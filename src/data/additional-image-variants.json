@@ -10,5 +10,13 @@
   "lumbares-cruzados": {
     "hombre": "exercises/additions/lumbares-cruzados-masculino.jpg",
     "mujer": "exercises/additions/lumbares-cruzados-femenino.jpg"
+  },
+  "elevacion-de-gemelos-sentado": {
+    "hombre": "exercises/additions/elevacion-de-gemelos-sentado-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-de-gemelos-sentado-femenino.jpg"
+  },
+  "elevacion-de-gemelos-de-pie": {
+    "hombre": "exercises/additions/elevacion-de-gemelos-de-pie-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-de-gemelos-de-pie-femenino.jpg"
   }
 }

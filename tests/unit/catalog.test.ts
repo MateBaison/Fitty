@@ -48,7 +48,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(17);
+    expect(Object.keys(imageVariants)).toHaveLength(19);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -83,4 +83,20 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(matchesEquipment(row, "Barra")).toBe(true);
     expect(matchesEquipment(row, "Mancuernas")).toBe(false);
   });
+});
+
+test("calf images follow profile gender without changing historical exercise definitions", () => {
+  for (const id of [
+    "elevacion-de-gemelos-sentado",
+    "elevacion-de-gemelos-de-pie",
+  ]) {
+    const exercise = exercises.find((item) => item.id === id)!;
+    expect(exerciseImage(exercise, "hombre")).toBe(
+      `/assets/exercises/additions/${id}-masculino.jpg`,
+    );
+    expect(exerciseImage(exercise, "mujer")).toBe(
+      `/assets/exercises/additions/${id}-femenino.jpg`,
+    );
+    expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
+  }
 });
