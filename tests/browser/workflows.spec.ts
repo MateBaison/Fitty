@@ -371,7 +371,9 @@ test("favorites, multiple exercise selection, touch-ready picker and routine reo
     )
     .not.toEqual(before);
   const firstHandle = rows.first().getByRole("button", { name: /Mover/ });
-  await firstHandle.scrollIntoViewIfNeeded();
+  await firstHandle.evaluate((node) =>
+    node.scrollIntoView({ block: "center" }),
+  );
   const from = await firstHandle.boundingBox(),
     target = await rows.nth(1).boundingBox();
   if (!from || !target) throw new Error("Missing drag targets");
@@ -380,6 +382,7 @@ test("favorites, multiple exercise selection, touch-ready picker and routine reo
   );
   await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
   await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2 + 5);
   await expect(firstHandle).toHaveAttribute("aria-pressed", "true");
   await page.mouse.move(target.x + 30, target.y + target.height / 2, {
     steps: 8,
@@ -392,6 +395,62 @@ test("favorites, multiple exercise selection, touch-ready picker and routine reo
       ),
     )
     .not.toEqual(order);
+  const touchHandle = rows.first().getByRole("button", { name: /Mover/ });
+  await touchHandle.evaluate((node) =>
+    node.scrollIntoView({ block: "center" }),
+  );
+  const touchFrom = await touchHandle.boundingBox(),
+    touchTo = await rows.nth(1).boundingBox();
+  if (!touchFrom || !touchTo) throw new Error("Missing touch targets");
+  const touchOrder = await rows.evaluateAll((nodes) =>
+    nodes.map((node) => node.getAttribute("data-routine-exercise")),
+  );
+  const emitTouch = async (type: string, x: number, y: number) =>
+    touchHandle.evaluate(
+      (node, { type, x, y }) => {
+        const touch = new Touch({
+          identifier: 1,
+          target: node,
+          clientX: x,
+          clientY: y,
+          pageX: x + scrollX,
+          pageY: y + scrollY,
+        });
+        node.dispatchEvent(
+          new TouchEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            touches: type === "touchend" ? [] : [touch],
+            targetTouches: type === "touchend" ? [] : [touch],
+            changedTouches: [touch],
+          }),
+        );
+      },
+      { type, x, y },
+    );
+  await emitTouch(
+    "touchstart",
+    touchFrom.x + touchFrom.width / 2,
+    touchFrom.y + touchFrom.height / 2,
+  );
+  await expect(touchHandle).toHaveAttribute("aria-pressed", "true");
+  await emitTouch(
+    "touchmove",
+    touchFrom.x + touchFrom.width / 2,
+    touchTo.y + touchTo.height / 2,
+  );
+  await emitTouch(
+    "touchend",
+    touchFrom.x + touchFrom.width / 2,
+    touchTo.y + touchTo.height / 2,
+  );
+  await expect
+    .poll(() =>
+      rows.evaluateAll((nodes) =>
+        nodes.map((node) => node.getAttribute("data-routine-exercise")),
+      ),
+    )
+    .not.toEqual(touchOrder);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

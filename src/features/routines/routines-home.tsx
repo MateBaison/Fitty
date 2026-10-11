@@ -10,16 +10,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
+import { SortableDays, SortableDay } from "./sortable-days";
 import { SortableExercises } from "./sortable-exercises";
 import { startWorkout, findExercise } from "@/domain/workouts";
 import { buildAutomaticRoutine } from "@/domain/calculations/automatic-routine";
+import { muscleImages } from "@/data/exercises";
+import { ChevronDown } from "lucide-react";
 import { muscleGroups, type MuscleGroup } from "@/domain/schemas/exercise";
 import { decodeRoutine, encodeRoutine, importRoutine } from "@/domain/sharing";
 import { INCOMING_ROUTINE_KEY } from "@/lib/storage/account-cache";
 import { CalendarPanel } from "@/features/calendar/calendar-panel";
 import { ReadinessDialog } from "@/features/workouts/readiness-dialog";
 
-type Editor = { type: "new" | "rename" | "day"; rid?: string } | null;
+type Editor = {
+  type: "new" | "rename" | "day" | "rename-day";
+  rid?: string;
+  did?: string;
+} | null;
 
 export function RoutinesHome() {
   const { snapshot, change, notify, t } = useApp(),
@@ -44,6 +51,7 @@ export function RoutinesHome() {
       snapshot.routines.find((routine) => routine.id === snapshot.selected) ??
       snapshot.routines[0],
     workout = snapshot.workout;
+  const [deletingRoutine, setDeletingRoutine] = useState<string | null>(null);
   const [pendingStart, setPendingStart] = useState<{
     rid: string;
     did: string;
@@ -84,6 +92,58 @@ export function RoutinesHome() {
     activeDay = activeRoutine?.days.find((day) => day.id === workout?.did);
   return (
     <>
+      <AppDialog
+        open={deletingRoutine !== null}
+        onClose={() => setDeletingRoutine(null)}
+        title={t("Eliminar rutina", "Delete routine")}
+      >
+        <div className="routine-delete-confirmation">
+          <span className="routine-delete-confirmation-icon" aria-hidden="true">
+            <Trash2 />
+          </span>
+          <strong>
+            {
+              snapshot.routines.find(
+                (routine) => routine.id === deletingRoutine,
+              )?.name
+            }
+          </strong>
+          <p>
+            {t(
+              "¿Eliminar esta rutina? El historial se conserva; su entrenamiento en curso se cancelará.",
+              "Delete this routine? History is preserved; its active workout will be cancelled.",
+            )}
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="secondary"
+              onClick={() => setDeletingRoutine(null)}
+            >
+              {t("Cancelar", "Cancel")}
+            </Button>
+            <Button
+              variant="destructive-solid"
+              onClick={() => {
+                if (
+                  change((draft) => {
+                    draft.routines = draft.routines.filter(
+                      (routine) => routine.id !== deletingRoutine,
+                    );
+                    if (draft.workout?.rid === deletingRoutine)
+                      draft.workout = null;
+                    if (draft.selected === deletingRoutine)
+                      draft.selected = draft.routines[0]?.id ?? null;
+                  })
+                )
+                  setDeletingRoutine(null);
+              }}
+            >
+              <Trash2 data-icon="inline-start" />
+              {t("Eliminar rutina", "Delete routine")}
+            </Button>
+          </div>
+        </div>
+      </AppDialog>
       {pendingStart && (
         <ReadinessDialog
           open
@@ -210,89 +270,97 @@ export function RoutinesHome() {
                 title={t("Eliminar rutina", "Delete routine")}
                 onClick={(event) => {
                   event.preventDefault();
-                  if (
-                    confirm(
-                      t(
-                        "¿Eliminar esta rutina? El historial se conserva; su entrenamiento en curso se cancelará.",
-                        "Delete this routine? History is preserved; its active workout will be cancelled.",
-                      ),
-                    )
-                  )
-                    change((draft) => {
-                      draft.routines = draft.routines.filter(
-                        (item) => item.id !== routine.id,
-                      );
-                      if (draft.workout?.rid === routine.id)
-                        draft.workout = null;
-                      if (draft.selected === routine.id)
-                        draft.selected = draft.routines[0]?.id ?? null;
-                    });
+                  setDeletingRoutine(routine.id);
                 }}
               >
                 <Trash2 data-icon="inline-start" />
               </Button>
             </span>
           </summary>
-          {routine.days.map((day) => (
-            <details className="routine-day" key={day.id}>
-              <summary className="font-bold">
-                {day.name} <small>({day.items.length})</small>
-              </summary>
-              <SortableExercises rid={routine.id} did={day.id} />
-              <div className="my-3 flex flex-wrap gap-2">
-                <Button
-                  onClick={() => begin(routine.id, day.id)}
-                  disabled={!!workout}
-                >
-                  {t("Empezar", "Start")}
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setPicker({ rid: routine.id, did: day.id })}
-                >
-                  {t("Agregar ejercicios", "Add exercises")}
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    setSuperset({ rid: routine.id, did: day.id });
-                    setMembers([]);
-                  }}
-                >
-                  {t("Superseries", "Supersets")}
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    if (confirm(t("¿Quitar este día?", "Remove this day?")))
-                      change((draft) => {
-                        const target = draft.routines.find(
-                          (item) => item.id === routine.id,
-                        );
-                        if (target)
-                          target.days = target.days.filter(
-                            (item) => item.id !== day.id,
+          <SortableDays
+            rid={routine.id}
+            ids={routine.days.map((day) => day.id)}
+          >
+            {routine.days.map((day) => (
+              <SortableDay
+                key={day.id}
+                id={day.id}
+                title={
+                  <>
+                    {day.name} <small>({day.items.length})</small>
+                  </>
+                }
+              >
+                <SortableExercises rid={routine.id} did={day.id} />
+                <div className="my-3 flex flex-wrap gap-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      openEditor(
+                        { type: "rename-day", rid: routine.id, did: day.id },
+                        day.name,
+                      )
+                    }
+                    aria-label={`${t("Cambiar nombre", "Rename")} ${day.name}`}
+                  >
+                    <Pencil data-icon="inline-start" />
+                    {t("Cambiar nombre", "Rename")}
+                  </Button>
+                  <Button
+                    onClick={() => begin(routine.id, day.id)}
+                    disabled={!!workout}
+                  >
+                    {t("Empezar", "Start")}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setPicker({ rid: routine.id, did: day.id })}
+                  >
+                    {t("Agregar ejercicios", "Add exercises")}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setSuperset({ rid: routine.id, did: day.id });
+                      setMembers([]);
+                    }}
+                  >
+                    {t("Superseries", "Supersets")}
+                  </Button>
+                  <Button
+                    variant="destructive-outline"
+                    onClick={() => {
+                      if (confirm(t("¿Quitar este día?", "Remove this day?")))
+                        change((draft) => {
+                          const target = draft.routines.find(
+                            (item) => item.id === routine.id,
                           );
-                        if (draft.workout?.did === day.id) draft.workout = null;
-                      });
-                  }}
-                >
-                  {t("Quitar día", "Remove day")}
-                </Button>
-              </div>
-              {!!day.supersets?.length && (
-                <p className="mb-3 text-sm text-orange-300">
-                  {day.supersets
-                    .map((group) =>
-                      group
-                        .map((id) => findExercise(snapshot, id)?.name ?? id)
-                        .join(" + "),
-                    )
-                    .join(" · ")}
-                </p>
-              )}
-            </details>
-          ))}
+                          if (target)
+                            target.days = target.days.filter(
+                              (item) => item.id !== day.id,
+                            );
+                          if (draft.workout?.did === day.id)
+                            draft.workout = null;
+                        });
+                    }}
+                  >
+                    {t("Quitar día", "Remove day")}
+                  </Button>
+                </div>
+                {!!day.supersets?.length && (
+                  <p className="mb-3 text-sm text-orange-300">
+                    {day.supersets
+                      .map((group) =>
+                        group
+                          .map((id) => findExercise(snapshot, id)?.name ?? id)
+                          .join(" + "),
+                      )
+                      .join(" · ")}
+                  </p>
+                )}
+              </SortableDay>
+            ))}
+          </SortableDays>
           <Button
             variant="secondary"
             className="routine-add-day"
@@ -330,11 +398,13 @@ export function RoutinesHome() {
         open={editor !== null}
         onClose={() => setEditor(null)}
         title={
-          editor?.type === "rename"
-            ? "Renombrar rutina"
-            : editor?.type === "day"
-              ? "Agregar día"
-              : "Nueva rutina"
+          editor?.type === "rename-day"
+            ? t("Cambiar nombre del día", "Rename workout day")
+            : editor?.type === "rename"
+              ? "Renombrar rutina"
+              : editor?.type === "day"
+                ? "Agregar día"
+                : "Nueva rutina"
         }
       >
         {editor?.type === "new" && mode === "choose" ? (
@@ -362,6 +432,11 @@ export function RoutinesHome() {
                       (item) => item.id === editing.rid,
                     );
                     if (routine) routine.name = name.trim();
+                  } else if (editing.type === "rename-day") {
+                    const day = draft.routines
+                      .find((item) => item.id === editing.rid)
+                      ?.days.find((item) => item.id === editing.did);
+                    if (day) day.name = name.trim();
                   } else if (editing.type === "day")
                     draft.routines
                       .find((item) => item.id === editing.rid)
@@ -417,39 +492,81 @@ export function RoutinesHome() {
             )}
             {mode === "auto" ? (
               <>
-                <div className="space-y-2">
-                  {muscleGroups.map((group) => (
-                    <label
-                      key={group}
-                      className="flex min-h-11 items-center gap-3"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={groups.includes(group)}
-                        onChange={() =>
-                          setGroups((previous) =>
-                            previous.includes(group)
-                              ? previous.filter((item) => item !== group)
-                              : [...previous, group],
-                          )
-                        }
-                      />
-                      {group}
-                    </label>
-                  ))}
-                </div>
-                <label>
-                  {t("Días por semana", "Days per week")}
-                  <select
-                    value={days}
-                    onChange={(event) => setDays(Number(event.target.value))}
+                <div className="automatic-muscle-picker">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="automatic-select-all"
+                    onClick={() =>
+                      setGroups(
+                        groups.length === muscleGroups.length
+                          ? []
+                          : [...muscleGroups],
+                      )
+                    }
                   >
-                    {Array.from({ length: 7 }, (_, index) => (
-                      <option key={index} value={index + 1}>
-                        {index + 1}
-                      </option>
+                    {groups.length === muscleGroups.length
+                      ? t("Deseleccionar todo", "Deselect all")
+                      : t("Seleccionar todo", "Select all")}
+                  </Button>
+                  <div className="automatic-muscle-grid">
+                    {muscleGroups.map((group) => (
+                      <label
+                        key={group}
+                        className="automatic-muscle-card"
+                        data-selected={groups.includes(group)}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={groups.includes(group)}
+                          onChange={() =>
+                            setGroups((previous) =>
+                              previous.includes(group)
+                                ? previous.filter((item) => item !== group)
+                                : [...previous, group],
+                            )
+                          }
+                        />
+                        <img
+                          src={`/assets/${muscleImages[group]}`}
+                          alt=""
+                          width={140}
+                          height={120}
+                        />
+                        <span>
+                          {t(
+                            group,
+                            {
+                              Pectorales: "Chest",
+                              Espalda: "Back",
+                              Hombros: "Shoulders",
+                              Bíceps: "Biceps",
+                              Tríceps: "Triceps",
+                              Abdominales: "Abs",
+                              Piernas: "Legs",
+                              Gemelos: "Calves",
+                            }[group],
+                          )}
+                        </span>
+                      </label>
                     ))}
-                  </select>
+                  </div>
+                </div>
+                <label className="automatic-days">
+                  {t("Días por semana", "Days per week")}
+                  <span className="automatic-days-select">
+                    <select
+                      value={days}
+                      onChange={(event) => setDays(Number(event.target.value))}
+                    >
+                      {Array.from({ length: 7 }, (_, index) => (
+                        <option key={index} value={index + 1}>
+                          {index + 1}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown aria-hidden="true" />
+                  </span>
                 </label>
               </>
             ) : (
@@ -464,7 +581,9 @@ export function RoutinesHome() {
               </label>
             )}
             <Button type="submit">
-              {mode === "auto" ? "Crear rutina" : t("Guardar", "Save")}
+              {mode === "auto"
+                ? t("Crear rutina", "Create routine")
+                : t("Guardar", "Save")}
             </Button>
           </form>
         )}

@@ -382,7 +382,11 @@
     "Más repeticiones": "Plus de répétitions",
     "Todavía no hay marcas registradas.": "Aucune performance enregistrée.",
     "Entrenamiento del récord": "Séance du record",
-    "Incluir calentamientos en el historial de progreso": "Inclure les échauffements dans l’historique de progression"
+    "Incluir calentamientos en el historial de progreso": "Inclure les échauffements dans l’historique de progression",
+    "Seleccionar todo": "Tout sélectionner",
+    "Deseleccionar todo": "Tout désélectionner",
+    "Crear rutina": "Créer une routine",
+    "Cambiar nombre del día": "Renommer le jour d’entraînement"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -767,7 +771,11 @@
     "Más repeticiones": "最多次数",
     "Todavía no hay marcas registradas.": "尚无成绩记录。",
     "Entrenamiento del récord": "纪录对应的训练",
-    "Incluir calentamientos en el historial de progreso": "在进度历史中包含热身组"
+    "Incluir calentamientos en el historial de progreso": "在进度历史中包含热身组",
+    "Seleccionar todo": "全选",
+    "Deseleccionar todo": "取消全选",
+    "Crear rutina": "创建训练计划",
+    "Cambiar nombre del día": "重命名训练日"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1152,7 +1160,11 @@
     "Más repeticiones": "सबसे अधिक दोहराव",
     "Todavía no hay marcas registradas.": "अभी कोई प्रदर्शन दर्ज नहीं है।",
     "Entrenamiento del récord": "रिकॉर्ड वाला प्रशिक्षण",
-    "Incluir calentamientos en el historial de progreso": "प्रगति इतिहास में वार्म-अप शामिल करें"
+    "Incluir calentamientos en el historial de progreso": "प्रगति इतिहास में वार्म-अप शामिल करें",
+    "Seleccionar todo": "सभी चुनें",
+    "Deseleccionar todo": "सभी चयन हटाएँ",
+    "Crear rutina": "रूटीन बनाएँ",
+    "Cambiar nombre del día": "प्रशिक्षण दिन का नाम बदलें"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1537,7 +1549,11 @@
     "Más repeticiones": "أكثر تكرارات",
     "Todavía no hay marcas registradas.": "لم يُسجل أي أداء بعد.",
     "Entrenamiento del récord": "تدريب الرقم القياسي",
-    "Incluir calentamientos en el historial de progreso": "تضمين الإحماء في سجل التقدم"
+    "Incluir calentamientos en el historial de progreso": "تضمين الإحماء في سجل التقدم",
+    "Seleccionar todo": "تحديد الكل",
+    "Deseleccionar todo": "إلغاء تحديد الكل",
+    "Crear rutina": "إنشاء برنامج",
+    "Cambiar nombre del día": "تغيير اسم يوم التدريب"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -1922,7 +1938,11 @@
     "Más repeticiones": "Meiste Wiederholungen",
     "Todavía no hay marcas registradas.": "Noch keine Leistungen erfasst.",
     "Entrenamiento del récord": "Training des Rekords",
-    "Incluir calentamientos en el historial de progreso": "Aufwärmsätze im Fortschrittsverlauf berücksichtigen"
+    "Incluir calentamientos en el historial de progreso": "Aufwärmsätze im Fortschrittsverlauf berücksichtigen",
+    "Seleccionar todo": "Alle auswählen",
+    "Deseleccionar todo": "Auswahl aufheben",
+    "Crear rutina": "Routine erstellen",
+    "Cambiar nombre del día": "Trainingstag umbenennen"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2307,7 +2327,11 @@
     "Más repeticiones": "Più ripetizioni",
     "Todavía no hay marcas registradas.": "Nessun risultato registrato.",
     "Entrenamiento del récord": "Allenamento del record",
-    "Incluir calentamientos en el historial de progreso": "Includi il riscaldamento nello storico dei progressi"
+    "Incluir calentamientos en el historial de progreso": "Includi il riscaldamento nello storico dei progressi",
+    "Seleccionar todo": "Seleziona tutto",
+    "Deseleccionar todo": "Deseleziona tutto",
+    "Crear rutina": "Crea routine",
+    "Cambiar nombre del día": "Rinomina giorno di allenamento"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2692,7 +2716,11 @@
     "Más repeticiones": "Mais repetições",
     "Todavía no hay marcas registradas.": "Ainda não há marcas registradas.",
     "Entrenamiento del récord": "Treino do recorde",
-    "Incluir calentamientos en el historial de progreso": "Incluir aquecimentos no histórico de progresso"
+    "Incluir calentamientos en el historial de progreso": "Incluir aquecimentos no histórico de progresso",
+    "Seleccionar todo": "Selecionar tudo",
+    "Deseleccionar todo": "Desmarcar tudo",
+    "Crear rutina": "Criar rotina",
+    "Cambiar nombre del día": "Renomear dia de treino"
   },
   "en": {
     "Sexo": "Sex",

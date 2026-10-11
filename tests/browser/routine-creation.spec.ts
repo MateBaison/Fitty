@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { login } from "./login-helper";
 test("custom goals, automatic routines, editable days and independent sharing copies", async ({
   page,
-}) => {
+}, info) => {
   await page.request.get("http://127.0.0.1:54329/__reset");
   await page.route("**/*", (route) =>
     new URL(route.request().url()).hostname === "127.0.0.1"
@@ -39,10 +39,40 @@ test("custom goals, automatic routines, editable days and independent sharing co
   await expect(custom.locator(".routine-day summary")).toContainText(
     "Custom day",
   );
+  await custom.locator(".routine-day summary").click();
+  await custom
+    .getByRole("button", { name: "Cambiar nombre Custom day", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByLabel("Nombre", { exact: true })
+    .fill("Renamed day");
+  await page.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(custom.locator(".routine-day summary")).toContainText(
+    "Renamed day",
+  );
   await page.getByRole("button", { name: /Nueva$/, exact: false }).click();
   await page
     .getByRole("button", { name: "Rutina automática", exact: true })
     .click();
+  await expect(page.locator(".automatic-muscle-card img")).toHaveCount(8);
+  await page
+    .getByRole("button", { name: "Seleccionar todo", exact: true })
+    .click();
+  await expect(
+    page.locator(".automatic-muscle-card input:checked"),
+  ).toHaveCount(8);
+  await page
+    .getByRole("button", { name: "Deseleccionar todo", exact: true })
+    .click();
+  await expect(
+    page.locator(".automatic-muscle-card input:checked"),
+  ).toHaveCount(0);
+  await page.screenshot({
+    path: `artifacts/automatic-muscles-${info.project.name}.png`,
+    animations: "disabled",
+    fullPage: true,
+  });
   await page.getByRole("dialog").getByLabel("Piernas", { exact: true }).check();
   await page.getByRole("dialog").getByLabel("Gemelos", { exact: true }).check();
   await page

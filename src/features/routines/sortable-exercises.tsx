@@ -1,7 +1,8 @@
 "use client";
 import {
   DndContext,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -46,6 +47,7 @@ function SortableItem({
     >
       <button
         type="button"
+        ref={sort.setActivatorNodeRef}
         className="drag-handle"
         aria-label={`Mover ${exercise?.name ?? exerciseId}`}
         {...sort.attributes}
@@ -75,8 +77,11 @@ export function SortableExercises({ rid, did }: { rid: string; did: string }) {
       .find((routine) => routine.id === rid)
       ?.days.find((day) => day.id === did);
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { delay: 250, tolerance: 8 },
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 4 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 180, tolerance: 12 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
