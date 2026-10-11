@@ -182,8 +182,22 @@ test("progress renders empty-state analytics without removed time totals", async
     .getByRole("navigation")
     .getByRole("link", { name: "Progreso", exact: true })
     .click();
+  await expect(page.locator("#main-content > .panel").first()).toHaveClass(
+    /weekly-summary/,
+  );
+  await expect(page.locator("#main-content > .panel").nth(1)).toHaveClass(
+    /recent-improvements/,
+  );
   await expect(
     page.getByRole("heading", { name: "Avances recientes" }),
+  ).toBeVisible();
+  await expect(page.locator(".recent-improvements")).not.toHaveAttribute(
+    "open",
+    "",
+  );
+  await page.locator(".recent-improvements summary").click();
+  await expect(
+    page.getByText("Últimas cuatro semanas", { exact: true }),
   ).toBeVisible();
   await page
     .getByRole("combobox", { name: "Meta semanal (opcional)", exact: true })
@@ -193,7 +207,7 @@ test("progress renders empty-state analytics without removed time totals", async
     .selectOption("8");
   await expect(page.locator("table thead th")).toHaveCount(9);
   await expect(
-    page.getByRole("img", { name: /Series por grupo muscular/ }),
+    page.getByRole("img", { name: /Series por zona muscular/ }),
   ).toBeVisible();
   await expect(page.getByText("minutos totales", { exact: false })).toHaveCount(
     0,

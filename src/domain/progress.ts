@@ -170,3 +170,57 @@ export function weeklySummary(snapshot: Snapshot, now = new Date()) {
     trainedDays: days.filter((day) => day.sessions > 0).length,
   };
 }
+
+/** Most recent improvement for each exercise in the last 28 local calendar days. */
+export function recentImprovements(snapshot: Snapshot, now = new Date()) {
+  const cutoff = new Date(now);
+  cutoff.setDate(cutoff.getDate() - 28);
+  const history = exerciseHistories(snapshot, false);
+  return [...history]
+    .flatMap(([id, records]) => {
+      for (let index = records.length - 1; index > 0; index--) {
+        const current = records[index]!;
+        if (current.date < cutoff || current.date > now) continue;
+        const previous = records[index - 1]!;
+        const candidates = current.sets.flatMap((after) => {
+          const comparable = previous.sets.filter(
+            (before) => before.metric === after.metric,
+          );
+          const heaviest = [...comparable].sort(
+            (a, b) => b.kg - a.kg || b.value - a.value,
+          )[0];
+          if (!heaviest) return [];
+          if (after.kg > heaviest.kg + 0.05)
+            return [
+              {
+                kind: "weight",
+                before: heaviest,
+                after,
+                gain: after.kg - heaviest.kg,
+              },
+            ];
+          const sameLoad = comparable
+            .filter((before) => Math.abs(after.kg - before.kg) <= 0.05)
+            .sort((a, b) => b.value - a.value)[0];
+          if (sameLoad && after.value > sameLoad.value)
+            return [
+              {
+                kind: "quantity",
+                before: sameLoad,
+                after,
+                gain: after.value - sameLoad.value,
+              },
+            ];
+          return [];
+        });
+        const result = candidates.sort(
+          (a, b) =>
+            Number(b.kind === "weight") - Number(a.kind === "weight") ||
+            b.gain - a.gain,
+        )[0];
+        if (result) return [{ id, date: current.date, result }];
+      }
+      return [];
+    })
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
+}

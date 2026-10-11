@@ -6,7 +6,7 @@ import { localeFor } from "@/data/translations";
 import { useState } from "react";
 import { useApp } from "@/state/app-provider";
 import { catalogFor, localDateKey, validDateKey } from "@/domain/workouts";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   comparable,
@@ -15,6 +15,7 @@ import {
   improvement,
   weeklyData,
   weeklySummary,
+  recentImprovements,
   type RecordSet,
 } from "@/domain/progress";
 import { Button } from "@/components/ui/button";
@@ -56,15 +57,7 @@ export function ProgressScreen() {
     );
   const format = (set: RecordSet) =>
     `${localizedSetTypes(snapshot.settings.language ?? "es").find((type) => type.id === (set.type ?? "normal"))?.letter ?? "N"} · ${(set.kg * factor).toFixed(1)} ${unit} × ${set.value} ${set.metric === "seconds" ? "s" : t("Rep", "Reps")}`;
-  const advances = [...history]
-    .flatMap(([id, records]) => {
-      const last = records.at(-1);
-      if (!last || Date.now() - last.date.getTime() > 90 * 864e5) return [];
-      const result = improvement(last, records.at(-2));
-      return result ? [{ id, date: last.date, result }] : [];
-    })
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
-    .slice(0, 3);
+  const advances = recentImprovements(snapshot);
   const records = history.get(selected) ?? [],
     recent = records.slice(-5),
     plateau =
@@ -82,6 +75,143 @@ export function ProgressScreen() {
   )[0];
   return (
     <>
+      <section
+        className="panel weekly-summary"
+        aria-labelledby="weekly-summary-title"
+      >
+        <h2 id="weekly-summary-title">
+          {t("Resumen semanal", "Weekly summary")}
+        </h2>
+        <div className="my-3 flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            aria-label={t("Semana anterior", "Previous week")}
+            onClick={() => moveWeek(-1)}
+          >
+            <ChevronLeft aria-hidden="true" />
+          </Button>
+          <Input
+            type="date"
+            className="w-auto min-w-0 flex-1"
+            aria-label={t("Elegir semana", "Choose week")}
+            value={localDateKey(summary.start)}
+            onChange={(event) => {
+              if (validDateKey(event.target.value))
+                setSummaryDate(new Date(`${event.target.value}T12:00:00`));
+            }}
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            aria-label={t("Semana siguiente", "Next week")}
+            onClick={() => moveWeek(1)}
+          >
+            <ChevronRight aria-hidden="true" />
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="text-xs"
+            onClick={() => setSummaryDate(new Date())}
+          >
+            {t("Semana actual", "Current week")}
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {summary.start.toLocaleDateString(locale, {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}{" "}
+          · {t("Semana de lunes a domingo", "Monday to Sunday")}
+        </p>
+        <div className="metric-grid">
+          <div>
+            <strong>{summary.sessions}</strong>
+            <small>{t("sesiones", "sessions")}</small>
+          </div>
+          <div>
+            <strong>{summary.trainedDays}</strong>
+            <small>{t("Días entrenados", "Training days")}</small>
+          </div>
+          <div>
+            <strong>{duration(summary.minutes)}</strong>
+            <small>{t("Tiempo registrado", "Recorded time")}</small>
+          </div>
+        </div>
+        <div className="weekly-duration-days">
+          {summary.days.map((day) => (
+            <div key={day.date.toISOString()} className="weekly-duration-day">
+              <strong>
+                {day.date.toLocaleDateString(locale, { weekday: "short" })}
+              </strong>
+              <span>
+                {day.sessions && day.unknown === day.sessions
+                  ? "—"
+                  : duration(day.minutes)}
+              </span>
+              <small>
+                {day.sessions} {t("sesiones", "sessions")}
+                {day.unknown ? " *" : ""}
+              </small>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">
+          {t(
+            "El tiempo cuenta desde el inicio hasta que guardás el entrenamiento, incluidos los descansos.",
+            "Time runs from workout start until saving, including rests.",
+          )}
+        </p>
+        {summary.unknown > 0 && (
+          <p role="status" className="text-sm text-muted-foreground">
+            * {summary.unknown}{" "}
+            {t(
+              "sesiones sin duración registrada; no se inventa su tiempo.",
+              "sessions have no recorded duration; their time is not estimated.",
+            )}
+          </p>
+        )}
+      </section>
+      <details className="panel recent-improvements">
+        <summary>
+          <h2>{t("Avances recientes", "Recent improvements")}</h2>
+          <ChevronDown aria-hidden="true" />
+        </summary>
+        <p className="my-3 text-sm text-muted-foreground">
+          {t("Últimas cuatro semanas", "Last four weeks")}
+        </p>
+        {advances.length ? (
+          advances.map(({ id, date, result }) => (
+            <article className="result-card result-maintain" key={id}>
+              <h3>
+                {catalog.find((exercise) => exercise.id === id)?.name ?? id}
+              </h3>
+              <p>
+                {format(result.before)} →{" "}
+                <strong>{format(result.after)}</strong>
+              </p>
+              <small>{date.toLocaleDateString(locale)}</small>
+            </article>
+          ))
+        ) : (
+          <p>
+            {t(
+              "Aún no hay dos sesiones comparables de un ejercicio con una mejora registrada.",
+              "There are not yet two comparable exercise sessions with a recorded improvement.",
+            )}
+          </p>
+        )}
+        <p className="mt-3 text-sm text-muted-foreground">
+          {t(
+            "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.",
+            "More weight, or more repetitions or seconds at the same weight. Warm-ups excluded.",
+          )}
+        </p>
+      </details>
       <section className="panel">
         <h2>{t("Récords personales", "Personal records")}</h2>
         <p className="text-sm text-muted-foreground">
@@ -200,137 +330,6 @@ export function ProgressScreen() {
           "Real changes in your exercises and training habits.",
         )}
       </p>
-      <section
-        className="panel weekly-summary"
-        aria-labelledby="weekly-summary-title"
-      >
-        <h2 id="weekly-summary-title">
-          {t("Resumen semanal", "Weekly summary")}
-        </h2>
-        <div className="my-3 flex flex-wrap items-center gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            size="icon"
-            aria-label={t("Semana anterior", "Previous week")}
-            onClick={() => moveWeek(-1)}
-          >
-            <ChevronLeft aria-hidden="true" />
-          </Button>
-          <Input
-            type="date"
-            className="w-auto min-w-0 flex-1"
-            aria-label={t("Elegir semana", "Choose week")}
-            value={localDateKey(summary.start)}
-            onChange={(event) => {
-              if (validDateKey(event.target.value))
-                setSummaryDate(new Date(`${event.target.value}T12:00:00`));
-            }}
-          />
-          <Button
-            type="button"
-            variant="secondary"
-            size="icon"
-            aria-label={t("Semana siguiente", "Next week")}
-            onClick={() => moveWeek(1)}
-          >
-            <ChevronRight aria-hidden="true" />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="text-xs"
-            onClick={() => setSummaryDate(new Date())}
-          >
-            {t("Semana actual", "Current week")}
-          </Button>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {summary.start.toLocaleDateString(locale, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}{" "}
-          · {t("Semana de lunes a domingo", "Monday to Sunday")}
-        </p>
-        <div className="metric-grid">
-          <div>
-            <strong>{summary.sessions}</strong>
-            <small>{t("sesiones", "sessions")}</small>
-          </div>
-          <div>
-            <strong>{summary.trainedDays}</strong>
-            <small>{t("Días entrenados", "Training days")}</small>
-          </div>
-          <div>
-            <strong>{duration(summary.minutes)}</strong>
-            <small>{t("Tiempo registrado", "Recorded time")}</small>
-          </div>
-        </div>
-        <div className="weekly-duration-days">
-          {summary.days.map((day) => (
-            <div key={day.date.toISOString()} className="weekly-duration-day">
-              <strong>
-                {day.date.toLocaleDateString(locale, { weekday: "short" })}
-              </strong>
-              <span>
-                {day.sessions && day.unknown === day.sessions
-                  ? "—"
-                  : duration(day.minutes)}
-              </span>
-              <small>
-                {day.sessions} {t("sesiones", "sessions")}
-                {day.unknown ? " *" : ""}
-              </small>
-            </div>
-          ))}
-        </div>
-        <p className="mt-3 text-sm text-muted-foreground">
-          {t(
-            "El tiempo cuenta desde el inicio hasta que guardás el entrenamiento, incluidos los descansos.",
-            "Time runs from workout start until saving, including rests.",
-          )}
-        </p>
-        {summary.unknown > 0 && (
-          <p role="status" className="text-sm text-muted-foreground">
-            * {summary.unknown}{" "}
-            {t(
-              "sesiones sin duración registrada; no se inventa su tiempo.",
-              "sessions have no recorded duration; their time is not estimated.",
-            )}
-          </p>
-        )}
-      </section>
-      <section className="panel">
-        <h2>{t("Avances recientes", "Recent improvements")}</h2>
-        {advances.length ? (
-          advances.map(({ id, date, result }) => (
-            <article className="result-card result-maintain" key={id}>
-              <h3>
-                {catalog.find((exercise) => exercise.id === id)?.name ?? id}
-              </h3>
-              <p>
-                {format(result.before)} →{" "}
-                <strong>{format(result.after)}</strong>
-              </p>
-              <small>{date.toLocaleDateString(locale)}</small>
-            </article>
-          ))
-        ) : (
-          <p>
-            {t(
-              "Aún no hay dos sesiones comparables de un ejercicio con una mejora registrada.",
-              "There are not yet two comparable exercise sessions with a recorded improvement.",
-            )}
-          </p>
-        )}
-        <p className="mt-3 text-sm text-muted-foreground">
-          {t(
-            "Se comparan series del mismo ejercicio y la misma métrica, con las mismas repeticiones/segundos o el mismo peso.",
-            "Sets of the same exercise and metric are compared at the same repetitions/seconds or weight.",
-          )}
-        </p>
-      </section>
       <section className="panel">
         <h2>{t("Frecuencia de entrenamiento", "Training frequency")}</h2>
         <label>

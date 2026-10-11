@@ -1899,3 +1899,27 @@ input[type="range"] {
   width: 26px;
   height: 26px;
 }
+.recent-improvements > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+.recent-improvements > summary::-webkit-details-marker {
+  display: none;
+}
+.recent-improvements > summary h2 {
+  margin: 0;
+}
+.recent-improvements > summary svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+  color: var(--primary);
+}
+.recent-improvements[open] > summary svg {
+  transform: rotate(180deg);
+}

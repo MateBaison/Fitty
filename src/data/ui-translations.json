@@ -386,7 +386,9 @@
     "Seleccionar todo": "Tout sélectionner",
     "Deseleccionar todo": "Tout désélectionner",
     "Crear rutina": "Créer une routine",
-    "Cambiar nombre del día": "Renommer le jour d’entraînement"
+    "Cambiar nombre del día": "Renommer le jour d’entraînement",
+    "Últimas cuatro semanas": "Quatre dernières semaines",
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Plus de poids, ou plus de répétitions ou de secondes à charge identique. Échauffements exclus."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -775,7 +777,9 @@
     "Seleccionar todo": "全选",
     "Deseleccionar todo": "取消全选",
     "Crear rutina": "创建训练计划",
-    "Cambiar nombre del día": "重命名训练日"
+    "Cambiar nombre del día": "重命名训练日",
+    "Últimas cuatro semanas": "最近四周",
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "更大重量，或在相同重量下更多次数或更长时间。不包含热身组。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1164,7 +1168,9 @@
     "Seleccionar todo": "सभी चुनें",
     "Deseleccionar todo": "सभी चयन हटाएँ",
     "Crear rutina": "रूटीन बनाएँ",
-    "Cambiar nombre del día": "प्रशिक्षण दिन का नाम बदलें"
+    "Cambiar nombre del día": "प्रशिक्षण दिन का नाम बदलें",
+    "Últimas cuatro semanas": "पिछले चार सप्ताह",
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "अधिक वजन, या समान वजन पर अधिक दोहराव या सेकंड। वार्म-अप शामिल नहीं है।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1553,7 +1559,9 @@
     "Seleccionar todo": "تحديد الكل",
     "Deseleccionar todo": "إلغاء تحديد الكل",
     "Crear rutina": "إنشاء برنامج",
-    "Cambiar nombre del día": "تغيير اسم يوم التدريب"
+    "Cambiar nombre del día": "تغيير اسم يوم التدريب",
+    "Últimas cuatro semanas": "آخر أربعة أسابيع",
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "وزن أكبر، أو تكرارات أو ثوانٍ أكثر بنفس الوزن. لا يشمل الإحماء."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -1942,7 +1950,9 @@
     "Seleccionar todo": "Alle auswählen",
     "Deseleccionar todo": "Auswahl aufheben",
     "Crear rutina": "Routine erstellen",
-    "Cambiar nombre del día": "Trainingstag umbenennen"
+    "Cambiar nombre del día": "Trainingstag umbenennen",
+    "Últimas cuatro semanas": "Letzte vier Wochen",
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Mehr Gewicht oder mehr Wiederholungen oder Sekunden bei gleichem Gewicht. Ohne Aufwärmsätze."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2331,7 +2341,9 @@
     "Seleccionar todo": "Seleziona tutto",
     "Deseleccionar todo": "Deseleziona tutto",
     "Crear rutina": "Crea routine",
-    "Cambiar nombre del día": "Rinomina giorno di allenamento"
+    "Cambiar nombre del día": "Rinomina giorno di allenamento",
+    "Últimas cuatro semanas": "Ultime quattro settimane",
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Più peso oppure più ripetizioni o secondi con lo stesso peso. Riscaldamento escluso."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2720,7 +2732,9 @@
     "Seleccionar todo": "Selecionar tudo",
     "Deseleccionar todo": "Desmarcar tudo",
     "Crear rutina": "Criar rotina",
-    "Cambiar nombre del día": "Renomear dia de treino"
+    "Cambiar nombre del día": "Renomear dia de treino",
+    "Últimas cuatro semanas": "Últimas quatro semanas",
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Mais peso, ou mais repetições ou segundos com o mesmo peso. Sem aquecimentos."
   },
   "en": {
     "Sexo": "Sex",
