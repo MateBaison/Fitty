@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Switch } from "@base-ui/react/switch";
-import { Pencil, Share, Trash2, Star } from "lucide-react";
+import {
+  Pencil,
+  Share,
+  Trash2,
+  Star,
+  LibraryBig,
+  ChartNoAxesCombined,
+} from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -455,6 +462,16 @@ export function RoutinesHome() {
         </p>
       )}
       <CalendarPanel />
+      <div className="home-section-shortcuts">
+        <Link href="/library" className="home-section-shortcut">
+          <LibraryBig aria-hidden="true" />
+          <strong>{t("Biblioteca", "Library")}</strong>
+        </Link>
+        <Link href="/progress" className="home-section-shortcut">
+          <ChartNoAxesCombined aria-hidden="true" />
+          <strong>{t("Progreso", "Progress")}</strong>
+        </Link>
+      </div>
       <AppDialog
         open={quick}
         onClose={() => setQuick(false)}

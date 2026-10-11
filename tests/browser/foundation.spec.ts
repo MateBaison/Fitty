@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login } from "./login-helper";
+import { login, openHomeSection } from "./login-helper";
 
 test.beforeEach(async ({ page }) => {
   // No real user login, cloud writes or unrelated network requests.
@@ -19,7 +19,7 @@ test("welcome, all navigation routes, active tab, brand home and reload", async 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "Bienvenido a HERCULES" }),
+    page.getByRole("heading", { name: "Bienvenido a FITTY" }),
   ).toBeVisible();
   expect(
     await page
@@ -36,10 +36,15 @@ test("welcome, all navigation routes, active tab, brand home and reload", async 
     ["Perfil", "/profile"],
     ["Inicio", "/home"],
   ] as const) {
+    if (label === "Biblioteca" || label === "Progreso")
+      await openHomeSection(page, label);
     const link = page
       .getByRole("navigation")
-      .getByRole("link", { name: label, exact: true });
-    await link.click();
+      .getByRole("link", {
+        name: label === "Biblioteca" || label === "Progreso" ? "Inicio" : label,
+        exact: true,
+      });
+    if (label !== "Biblioteca" && label !== "Progreso") await link.click();
     await expect(page).toHaveURL(new RegExp(`${url}$`));
     await expect(link).toHaveAttribute("aria-current", "page");
     const title = page.locator(".header-section-title");
@@ -68,9 +73,7 @@ test("welcome, all navigation routes, active tab, brand home and reload", async 
     ).toBe(true);
   }
   await page.goto("/workout");
-  await page
-    .getByRole("link", { name: /HERCULES — volver al inicio/i })
-    .click();
+  await page.getByRole("link", { name: /FITTY — Volver al inicio/i }).click();
   await expect(page).toHaveURL(/\/home$/);
   await page.reload();
   await expect(page.getByRole("navigation")).toBeVisible();

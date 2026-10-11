@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login } from "./login-helper";
+import { login, openHomeSection } from "./login-helper";
 test("compact workout controls, grouped drops, remembered metric and record source", async ({
   page,
 }, info) => {
@@ -138,10 +138,7 @@ test("compact workout controls, grouped drops, remembered metric and record sour
     "Tiempo: 0 min",
   );
   await page.keyboard.press("Escape");
-  await page
-    .getByRole("navigation")
-    .getByRole("link", { name: "Progreso", exact: true })
-    .click();
+  await openHomeSection(page, "Progreso");
   await expect(
     page.getByRole("heading", { name: "Récords personales" }),
   ).toBeVisible();

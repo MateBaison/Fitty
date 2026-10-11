@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login } from "./login-helper";
+import { login, openHomeSection } from "./login-helper";
 import { readFile } from "node:fs/promises";
 test.beforeEach(async ({ page }) => {
   await page.request.get("http://127.0.0.1:54329/__reset");
@@ -191,10 +191,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
     ),
   ).toBe(true);
   expect(errors).toEqual([]);
-  await page
-    .getByRole("navigation")
-    .getByRole("link", { name: "Progreso", exact: true })
-    .click();
+  await openHomeSection(page, "Progreso");
   await page
     .getByRole("combobox", { name: "Elegí un ejercicio", exact: true })
     .selectOption({ label: "Press de banca con barra" });
@@ -297,10 +294,7 @@ test("personal record highlights appear while logging and remain in the calendar
 test("favorites, multiple exercise selection, touch-ready picker and routine reordering", async ({
   page,
 }) => {
-  await page
-    .getByRole("navigation")
-    .getByRole("link", { name: "Biblioteca", exact: true })
-    .click();
+  await openHomeSection(page, "Biblioteca");
   await page
     .getByRole("button", { name: "Ver Press de banca con barra", exact: true })
     .click();

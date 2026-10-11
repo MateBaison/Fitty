@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login } from "./login-helper";
+import { login, openHomeSection } from "./login-helper";
 test.beforeEach(async ({ page }) => {
   await page.request.get("http://127.0.0.1:54329/__reset");
   await page.route("**/*", (route) =>
@@ -178,10 +178,7 @@ test("four calculators expose colored results and a weight-goal range", async ({
 test("progress renders empty-state analytics without removed time totals", async ({
   page,
 }, info) => {
-  await page
-    .getByRole("navigation")
-    .getByRole("link", { name: "Progreso", exact: true })
-    .click();
+  await openHomeSection(page, "Progreso");
   await expect(page.locator("#main-content > .panel").first()).toHaveClass(
     /weekly-summary/,
   );
