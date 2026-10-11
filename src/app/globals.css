@@ -259,7 +259,7 @@
   }
 }
 
-/* HERCULES tokens: keep the current brand, not the shadcn starter theme. */
+/* Application brand tokens. */
 :root,
 .dark {
   color-scheme: dark;
@@ -1615,4 +1615,42 @@ input[type="range"] {
 [data-theme="light"] .result-daily {
   background: #f0e6ff;
   border-color: #8d62c7;
+}
+
+.fitty-brand {
+  display: grid;
+  justify-items: center;
+}
+.fitty-logo-window {
+  display: block;
+  position: relative;
+  width: 112px;
+  height: 51px;
+  overflow: hidden;
+}
+.brand .fitty-logo-window img {
+  position: absolute;
+  width: 112px;
+  height: 112px;
+  max-width: none;
+  top: -33px;
+  left: 0;
+  border-radius: 0;
+  object-fit: contain;
+}
+.fitty-brand small {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+}
+@media (max-width: 480px) {
+  .fitty-logo-window {
+    width: 86px;
+    height: 40px;
+  }
+  .app-header-section .brand .fitty-logo-window img,
+  .brand .fitty-logo-window img {
+    width: 86px;
+    height: 86px;
+    top: -25px;
+  }
 }

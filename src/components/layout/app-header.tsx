@@ -32,11 +32,17 @@ export function AppHeader({
       <Link
         href="/home"
         className="brand"
-        aria-label={`HERCULES — ${translate(language, "Volver al inicio", "Go home")}`}
+        aria-label={`FITTY — ${translate(language, "Volver al inicio", "Go home")}`}
       >
-        <img src="/assets/hercules-logo-v1.jpg" alt="" width={44} height={44} />
-        <span>
-          <strong>HERCULES</strong>
+        <span className="fitty-brand">
+          <span className="fitty-logo-window">
+            <img
+              src="/assets/fitty-logo.png"
+              alt="FITTY"
+              width={1254}
+              height={1254}
+            />
+          </span>
           <small>GYM TRACKER</small>
         </span>
       </Link>

@@ -577,7 +577,7 @@ export function RoutinesHome() {
             variant="secondary"
             onClick={() => {
               void navigator
-                .share({ url: share, title: "HERCULES" })
+                .share({ url: share, title: "FITTY" })
                 .catch(() => {});
             }}
           >

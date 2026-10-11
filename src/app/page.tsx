@@ -8,7 +8,7 @@ export default function WelcomePage() {
       <AppHeader />
       <main className="hero-panel mt-10">
         <span className="eyebrow">Tu entrenamiento, tu camino</span>
-        <h1>Bienvenido a HERCULES</h1>
+        <h1>Bienvenido a FITTY</h1>
         <p>
           Creá tu cuenta, organizá tus rutinas y seguí tu progreso. Tus datos
           quedan vinculados a tu cuenta para usarlos en otros dispositivos.

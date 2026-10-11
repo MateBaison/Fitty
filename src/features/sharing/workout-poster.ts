@@ -6,7 +6,7 @@ export async function workoutPoster(
   session: Session,
 ): Promise<Blob> {
   const logo = new Image();
-  logo.src = "/assets/hercules-logo-v1.jpg";
+  logo.src = "/assets/fitty-logo.png";
   await logo.decode();
   const canvas = document.createElement("canvas");
   canvas.width = 1080;
@@ -52,7 +52,7 @@ export async function workoutPoster(
     context.fill();
   };
   context.drawImage(logo, 76, 74, 96, 96);
-  text("HERCULES", 196, 135, 42);
+  text("FITTY", 196, 135, 42);
   text("MI ENTRENAMIENTO", 76, 235, 28, "#ff8a4c");
   fit(session.day, 76, 340, 928, 86);
   fit(session.routine, 76, 405, 928, 37);
@@ -107,7 +107,7 @@ export async function workoutPoster(
     );
   });
   context.drawImage(logo, 76, 1829, 48, 48);
-  text("HERCULES", 136, 1865, 30);
+  text("FITTY", 136, 1865, 30);
   text("Mi progreso, a mi ritmo.", 340, 1865, 26, "#a7b0c1");
   return await new Promise<Blob>((accept, reject) =>
     canvas.toBlob(
@@ -126,7 +126,7 @@ export async function shareWorkoutPoster(
       type: "image/png",
     });
   if (navigator.share && navigator.canShare?.({ files: [file] })) {
-    await navigator.share({ files: [file], title: "HERCULES" });
+    await navigator.share({ files: [file], title: "FITTY" });
     return;
   }
   const url = URL.createObjectURL(blob),

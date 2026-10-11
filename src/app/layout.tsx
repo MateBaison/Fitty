@@ -3,11 +3,11 @@ import "./globals.css";
 import { AuthEntry } from "@/features/auth/auth-entry";
 
 export const metadata: Metadata = {
-  title: { default: "HERCULES · Entrenamiento", template: "%s · HERCULES" },
+  title: { default: "FITTY · Entrenamiento", template: "%s · FITTY" },
   description: "Tu entrenamiento, tus rutinas y tu progreso.",
   icons: {
-    icon: "/assets/hercules-logo-v1.jpg",
-    apple: "/assets/hercules-logo-v1.jpg",
+    icon: "/assets/fitty-logo.png",
+    apple: "/assets/fitty-logo.png",
   },
 };
 
