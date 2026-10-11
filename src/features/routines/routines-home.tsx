@@ -51,6 +51,10 @@ export function RoutinesHome() {
       snapshot.routines.find((routine) => routine.id === snapshot.selected) ??
       snapshot.routines[0],
     workout = snapshot.workout;
+  const [removingDay, setRemovingDay] = useState<{
+    rid: string;
+    did?: string;
+  } | null>(null);
   const [deletingRoutine, setDeletingRoutine] = useState<string | null>(null);
   const [pendingStart, setPendingStart] = useState<{
     rid: string;
@@ -93,14 +97,85 @@ export function RoutinesHome() {
   return (
     <>
       <AppDialog
+        open={removingDay !== null}
+        onClose={() => setRemovingDay(null)}
+        title={t("Quitar día", "Remove day")}
+      >
+        {removingDay?.did ? (
+          <div className="routine-delete-confirmation">
+            <strong>
+              {
+                snapshot.routines
+                  .find((routine) => routine.id === removingDay.rid)
+                  ?.days.find((day) => day.id === removingDay.did)?.name
+              }
+            </strong>
+            <p>{t("¿Quitar este día?", "Remove this day?")}</p>
+            <p className="routine-delete-disclaimer">
+              {t(
+                "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.",
+                "History is preserved. Any workout in progress for this day will be cancelled.",
+              )}
+            </p>
+            <div className="routine-delete-confirmation-actions">
+              <Button variant="secondary" onClick={() => setRemovingDay(null)}>
+                {t("Cancelar", "Cancel")}
+              </Button>
+              <Button
+                variant="destructive-solid"
+                onClick={() => {
+                  if (
+                    change((draft) => {
+                      const routine = draft.routines.find(
+                        (item) => item.id === removingDay.rid,
+                      );
+                      if (routine)
+                        routine.days = routine.days.filter(
+                          (day) => day.id !== removingDay.did,
+                        );
+                      if (
+                        draft.workout?.rid === removingDay.rid &&
+                        draft.workout.did === removingDay.did
+                      )
+                        draft.workout = null;
+                    })
+                  )
+                    setRemovingDay(null);
+                }}
+              >
+                {t("Quitar día", "Remove day")}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          snapshot.routines
+            .find((routine) => routine.id === removingDay?.rid)
+            ?.days.map((day) => (
+              <Button
+                key={day.id}
+                variant="secondary"
+                onClick={() =>
+                  setRemovingDay((previous) =>
+                    previous ? { ...previous, did: day.id } : null,
+                  )
+                }
+              >
+                {day.name}
+              </Button>
+            ))
+        )}
+      </AppDialog>
+      <AppDialog
         open={deletingRoutine !== null}
         onClose={() => setDeletingRoutine(null)}
         title={t("Eliminar rutina", "Delete routine")}
-      >
-        <div className="routine-delete-confirmation">
+        titleAction={
           <span className="routine-delete-confirmation-icon" aria-hidden="true">
             <Trash2 />
           </span>
+        }
+      >
+        <div className="routine-delete-confirmation">
           <strong>
             {
               snapshot.routines.find(
@@ -110,11 +185,24 @@ export function RoutinesHome() {
           </strong>
           <p>
             {t(
-              "¿Eliminar esta rutina? El historial se conserva; su entrenamiento en curso se cancelará.",
-              "Delete this routine? History is preserved; its active workout will be cancelled.",
+              "¿Seguro que querés eliminar esta rutina con",
+              "Are you sure you want to delete this routine with",
+            )}{" "}
+            <b>
+              {snapshot.routines.find(
+                (routine) => routine.id === deletingRoutine,
+              )?.days.length ?? 0}{" "}
+              {t("días", "days")}
+            </b>
+            ?
+          </p>
+          <p className="routine-delete-disclaimer">
+            {t(
+              "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.",
+              "History is preserved. Any workout currently in progress for this routine will be lost.",
             )}
           </p>
-          <div className="flex justify-end gap-3">
+          <div className="routine-delete-confirmation-actions">
             <Button
               variant="secondary"
               onClick={() => setDeletingRoutine(null)}
@@ -301,10 +389,10 @@ export function RoutinesHome() {
                         day.name,
                       )
                     }
-                    aria-label={`${t("Cambiar nombre", "Rename")} ${day.name}`}
+                    aria-label={`${t("Renombrar", "Rename")} ${day.name}`}
                   >
                     <Pencil data-icon="inline-start" />
-                    {t("Cambiar nombre", "Rename")}
+                    {t("Renombrar", "Rename")}
                   </Button>
                   <Button
                     onClick={() => begin(routine.id, day.id)}
@@ -327,25 +415,6 @@ export function RoutinesHome() {
                   >
                     {t("Superseries", "Supersets")}
                   </Button>
-                  <Button
-                    variant="destructive-outline"
-                    onClick={() => {
-                      if (confirm(t("¿Quitar este día?", "Remove this day?")))
-                        change((draft) => {
-                          const target = draft.routines.find(
-                            (item) => item.id === routine.id,
-                          );
-                          if (target)
-                            target.days = target.days.filter(
-                              (item) => item.id !== day.id,
-                            );
-                          if (draft.workout?.did === day.id)
-                            draft.workout = null;
-                        });
-                    }}
-                  >
-                    {t("Quitar día", "Remove day")}
-                  </Button>
                 </div>
                 {!!day.supersets?.length && (
                   <p className="mb-3 text-sm text-orange-300">
@@ -361,13 +430,22 @@ export function RoutinesHome() {
               </SortableDay>
             ))}
           </SortableDays>
-          <Button
-            variant="secondary"
-            className="routine-add-day"
-            onClick={() => openEditor({ type: "day", rid: routine.id })}
-          >
-            {t("Agregar día", "Add day")}
-          </Button>
+          <div className="routine-day-actions">
+            <Button
+              variant="destructive-outline"
+              disabled={!routine.days.length}
+              onClick={() => setRemovingDay({ rid: routine.id })}
+            >
+              {t("Quitar día", "Remove day")}
+            </Button>
+            <Button
+              variant="secondary"
+              className="routine-add-day"
+              onClick={() => openEditor({ type: "day", rid: routine.id })}
+            >
+              {t("Agregar día", "Add day")}
+            </Button>
+          </div>
         </details>
       ))}
       {!snapshot.routines.length && (
@@ -381,22 +459,56 @@ export function RoutinesHome() {
         onClose={() => setQuick(false)}
         title={t("Elegir día para entrenar", "Choose training day")}
       >
-        {snapshot.routines.flatMap((routine) =>
-          routine.days.map((day) => (
-            <Button
-              key={day.id}
-              variant="secondary"
-              disabled={!day.items.length}
-              onClick={() => begin(routine.id, day.id)}
-            >
-              {routine.name} · {day.name}
-            </Button>
-          )),
+        {!snapshot.routines.some(
+          (routine) => routine.id === snapshot.selected,
+        ) && (
+          <p>
+            {t(
+              "Activá una rutina para elegir un día de entrenamiento.",
+              "Activate a routine to choose a training day.",
+            )}
+          </p>
         )}
+        {snapshot.routines
+          .filter((routine) => routine.id === snapshot.selected)
+          .flatMap((routine) =>
+            routine.days.map((day) => (
+              <Button
+                key={day.id}
+                variant="secondary"
+                disabled={!day.items.length}
+                onClick={() => begin(routine.id, day.id)}
+              >
+                {routine.name} · {day.name}
+              </Button>
+            )),
+          )}
       </AppDialog>
       <AppDialog
         open={editor !== null}
         onClose={() => setEditor(null)}
+        compactHeader={editor?.type === "new" && mode === "auto"}
+        titleAction={
+          editor?.type === "new" && mode === "auto" ? (
+            <Button
+              type="button"
+              variant="secondary"
+              className="automatic-select-all"
+              size="sm"
+              onClick={() =>
+                setGroups(
+                  groups.length === muscleGroups.length
+                    ? []
+                    : [...muscleGroups],
+                )
+              }
+            >
+              {groups.length === muscleGroups.length
+                ? t("Deseleccionar todo", "Deselect all")
+                : t("Seleccionar todo", "Select all")}
+            </Button>
+          ) : undefined
+        }
         title={
           editor?.type === "rename-day"
             ? t("Cambiar nombre del día", "Rename workout day")
@@ -493,22 +605,6 @@ export function RoutinesHome() {
             {mode === "auto" ? (
               <>
                 <div className="automatic-muscle-picker">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="automatic-select-all"
-                    onClick={() =>
-                      setGroups(
-                        groups.length === muscleGroups.length
-                          ? []
-                          : [...muscleGroups],
-                      )
-                    }
-                  >
-                    {groups.length === muscleGroups.length
-                      ? t("Deseleccionar todo", "Deselect all")
-                      : t("Seleccionar todo", "Select all")}
-                  </Button>
                   <div className="automatic-muscle-grid">
                     {muscleGroups.map((group) => (
                       <label

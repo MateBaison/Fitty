@@ -50,6 +50,11 @@ export function CalendarPanel() {
     }),
     [extras, setExtras] = useState<Extras>(emptyExtras),
     [picking, setPicking] = useState(false);
+  const [chosenRoutine, setChosenRoutine] = useState("");
+  const [chosenDay, setChosenDay] = useState("");
+  const routineChoice = snapshot.routines.find(
+    (routine) => routine.id === chosenRoutine,
+  );
   const [detailsEdited, setDetailsEdited] = useState(false);
   const year = month.getFullYear(),
     number = month.getMonth(),
@@ -62,6 +67,8 @@ export function CalendarPanel() {
   const edit = (date: string, session?: Session) => {
     setEditing({ id: session?.id ?? null, date });
     setDetailsEdited(false);
+    setChosenRoutine("");
+    setChosenDay("");
     setNames({
       routine: session?.routine ?? "Entrenamiento libre",
       day: session?.day ?? "Día libre",
@@ -104,6 +111,16 @@ export function CalendarPanel() {
       bodyWeightEndKg: session?.bodyWeightEndKg ?? null,
     });
   };
+  const canReplaceEntries = () =>
+    !entries.some((entry) =>
+      entry.sets.some((set) => set.entered || set.done),
+    ) ||
+    confirm(
+      t(
+        "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?",
+        "Changing the selection will replace the values entered in this form. Continue?",
+      ),
+    );
   return (
     <section className="panel calendar-panel">
       <div className="mb-4 flex items-center justify-between gap-2">
@@ -456,21 +473,88 @@ export function CalendarPanel() {
         <div className="form-grid">
           <label>
             {t("Rutina", "Routine")}
-            <Input
-              value={names.routine}
-              onChange={(event) =>
-                setNames({ ...names, routine: event.target.value })
-              }
-            />
+            {editing?.id ? (
+              <Input
+                value={names.routine}
+                onChange={(event) =>
+                  setNames({ ...names, routine: event.target.value })
+                }
+              />
+            ) : (
+              <select
+                value={chosenRoutine}
+                onChange={(event) => {
+                  if (!canReplaceEntries()) return;
+                  const id = event.target.value;
+                  const routine = snapshot.routines.find(
+                    (item) => item.id === id,
+                  );
+                  setChosenRoutine(id);
+                  setChosenDay("");
+                  setEntries([]);
+                  setDetailsEdited(true);
+                  setNames({
+                    routine:
+                      routine?.name ?? t("Entrenamiento libre", "Free workout"),
+                    day: routine ? "" : t("Día libre", "Free day"),
+                  });
+                }}
+              >
+                <option value="">
+                  {t("Entrenamiento libre", "Free workout")}
+                </option>
+                {snapshot.routines.map((routine) => (
+                  <option key={routine.id} value={routine.id}>
+                    {routine.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </label>
           <label>
             {t("Nombre del día", "Day name")}
-            <Input
-              value={names.day}
-              onChange={(event) =>
-                setNames({ ...names, day: event.target.value })
-              }
-            />
+            {!editing?.id && routineChoice ? (
+              <select
+                value={chosenDay}
+                onChange={(event) => {
+                  if (!canReplaceEntries()) return;
+                  const id = event.target.value,
+                    day = routineChoice.days.find((item) => item.id === id);
+                  setChosenDay(id);
+                  setNames({
+                    routine: routineChoice.name,
+                    day: day?.name ?? "",
+                  });
+                  setDetailsEdited(true);
+                  setEntries(
+                    (day?.items ?? []).map((id) => ({
+                      id,
+                      tracking: metricFor(snapshot, id),
+                      note: "",
+                      sets: Array.from({ length: 3 }, () =>
+                        blankSet(metricFor(snapshot, id)),
+                      ),
+                    })),
+                  );
+                }}
+              >
+                <option value="">
+                  {t("Elegir día para entrenar", "Choose training day")}
+                </option>
+                {routineChoice.days.map((day) => (
+                  <option key={day.id} value={day.id}>
+                    {day.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <Input
+                value={names.day}
+                onChange={(event) =>
+                  setNames({ ...names, day: event.target.value })
+                }
+              />
+            )}
           </label>
         </div>
         {entries.map((entry, index) => {
@@ -526,7 +610,10 @@ export function CalendarPanel() {
             if (
               !editing ||
               !validDateKey(editing.date) ||
-              (!editing.id && !entries.length)
+              (!editing.id &&
+                (!entries.length ||
+                  !names.day.trim() ||
+                  (chosenRoutine && !chosenDay)))
             )
               return notify("Elegí una fecha válida y agregá ejercicios.");
             const editValue = editing;

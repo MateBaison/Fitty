@@ -41,7 +41,7 @@ test("custom goals, automatic routines, editable days and independent sharing co
   );
   await custom.locator(".routine-day summary").click();
   await custom
-    .getByRole("button", { name: "Cambiar nombre Custom day", exact: true })
+    .getByRole("button", { name: "Renombrar Custom day", exact: true })
     .click();
   await page
     .getByRole("dialog")
@@ -56,6 +56,23 @@ test("custom goals, automatic routines, editable days and independent sharing co
     .getByRole("button", { name: "Rutina automática", exact: true })
     .click();
   await expect(page.locator(".automatic-muscle-card img")).toHaveCount(8);
+  await expect
+    .poll(() =>
+      page.getByRole("dialog").evaluate((node) => {
+        const elements = [
+          node.querySelector('[data-slot="dialog-title"]'),
+          node.querySelector(".automatic-select-all"),
+          node.querySelector(":scope > button:last-child"),
+        ];
+        const centers = elements.map((element) => {
+          if (!element) throw new Error("Missing header element");
+          const box = element.getBoundingClientRect();
+          return box.y + box.height / 2;
+        });
+        return Math.max(...centers) - Math.min(...centers);
+      }),
+    )
+    .toBeLessThan(3);
   await page
     .getByRole("button", { name: "Seleccionar todo", exact: true })
     .click();
@@ -73,8 +90,14 @@ test("custom goals, automatic routines, editable days and independent sharing co
     animations: "disabled",
     fullPage: true,
   });
-  await page.getByRole("dialog").getByLabel("Piernas", { exact: true }).check();
-  await page.getByRole("dialog").getByLabel("Gemelos", { exact: true }).check();
+  await page
+    .locator(".automatic-muscle-card")
+    .filter({ hasText: "Piernas" })
+    .click();
+  await page
+    .locator(".automatic-muscle-card")
+    .filter({ hasText: "Gemelos" })
+    .click();
   await page
     .getByRole("dialog")
     .getByRole("combobox", { name: "Días por semana", exact: true })

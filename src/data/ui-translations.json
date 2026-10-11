@@ -388,7 +388,16 @@
     "Crear rutina": "Créer une routine",
     "Cambiar nombre del día": "Renommer le jour d’entraînement",
     "Últimas cuatro semanas": "Quatre dernières semaines",
-    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Plus de poids, ou plus de répétitions ou de secondes à charge identique. Échauffements exclus."
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Plus de poids, ou plus de répétitions ou de secondes à charge identique. Échauffements exclus.",
+    "¿Seguro que querés eliminar esta rutina con": "Voulez-vous vraiment supprimer cette routine avec",
+    "días": "jours",
+    "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.": "L’historique est conservé. Tout entraînement en cours de cette routine sera perdu.",
+    "Activá una rutina para elegir un día de entrenamiento.": "Activez une routine pour choisir un jour d’entraînement.",
+    "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?": "Changer la sélection remplacera les valeurs saisies dans ce formulaire. Continuer ?",
+    "Entrenamiento libre": "Entraînement libre",
+    "Día libre": "Jour libre",
+    "Renombrar": "Renommer",
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "L’historique est conservé. Tout entraînement en cours pour ce jour sera annulé."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -779,7 +788,16 @@
     "Crear rutina": "创建训练计划",
     "Cambiar nombre del día": "重命名训练日",
     "Últimas cuatro semanas": "最近四周",
-    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "更大重量，或在相同重量下更多次数或更长时间。不包含热身组。"
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "更大重量，或在相同重量下更多次数或更长时间。不包含热身组。",
+    "¿Seguro que querés eliminar esta rutina con": "确定要删除此训练计划吗？天数：",
+    "días": "天",
+    "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.": "历史记录会保留。此计划正在进行的训练将丢失。",
+    "Activá una rutina para elegir un día de entrenamiento.": "请激活训练计划以选择训练日。",
+    "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?": "更改选择将替换此表单中已输入的数据。继续吗？",
+    "Entrenamiento libre": "自由训练",
+    "Día libre": "自由训练日",
+    "Renombrar": "重命名",
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "历史记录会保留。此训练日正在进行的训练将取消。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1170,7 +1188,16 @@
     "Crear rutina": "रूटीन बनाएँ",
     "Cambiar nombre del día": "प्रशिक्षण दिन का नाम बदलें",
     "Últimas cuatro semanas": "पिछले चार सप्ताह",
-    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "अधिक वजन, या समान वजन पर अधिक दोहराव या सेकंड। वार्म-अप शामिल नहीं है।"
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "अधिक वजन, या समान वजन पर अधिक दोहराव या सेकंड। वार्म-अप शामिल नहीं है।",
+    "¿Seguro que querés eliminar esta rutina con": "क्या आप इस रूटीन को हटाना चाहते हैं जिसमें हैं",
+    "días": "दिन",
+    "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.": "इतिहास सुरक्षित रहेगा। इस रूटीन का चालू प्रशिक्षण खो जाएगा।",
+    "Activá una rutina para elegir un día de entrenamiento.": "प्रशिक्षण दिन चुनने के लिए रूटीन सक्रिय करें।",
+    "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?": "चयन बदलने से इस फ़ॉर्म के दर्ज मान बदल जाएँगे। जारी रखें?",
+    "Entrenamiento libre": "स्वतंत्र प्रशिक्षण",
+    "Día libre": "स्वतंत्र दिन",
+    "Renombrar": "नाम बदलें",
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "इतिहास सुरक्षित रहेगा। इस दिन का चालू प्रशिक्षण रद्द होगा।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1561,7 +1588,16 @@
     "Crear rutina": "إنشاء برنامج",
     "Cambiar nombre del día": "تغيير اسم يوم التدريب",
     "Últimas cuatro semanas": "آخر أربعة أسابيع",
-    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "وزن أكبر، أو تكرارات أو ثوانٍ أكثر بنفس الوزن. لا يشمل الإحماء."
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "وزن أكبر، أو تكرارات أو ثوانٍ أكثر بنفس الوزن. لا يشمل الإحماء.",
+    "¿Seguro que querés eliminar esta rutina con": "هل تريد بالتأكيد حذف هذا البرنامج الذي يحتوي على",
+    "días": "أيام",
+    "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.": "سيُحفظ السجل. سيُفقد أي تدريب جارٍ لهذا البرنامج.",
+    "Activá una rutina para elegir un día de entrenamiento.": "فعّل برنامجًا لاختيار يوم التدريب.",
+    "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?": "سيؤدي تغيير الاختيار إلى استبدال القيم المدخلة في هذا النموذج. هل تريد المتابعة؟",
+    "Entrenamiento libre": "تدريب حر",
+    "Día libre": "يوم حر",
+    "Renombrar": "إعادة التسمية",
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "سيُحفظ السجل. سيُلغى أي تدريب جارٍ لهذا اليوم."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -1952,7 +1988,16 @@
     "Crear rutina": "Routine erstellen",
     "Cambiar nombre del día": "Trainingstag umbenennen",
     "Últimas cuatro semanas": "Letzte vier Wochen",
-    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Mehr Gewicht oder mehr Wiederholungen oder Sekunden bei gleichem Gewicht. Ohne Aufwärmsätze."
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Mehr Gewicht oder mehr Wiederholungen oder Sekunden bei gleichem Gewicht. Ohne Aufwärmsätze.",
+    "¿Seguro que querés eliminar esta rutina con": "Möchtest du diese Routine wirklich löschen mit",
+    "días": "Tagen",
+    "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.": "Der Verlauf bleibt erhalten. Ein laufendes Training dieser Routine geht verloren.",
+    "Activá una rutina para elegir un día de entrenamiento.": "Aktiviere eine Routine, um einen Trainingstag auszuwählen.",
+    "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?": "Die Auswahländerung ersetzt die eingegebenen Werte. Fortfahren?",
+    "Entrenamiento libre": "Freies Training",
+    "Día libre": "Freier Tag",
+    "Renombrar": "Umbenennen",
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "Der Verlauf bleibt erhalten. Ein laufendes Training für diesen Tag wird abgebrochen."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2343,7 +2388,16 @@
     "Crear rutina": "Crea routine",
     "Cambiar nombre del día": "Rinomina giorno di allenamento",
     "Últimas cuatro semanas": "Ultime quattro settimane",
-    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Più peso oppure più ripetizioni o secondi con lo stesso peso. Riscaldamento escluso."
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Più peso oppure più ripetizioni o secondi con lo stesso peso. Riscaldamento escluso.",
+    "¿Seguro que querés eliminar esta rutina con": "Vuoi davvero eliminare questa routine con",
+    "días": "giorni",
+    "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.": "Lo storico viene conservato. Un allenamento in corso di questa routine andrà perso.",
+    "Activá una rutina para elegir un día de entrenamiento.": "Attiva una routine per scegliere un giorno di allenamento.",
+    "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?": "Cambiare selezione sostituirà i valori inseriti. Continuare?",
+    "Entrenamiento libre": "Allenamento libero",
+    "Día libre": "Giorno libero",
+    "Renombrar": "Rinomina",
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "Lo storico viene conservato. Un allenamento in corso per questo giorno sarà annullato."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2734,7 +2788,16 @@
     "Crear rutina": "Criar rotina",
     "Cambiar nombre del día": "Renomear dia de treino",
     "Últimas cuatro semanas": "Últimas quatro semanas",
-    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Mais peso, ou mais repetições ou segundos com o mesmo peso. Sem aquecimentos."
+    "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.": "Mais peso, ou mais repetições ou segundos com o mesmo peso. Sem aquecimentos.",
+    "¿Seguro que querés eliminar esta rutina con": "Tem certeza de que deseja eliminar esta rotina com",
+    "días": "dias",
+    "El historial se conserva. Si hay un entrenamiento en curso de esta rutina, se perderá.": "O histórico é mantido. Um treino em andamento desta rotina será perdido.",
+    "Activá una rutina para elegir un día de entrenamiento.": "Ative uma rotina para escolher um dia de treino.",
+    "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?": "Alterar a seleção substituirá os valores inseridos neste formulário. Continuar?",
+    "Entrenamiento libre": "Treino livre",
+    "Día libre": "Dia livre",
+    "Renombrar": "Renomear",
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "O histórico é mantido. Um treino em andamento deste dia será cancelado."
   },
   "en": {
     "Sexo": "Sex",

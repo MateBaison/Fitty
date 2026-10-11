@@ -56,9 +56,7 @@ test("days reorder without a grip, rename persists and deletion has a cancellabl
     )
     .toEqual(reordered);
   await days.first().locator("summary").first().click();
-  const remove = days
-    .first()
-    .getByRole("button", { name: "Quitar día", exact: true });
+  const remove = card.getByRole("button", { name: "Quitar día", exact: true });
   await expect(remove).toBeVisible();
   const border = await remove.evaluate(
     (node) => getComputedStyle(node).borderTopColor,
@@ -66,7 +64,7 @@ test("days reorder without a grip, rename persists and deletion has a cancellabl
   expect(border).not.toBe("rgba(0, 0, 0, 0)");
   await days
     .first()
-    .getByRole("button", { name: /Cambiar nombre/ })
+    .getByRole("button", { name: /Renombrar/ })
     .click();
   await page
     .getByRole("dialog")
@@ -76,10 +74,40 @@ test("days reorder without a grip, rename persists and deletion has a cancellabl
   await expect(days.first().locator("summary").first()).toContainText(
     "Mi día favorito",
   );
+  await expect(
+    days.locator("button").filter({ hasText: "Quitar día" }),
+  ).toHaveCount(0);
+  await remove.click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Mi día favorito", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "El historial se conserva",
+  );
+  await page.getByRole("button", { name: "Cancelar", exact: true }).click();
+  await expect(days).toHaveCount(3);
+  await remove.click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Mi día favorito", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Quitar día", exact: true })
+    .click();
+  await expect(days).toHaveCount(2);
   await card
     .getByRole("button", { name: "Eliminar rutina", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toContainText("Rutina principal");
+  await expect(page.getByRole("dialog")).toContainText("2 días");
+  expect(
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Eliminar rutina", exact: true })
+      .evaluate((node) => getComputedStyle(node).backgroundColor),
+  ).toBe("rgb(220, 38, 38)");
   await expect(page.getByRole("dialog")).toContainText(
     "El historial se conserva",
   );
