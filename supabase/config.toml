@@ -1,0 +1,3 @@
+[functions.delete-account]
+# Auth is verified with auth.getUser inside the function, supporting current signing keys.
+verify_jwt = false
