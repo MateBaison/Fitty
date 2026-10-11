@@ -411,7 +411,6 @@ export function RoutinesHome() {
                     {t("Superseries", "Supersets")}
                   </Button>
                   <Button
-                    className="ms-auto"
                     onClick={() => begin(routine.id, day.id)}
                     disabled={!!workout}
                   >
