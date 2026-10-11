@@ -8,6 +8,8 @@ const optionalValue = nonnegative.nullable().optional();
 // Tolerant persisted-data readers: never strip metadata or retired exercise IDs.
 export const savedSetSchema = z.looseObject({
   type: z.string().optional(),
+  dropGroup: z.string().optional(),
+  restUsed: z.boolean().optional(),
   kg: optionalValue,
   reps: optionalValue,
   seconds: optionalValue,
@@ -95,6 +97,7 @@ export const settingsSchema = z.looseObject({
   distance: z.enum(["km", "mi"]).optional(),
   language: z.string().optional(),
   theme: z.string().optional(),
+  exerciseMetrics: z.record(z.string(), z.string()).optional(),
   restEnabled: z.boolean().optional(),
   restSeconds: nonnegative.optional(),
   workoutLayout: z.enum(["individual", "list"]).optional(),

@@ -8,10 +8,7 @@ Estas ideas fueron solicitadas para el futuro. No implementarlas hasta que se pi
 
 ## Mejoras para evaluar
 
-- Series descendentes: agrupar los tramos de una misma serie, conservar carga y repeticiones de cada tramo y permitir indicar cuánto se reduce el peso. El tipo actual identifica cada fila, pero no agrupa automáticamente los tramos ni anula el descanso entre ellos.
-- Tipos de serie en historial y edición: mostrar las letras y colores que ya se guardan, permitir cambiar el tipo sin alterar las repeticiones y distinguir calentamientos de series de trabajo en los análisis.
 - Esfuerzo percibido por serie (RPE o repeticiones en reserva) para comparar el esfuerzo además de la carga.
-- Panel de récords personales por ejercicio y métrica. Las series que superan registros ya se resaltan en entrenamiento/calendario; falta reunir los mejores registros en Progreso.
 - Registro breve de molestias por ejercicio para reconocer patrones en el historial, sin diagnósticos automáticos.
 - Exportación de un resumen de progreso que omita fotos, datos de contacto y registros menstruales.
 
@@ -20,3 +17,5 @@ Ya implementado: resumen de la semana con sesiones, días entrenados y duración
 También implementado: selección de semana, mapa GPS con historial de rutas finalizadas y tres ejercicios adicionales con maniquíes masculinos/femeninos. Para evaluar después: recuperación local de un recorrido GPS interrumpido, filtros de precisión para reducir saltos GPS y estadísticas de cardio separadas de las de fuerza.
 
 Acceso por correo público: pendiente por decisión del usuario hasta disponer de SMTP. Apple: pendiente por falta de membresía de desarrollador o exención aplicable; no prometer configuración gratuita sin ese requisito.
+
+Implementado: tramos agrupados de series descendentes con reducción ajustable del 20% o 25%, tipo de serie visible y editable en el calendario, filtro de calentamientos en el historial de progreso, panel de mejores marcas con acceso al entrenamiento de origen, descanso por serie y preferencia de registro por ejercicio.

@@ -1,4 +1,7 @@
 "use client";
+import { recordPanel } from "@/domain/personal-records";
+import { AppDialog } from "@/components/ui/app-dialog";
+import { localizedSetTypes } from "@/data/set-types";
 import { localeFor } from "@/data/translations";
 import { useState } from "react";
 import { useApp } from "@/state/app-provider";
@@ -21,6 +24,12 @@ export function ProgressScreen() {
     [window, setWindow] = useState(4),
     [selected, setSelected] = useState(""),
     [summaryDate, setSummaryDate] = useState(() => new Date());
+  const [recordSession, setRecordSession] = useState<string | null>(null);
+  const [includeWarmups, setIncludeWarmups] = useState(true);
+  const bestRecords = recordPanel(snapshot);
+  const selectedRecordSession = snapshot.sessions.find(
+    (session) => session.id === recordSession,
+  );
   const locale = localeFor(snapshot.settings.language);
   const summary = weeklySummary(snapshot, summaryDate);
   const moveWeek = (offset: number) => {
@@ -30,7 +39,7 @@ export function ProgressScreen() {
   };
   const duration = (minutes: number) =>
     `${Math.floor(Math.round(minutes) / 60)} h ${Math.round(minutes) % 60} min`;
-  const history = exerciseHistories(snapshot),
+  const history = exerciseHistories(snapshot, includeWarmups),
     catalog = catalogFor(snapshot),
     weeks = weeklyData(snapshot, window),
     unit = snapshot.settings.weight ?? "kg",
@@ -46,7 +55,7 @@ export function ProgressScreen() {
       ]),
     );
   const format = (set: RecordSet) =>
-    `${(set.kg * factor).toFixed(1)} ${unit} × ${set.value} ${set.metric === "seconds" ? "seg" : "reps"}`;
+    `${localizedSetTypes(snapshot.settings.language ?? "es").find((type) => type.id === (set.type ?? "normal"))?.letter ?? "N"} · ${(set.kg * factor).toFixed(1)} ${unit} × ${set.value} ${set.metric === "seconds" ? "s" : t("Rep", "Reps")}`;
   const advances = [...history]
     .flatMap(([id, records]) => {
       const last = records.at(-1);
@@ -73,6 +82,118 @@ export function ProgressScreen() {
   )[0];
   return (
     <>
+      <section className="panel">
+        <h2>{t("Récords personales", "Personal records")}</h2>
+        <p className="text-sm text-muted-foreground">
+          {t(
+            "Mejores marcas por ejercicio y carga. No incluye calentamientos.",
+            "Best performances by exercise and load. Warm-ups excluded.",
+          )}
+        </p>
+        <label>
+          {t("Ejercicio", "Exercise")}
+          <select
+            value={selected}
+            onChange={(event) => setSelected(event.target.value)}
+          >
+            <option value="">{t("Todos", "All")}</option>
+            {catalog
+              .filter((exercise) =>
+                bestRecords.some((record) => record.exerciseId === exercise.id),
+              )
+              .map((exercise) => (
+                <option key={exercise.id} value={exercise.id}>
+                  {exercise.name}
+                </option>
+              ))}
+          </select>
+        </label>
+        <div className="record-panel-list">
+          {bestRecords
+            .filter((record) => !selected || record.exerciseId === selected)
+            .map((record, index) => (
+              <Button
+                key={index}
+                variant="secondary"
+                className="record-panel-item"
+                onClick={() => setRecordSession(record.sessionId)}
+              >
+                <strong>
+                  {catalog.find((exercise) => exercise.id === record.exerciseId)
+                    ?.name ?? record.exerciseId}
+                </strong>
+                <span>
+                  {record.kind === "weight"
+                    ? t("Mayor peso", "Highest weight")
+                    : record.metric === "seconds"
+                      ? t("Mayor tiempo", "Longest hold")
+                      : t("Más repeticiones", "Most repetitions")}
+                  : {(record.weight * factor).toFixed(1)} {unit} ×{" "}
+                  {record.quantity}{" "}
+                  {record.metric === "seconds" ? "s" : t("Rep", "Reps")}
+                </span>
+                <small>
+                  {new Date(record.date).toLocaleDateString(locale)}
+                </small>
+              </Button>
+            ))}
+          {!bestRecords.length && (
+            <p>
+              {t(
+                "Todavía no hay marcas registradas.",
+                "No performances recorded yet.",
+              )}
+            </p>
+          )}
+        </div>
+      </section>
+      <AppDialog
+        open={!!selectedRecordSession}
+        onClose={() => setRecordSession(null)}
+        title={t("Entrenamiento del récord", "Record workout")}
+      >
+        {selectedRecordSession && (
+          <>
+            <strong>
+              {selectedRecordSession.day} · {selectedRecordSession.routine}
+            </strong>
+            <p>
+              {new Date(selectedRecordSession.date).toLocaleDateString(locale)}
+            </p>
+            {selectedRecordSession.exercises?.map((exercise, index) => (
+              <div key={index}>
+                <strong>
+                  {catalog.find((item) => item.id === exercise.id)?.name ??
+                    exercise.id}
+                </strong>
+                {exercise.performedSets?.map((set, number) => (
+                  <p key={number}>
+                    {
+                      localizedSetTypes(
+                        snapshot.settings.language ?? "es",
+                      ).find((type) => type.id === (set.type ?? "normal"))?.name
+                    }{" "}
+                    · {set.kg ?? 0} {selectedRecordSession.weightUnit ?? "kg"} ×{" "}
+                    {set.seconds ?? set.reps ?? 0}{" "}
+                    {set.seconds != null ? "s" : t("Rep", "Reps")}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </>
+        )}
+      </AppDialog>
+      <label className="mb-4 flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={includeWarmups}
+          onChange={(event) => setIncludeWarmups(event.target.checked)}
+        />
+        {t(
+          "Incluir calentamientos en el historial de progreso",
+          "Include warm-ups in progress history",
+        )}
+      </label>
       <p className="page-description">
         {t(
           "Cambios reales en tus ejercicios y hábitos de entrenamiento.",

@@ -1,12 +1,14 @@
 "use client";
 import { menstrualCalendarEnabled } from "@/domain/menstrual-calendar";
 import { personalRecords } from "@/domain/personal-records";
+import { localizedSetTypes } from "@/data/set-types";
 import { Trophy } from "lucide-react";
 import { localeFor } from "@/data/translations";
 import { useState } from "react";
 import { useApp } from "@/state/app-provider";
 import {
   buildSession,
+  countSetGroups,
   blankSet,
   color,
   copySessions,
@@ -74,7 +76,7 @@ export function CalendarPanel() {
       session?.exercises?.map((exercise) => ({
         id: exercise.id,
         note: exercise.note ?? "",
-        tracking: exercise.performedSets?.some((set) => set.seconds != null)
+        tracking: exercise.performedSets?.some((set) => Number(set.seconds) > 0)
           ? "seconds"
           : metricFor(snapshot, exercise.id),
         sets: exercise.performedSets?.length
@@ -215,7 +217,7 @@ export function CalendarPanel() {
             className="routine-day calendar-workout"
             style={{ borderLeft: `4px solid ${color(session.color)}` }}
           >
-            <summary>
+            <summary className="calendar-session-summary">
               <strong>{session.day}</strong>
               {workoutRatings.includes(
                 session.rating as (typeof workoutRatings)[number],
@@ -233,26 +235,24 @@ export function CalendarPanel() {
                   }
                 </span>
               )}
-              <div className="calendar-session-summary">
-                <span
-                  className="calendar-session-routine"
-                  title={session.routine}
-                >
-                  {session.routine}
-                </span>
-                <span>
-                  {t("Tiempo", "Time")}:{" "}
-                  {session.duration == null
-                    ? t("Sin registro", "Not recorded")
-                    : `${session.duration >= 60 ? `${Math.floor(session.duration / 60)} h ` : ""}${Math.round(session.duration % 60)} min`}
-                </span>
-                <span>
-                  {t("Volumen", "Volume")}:{" "}
-                  {session.volumeKg == null && session.volume == null
-                    ? t("Sin registro", "Not recorded")
-                    : `${Math.round((session.volumeKg ?? (session.volume ?? 0) / (session.weightUnit === "lb" ? 2.20462 : 1)) * (snapshot.settings.weight === "lb" ? 2.20462 : 1)).toLocaleString(locale)} ${snapshot.settings.weight}`}
-                </span>
-              </div>
+              <span
+                className="calendar-session-routine"
+                title={session.routine}
+              >
+                {session.routine}
+              </span>
+              <span>
+                {t("Tiempo", "Time")}:{" "}
+                {session.duration == null
+                  ? t("Sin registro", "Not recorded")
+                  : `${session.duration >= 60 ? `${Math.floor(session.duration / 60)} h ` : ""}${Math.round(session.duration % 60)} min`}
+              </span>
+              <span>
+                {t("Volumen", "Volume")}:{" "}
+                {session.volumeKg == null && session.volume == null
+                  ? t("Sin registro", "Not recorded")
+                  : `${Math.round((session.volumeKg ?? (session.volume ?? 0) / (session.weightUnit === "lb" ? 2.20462 : 1)) * (snapshot.settings.weight === "lb" ? 2.20462 : 1)).toLocaleString(locale)} ${snapshot.settings.weight}`}
+              </span>
             </summary>
             {session.exercises?.map((exercise, index) => {
               const records = personalRecords(
@@ -273,8 +273,31 @@ export function CalendarPanel() {
                       className={`text-sm text-muted-foreground${records[number]?.length ? " personal-record-history" : ""}`}
                       key={number}
                     >
-                      {t("Serie", "Set")} {number + 1}: {set.kg ?? 0}{" "}
-                      {session.weightUnit ?? "kg"} ×{" "}
+                      <span
+                        className="set-type-letter"
+                        data-set-type={set.type ?? "normal"}
+                        title={
+                          localizedSetTypes(
+                            snapshot.settings.language ?? "es",
+                          ).find((type) => type.id === (set.type ?? "normal"))
+                            ?.name
+                        }
+                      >
+                        {localizedSetTypes(
+                          snapshot.settings.language ?? "es",
+                        ).find((type) => type.id === (set.type ?? "normal"))
+                          ?.letter ?? "N"}
+                      </span>{" "}
+                      {set.dropGroup &&
+                      exercise.performedSets?.[number - 1]?.dropGroup ===
+                        set.dropGroup
+                        ? "↳ "
+                        : ""}
+                      {t("Serie", "Set")}{" "}
+                      {countSetGroups(
+                        (exercise.performedSets ?? []).slice(0, number + 1),
+                      )}
+                      : {set.kg ?? 0} {session.weightUnit ?? "kg"} ×{" "}
                       {set.seconds != null
                         ? `${set.seconds} s`
                         : `${set.reps ?? 0} reps`}
@@ -528,8 +551,20 @@ export function CalendarPanel() {
                     extras,
                     true,
                   );
-                  if (old) Object.assign(old, next, { id: old.id });
-                  else draft.sessions.push(next);
+                  if (old) {
+                    next.exercises = next.exercises?.map((exercise, index) => ({
+                      ...(old.exercises?.[index]?.id === exercise.id
+                        ? old.exercises[index]
+                        : old.exercises?.find(
+                            (item) => item.id === exercise.id,
+                          )),
+                      ...exercise,
+                    }));
+                    Object.assign(old, next, {
+                      id: old.id,
+                      duration: old.duration,
+                    });
+                  } else draft.sessions.push(next);
                 }
                 draft.sessions.sort(
                   (a, b) =>

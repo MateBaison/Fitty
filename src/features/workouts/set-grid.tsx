@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
 import { localizedSetTypes } from "@/data/set-types";
-import { CircleHelp, Trophy } from "lucide-react";
+import { CircleHelp, Trophy, Timer } from "lucide-react";
 import { personalRecords } from "@/domain/personal-records";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { useApp } from "@/state/app-provider";
 import {
   blankSet,
+  addDropSegment,
+  countSetGroups,
   metricFor,
   previousSets,
   type Entry,
@@ -18,13 +20,17 @@ export function SetGrid({
   index,
   started,
   onChange,
+  toolbar,
+  onRest,
 }: {
+  toolbar?: React.ReactNode;
+  onRest?: () => void;
   entry: Entry;
   index: number;
   started: number;
   onChange: (edit: (draft: Entry) => void) => void;
 }) {
-  const { snapshot, t } = useApp(),
+  const { snapshot, change, t } = useApp(),
     metric = metricFor(snapshot, entry.id, entry),
     previous = previousSets(snapshot, entry.id, metric, started);
   const [editingType, setEditingType] = useState<number | null>(null);
@@ -37,6 +43,8 @@ export function SetGrid({
     undefined,
     metric,
   );
+  const [metricOpen, setMetricOpen] = useState(false);
+  const [reduction, setReduction] = useState(20);
   const [showHelp, setShowHelp] = useState(false);
   const types = [
     {
@@ -115,7 +123,17 @@ export function SetGrid({
                   if (number !== null)
                     onChange((draft) => {
                       const set = draft.sets[number];
-                      if (set) set.type = type.id;
+                      if (set) {
+                        const group = set.dropGroup;
+                        for (const current of draft.sets)
+                          if (
+                            current === set ||
+                            (group && current.dropGroup === group)
+                          ) {
+                            current.type = type.id;
+                            if (type.id !== "drop") delete current.dropGroup;
+                          }
+                      }
                     });
                   setEditingType(null);
                 }}
@@ -134,140 +152,236 @@ export function SetGrid({
           ))}
         </div>
       </AppDialog>
-      <label className="block text-sm text-muted-foreground">
-        {t("Cómo registrar", "Tracking metric")}
-        <select
-          value={metric}
-          onChange={(event) => {
-            const value = event.target.value;
-            onChange((draft) => {
-              draft.tracking = value === "seconds" ? "seconds" : "reps";
-            });
-          }}
-        >
-          <option value="reps">{t("Repeticiones", "Repetitions")}</option>
-          <option value="seconds">
-            {t("Tiempo (segundos)", "Time (seconds)")}
-          </option>
-        </select>
-      </label>
-      <div className="set-grid-heading">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        {toolbar}
+        <Button variant="secondary" onClick={() => setMetricOpen(true)}>
+          {t("Registro", "Tracking")}
+        </Button>
+      </div>
+      <AppDialog
+        open={metricOpen}
+        onClose={() => setMetricOpen(false)}
+        title={t("Registro", "Tracking")}
+      >
+        <label>
+          {t("Cómo registrar", "Tracking metric")}
+          <select
+            value={metric}
+            onChange={(event) => {
+              const value =
+                event.target.value === "seconds" ? "seconds" : "reps";
+              if (
+                value !== metric &&
+                entry.sets.some((set) => set.entered || set.done) &&
+                !confirm(
+                  t(
+                    "Cambiar el registro conserva los datos anteriores, pero deberás ingresar los valores en la nueva unidad. ¿Continuar?",
+                    "Changing tracking keeps previous values, but you must enter values in the new unit. Continue?",
+                  ),
+                )
+              )
+                return;
+              onChange((draft) => {
+                draft.tracking = value;
+                draft.sets.forEach((set) => {
+                  set.entered = Number(set[value]) > 0;
+                  set.done = false;
+                });
+              });
+              change((draft) => {
+                draft.settings.exerciseMetrics = {
+                  ...draft.settings.exerciseMetrics,
+                  [entry.id]: value,
+                };
+              });
+              setMetricOpen(false);
+            }}
+          >
+            <option value="reps">{t("Repeticiones", "Repetitions")}</option>
+            <option value="seconds">
+              {t("Tiempo (segundos)", "Time (seconds)")}
+            </option>
+          </select>
+        </label>
+      </AppDialog>
+      <div className="set-grid-heading" data-rest-enabled={!!onRest}>
         <span>{t("Series", "Sets")}</span>
         <span>{t("Anterior", "Previous")}</span>
         <span>{snapshot.settings.weight ?? "kg"}</span>
         <span>
-          {metric === "seconds"
-            ? t("Segundos", "Seconds")
-            : t("Rep", "Reps")}
+          {metric === "seconds" ? t("Segundos", "Seconds") : t("Rep", "Reps")}
         </span>
         <span>{t("Tipo", "Type")}</span>
       </div>
       {entry.sets.map((set, number) => (
-        <div
-          className={`set-grid-row${records[number]?.length ? " personal-record-row" : ""}`}
-          key={number}
-          data-set-row={number}
-        >
-          <b className="set-number">
-            {number + 1}
-            {!!records[number]?.length && (
-              <span title={t("Nuevo récord", "New personal record")}>
-                <Trophy className="size-3.5 text-yellow-300" aria-hidden="true" />
-                <span className="sr-only">
-                  {t("Nuevo récord", "New personal record")}
+        <div key={number}>
+          <div
+            className={`set-grid-row${records[number]?.length ? " personal-record-row" : ""}`}
+            data-rest-enabled={!!onRest}
+            key={number}
+            data-set-row={number}
+          >
+            <b className="set-number">
+              {set.dropGroup &&
+              entry.sets[number - 1]?.dropGroup === set.dropGroup
+                ? "↳"
+                : countSetGroups(entry.sets.slice(0, number + 1))}
+              {onRest &&
+                (!set.dropGroup ||
+                  entry.sets[number + 1]?.dropGroup !== set.dropGroup) && (
+                  <button
+                    type="button"
+                    className="set-rest"
+                    aria-pressed={set.restUsed === true}
+                    aria-label={`${t("Iniciar descanso", "Start rest")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
+                    onClick={() => {
+                      onChange((draft) => {
+                        const current = draft.sets[number];
+                        if (current) current.restUsed = true;
+                      });
+                      onRest();
+                    }}
+                  >
+                    <Timer aria-hidden="true" />
+                  </button>
+                )}
+              {!!records[number]?.length && (
+                <span title={t("Nuevo récord", "New personal record")}>
+                  <Trophy
+                    className="size-3.5 text-yellow-300"
+                    aria-hidden="true"
+                  />
+                  <span className="sr-only">
+                    {t("Nuevo récord", "New personal record")}
+                  </span>
                 </span>
-              </span>
-            )}
-          </b>
-          <button
-            type="button"
-            className="previous-set"
-            disabled={!previous[number]}
-            aria-label={`${t("Usar datos anteriores", "Use previous values")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
-            onClick={() => {
-              const old = previous[number];
-              if (old)
+              )}
+            </b>
+            <button
+              type="button"
+              className="previous-set"
+              disabled={!previous[number]}
+              aria-label={`${t("Usar datos anteriores", "Use previous values")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
+              onClick={() => {
+                const old = previous[number];
+                if (old)
+                  onChange((draft) => {
+                    const current = draft.sets[number];
+                    if (current) {
+                      current.kg = old.kg;
+                      current.type = old.type ?? "normal";
+                      current[metric] = old.value;
+                      current.entered = true;
+                    }
+                  });
+              }}
+            >
+              {previous[number] ? (
+                <>
+                  <strong>
+                    {previous[number]?.kg} {snapshot.settings.weight}
+                  </strong>
+                  <small>
+                    × {previous[number]?.value}{" "}
+                    {metric === "seconds" ? "s" : "reps"}
+                  </small>
+                </>
+              ) : (
+                "—"
+              )}
+            </button>
+            <Input
+              type="number"
+              min={0}
+              step={0.5}
+              inputMode="decimal"
+              aria-label={`${t("Peso", "Weight")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
+              value={set.kg ?? ""}
+              onChange={(event) => {
+                const value =
+                  event.target.value === ""
+                    ? null
+                    : Math.max(0, Number(event.target.value));
                 onChange((draft) => {
                   const current = draft.sets[number];
                   if (current) {
-                    current.kg = old.kg;
-                    current.type = old.type ?? "normal";
-                    current[metric] = old.value;
-                    current.entered = true;
+                    current.kg = value;
+                    current.entered = value !== null || current[metric] != null;
                   }
                 });
-            }}
-          >
-            {previous[number] ? (
-              <>
-                <strong>
-                  {previous[number]?.kg} {snapshot.settings.weight}
-                </strong>
+              }}
+            />
+            <Input
+              type="number"
+              min={0}
+              step={1}
+              inputMode="numeric"
+              aria-label={`${metric === "seconds" ? t("Segundos", "Seconds") : t("Repeticiones", "Repetitions")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
+              value={set[metric] ?? ""}
+              onChange={(event) => {
+                const value =
+                  event.target.value === ""
+                    ? null
+                    : Math.max(0, Math.floor(Number(event.target.value)));
+                onChange((draft) => {
+                  const current = draft.sets[number];
+                  if (current) {
+                    current[metric] = value;
+                    current.entered = value !== null || current.kg != null;
+                  }
+                });
+              }}
+            />
+            <button
+              type="button"
+              className="set-type-letter set-type-control"
+              data-set-type={
+                types.find((type) => type.id === set.type)?.id ?? "normal"
+              }
+              aria-label={`${t("Tipo de serie", "Set type")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
+              onClick={() => {
+                setEditingType(number);
+                setShowHelp(false);
+              }}
+            >
+              {types.find((type) => type.id === set.type)?.letter ?? "N"}
+            </button>
+          </div>
+          {set.type === "drop" &&
+            (!set.dropGroup ||
+              entry.sets[number + 1]?.dropGroup !== set.dropGroup) && (
+              <div className="drop-segment-controls">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() =>
+                    onChange((draft) =>
+                      addDropSegment(draft, number, metric, reduction),
+                    )
+                  }
+                >
+                  {t("Bajar peso", "Reduce weight")}
+                </Button>
+                <label>
+                  {t("Reducción", "Reduction")}{" "}
+                  <select
+                    value={reduction}
+                    onChange={(event) =>
+                      setReduction(Number(event.target.value))
+                    }
+                  >
+                    <option value={20}>20%</option>
+                    <option value={25}>25%</option>
+                  </select>
+                </label>
                 <small>
-                  × {previous[number]?.value}{" "}
-                  {metric === "seconds" ? "s" : "reps"}
+                  {t(
+                    "Peso sugerido, ajustable",
+                    "Suggested weight, adjustable",
+                  )}
                 </small>
-              </>
-            ) : (
-              "—"
+              </div>
             )}
-          </button>
-          <Input
-            type="number"
-            min={0}
-            step={0.5}
-            inputMode="decimal"
-            aria-label={`${t("Peso", "Weight")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
-            value={set.kg ?? ""}
-            onChange={(event) => {
-              const value =
-                event.target.value === ""
-                  ? null
-                  : Math.max(0, Number(event.target.value));
-              onChange((draft) => {
-                const current = draft.sets[number];
-                if (current) {
-                  current.kg = value;
-                  current.entered = value !== null || current[metric] != null;
-                }
-              });
-            }}
-          />
-          <Input
-            type="number"
-            min={0}
-            step={1}
-            inputMode="numeric"
-            aria-label={`${metric === "seconds" ? t("Segundos", "Seconds") : t("Repeticiones", "Repetitions")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
-            value={set[metric] ?? ""}
-            onChange={(event) => {
-              const value =
-                event.target.value === ""
-                  ? null
-                  : Math.max(0, Math.floor(Number(event.target.value)));
-              onChange((draft) => {
-                const current = draft.sets[number];
-                if (current) {
-                  current[metric] = value;
-                  current.entered = value !== null || current.kg != null;
-                }
-              });
-            }}
-          />
-          <button
-            type="button"
-            className="set-type-letter set-type-control"
-            data-set-type={
-              types.find((type) => type.id === set.type)?.id ?? "normal"
-            }
-            aria-label={`${t("Tipo de serie", "Set type")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
-            onClick={() => {
-              setEditingType(number);
-              setShowHelp(false);
-            }}
-          >
-            {types.find((type) => type.id === set.type)?.letter ?? "N"}
-          </button>
         </div>
       ))}
       <div className="set-tools my-4 flex justify-between gap-2">

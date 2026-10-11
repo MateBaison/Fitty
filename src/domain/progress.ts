@@ -1,5 +1,5 @@
 import type { Snapshot } from "./schemas/snapshot";
-import { catalogFor } from "./workouts";
+import { catalogFor, countSetGroups } from "./workouts";
 export const groups = [
   "Pectorales",
   "Espalda",
@@ -11,12 +11,13 @@ export const groups = [
   "Gemelos",
 ] as const;
 export type RecordSet = {
+  type?: string;
   kg: number;
   value: number;
   metric: "reps" | "seconds";
 };
 export type History = { date: Date; sets: RecordSet[] };
-export function exerciseHistories(snapshot: Snapshot) {
+export function exerciseHistories(snapshot: Snapshot, includeWarmups = true) {
   const histories = new Map<string, History[]>();
   for (const session of [...snapshot.sessions].sort(
     (a, b) => Date.parse(a.date) - Date.parse(b.date),
@@ -26,11 +27,13 @@ export function exerciseHistories(snapshot: Snapshot) {
     for (const exercise of session.exercises ?? []) {
       const sets = (exercise.performedSets ?? []).flatMap(
         (set): RecordSet[] => {
+          if (!includeWarmups && set.type === "warmup") return [];
           const metric = Number(set.seconds) > 0 ? "seconds" : "reps",
             value = Number(set[metric]);
           return value > 0
             ? [
                 {
+                  ...(set.type ? { type: set.type } : {}),
                   metric,
                   value,
                   kg:
@@ -122,7 +125,9 @@ export function weeklyData(
           if (group && group in counts)
             counts[group] =
               (counts[group] ?? 0) +
-              (exercise.performedSets?.length ?? exercise.sets ?? 0);
+              (exercise.performedSets
+                ? countSetGroups(exercise.performedSets)
+                : (exercise.sets ?? 0));
         }
     }
     return { start, sessions: sessions.length, groups: counts };

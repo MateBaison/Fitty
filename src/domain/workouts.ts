@@ -42,9 +42,19 @@ export function metricFor(
   id: string,
   entry?: Entry,
 ): "reps" | "seconds" {
-  return entry?.tracking === "seconds" ||
-    (entry?.tracking !== "reps" &&
-      findExercise(snapshot, id)?.tracking === "seconds")
+  const explicit = entry?.tracking;
+  if (explicit === "seconds" || explicit === "reps") return explicit;
+  const saved = snapshot.settings.exerciseMetrics?.[id];
+  if (saved === "seconds" || saved === "reps") return saved;
+  const latest = [...snapshot.sessions]
+    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+    .flatMap((session) => session.exercises ?? [])
+    .find((exercise) => exercise.id === id && exercise.performedSets?.length);
+  if (latest)
+    return latest.performedSets?.some((set) => Number(set.seconds) > 0)
+      ? "seconds"
+      : "reps";
+  return findExercise(snapshot, id)?.tracking === "seconds"
     ? "seconds"
     : "reps";
 }
@@ -115,6 +125,7 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
     entries: day.items.map((id) => ({
       id,
       note: "",
+      tracking: metricFor(snapshot, id),
       sets: Array.from({ length: 3 }, () => blankSet(metricFor(snapshot, id))),
       ...(day.supersets?.find((group) => group.includes(id))
         ? {
@@ -177,12 +188,25 @@ export function buildSession(
       .map(
         (
           set,
-        ): { kg: number; reps?: number; seconds?: number; type?: string } => ({
+        ): {
+          kg: number;
+          reps?: number | null;
+          seconds?: number | null;
+          type?: string;
+          dropGroup?: string;
+        } => ({
+          ...set,
           ...(set.type ? { type: set.type } : {}),
+          ...(set.dropGroup ? { dropGroup: set.dropGroup } : {}),
           kg: Number(set.kg) || 0,
           [metric]: Number(set[metric]),
         }),
       );
+    for (const set of performedSets) {
+      const otherMetric = metric === "seconds" ? "reps" : "seconds";
+      if (set[otherMetric] != null) delete set[otherMetric];
+    }
+    const setCount = countSetGroups(performedSets);
     const exerciseVolume =
       metric === "seconds"
         ? 0
@@ -196,14 +220,14 @@ export function buildSession(
       ),
       group = findExercise(snapshot, entry.id)?.group ?? "";
     if (muscleGroupSchema.safeParse(group).success)
-      groupSets[group] = (groupSets[group] ?? 0) + performedSets.length;
+      groupSets[group] = (groupSets[group] ?? 0) + setCount;
     volume += exerciseVolume;
     reps += quantity;
-    sets += performedSets.length;
+    sets += setCount;
     return {
       id: entry.id,
       group,
-      sets: performedSets.length,
+      sets: setCount,
       reps: quantity,
       volume: exerciseVolume,
       performedSets,
@@ -240,4 +264,35 @@ export function copySessions(sessions: Session[], date: string): Session[] {
     bodyWeightStartKg: null,
     bodyWeightEndKg: null,
   }));
+}
+
+export function countSetGroups(sets: SavedSet[]): number {
+  return new Set(
+    sets.map((set, index) =>
+      set.dropGroup ? `group:${set.dropGroup}` : `set:${index}`,
+    ),
+  ).size;
+}
+export function addDropSegment(
+  entry: Entry,
+  index: number,
+  metric: "reps" | "seconds",
+  reduction = 20,
+) {
+  const source = entry.sets[index];
+  if (!source || source.type !== "drop") return;
+  const group = source.dropGroup ?? crypto.randomUUID();
+  source.dropGroup = group;
+  const kg =
+    Math.round(
+      (Number(source.kg) || 0) *
+        (1 - Math.max(20, Math.min(25, reduction)) / 100) *
+        10,
+    ) / 10;
+  entry.sets.splice(index + 1, 0, {
+    ...blankSet(metric),
+    kg,
+    type: "drop",
+    dropGroup: group,
+  });
 }

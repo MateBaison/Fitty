@@ -82,3 +82,52 @@ export function personalRecords(
     return records;
   });
 }
+
+/** Current best performances, separated by exercise, metric and equivalent load. */
+export function recordPanel(snapshot: Snapshot) {
+  const best = new Map<
+    string,
+    {
+      exerciseId: string;
+      kind: string;
+      weight: number;
+      quantity: number;
+      metric: "reps" | "seconds";
+      sessionId: string;
+      date: string;
+    }
+  >();
+  for (const session of [...snapshot.sessions].sort(
+    (a, b) => Date.parse(a.date) - Date.parse(b.date),
+  )) {
+    for (const exercise of session.exercises ?? [])
+      for (const set of exercise.performedSets ?? []) {
+        if (set.type === "warmup") continue;
+        const value = performance(set, session.weightUnit ?? "kg");
+        if (!value) continue;
+        const candidate = {
+          exerciseId: exercise.id,
+          ...value,
+          sessionId: session.id,
+          date: session.date,
+        };
+        const weightKey = `${exercise.id}:${value.metric}:weight`;
+        const oldWeight = best.get(weightKey);
+        if (
+          value.weight > 0 &&
+          (!oldWeight ||
+            value.weight > oldWeight.weight + 0.05 ||
+            (Math.abs(value.weight - oldWeight.weight) <= 0.05 &&
+              value.quantity > oldWeight.quantity))
+        )
+          best.set(weightKey, { ...candidate, kind: "weight" });
+        const key = `${exercise.id}:${value.metric}:${Math.round(value.weight * 10)}`;
+        const old = best.get(key);
+        if (!old || value.quantity > old.quantity)
+          best.set(key, { ...candidate, kind: value.metric });
+      }
+  }
+  return [...best.values()].sort(
+    (a, b) => Date.parse(b.date) - Date.parse(a.date),
+  );
+}

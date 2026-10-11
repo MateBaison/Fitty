@@ -6,6 +6,7 @@ import { Timer } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import {
   buildSession,
+  countSetGroups,
   findExercise,
   type CatalogExercise,
   type Entry,
@@ -74,18 +75,24 @@ export function WorkoutScreen() {
       opened = workout.openExercises?.includes(index) ?? index === 0;
     const content = (
       <>
-        <Button
-          type="button"
-          variant="secondary"
-          className="mb-3"
-          onClick={() => setReplacement(index)}
-        >
-          {t("Reemplazar ejercicio", "Replace exercise")}
-        </Button>
         <SetGrid
           entry={entry}
           index={index}
           started={workout.started}
+          toolbar={
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setReplacement(index)}
+            >
+              {t("Reemplazar ejercicio", "Replace exercise")}
+            </Button>
+          }
+          onRest={
+            enabled
+              ? () => setRestEnd(Date.now() + restSeconds * 1000)
+              : undefined
+          }
           onChange={(edit) => editEntry(index, edit)}
         />
         {individual && (
@@ -161,7 +168,7 @@ export function WorkoutScreen() {
             <strong>{exercise?.name ?? entry.id}</strong>
             <small className="block text-muted-foreground">
               {entry.superset ? `${t("Superserie", "Superset")} · ` : ""}
-              {entry.sets.length} {t("series", "sets")}
+              {countSetGroups(entry.sets)} {t("series", "sets")}
             </small>
           </span>
           <span>⌄</span>
