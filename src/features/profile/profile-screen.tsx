@@ -5,6 +5,7 @@ import { useApp } from "@/state/app-provider";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DeleteAccount } from "./delete-account";
 import { PersonalForm } from "./personal-form";
 import { AccountPanel } from "./account-panel";
 import { readSnapshotJson } from "@/domain/legacy/read-snapshot";
@@ -259,6 +260,7 @@ export function ProfileScreen() {
             {t("Guardar configuración", "Save settings")}
           </Button>
         </form>
+        <DeleteAccount />
       </AppDialog>
     </>
   );

@@ -26,6 +26,7 @@ type AccountContext = {
   change: (edit: (draft: Snapshot) => void) => boolean;
   flush: () => Promise<boolean>;
   retry: () => Promise<void>;
+  disposeDeletedAccount: () => void;
   holdRefresh: () => () => void;
   t: (es: string, en: string) => string;
   notify: (message: string) => void;
@@ -214,6 +215,7 @@ export function AppProvider({
         },
         flush: () => controller.current?.flush() ?? Promise.resolve(false),
         retry: () => controller.current?.start() ?? Promise.resolve(),
+        disposeDeletedAccount: () => controller.current?.dispose(),
         holdRefresh,
         t,
         notify: setNotice,

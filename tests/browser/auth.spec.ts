@@ -220,3 +220,88 @@ test("appearance stays dark and settings no longer offer a theme selector", asyn
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/dark/);
 });
+
+test("account deletion requires acknowledgement, email and exact written confirmation", async ({
+  page,
+}) => {
+  await login(page);
+  await page.goto("/profile");
+  await page
+    .getByRole("button", { name: "Configuración", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Eliminar cuenta", exact: true })
+    .click();
+  const remove = page.getByRole("button", {
+    name: "Eliminar definitivamente",
+    exact: true,
+  });
+  await expect(remove).toBeDisabled();
+  await page.getByLabel("Entiendo que perderé todos mis datos").check();
+  await page
+    .getByLabel("Escribí tu email para confirmar")
+    .fill("test@example.invalid");
+  await page
+    .getByLabel("Escribí ELIMINAR para desbloquear el botón")
+    .fill("eliminar");
+  await expect(remove).toBeDisabled();
+  await page
+    .getByLabel("Escribí ELIMINAR para desbloquear el botón")
+    .fill("ELIMINAR");
+  await expect(remove).toBeEnabled();
+  await remove.click();
+  await expect(page.getByRole("alert")).toContainText("No se pudo eliminar");
+  expect((await page.request.get("/api/account/summary")).status()).toBe(200);
+  await page.getByRole("button", { name: "Cancelar", exact: true }).click();
+  await expect(remove).toHaveCount(0);
+});
+
+test("confirmed mock deletion signs out and removes only this account's local records", async ({
+  page,
+}) => {
+  await page.request.get("http://127.0.0.1:54329/__reset?delete=1");
+  await login(page);
+  await page.goto("/profile");
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "mrgymson-user-11111111-1111-4111-8111-111111111111:test-backup",
+      "private",
+    );
+    localStorage.setItem(
+      "mrgymson-user-22222222-2222-4222-8222-222222222222:test-backup",
+      "other",
+    );
+  });
+  await page
+    .getByRole("button", { name: "Configuración", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Eliminar cuenta", exact: true })
+    .click();
+  await page.getByLabel("Entiendo que perderé todos mis datos").check();
+  await page
+    .getByLabel("Escribí tu email para confirmar")
+    .fill("test@example.invalid");
+  await page
+    .getByLabel("Escribí ELIMINAR para desbloquear el botón")
+    .fill("ELIMINAR");
+  await page
+    .getByRole("button", { name: "Eliminar definitivamente", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/login$/);
+  expect((await page.request.get("/api/account/summary")).status()).toBe(401);
+  expect(
+    await page.evaluate(() =>
+      Object.keys(localStorage).filter((key) =>
+        key.startsWith("mrgymson-user-11111111-1111-4111-8111-111111111111"),
+      ),
+    ),
+  ).toEqual([]);
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem(
+        "mrgymson-user-22222222-2222-4222-8222-222222222222:test-backup",
+      ),
+    ),
+  ).toBe("other");
+});

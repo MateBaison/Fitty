@@ -360,7 +360,15 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Terminez l’activité pour enregistrer le parcours. Gardez l’application visible : le navigateur peut limiter le GPS en arrière-plan.",
     "Apariencia": "Apparence",
     "Modo claro": "Mode clair",
-    "Modo oscuro": "Mode sombre"
+    "Modo oscuro": "Mode sombre",
+    "Eliminar cuenta": "Supprimer le compte",
+    "Se eliminarán permanentemente tu cuenta, rutinas, entrenamientos, fotos y recorridos. Exportá una copia antes si querés conservarlos. Esta acción no se puede revertir.": "Votre compte, routines, entraînements, photos et parcours seront supprimés définitivement. Exportez une sauvegarde pour les conserver. Cette action est irréversible.",
+    "Entiendo que perderé todos mis datos": "Je comprends que toutes mes données seront perdues",
+    "Escribí tu email para confirmar": "Saisissez votre email pour confirmer",
+    "Escribí ELIMINAR para desbloquear el botón": "Saisissez ELIMINAR pour déverrouiller le bouton",
+    "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.": "Impossible de supprimer le compte. Aucune suppression confirmée. Réessayez plus tard.",
+    "Eliminando…": "Suppression…",
+    "Eliminar definitivamente": "Supprimer définitivement"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -723,7 +731,15 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "结束活动以保存路线。请保持应用可见：浏览器可能限制后台 GPS。",
     "Apariencia": "外观",
     "Modo claro": "浅色模式",
-    "Modo oscuro": "深色模式"
+    "Modo oscuro": "深色模式",
+    "Eliminar cuenta": "删除账户",
+    "Se eliminarán permanentemente tu cuenta, rutinas, entrenamientos, fotos y recorridos. Exportá una copia antes si querés conservarlos. Esta acción no se puede revertir.": "您的账户、训练计划、训练记录、照片和路线将被永久删除。如需保留，请先导出备份。此操作无法撤销。",
+    "Entiendo que perderé todos mis datos": "我了解所有数据都将丢失",
+    "Escribí tu email para confirmar": "输入您的电子邮箱以确认",
+    "Escribí ELIMINAR para desbloquear el botón": "输入 ELIMINAR 以解锁按钮",
+    "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.": "无法删除账户。尚未确认任何删除操作。请稍后重试。",
+    "Eliminando…": "正在删除…",
+    "Eliminar definitivamente": "永久删除"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1086,7 +1102,15 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "मार्ग सहेजने के लिए गतिविधि समाप्त करें। ऐप को खुला रखें: ब्राउज़र पृष्ठभूमि में GPS सीमित कर सकता है।",
     "Apariencia": "दिखावट",
     "Modo claro": "हल्का मोड",
-    "Modo oscuro": "डार्क मोड"
+    "Modo oscuro": "डार्क मोड",
+    "Eliminar cuenta": "खाता हटाएँ",
+    "Se eliminarán permanentemente tu cuenta, rutinas, entrenamientos, fotos y recorridos. Exportá una copia antes si querés conservarlos. Esta acción no se puede revertir.": "आपका खाता, दिनचर्या, वर्कआउट, फ़ोटो और मार्ग स्थायी रूप से हटा दिए जाएँगे। इन्हें रखने के लिए पहले बैकअप निर्यात करें। यह कार्रवाई वापस नहीं ली जा सकती।",
+    "Entiendo que perderé todos mis datos": "मैं समझता हूँ कि मेरा सारा डेटा खो जाएगा",
+    "Escribí tu email para confirmar": "पुष्टि के लिए अपना ईमेल लिखें",
+    "Escribí ELIMINAR para desbloquear el botón": "बटन अनलॉक करने के लिए ELIMINAR लिखें",
+    "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.": "खाता हटाया नहीं जा सका। किसी भी हटाने की पुष्टि नहीं हुई। बाद में फिर प्रयास करें।",
+    "Eliminando…": "हटाया जा रहा है…",
+    "Eliminar definitivamente": "स्थायी रूप से हटाएँ"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1449,7 +1473,15 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "أنهِ النشاط لحفظ المسار. أبقِ التطبيق ظاهرًا: قد يحد المتصفح من GPS في الخلفية.",
     "Apariencia": "المظهر",
     "Modo claro": "الوضع الفاتح",
-    "Modo oscuro": "الوضع الداكن"
+    "Modo oscuro": "الوضع الداكن",
+    "Eliminar cuenta": "حذف الحساب",
+    "Se eliminarán permanentemente tu cuenta, rutinas, entrenamientos, fotos y recorridos. Exportá una copia antes si querés conservarlos. Esta acción no se puede revertir.": "سيتم حذف حسابك وروتينك وتمارينك وصورك ومساراتك نهائياً. صدّر نسخة احتياطية أولاً للاحتفاظ بها. لا يمكن التراجع عن هذا الإجراء.",
+    "Entiendo que perderé todos mis datos": "أفهم أنني سأفقد جميع بياناتي",
+    "Escribí tu email para confirmar": "اكتب بريدك الإلكتروني للتأكيد",
+    "Escribí ELIMINAR para desbloquear el botón": "اكتب ELIMINAR لتفعيل الزر",
+    "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.": "تعذر حذف الحساب. لم يتم تأكيد أي حذف. حاول لاحقاً.",
+    "Eliminando…": "جارٍ الحذف…",
+    "Eliminar definitivamente": "الحذف نهائياً"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -1812,7 +1844,15 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Beende die Aktivität, um die Route zu speichern. Lass die App sichtbar: Der Browser kann GPS im Hintergrund einschränken.",
     "Apariencia": "Darstellung",
     "Modo claro": "Heller Modus",
-    "Modo oscuro": "Dunkler Modus"
+    "Modo oscuro": "Dunkler Modus",
+    "Eliminar cuenta": "Konto löschen",
+    "Se eliminarán permanentemente tu cuenta, rutinas, entrenamientos, fotos y recorridos. Exportá una copia antes si querés conservarlos. Esta acción no se puede revertir.": "Konto, Routinen, Trainings, Fotos und Strecken werden dauerhaft gelöscht. Exportiere vorher eine Sicherung, um sie zu behalten. Dies kann nicht rückgängig gemacht werden.",
+    "Entiendo que perderé todos mis datos": "Ich verstehe, dass alle meine Daten verloren gehen",
+    "Escribí tu email para confirmar": "Gib zur Bestätigung deine E-Mail ein",
+    "Escribí ELIMINAR para desbloquear el botón": "Gib ELIMINAR ein, um die Schaltfläche freizuschalten",
+    "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.": "Das Konto konnte nicht gelöscht werden. Keine Löschung bestätigt. Versuche es später erneut.",
+    "Eliminando…": "Wird gelöscht…",
+    "Eliminar definitivamente": "Dauerhaft löschen"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2175,7 +2215,15 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Termina l’attività per salvare il percorso. Mantieni visibile l’app: il browser può limitare il GPS in background.",
     "Apariencia": "Aspetto",
     "Modo claro": "Modalità chiara",
-    "Modo oscuro": "Modalità scura"
+    "Modo oscuro": "Modalità scura",
+    "Eliminar cuenta": "Elimina account",
+    "Se eliminarán permanentemente tu cuenta, rutinas, entrenamientos, fotos y recorridos. Exportá una copia antes si querés conservarlos. Esta acción no se puede revertir.": "Account, routine, allenamenti, foto e percorsi saranno eliminati definitivamente. Esporta prima una copia per conservarli. Questa azione è irreversibile.",
+    "Entiendo que perderé todos mis datos": "Comprendo che perderò tutti i miei dati",
+    "Escribí tu email para confirmar": "Scrivi la tua email per confermare",
+    "Escribí ELIMINAR para desbloquear el botón": "Scrivi ELIMINAR per sbloccare il pulsante",
+    "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.": "Impossibile eliminare l’account. Nessuna eliminazione confermata. Riprova più tardi.",
+    "Eliminando…": "Eliminazione…",
+    "Eliminar definitivamente": "Elimina definitivamente"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2538,7 +2586,15 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Finalize a atividade para salvar o percurso. Mantenha o app visível: o navegador pode limitar o GPS em segundo plano.",
     "Apariencia": "Aparência",
     "Modo claro": "Modo claro",
-    "Modo oscuro": "Modo escuro"
+    "Modo oscuro": "Modo escuro",
+    "Eliminar cuenta": "Excluir conta",
+    "Se eliminarán permanentemente tu cuenta, rutinas, entrenamientos, fotos y recorridos. Exportá una copia antes si querés conservarlos. Esta acción no se puede revertir.": "Sua conta, rotinas, treinos, fotos e percursos serão excluídos permanentemente. Exporte uma cópia antes para conservá-los. Esta ação não pode ser revertida.",
+    "Entiendo que perderé todos mis datos": "Entendo que perderei todos os meus dados",
+    "Escribí tu email para confirmar": "Digite seu email para confirmar",
+    "Escribí ELIMINAR para desbloquear el botón": "Digite ELIMINAR para desbloquear o botão",
+    "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.": "Não foi possível excluir a conta. Nenhuma exclusão foi confirmada. Tente novamente mais tarde.",
+    "Eliminando…": "Excluindo…",
+    "Eliminar definitivamente": "Excluir definitivamente"
   },
   "en": {
     "Sexo": "Sex",

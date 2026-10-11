@@ -64,3 +64,29 @@ export async function signOut() {
     };
   redirect("/login");
 }
+
+export async function deleteAccount(input: {
+  confirmation: string;
+  email: string;
+  acknowledged: boolean;
+}): Promise<{ deleted?: true; error?: string }> {
+  await assertOrigin();
+  const client = await serverClient();
+  const {
+    data: { user },
+    error,
+  } = await client.auth.getUser();
+  if (error || !user?.email) return { error: "session" };
+  if (
+    input.confirmation !== "ELIMINAR" ||
+    input.email !== user.email ||
+    input.acknowledged !== true
+  )
+    return { error: "confirmation" };
+  const result = await client.functions.invoke("delete-account", {
+    body: input,
+  });
+  if (result.error || result.data?.deleted !== true)
+    return { error: "unavailable" };
+  return { deleted: true };
+}

@@ -9,6 +9,7 @@ const ids = [
 const records = new Map<string, unknown>(),
   tokens = new Map<string, string>();
 const writes: string[] = [];
+let allowDeletion = false;
 const revisions = new Map<string, string>();
 function user(id: string) {
   return {
@@ -82,6 +83,7 @@ const server = createServer(async (request, response) => {
   }
   if (url.pathname === "/__reset") {
     reset(url.searchParams.has("new"));
+    allowDeletion = url.searchParams.has("delete");
     send({ ok: true });
     return;
   }
@@ -110,6 +112,28 @@ const server = createServer(async (request, response) => {
   }
   const auth = request.headers.authorization?.replace(/^Bearer /, ""),
     owner = auth ? tokens.get(auth) : undefined;
+  if (url.pathname === "/functions/v1/delete-account") {
+    const input = z
+      .object({
+        confirmation: z.literal("ELIMINAR"),
+        email: z.string(),
+        acknowledged: z.literal(true),
+      })
+      .safeParse(raw);
+    if (!allowDeletion) {
+      send({ error: "unavailable" }, 503);
+      return;
+    }
+    if (!owner || !input.success || input.data.email !== user(owner).email) {
+      send({ error: "confirmation" }, 403);
+      return;
+    }
+    records.delete(owner);
+    revisions.delete(owner);
+    for (const [token, id] of tokens) if (id === owner) tokens.delete(token);
+    send({ deleted: true });
+    return;
+  }
   if (url.pathname === "/auth/v1/otp") {
     send({});
     return;
