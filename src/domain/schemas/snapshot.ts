@@ -94,6 +94,7 @@ export const settingsSchema = z.looseObject({
   height: z.enum(["cm", "ft"]).optional(),
   distance: z.enum(["km", "mi"]).optional(),
   language: z.string().optional(),
+  theme: z.string().optional(),
   restEnabled: z.boolean().optional(),
   restSeconds: nonnegative.optional(),
   workoutLayout: z.enum(["individual", "list"]).optional(),

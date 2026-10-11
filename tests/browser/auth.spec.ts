@@ -205,3 +205,28 @@ test("header sign-out preserves unsynced edits and requires a second confirmatio
     ),
   ).toBe("Pending local profile");
 });
+
+test("account appearance changes immediately and persists after reload", async ({
+  page,
+}) => {
+  await login(page);
+  await page.goto("/profile");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await page
+    .getByRole("button", { name: "Configuración", exact: true })
+    .click();
+  await page.getByLabel("Apariencia").selectOption("light");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await page.getByRole("button", { name: "Guardar configuración" }).click();
+  await expect(page.locator('[data-sync-status="synced"]')).toBeAttached();
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page
+    .getByRole("button", { name: "Configuración", exact: true })
+    .click();
+  await expect(page.getByLabel("Apariencia")).toHaveValue("light");
+  await page.getByLabel("Apariencia").selectOption("dark");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator("html")).toHaveClass(/dark/);
+});

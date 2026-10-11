@@ -111,6 +111,19 @@ export function AppProvider({
     document.documentElement.dir =
       view.snapshot.settings.language === "ar" ? "rtl" : "ltr";
   }, [view.snapshot?.settings.language]);
+  useEffect(() => {
+    const root = document.documentElement;
+    const theme = view.snapshot?.settings.theme === "light" ? "light" : "dark";
+    root.dataset.theme = theme;
+    root.classList.toggle("dark", theme === "dark");
+    const color = document.querySelector('meta[name="theme-color"]');
+    color?.setAttribute("content", theme === "light" ? "#f4f6fa" : "#090b10");
+    return () => {
+      delete root.dataset.theme;
+      root.classList.add("dark");
+      color?.setAttribute("content", "#090b10");
+    };
+  }, [view.snapshot?.settings.theme]);
   const t = (es: string, en: string) =>
     translate(
       view.snapshot?.settings.language ?? controller.current?.language ?? "es",

@@ -357,7 +357,10 @@
     "Recorridos guardados": "Parcours enregistrés",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "Terminez une activité GPS pour enregistrer son parcours ici.",
     "Recorrido guardado": "Parcours enregistré",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Terminez l’activité pour enregistrer le parcours. Gardez l’application visible : le navigateur peut limiter le GPS en arrière-plan."
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Terminez l’activité pour enregistrer le parcours. Gardez l’application visible : le navigateur peut limiter le GPS en arrière-plan.",
+    "Apariencia": "Apparence",
+    "Modo claro": "Mode clair",
+    "Modo oscuro": "Mode sombre"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -717,7 +720,10 @@
     "Recorridos guardados": "已保存路线",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "结束 GPS 活动后，路线将保存在这里。",
     "Recorrido guardado": "已保存路线",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "结束活动以保存路线。请保持应用可见：浏览器可能限制后台 GPS。"
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "结束活动以保存路线。请保持应用可见：浏览器可能限制后台 GPS。",
+    "Apariencia": "外观",
+    "Modo claro": "浅色模式",
+    "Modo oscuro": "深色模式"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1077,7 +1083,10 @@
     "Recorridos guardados": "सहेजे गए मार्ग",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "GPS गतिविधि समाप्त करने पर उसका मार्ग यहाँ सहेजा जाएगा।",
     "Recorrido guardado": "सहेजा गया मार्ग",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "मार्ग सहेजने के लिए गतिविधि समाप्त करें। ऐप को खुला रखें: ब्राउज़र पृष्ठभूमि में GPS सीमित कर सकता है।"
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "मार्ग सहेजने के लिए गतिविधि समाप्त करें। ऐप को खुला रखें: ब्राउज़र पृष्ठभूमि में GPS सीमित कर सकता है।",
+    "Apariencia": "दिखावट",
+    "Modo claro": "हल्का मोड",
+    "Modo oscuro": "डार्क मोड"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1437,7 +1446,10 @@
     "Recorridos guardados": "المسارات المحفوظة",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "أنهِ نشاط GPS لحفظ مساره هنا.",
     "Recorrido guardado": "مسار محفوظ",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "أنهِ النشاط لحفظ المسار. أبقِ التطبيق ظاهرًا: قد يحد المتصفح من GPS في الخلفية."
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "أنهِ النشاط لحفظ المسار. أبقِ التطبيق ظاهرًا: قد يحد المتصفح من GPS في الخلفية.",
+    "Apariencia": "المظهر",
+    "Modo claro": "الوضع الفاتح",
+    "Modo oscuro": "الوضع الداكن"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -1797,7 +1809,10 @@
     "Recorridos guardados": "Gespeicherte Routen",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "Beende eine GPS-Aktivität, um ihre Route hier zu speichern.",
     "Recorrido guardado": "Gespeicherte Route",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Beende die Aktivität, um die Route zu speichern. Lass die App sichtbar: Der Browser kann GPS im Hintergrund einschränken."
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Beende die Aktivität, um die Route zu speichern. Lass die App sichtbar: Der Browser kann GPS im Hintergrund einschränken.",
+    "Apariencia": "Darstellung",
+    "Modo claro": "Heller Modus",
+    "Modo oscuro": "Dunkler Modus"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2157,7 +2172,10 @@
     "Recorridos guardados": "Percorsi salvati",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "Termina un’attività GPS per salvarne qui il percorso.",
     "Recorrido guardado": "Percorso salvato",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Termina l’attività per salvare il percorso. Mantieni visibile l’app: il browser può limitare il GPS in background."
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Termina l’attività per salvare il percorso. Mantieni visibile l’app: il browser può limitare il GPS in background.",
+    "Apariencia": "Aspetto",
+    "Modo claro": "Modalità chiara",
+    "Modo oscuro": "Modalità scura"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2517,7 +2535,10 @@
     "Recorridos guardados": "Percursos salvos",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "Finalize uma atividade com GPS para salvar o percurso aqui.",
     "Recorrido guardado": "Percurso salvo",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Finalize a atividade para salvar o percurso. Mantenha o app visível: o navegador pode limitar o GPS em segundo plano."
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Finalize a atividade para salvar o percurso. Mantenha o app visível: o navegador pode limitar o GPS em segundo plano.",
+    "Apariencia": "Aparência",
+    "Modo claro": "Modo claro",
+    "Modo oscuro": "Modo escuro"
   },
   "en": {
     "Sexo": "Sex",

@@ -482,7 +482,7 @@ function Octagon({ counts }: { counts: Record<string, number> }) {
           key={level}
           points={groups.map((_, index) => point(index, level)).join(" ")}
           fill="none"
-          stroke="#363d4d"
+          stroke="var(--border)"
         />
       ))}
       <polygon
@@ -502,7 +502,7 @@ function Octagon({ counts }: { counts: Record<string, number> }) {
             y={170 + Math.sin(angle) * 142}
             textAnchor="middle"
             dominantBaseline="middle"
-            fill="#b9c3d6"
+            fill="var(--muted-foreground)"
             fontSize={12}
           >
             {t(group, group)}
@@ -531,10 +531,10 @@ function Trend({ values, label }: { values: number[]; label: string }) {
         role="img"
         aria-label={`${label}: ${values.join(", ")}`}
       >
-        <text x={0} y={20} fill="#b9c3d6">
+        <text x={0} y={20} fill="var(--muted-foreground)">
           {high.toFixed(1)}
         </text>
-        <text x={0} y={170} fill="#b9c3d6">
+        <text x={0} y={170} fill="var(--muted-foreground)">
           {low.toFixed(1)}
         </text>
         <polyline
