@@ -225,22 +225,6 @@ export function ProfileScreen() {
           }}
         >
           <label className="block">
-            {t("Apariencia", "Appearance")}
-            <select
-              value={snapshot.settings.theme === "light" ? "light" : "dark"}
-              onChange={(event) => {
-                const theme =
-                  event.currentTarget.value === "light" ? "light" : "dark";
-                change((draft) => {
-                  draft.settings.theme = theme;
-                });
-              }}
-            >
-              <option value="light">{t("Modo claro", "Light mode")}</option>
-              <option value="dark">{t("Modo oscuro", "Dark mode")}</option>
-            </select>
-          </label>
-          <label className="block">
             {t("Peso", "Weight")}
             <select name="weight" defaultValue={snapshot.settings.weight}>
               <option value="kg">kg</option>
