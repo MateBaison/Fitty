@@ -380,7 +380,7 @@ export function RoutinesHome() {
                 }
               >
                 <SortableExercises rid={routine.id} did={day.id} />
-                <div className="my-3 flex flex-wrap justify-end gap-2">
+                <div className="my-3 flex flex-wrap justify-center gap-2">
                   <Button
                     variant="secondary"
                     onClick={() =>
