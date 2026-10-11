@@ -58,10 +58,13 @@ test("days reorder without a grip, rename persists and deletion has a cancellabl
   await days.first().locator("summary").first().click();
   const remove = card.getByRole("button", { name: "Quitar día", exact: true });
   await expect(remove).toBeVisible();
-  const border = await remove.evaluate(
-    (node) => getComputedStyle(node).borderTopColor,
+  const background = await remove.evaluate(
+    (node) => getComputedStyle(node).backgroundColor,
   );
-  expect(border).not.toBe("rgba(0, 0, 0, 0)");
+  expect(background).toBe("rgb(220, 38, 38)");
+  expect(await remove.evaluate((node) => getComputedStyle(node).color)).toBe(
+    "rgb(255, 255, 255)",
+  );
   await days
     .first()
     .getByRole("button", { name: /Renombrar/ })

@@ -394,12 +394,7 @@ export function RoutinesHome() {
                     <Pencil data-icon="inline-start" />
                     {t("Renombrar", "Rename")}
                   </Button>
-                  <Button
-                    onClick={() => begin(routine.id, day.id)}
-                    disabled={!!workout}
-                  >
-                    {t("Empezar", "Start")}
-                  </Button>
+
                   <Button
                     variant="secondary"
                     onClick={() => setPicker({ rid: routine.id, did: day.id })}
@@ -414,6 +409,13 @@ export function RoutinesHome() {
                     }}
                   >
                     {t("Superseries", "Supersets")}
+                  </Button>
+                  <Button
+                    className="ms-auto"
+                    onClick={() => begin(routine.id, day.id)}
+                    disabled={!!workout}
+                  >
+                    {t("Empezar", "Start")}
                   </Button>
                 </div>
                 {!!day.supersets?.length && (
@@ -432,7 +434,7 @@ export function RoutinesHome() {
           </SortableDays>
           <div className="routine-day-actions">
             <Button
-              variant="destructive-outline"
+              variant="destructive-solid"
               disabled={!routine.days.length}
               onClick={() => setRemovingDay({ rid: routine.id })}
             >
