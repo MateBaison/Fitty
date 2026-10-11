@@ -269,24 +269,24 @@
   --card-foreground: #f5f7fb;
   --popover: #12151c;
   --popover-foreground: #f5f7fb;
-  --primary: #ff5538;
-  --primary-foreground: #ffffff;
+  --primary: #69b9e7;
+  --primary-foreground: #082b43;
   --secondary: #191d26;
   --secondary-foreground: #f5f7fb;
   --muted: #191d26;
   --muted-foreground: #99a1b2;
-  --accent: #ff553818;
-  --accent-foreground: #ff8a4c;
+  --accent: #69b9e724;
+  --accent-foreground: #8ed2f5;
   --border: #272d39;
   --input: #272d39;
-  --ring: #ff8a4c;
+  --ring: #69b9e7;
   --radius: 1.25rem;
 }
 body {
   min-height: 100dvh;
   margin: 0;
   background:
-    radial-gradient(circle at 90% -5%, #492218 0, transparent 28rem),
+    radial-gradient(circle at 90% -5%, #153f5a 0, transparent 28rem),
     var(--background);
 }
 button,
@@ -433,21 +433,21 @@ main > h1 {
   color: var(--muted-foreground);
 }
 .bottom-nav a[aria-current="page"] {
-  background: #ff553818;
+  background: #69b9e724;
   color: white;
 }
 .migration-notice {
-  border: 1px solid #3a2c29;
-  background: #241915;
-  color: #ffb28d;
+  border: 1px solid #29495b;
+  background: #152b3a;
+  color: #a9ddfa;
   border-radius: 14px;
   padding: 10px 14px;
   font-size: 0.8rem;
   margin-bottom: 18px;
 }
 .hero-panel {
-  border: 1px solid #3a2c29;
-  background: linear-gradient(145deg, #241915, #11151c 66%);
+  border: 1px solid #29495b;
+  background: linear-gradient(145deg, #152b3a, #11151c 66%);
   border-radius: 28px;
   padding: 24px;
 }
@@ -462,7 +462,7 @@ main > h1 {
   margin-bottom: 20px;
 }
 .eyebrow {
-  color: #ff8a4c;
+  color: var(--accent-foreground);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.72rem;
@@ -522,7 +522,7 @@ main > h1 {
 }
 .muscle-chips button[aria-pressed="true"] {
   background: var(--primary);
-  color: white;
+  color: var(--primary-foreground);
 }
 .muscle-summary {
   display: grid;
@@ -580,7 +580,7 @@ main > h1 {
   padding: 8px;
 }
 .equipment-menu button[aria-pressed="true"] {
-  color: #ff8a4c;
+  color: var(--accent-foreground);
   background: var(--accent);
 }
 .skip-link {
@@ -697,7 +697,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 label input[type="checkbox"] {
   width: 22px;
   height: 22px;
-  accent-color: #ff5538;
+  accent-color: var(--primary);
   flex-shrink: 0;
 }
 .favorite-star {
@@ -815,15 +815,15 @@ label input[type="checkbox"] {
   padding: 10px 18px;
   border-radius: 15px;
   background: var(--primary);
-  color: white;
+  color: var(--primary-foreground);
   font-weight: 750;
 }
 .workout-banner {
   padding: 12px 16px;
   margin: 10px 0 20px;
   border-radius: 18px;
-  border: 1px solid #713c2f;
-  background: linear-gradient(145deg, #3d221b, #1a171a);
+  border: 1px solid #2d607b;
+  background: linear-gradient(145deg, #173a50, #131c26);
 }
 .workout-banner h1 {
   font-size: 1.5rem;
@@ -983,7 +983,7 @@ label input[type="checkbox"] {
   position: relative;
 }
 .calendar-grid button.today {
-  outline: 2px solid #ff8a4c;
+  outline: 2px solid var(--ring);
   outline-offset: 1px;
 }
 .calendar-grid small {
@@ -1018,7 +1018,7 @@ label input[type="checkbox"] {
   height: 88px;
   border-radius: 50%;
   object-fit: cover;
-  background: linear-gradient(135deg, #ff5538, #713424);
+  background: linear-gradient(135deg, #69b9e7, #245675);
   display: grid;
   place-items: center;
   font-size: 2rem;
@@ -1547,15 +1547,15 @@ input[type="range"] {
   --secondary-foreground: #202633;
   --muted: #e9edf4;
   --muted-foreground: #566174;
-  --accent: #fff0e9;
-  --accent-foreground: #a9361e;
+  --accent: #e4f3fc;
+  --accent-foreground: #15587d;
   --border: #ccd3de;
   --input: #ccd3de;
-  --ring: #bd3c24;
+  --ring: #287cab;
 }
 [data-theme="light"] body {
   background:
-    radial-gradient(circle at 90% -5%, #ffe6da 0, transparent 28rem),
+    radial-gradient(circle at 90% -5%, #d5efff 0, transparent 28rem),
     var(--background);
 }
 [data-theme="light"] .bottom-nav a[aria-current="page"] {
@@ -1564,12 +1564,12 @@ input[type="range"] {
 [data-theme="light"] .hero-panel,
 [data-theme="light"] .migration-notice,
 [data-theme="light"] .resume-workout {
-  background: #fff0e9;
-  border-color: #edc3af;
-  color: #853a20;
+  background: #e4f3fc;
+  border-color: #add6eb;
+  color: #20516d;
 }
 [data-theme="light"] .eyebrow {
-  color: #a9361e;
+  color: #15587d;
 }
 [data-theme="light"] input[type="date"]::-webkit-calendar-picker-indicator {
   color-scheme: light;
@@ -1581,8 +1581,8 @@ input[type="range"] {
   color: var(--muted-foreground);
 }
 [data-theme="light"] .workout-banner {
-  background: #fff0e9;
-  border-color: #edc3af;
+  background: #e4f3fc;
+  border-color: #add6eb;
 }
 [data-theme="light"] .result-card {
   background: #e9edf4;
