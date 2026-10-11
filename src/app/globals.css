@@ -1753,3 +1753,25 @@ input[type="range"] {
 .calendar-workout > summary.calendar-session-summary {
   justify-content: flex-start;
 }
+
+.app-header-welcome {
+  background: transparent;
+  isolation: isolate;
+}
+.app-header-welcome::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: -64px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    var(--background) 0%,
+    var(--background) 48%,
+    transparent 100%
+  );
+  z-index: -1;
+  pointer-events: none;
+}

@@ -13,6 +13,8 @@ export function AppHeader({
   language?: string;
 }) {
   const pathname = usePathname();
+  const welcome = pathname === "/";
+  const showDate = !welcome && pathname !== "/login";
   const section = [
     { path: "/home", es: "Inicio", en: "Home" },
     { path: "/library", es: "Biblioteca", en: "Library" },
@@ -22,13 +24,20 @@ export function AppHeader({
   ].find((item) => item.path === pathname);
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
+    if (!showDate) return;
     const update = () => setNow(new Date());
     update();
     const timer = setInterval(update, 30_000);
     return () => clearInterval(timer);
-  }, []);
+  }, [showDate]);
   return (
-    <header className={cn("app-header", section && "app-header-section")}>
+    <header
+      className={cn(
+        "app-header",
+        section && "app-header-section",
+        welcome && "app-header-welcome",
+      )}
+    >
       <Link
         href="/home"
         className="brand"
@@ -47,27 +56,29 @@ export function AppHeader({
         </span>
       </Link>
       <div className="header-actions">
-        <div
-          className="header-date"
-          aria-label={translate(language, "Fecha y hora", "Date and time")}
-        >
-          {now && (
-            <>
-              <time dateTime={now.toISOString()}>
-                {new Intl.DateTimeFormat(localeFor(language), {
-                  day: "numeric",
-                  month: "short",
-                }).format(now)}
-              </time>
-              <span>
-                {new Intl.DateTimeFormat(localeFor(language), {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }).format(now)}
-              </span>
-            </>
-          )}
-        </div>
+        {showDate && (
+          <div
+            className="header-date"
+            aria-label={translate(language, "Fecha y hora", "Date and time")}
+          >
+            {now && (
+              <>
+                <time dateTime={now.toISOString()}>
+                  {new Intl.DateTimeFormat(localeFor(language), {
+                    day: "numeric",
+                    month: "short",
+                  }).format(now)}
+                </time>
+                <span>
+                  {new Intl.DateTimeFormat(localeFor(language), {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).format(now)}
+                </span>
+              </>
+            )}
+          </div>
+        )}
         {accountAction}
       </div>
       {section && (
