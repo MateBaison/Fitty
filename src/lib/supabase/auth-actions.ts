@@ -5,8 +5,10 @@ import { z } from "zod";
 import { publicEnv, trustedOrigin } from "@/lib/env";
 import { serverClient } from "./server";
 async function assertOrigin() {
-  if (!trustedOrigin((await headers()).get("origin"), publicEnv().site))
+  const origin = (await headers()).get("origin");
+  if (!trustedOrigin(origin, publicEnv().site))
     throw new Error("Origen no autorizado. Revisá la URL configurada.");
+  return origin!;
 }
 const emailSchema = z.email().max(254);
 export async function requestCode(email: string): Promise<{ error?: string }> {
@@ -42,12 +44,12 @@ export async function verifyCode(
   return error ? { error: "El código no es válido o venció." } : {};
 }
 export async function googleLogin() {
-  await assertOrigin();
+  const origin = await assertOrigin();
   const client = await serverClient();
   const { data, error } = await client.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: new URL("/auth/callback", publicEnv().site).href,
+      redirectTo: new URL("/auth/callback", origin).href,
       skipBrowserRedirect: true,
     },
   });

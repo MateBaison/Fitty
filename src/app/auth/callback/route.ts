@@ -1,21 +1,22 @@
 import { NextResponse } from "next/server";
 import { serverClient } from "@/lib/supabase/server";
-import { publicEnv, safeNext } from "@/lib/env";
+import { publicEnv, safeNext, trustedOrigin } from "@/lib/env";
 export async function GET(request: Request) {
   const url = new URL(request.url),
     code = url.searchParams.get("code"),
-    env = publicEnv();
+    env = publicEnv(),
+    origin = trustedOrigin(url.origin, env.site) ? url.origin : env.site;
   if (code) {
     const client = await serverClient();
     const { error } = await client.auth.exchangeCodeForSession(code);
     const { data } = await client.auth.getUser();
     if (!error && data.user)
       return NextResponse.redirect(
-        new URL(safeNext(url.searchParams.get("next")), env.site),
+        new URL(safeNext(url.searchParams.get("next")), origin),
         { headers: { "Cache-Control": "private, no-store" } },
       );
   }
-  return NextResponse.redirect(new URL("/login?error=callback", env.site), {
+  return NextResponse.redirect(new URL("/login?error=callback", origin), {
     headers: { "Cache-Control": "private, no-store" },
   });
 }

@@ -55,5 +55,16 @@ export function safeNext(value: string | null): string {
     : "/home";
 }
 export function trustedOrigin(origin: string | null, site: string): boolean {
-  return origin !== null && origin === new URL(site).origin;
+  const configuredOrigin = new URL(site).origin;
+  if (origin === configuredOrigin) return true;
+  // Both domains belong to this production app. Keep old-origin sessions during handoff.
+  const productionOrigins = [
+    "https://fitty.uy",
+    "https://hercules-navy.vercel.app",
+  ];
+  return (
+    productionOrigins.includes(configuredOrigin) &&
+    origin !== null &&
+    productionOrigins.includes(origin)
+  );
 }
