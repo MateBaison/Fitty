@@ -433,8 +433,13 @@ main > h1 {
   color: var(--muted-foreground);
 }
 .bottom-nav a[aria-current="page"] {
-  background: #69b9e724;
-  color: white;
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
+  color: var(--primary);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--primary) 35%, transparent);
+}
+.bottom-nav a[aria-current="page"] svg {
+  stroke-width: 2.5;
 }
 .migration-notice {
   border: 1px solid #29495b;
