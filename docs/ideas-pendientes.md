@@ -4,6 +4,7 @@ Estas ideas fueron solicitadas para el futuro. No implementarlas hasta que se pi
 
 - Agregar una opción de soporte. El correo de la cuenta permanece sin edición desde el perfil; los cambios de correo requerirán soporte.
 - Incorporar una IA a la que se pueda hablar para hacer consultas. Solo idea futura; no añadir controles ni integración todavía.
+- Estimar calorías y macros (proteínas, carbohidratos y grasas) a partir de una foto de la comida tomada con la cámara o subida por la persona. Mostrar que es una estimación y permitir corregir alimentos y porciones antes de registrar los valores. Solo idea futura; no implementar todavía.
 - Incorporar una búsqueda de entrenadores y perfiles profesionales. Mantener la navegación inferior actual de tres destinos (Inicio, Herramientas y Perfil): evaluar convertir el acceso Biblioteca de Inicio en Explorar con pestañas Ejercicios/Entrenadores, y ofrecer creación/gestión del perfil profesional dentro de Perfil. Solo planificación, sin implementar aún.
 
 ## Mejoras para evaluar
