@@ -197,9 +197,6 @@ test("progress renders empty-state analytics without removed time totals", async
     page.getByText("Últimas cuatro semanas", { exact: true }),
   ).toBeVisible();
   await page
-    .getByRole("combobox", { name: "Meta semanal (opcional)", exact: true })
-    .selectOption("3");
-  await page
     .getByRole("combobox", { name: "Período", exact: true })
     .selectOption("8");
   await expect(page.locator("table thead th")).toHaveCount(9);

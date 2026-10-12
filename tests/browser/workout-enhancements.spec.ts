@@ -18,8 +18,9 @@ test("compact workout controls, grouped drops, remembered metric and record sour
     .click();
   await expect(page).toHaveURL(/\/workout$/);
   const first = page.locator('[data-workout-entry="0"]');
-  await first.getByRole("button", { name: "Registro", exact: true }).click();
-  await page.getByRole("dialog").locator("select").selectOption("seconds");
+  await first
+    .getByRole("switch", { name: "Registrar por tiempo", exact: true })
+    .check();
   await expect(
     page.getByLabel("Segundos 1 serie 1", { exact: true }),
   ).toBeVisible();
@@ -27,14 +28,13 @@ test("compact workout controls, grouped drops, remembered metric and record sour
   await expect(
     page.getByLabel("Segundos 1 serie 1", { exact: true }),
   ).toBeVisible();
-  await first.getByRole("button", { name: "Registro", exact: true }).click();
-  await page.getByRole("dialog").locator("select").selectOption("reps");
+  await first
+    .getByRole("switch", { name: "Registrar por tiempo", exact: true })
+    .uncheck();
   const replace = await first
     .getByRole("button", { name: "Reemplazar ejercicio" })
     .boundingBox();
-  const tracking = await first
-    .getByRole("button", { name: "Registro", exact: true })
-    .boundingBox();
+  const tracking = await first.locator(".metric-switch-control").boundingBox();
   expect(Math.abs(replace!.y - tracking!.y)).toBeLessThan(2);
   await page.getByRole("switch", { name: "Descanso entre series" }).check();
   await page

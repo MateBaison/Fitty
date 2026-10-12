@@ -13,8 +13,8 @@ export function AppHeader({
   language?: string;
 }) {
   const pathname = usePathname();
-  const welcome = pathname === "/";
-  const showDate = !welcome && pathname !== "/login";
+  const welcome = ["/", "/login", "/onboarding"].includes(pathname);
+  const showDate = !welcome;
   const section = [
     { path: "/home", es: "Inicio", en: "Home" },
     { path: "/library", es: "Biblioteca", en: "Library" },

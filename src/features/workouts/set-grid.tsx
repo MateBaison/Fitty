@@ -1,4 +1,5 @@
 "use client";
+import { Switch } from "@base-ui/react/switch";
 import { useState } from "react";
 import { localizedSetTypes } from "@/data/set-types";
 import { CircleHelp, Trophy, Timer } from "lucide-react";
@@ -7,6 +8,7 @@ import { AppDialog } from "@/components/ui/app-dialog";
 import { useApp } from "@/state/app-provider";
 import {
   blankSet,
+  switchEntryMetric,
   addDropSegment,
   countSetGroups,
   metricFor,
@@ -43,7 +45,6 @@ export function SetGrid({
     undefined,
     metric,
   );
-  const [metricOpen, setMetricOpen] = useState(false);
   const [reduction, setReduction] = useState(20);
   const [showHelp, setShowHelp] = useState(false);
   const types = [
@@ -152,58 +153,31 @@ export function SetGrid({
           ))}
         </div>
       </AppDialog>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+      <div className="set-grid-toolbar mb-3 flex flex-wrap items-center gap-2">
         {toolbar}
-        <Button variant="secondary" onClick={() => setMetricOpen(true)}>
-          {t("Registro", "Tracking")}
-        </Button>
-      </div>
-      <AppDialog
-        open={metricOpen}
-        onClose={() => setMetricOpen(false)}
-        title={t("Registro", "Tracking")}
-      >
-        <label>
-          {t("Cómo registrar", "Tracking metric")}
-          <select
-            value={metric}
-            onChange={(event) => {
-              const value =
-                event.target.value === "seconds" ? "seconds" : "reps";
-              if (
-                value !== metric &&
-                entry.sets.some((set) => set.entered || set.done) &&
-                !confirm(
-                  t(
-                    "Cambiar el registro conserva los datos anteriores, pero deberás ingresar los valores en la nueva unidad. ¿Continuar?",
-                    "Changing tracking keeps previous values, but you must enter values in the new unit. Continue?",
-                  ),
-                )
-              )
-                return;
-              onChange((draft) => {
-                draft.tracking = value;
-                draft.sets.forEach((set) => {
-                  set.entered = Number(set[value]) > 0;
-                  set.done = false;
-                });
-              });
+        <div className="metric-switch-control">
+          <span>{t("Rep", "Reps")}</span>
+          <Switch.Root
+            render={<button type="button" />}
+            className="routine-switch"
+            checked={metric === "seconds"}
+            aria-label={t("Registrar por tiempo", "Track by time")}
+            onCheckedChange={(checked) => {
+              const next = checked ? "seconds" : "reps";
+              onChange((draft) => switchEntryMetric(draft, metric, next));
               change((draft) => {
                 draft.settings.exerciseMetrics = {
                   ...draft.settings.exerciseMetrics,
-                  [entry.id]: value,
+                  [entry.id]: next,
                 };
               });
-              setMetricOpen(false);
             }}
           >
-            <option value="reps">{t("Repeticiones", "Repetitions")}</option>
-            <option value="seconds">
-              {t("Tiempo (segundos)", "Time (seconds)")}
-            </option>
-          </select>
-        </label>
-      </AppDialog>
+            <Switch.Thumb className="routine-switch-thumb" />
+          </Switch.Root>
+          <span>{t("Temp", "Time")}</span>
+        </div>
+      </div>
       <div className="set-grid-heading" data-rest-enabled={!!onRest}>
         <span>{t("Series", "Sets")}</span>
         <span>{t("Anterior", "Previous")}</span>
@@ -248,7 +222,7 @@ export function SetGrid({
               {!!records[number]?.length && (
                 <span title={t("Nuevo récord", "New personal record")}>
                   <Trophy
-                    className="size-3.5 text-yellow-300"
+                    className="size-3.5 record-trophy"
                     aria-hidden="true"
                   />
                   <span className="sr-only">

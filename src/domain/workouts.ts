@@ -126,7 +126,9 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
       id,
       note: "",
       tracking: metricFor(snapshot, id),
-      sets: Array.from({ length: 3 }, () => blankSet(metricFor(snapshot, id))),
+      sets: Array.from({ length: lastSetCount(snapshot, id) }, () =>
+        blankSet(metricFor(snapshot, id)),
+      ),
       ...(day.supersets?.find((group) => group.includes(id))
         ? {
             superset: `${rid}-${did}-superset-${day.supersets.findIndex((group) => group.includes(id))}`,
@@ -295,4 +297,40 @@ export function addDropSegment(
     type: "drop",
     dropGroup: group,
   });
+}
+
+export function lastSetCount(snapshot: Snapshot, id: string): number {
+  const latest = [...snapshot.sessions]
+    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+    .flatMap((session) => session.exercises ?? [])
+    .find(
+      (exercise) =>
+        exercise.id === id &&
+        (exercise.performedSets?.length || Number(exercise.sets) > 0),
+    );
+  const count = latest?.performedSets?.length
+    ? countSetGroups(latest.performedSets)
+    : latest?.sets;
+  return count && count > 0 ? Math.min(200, Math.floor(count)) : 3;
+}
+export function switchEntryMetric(
+  entry: Entry,
+  current: "reps" | "seconds",
+  next: "reps" | "seconds",
+) {
+  if (current === next) return;
+  for (const set of entry.sets) {
+    set.metricStates = {
+      ...set.metricStates,
+      [current]: {
+        ...set.metricStates?.[current],
+        entered: set.entered,
+        done: set.done,
+      },
+    };
+    const saved = set.metricStates[next];
+    set.entered = saved?.entered ?? Number(set[next]) > 0;
+    set.done = saved?.done ?? false;
+  }
+  entry.tracking = next;
 }

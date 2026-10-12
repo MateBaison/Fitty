@@ -10,6 +10,7 @@ import {
   buildSession,
   countSetGroups,
   blankSet,
+  lastSetCount,
   color,
   copySessions,
   findExercise,
@@ -320,7 +321,10 @@ export function CalendarPanel() {
                         : `${set.reps ?? 0} reps`}
                       {!!records[number]?.length && (
                         <span className="ms-2 inline-flex items-center gap-1 font-semibold text-yellow-300">
-                          <Trophy className="size-4" aria-hidden="true" />
+                          <Trophy
+                            className="size-4 record-trophy"
+                            aria-hidden="true"
+                          />
                           {t("Nuevo récord", "New personal record")}
                         </span>
                       )}
@@ -531,8 +535,9 @@ export function CalendarPanel() {
                       id,
                       tracking: metricFor(snapshot, id),
                       note: "",
-                      sets: Array.from({ length: 3 }, () =>
-                        blankSet(metricFor(snapshot, id)),
+                      sets: Array.from(
+                        { length: lastSetCount(snapshot, id) },
+                        () => blankSet(metricFor(snapshot, id)),
                       ),
                     })),
                   );
@@ -678,7 +683,9 @@ export function CalendarPanel() {
               ...ids.map((id) => ({
                 id,
                 note: "",
-                sets: [blankSet(metricFor(snapshot, id))],
+                sets: Array.from({ length: lastSetCount(snapshot, id) }, () =>
+                  blankSet(metricFor(snapshot, id)),
+                ),
               })),
             ]);
             setPicking(false);

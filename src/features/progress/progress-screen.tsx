@@ -15,13 +15,15 @@ import {
   improvement,
   weeklyData,
   weeklySummary,
+  lifetimeSummary,
+  sessionVolumeKg,
   recentImprovements,
   type RecordSet,
 } from "@/domain/progress";
 import { Button } from "@/components/ui/button";
 import { shareWorkoutPoster } from "@/features/sharing/workout-poster";
 export function ProgressScreen() {
-  const { snapshot, change, t, notify } = useApp(),
+  const { snapshot, t, notify } = useApp(),
     [window, setWindow] = useState(4),
     [selected, setSelected] = useState(""),
     [summaryDate, setSummaryDate] = useState(() => new Date());
@@ -32,11 +34,21 @@ export function ProgressScreen() {
     (session) => session.id === recordSession,
   );
   const locale = localeFor(snapshot.settings.language);
-  const summary = weeklySummary(snapshot, summaryDate);
+  const [allTime, setAllTime] = useState(false);
+  const [dayDetails, setDayDetails] = useState<string | null>(null);
+  const weekly = weeklySummary(snapshot, summaryDate);
+  const summary = allTime ? lifetimeSummary(snapshot) : weekly;
+  const activeDays = snapshot.routines.find(
+    (routine) => routine.id === snapshot.selected,
+  )?.days.length;
+  const dailySessions = snapshot.sessions.filter(
+    (session) => dayDetails && localDateKey(session.date) === dayDetails,
+  );
   const moveWeek = (offset: number) => {
-    const next = new Date(summary.start);
+    const next = new Date(weekly.start);
     next.setDate(next.getDate() + offset * 7);
     setSummaryDate(next);
+    setAllTime(false);
   };
   const duration = (minutes: number) =>
     `${Math.floor(Math.round(minutes) / 60)} h ${Math.round(minutes) % 60} min`;
@@ -45,16 +57,12 @@ export function ProgressScreen() {
     weeks = weeklyData(snapshot, window),
     unit = snapshot.settings.weight ?? "kg",
     factor = unit === "lb" ? 2.20462 : 1;
-  const goal = Math.max(
-      0,
-      Math.min(7, Number(snapshot.settings.weeklyGoal) || 0),
-    ),
-    counts = Object.fromEntries(
-      groups.map((group) => [
-        group,
-        weeks.reduce((sum, week) => sum + (week.groups[group] ?? 0), 0),
-      ]),
-    );
+  const counts = Object.fromEntries(
+    groups.map((group) => [
+      group,
+      weeks.reduce((sum, week) => sum + (week.groups[group] ?? 0), 0),
+    ]),
+  );
   const format = (set: RecordSet) =>
     `${localizedSetTypes(snapshot.settings.language ?? "es").find((type) => type.id === (set.type ?? "normal"))?.letter ?? "N"} · ${(set.kg * factor).toFixed(1)} ${unit} × ${set.value} ${set.metric === "seconds" ? "s" : t("Rep", "Reps")}`;
   const advances = recentImprovements(snapshot);
@@ -75,12 +83,98 @@ export function ProgressScreen() {
   )[0];
   return (
     <>
+      <AppDialog
+        open={dayDetails !== null}
+        onClose={() => setDayDetails(null)}
+        title={
+          dayDetails
+            ? new Date(`${dayDetails}T12:00:00`).toLocaleDateString(locale, {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+            : ""
+        }
+      >
+        <div className="metric-grid">
+          <div>
+            <strong>{dailySessions.length}</strong>
+            <small>{t("sesiones", "sessions")}</small>
+          </div>
+          <div>
+            <strong>
+              {duration(
+                dailySessions.reduce(
+                  (sum, session) => sum + (session.duration ?? 0),
+                  0,
+                ),
+              )}
+            </strong>
+            <small>{t("Tiempo registrado", "Recorded time")}</small>
+          </div>
+          <div>
+            <strong>
+              {Math.round(
+                dailySessions.reduce(
+                  (sum, session) => sum + sessionVolumeKg(session),
+                  0,
+                ) * factor,
+              ).toLocaleString(locale)}{" "}
+              {unit}
+            </strong>
+            <small>{t("Volumen", "Volume")}</small>
+          </div>
+        </div>
+        {dailySessions.map((session) => (
+          <details key={session.id} className="routine-day">
+            <summary>
+              {session.day} · {session.routine}
+            </summary>
+            <p>
+              {session.duration == null
+                ? t("Sin registro", "Not recorded")
+                : duration(session.duration)}{" "}
+              ·{" "}
+              {Math.round(sessionVolumeKg(session) * factor).toLocaleString(
+                locale,
+              )}{" "}
+              {unit}
+            </p>
+            {session.exercises?.map((exercise, index) => (
+              <div key={index}>
+                <strong>
+                  {catalog.find((item) => item.id === exercise.id)?.name ??
+                    exercise.id}
+                </strong>
+                {exercise.performedSets?.map((set, number) => (
+                  <p key={number}>
+                    {set.kg ?? 0} {session.weightUnit ?? "kg"} ×{" "}
+                    {set.seconds ?? set.reps ?? 0}{" "}
+                    {set.seconds != null ? "s" : t("Rep", "Reps")}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </details>
+        ))}
+        {!dailySessions.length && (
+          <p>
+            {t(
+              "No hay entrenamientos guardados este día.",
+              "No workouts saved for this day.",
+            )}
+          </p>
+        )}
+      </AppDialog>
       <section
         className="panel weekly-summary"
         aria-labelledby="weekly-summary-title"
       >
         <h2 id="weekly-summary-title">
-          {t("Resumen semanal", "Weekly summary")}
+          {allTime
+            ? t("Resumen total", "Lifetime summary")
+            : t("Resumen semanal", "Weekly summary")}
         </h2>
         <div className="my-3 flex flex-wrap items-center gap-2">
           <Button
@@ -94,12 +188,15 @@ export function ProgressScreen() {
           </Button>
           <Input
             type="date"
-            className="w-auto min-w-0 flex-1"
+            className="summary-week-date min-w-0"
             aria-label={t("Elegir semana", "Choose week")}
-            value={localDateKey(summary.start)}
+            value={localDateKey(weekly.start)}
+            disabled={allTime}
             onChange={(event) => {
-              if (validDateKey(event.target.value))
+              if (validDateKey(event.target.value)) {
                 setSummaryDate(new Date(`${event.target.value}T12:00:00`));
+                setAllTime(false);
+              }
             }}
           />
           <Button
@@ -115,22 +212,41 @@ export function ProgressScreen() {
             type="button"
             variant="outline"
             className="text-xs"
-            onClick={() => setSummaryDate(new Date())}
+            onClick={() => {
+              setSummaryDate(new Date());
+              setAllTime(false);
+            }}
           >
             {t("Semana actual", "Current week")}
           </Button>
+          <Button
+            variant="outline"
+            aria-pressed={allTime}
+            onClick={() => setAllTime(true)}
+          >
+            {t("Siempre", "Lifetime")}
+          </Button>
         </div>
         <p className="text-sm text-muted-foreground">
-          {summary.start.toLocaleDateString(locale, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}{" "}
-          · {t("Semana de lunes a domingo", "Monday to Sunday")}
+          {allTime ? (
+            t("Todos los entrenamientos registrados", "All recorded workouts")
+          ) : (
+            <>
+              {weekly.start.toLocaleDateString(locale, {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}{" "}
+              · {t("Semana de lunes a domingo", "Monday to Sunday")}
+            </>
+          )}
         </p>
         <div className="metric-grid">
           <div>
-            <strong>{summary.sessions}</strong>
+            <strong>
+              {summary.sessions}
+              {!allTime && activeDays ? `/${activeDays}` : ""}
+            </strong>
             <small>{t("sesiones", "sessions")}</small>
           </div>
           <div>
@@ -141,25 +257,39 @@ export function ProgressScreen() {
             <strong>{duration(summary.minutes)}</strong>
             <small>{t("Tiempo registrado", "Recorded time")}</small>
           </div>
+          <div>
+            <strong>
+              {Math.round(summary.volumeKg * factor).toLocaleString(locale)}{" "}
+              {unit}
+            </strong>
+            <small>{t("Volumen", "Volume")}</small>
+          </div>
         </div>
-        <div className="weekly-duration-days">
-          {summary.days.map((day) => (
-            <div key={day.date.toISOString()} className="weekly-duration-day">
-              <strong>
-                {day.date.toLocaleDateString(locale, { weekday: "short" })}
-              </strong>
-              <span>
-                {day.sessions && day.unknown === day.sessions
-                  ? "—"
-                  : duration(day.minutes)}
-              </span>
-              <small>
-                {day.sessions} {t("sesiones", "sessions")}
-                {day.unknown ? " *" : ""}
-              </small>
-            </div>
-          ))}
-        </div>
+        {!allTime && (
+          <div className="weekly-duration-days">
+            {weekly.days.map((day) => (
+              <button
+                type="button"
+                onClick={() => setDayDetails(localDateKey(day.date))}
+                key={day.date.toISOString()}
+                className="weekly-duration-day"
+              >
+                <strong>
+                  {day.date.toLocaleDateString(locale, { weekday: "short" })}
+                </strong>
+                <span>
+                  {day.sessions && day.unknown === day.sessions
+                    ? "—"
+                    : duration(day.minutes)}
+                </span>
+                <small>
+                  {day.sessions} {t("sesiones", "sessions")}
+                  {day.unknown ? " *" : ""}
+                </small>
+              </button>
+            ))}
+          </div>
+        )}
         <p className="mt-3 text-sm text-muted-foreground">
           {t(
             "El tiempo cuenta desde el inicio hasta que guardás el entrenamiento, incluidos los descansos.",
@@ -330,49 +460,6 @@ export function ProgressScreen() {
           "Real changes in your exercises and training habits.",
         )}
       </p>
-      <section className="panel">
-        <h2>{t("Frecuencia de entrenamiento", "Training frequency")}</h2>
-        <label>
-          {t("Meta semanal (opcional)", "Weekly goal (optional)")}
-          <select
-            value={goal}
-            onChange={(event) =>
-              change((draft) => {
-                draft.settings.weeklyGoal = Number(event.target.value);
-              })
-            }
-          >
-            <option value={0}>{t("Sin meta", "No goal")}</option>
-            {Array.from({ length: 7 }, (_, index) => (
-              <option key={index} value={index + 1}>
-                {index + 1} {t("sesiones", "sessions")}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div className="metric-grid">
-          {weeks.slice(-4).map((week) => (
-            <div key={week.start.toISOString()}>
-              <small>
-                {week.start.toLocaleDateString(locale, {
-                  day: "numeric",
-                  month: "short",
-                })}
-              </small>
-              <strong>
-                {week.sessions}
-                {goal ? ` / ${goal}` : ""}
-              </strong>
-            </div>
-          ))}
-        </div>
-        <p className="mt-4 text-sm text-muted-foreground">
-          {t(
-            "La semana actual sigue en curso; esta comparación no marca días perdidos.",
-            "The current week is still in progress; this comparison does not mark missed days.",
-          )}
-        </p>
-      </section>
       <section className="panel">
         <h2>{t("Series por zona muscular", "Sets per muscle group")}</h2>
         <label>

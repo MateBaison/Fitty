@@ -397,7 +397,12 @@
     "Entrenamiento libre": "Entraînement libre",
     "Día libre": "Jour libre",
     "Renombrar": "Renommer",
-    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "L’historique est conservé. Tout entraînement en cours pour ce jour sera annulé."
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "L’historique est conservé. Tout entraînement en cours pour ce jour sera annulé.",
+    "Registrar por tiempo": "Suivre la durée",
+    "Temp": "Temps",
+    "Resumen total": "Résumé total",
+    "Siempre": "Depuis toujours",
+    "Todos los entrenamientos registrados": "Tous les entraînements enregistrés"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -797,7 +802,12 @@
     "Entrenamiento libre": "自由训练",
     "Día libre": "自由训练日",
     "Renombrar": "重命名",
-    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "历史记录会保留。此训练日正在进行的训练将取消。"
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "历史记录会保留。此训练日正在进行的训练将取消。",
+    "Registrar por tiempo": "按时间记录",
+    "Temp": "时间",
+    "Resumen total": "总览",
+    "Siempre": "全部时间",
+    "Todos los entrenamientos registrados": "所有已记录的训练"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1197,7 +1207,12 @@
     "Entrenamiento libre": "स्वतंत्र प्रशिक्षण",
     "Día libre": "स्वतंत्र दिन",
     "Renombrar": "नाम बदलें",
-    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "इतिहास सुरक्षित रहेगा। इस दिन का चालू प्रशिक्षण रद्द होगा।"
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "इतिहास सुरक्षित रहेगा। इस दिन का चालू प्रशिक्षण रद्द होगा।",
+    "Registrar por tiempo": "समय के अनुसार दर्ज करें",
+    "Temp": "समय",
+    "Resumen total": "कुल सारांश",
+    "Siempre": "सभी समय",
+    "Todos los entrenamientos registrados": "सभी दर्ज प्रशिक्षण"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1597,7 +1612,12 @@
     "Entrenamiento libre": "تدريب حر",
     "Día libre": "يوم حر",
     "Renombrar": "إعادة التسمية",
-    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "سيُحفظ السجل. سيُلغى أي تدريب جارٍ لهذا اليوم."
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "سيُحفظ السجل. سيُلغى أي تدريب جارٍ لهذا اليوم.",
+    "Registrar por tiempo": "التسجيل حسب الوقت",
+    "Temp": "الوقت",
+    "Resumen total": "الملخص الكلي",
+    "Siempre": "كل الوقت",
+    "Todos los entrenamientos registrados": "جميع التدريبات المسجلة"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -1997,7 +2017,12 @@
     "Entrenamiento libre": "Freies Training",
     "Día libre": "Freier Tag",
     "Renombrar": "Umbenennen",
-    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "Der Verlauf bleibt erhalten. Ein laufendes Training für diesen Tag wird abgebrochen."
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "Der Verlauf bleibt erhalten. Ein laufendes Training für diesen Tag wird abgebrochen.",
+    "Registrar por tiempo": "Zeit erfassen",
+    "Temp": "Zeit",
+    "Resumen total": "Gesamtübersicht",
+    "Siempre": "Gesamter Zeitraum",
+    "Todos los entrenamientos registrados": "Alle gespeicherten Trainings"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2397,7 +2422,12 @@
     "Entrenamiento libre": "Allenamento libero",
     "Día libre": "Giorno libero",
     "Renombrar": "Rinomina",
-    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "Lo storico viene conservato. Un allenamento in corso per questo giorno sarà annullato."
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "Lo storico viene conservato. Un allenamento in corso per questo giorno sarà annullato.",
+    "Registrar por tiempo": "Registra per tempo",
+    "Temp": "Tempo",
+    "Resumen total": "Riepilogo totale",
+    "Siempre": "Da sempre",
+    "Todos los entrenamientos registrados": "Tutti gli allenamenti registrati"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2797,7 +2827,12 @@
     "Entrenamiento libre": "Treino livre",
     "Día libre": "Dia livre",
     "Renombrar": "Renomear",
-    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "O histórico é mantido. Um treino em andamento deste dia será cancelado."
+    "El historial se conserva. El entrenamiento en curso de este día, si lo hay, se cancelará.": "O histórico é mantido. Um treino em andamento deste dia será cancelado.",
+    "Registrar por tiempo": "Registrar por tempo",
+    "Temp": "Tempo",
+    "Resumen total": "Resumo total",
+    "Siempre": "Desde sempre",
+    "Todos los entrenamientos registrados": "Todos os treinos registrados"
   },
   "en": {
     "Sexo": "Sex",

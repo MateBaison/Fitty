@@ -10,6 +10,22 @@ export const savedSetSchema = z.looseObject({
   type: z.string().optional(),
   dropGroup: z.string().optional(),
   restUsed: z.boolean().optional(),
+  metricStates: z
+    .looseObject({
+      reps: z
+        .looseObject({
+          entered: z.boolean().optional(),
+          done: z.boolean().optional(),
+        })
+        .optional(),
+      seconds: z
+        .looseObject({
+          entered: z.boolean().optional(),
+          done: z.boolean().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
   kg: optionalValue,
   reps: optionalValue,
   seconds: optionalValue,

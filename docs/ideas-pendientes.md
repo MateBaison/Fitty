@@ -4,7 +4,7 @@ Estas ideas fueron solicitadas para el futuro. No implementarlas hasta que se pi
 
 - Agregar una opción de soporte. El correo de la cuenta permanece sin edición desde el perfil; los cambios de correo requerirán soporte.
 - Incorporar una IA a la que se pueda hablar para hacer consultas. Solo idea futura; no añadir controles ni integración todavía.
-- Incorporar una búsqueda de entrenadores y perfiles profesionales. Mantener cinco destinos inferiores: convertir Biblioteca en Explorar con pestañas Ejercicios/Entrenadores, y ofrecer creación/gestión del perfil profesional dentro de Perfil. Solo planificación, sin implementar aún.
+- Incorporar una búsqueda de entrenadores y perfiles profesionales. Mantener la navegación inferior actual de tres destinos (Inicio, Herramientas y Perfil): evaluar convertir el acceso Biblioteca de Inicio en Explorar con pestañas Ejercicios/Entrenadores, y ofrecer creación/gestión del perfil profesional dentro de Perfil. Solo planificación, sin implementar aún.
 
 ## Mejoras para evaluar
 

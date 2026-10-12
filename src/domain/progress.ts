@@ -158,6 +158,10 @@ export function weeklySummary(snapshot: Snapshot, now = new Date()) {
         0,
       ),
       unknown,
+      volumeKg: sessions.reduce(
+        (sum, session) => sum + sessionVolumeKg(session),
+        0,
+      ),
       sets: sessions.reduce((sum, session) => sum + (session.sets ?? 0), 0),
     };
   });
@@ -168,6 +172,7 @@ export function weeklySummary(snapshot: Snapshot, now = new Date()) {
     minutes: days.reduce((sum, day) => sum + day.minutes, 0),
     unknown: days.reduce((sum, day) => sum + day.unknown, 0),
     trainedDays: days.filter((day) => day.sessions > 0).length,
+    volumeKg: days.reduce((sum, day) => sum + day.volumeKg, 0),
   };
 }
 
@@ -223,4 +228,34 @@ export function recentImprovements(snapshot: Snapshot, now = new Date()) {
       return [];
     })
     .sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
+export function sessionVolumeKg(session: Snapshot["sessions"][number]) {
+  return (
+    session.volumeKg ??
+    (session.volume ?? 0) / (session.weightUnit === "lb" ? 2.20462 : 1)
+  );
+}
+export function lifetimeSummary(snapshot: Snapshot) {
+  const sessions = snapshot.sessions.filter((session) =>
+    Number.isFinite(Date.parse(session.date)),
+  );
+  return {
+    sessions: sessions.length,
+    minutes: sessions.reduce(
+      (sum, session) => sum + (session.duration ?? 0),
+      0,
+    ),
+    unknown: sessions.filter((session) => session.duration == null).length,
+    trainedDays: new Set(
+      sessions.map((session) => {
+        const d = new Date(session.date);
+        return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+      }),
+    ).size,
+    volumeKg: sessions.reduce(
+      (sum, session) => sum + sessionVolumeKg(session),
+      0,
+    ),
+  };
 }

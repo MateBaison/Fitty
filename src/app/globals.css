@@ -1765,7 +1765,7 @@ input[type="range"] {
   content: "";
   position: absolute;
   top: 0;
-  bottom: -64px;
+  bottom: -88px;
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
@@ -2041,4 +2041,40 @@ input[type="range"] {
 .home-section-shortcut:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 3px;
+}
+
+.metric-switch-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 6px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-height: 48px;
+}
+.record-trophy {
+  color: #d4af37;
+  fill: #d4af37;
+  stroke: #d4af37;
+}
+.summary-week-date {
+  width: 150px;
+  flex: 0 1 150px;
+}
+.weekly-duration-days button {
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+}
+.weekly-duration-days button:hover,
+.weekly-duration-days button:focus-visible {
+  outline: 1px solid var(--primary);
+}
+
+.set-grid-toolbar > [data-slot="button"] {
+  padding-inline: 12px;
+  font-size: 0.8rem;
 }
