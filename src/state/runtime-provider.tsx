@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Session } from "@/domain/workouts";
+import { CombatAudio } from "@/lib/browser/combat-audio";
 type Rest = { end: number; duration: number };
 const Context = createContext<{
   now: number;
@@ -22,6 +23,8 @@ export function RuntimeProvider({
     announced = useRef(0),
     callback = useRef(onRestComplete);
   callback.current = onRestComplete;
+  const audio = useRef(new CombatAudio());
+  useEffect(() => () => audio.current.close(), []);
   useEffect(() => {
     if (!rest.end) return;
     const update = () => {
@@ -30,6 +33,7 @@ export function RuntimeProvider({
       if (time >= rest.end && announced.current !== rest.end) {
         announced.current = rest.end;
         navigator.vibrate?.([120, 70, 120]);
+        void audio.current.play("timer").catch(() => {});
         callback.current();
       }
     };
@@ -49,6 +53,12 @@ export function RuntimeProvider({
         clipboard,
         setClipboard,
         setRest: (value) => {
+          if (value.end > Date.now()) {
+            void audio.current
+              .unlock()
+              .then(() => audio.current.play("warning"))
+              .catch(() => {});
+          }
           setNow(Date.now());
           updateRest(value);
         },
