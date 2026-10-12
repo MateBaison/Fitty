@@ -4,7 +4,7 @@ Generadas con la herramienta integrada imagegen el 12 de octubre de 2026. Dos po
 
 - Masculina: `public/assets/exercises/additions/sentadilla-masculino.jpg`
 - Femenina: `public/assets/exercises/additions/sentadilla-femenino.jpg`
-- Selección por perfil mediante `additional-image-variants.json`; otros perfiles conservan la imagen neutral existente.
+- Aplicadas a “Sentadillas con propio peso” (`sentadillas-con-propio-peso`). Selección por perfil mediante `additional-image-variants.json`; otros perfiles conservan la imagen neutral existente. “Sentadilla” conserva sus imágenes anteriores.
 
 ## Prompt masculino
 

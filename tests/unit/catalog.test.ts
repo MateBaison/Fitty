@@ -89,7 +89,6 @@ test("calf images follow profile gender without changing historical exercise def
   for (const id of [
     "elevacion-de-gemelos-sentado",
     "elevacion-de-gemelos-de-pie",
-    "sentadilla",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
@@ -100,4 +99,20 @@ test("calf images follow profile gender without changing historical exercise def
     );
     expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
   }
+});
+
+test("bodyweight squats use new mannequins and standard squats keep their original images", () => {
+  const bodyweight = exercises.find(
+    (item) => item.id === "sentadillas-con-propio-peso",
+  )!;
+  expect(exerciseImage(bodyweight, "hombre")).toBe(
+    "/assets/exercises/additions/sentadilla-masculino.jpg",
+  );
+  expect(exerciseImage(bodyweight, "mujer")).toBe(
+    "/assets/exercises/additions/sentadilla-femenino.jpg",
+  );
+  const squat = exercises.find((item) => item.id === "sentadilla")!;
+  expect(imageVariants.sentadilla).toBeUndefined();
+  expect(exerciseImage(squat, "hombre")).toBe(`/assets/${squat.image}`);
+  expect(exerciseImage(squat, "mujer")).toBe(`/assets/${squat.image}`);
 });
