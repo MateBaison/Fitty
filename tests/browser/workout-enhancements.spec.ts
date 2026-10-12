@@ -56,6 +56,20 @@ test("compact workout controls, grouped drops, remembered metric and record sour
   await expect(page.getByLabel("Peso 1 serie 2", { exact: true })).toHaveValue(
     "32",
   );
+  await expect(first.locator(".drop-segment-controls")).toContainText(
+    "Reducción sugerida",
+  );
+  await first
+    .locator(".drop-segment-controls")
+    .getByRole("button", { name: "− Eliminar última serie", exact: true })
+    .click();
+  await expect(page.getByLabel("Peso 1 serie 2", { exact: true })).toHaveValue(
+    "",
+  );
+  await expect(page.getByLabel("Peso 1 serie 1", { exact: true })).toHaveValue(
+    "40",
+  );
+  await first.getByRole("button", { name: "Bajar peso", exact: true }).click();
   await page.getByLabel("Repeticiones 1 serie 2", { exact: true }).fill("8");
   await expect(
     page.getByRole("button", {

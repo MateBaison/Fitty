@@ -337,7 +337,7 @@ export function SetGrid({
                   {t("Bajar peso", "Reduce weight")}
                 </Button>
                 <label>
-                  {t("Reducción", "Reduction")}{" "}
+                  {t("Reducción sugerida", "Suggested reduction")}{" "}
                   <select
                     value={reduction}
                     onChange={(event) =>
@@ -348,12 +348,21 @@ export function SetGrid({
                     <option value={25}>25%</option>
                   </select>
                 </label>
-                <small>
-                  {t(
-                    "Peso sugerido, ajustable",
-                    "Suggested weight, adjustable",
+                <small>{t("Ajustable", "Adjustable")}</small>
+                {set.dropGroup &&
+                  entry.sets[number - 1]?.dropGroup === set.dropGroup && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        onChange((draft) => {
+                          draft.sets.splice(number, 1);
+                        })
+                      }
+                    >
+                      − {t("Eliminar última serie", "Remove last set")}
+                    </Button>
                   )}
-                </small>
               </div>
             )}
         </div>

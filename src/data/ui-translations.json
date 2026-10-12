@@ -402,7 +402,9 @@
     "Temp": "Temps",
     "Resumen total": "Résumé total",
     "Siempre": "Depuis toujours",
-    "Todos los entrenamientos registrados": "Tous les entraînements enregistrés"
+    "Todos los entrenamientos registrados": "Tous les entraînements enregistrés",
+    "Reducción sugerida": "Réduction suggérée",
+    "Ajustable": "Ajustable"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -807,7 +809,9 @@
     "Temp": "时间",
     "Resumen total": "总览",
     "Siempre": "全部时间",
-    "Todos los entrenamientos registrados": "所有已记录的训练"
+    "Todos los entrenamientos registrados": "所有已记录的训练",
+    "Reducción sugerida": "建议减重比例",
+    "Ajustable": "可调整"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1212,7 +1216,9 @@
     "Temp": "समय",
     "Resumen total": "कुल सारांश",
     "Siempre": "सभी समय",
-    "Todos los entrenamientos registrados": "सभी दर्ज प्रशिक्षण"
+    "Todos los entrenamientos registrados": "सभी दर्ज प्रशिक्षण",
+    "Reducción sugerida": "सुझाई गई कमी",
+    "Ajustable": "समायोज्य"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1617,7 +1623,9 @@
     "Temp": "الوقت",
     "Resumen total": "الملخص الكلي",
     "Siempre": "كل الوقت",
-    "Todos los entrenamientos registrados": "جميع التدريبات المسجلة"
+    "Todos los entrenamientos registrados": "جميع التدريبات المسجلة",
+    "Reducción sugerida": "التخفيض المقترح",
+    "Ajustable": "قابل للتعديل"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2022,7 +2030,9 @@
     "Temp": "Zeit",
     "Resumen total": "Gesamtübersicht",
     "Siempre": "Gesamter Zeitraum",
-    "Todos los entrenamientos registrados": "Alle gespeicherten Trainings"
+    "Todos los entrenamientos registrados": "Alle gespeicherten Trainings",
+    "Reducción sugerida": "Empfohlene Reduktion",
+    "Ajustable": "Anpassbar"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2427,7 +2437,9 @@
     "Temp": "Tempo",
     "Resumen total": "Riepilogo totale",
     "Siempre": "Da sempre",
-    "Todos los entrenamientos registrados": "Tutti gli allenamenti registrati"
+    "Todos los entrenamientos registrados": "Tutti gli allenamenti registrati",
+    "Reducción sugerida": "Riduzione suggerita",
+    "Ajustable": "Regolabile"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2832,7 +2844,9 @@
     "Temp": "Tempo",
     "Resumen total": "Resumo total",
     "Siempre": "Desde sempre",
-    "Todos los entrenamientos registrados": "Todos os treinos registrados"
+    "Todos los entrenamientos registrados": "Todos os treinos registrados",
+    "Reducción sugerida": "Redução sugerida",
+    "Ajustable": "Ajustável"
   },
   "en": {
     "Sexo": "Sex",
@@ -3042,6 +3056,8 @@
     "Recorridos guardados": "Saved routes",
     "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.": "Finish a GPS activity to save its route here.",
     "Recorrido guardado": "Saved route",
-    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Finish the activity to save the route. Keep the app visible: the browser may limit GPS in the background."
+    "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Finish the activity to save the route. Keep the app visible: the browser may limit GPS in the background.",
+    "Reducción sugerida": "Suggested reduction",
+    "Ajustable": "Adjustable"
   }
 }
