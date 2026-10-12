@@ -2,6 +2,8 @@
 
 Estas ideas fueron solicitadas para el futuro. No implementarlas hasta que se pida expresamente.
 
+- Comparar estadísticas de entrenamiento con otras personas. Evaluar comparaciones de frecuencia, tiempo, volumen y progreso, con participación voluntaria y elección de qué datos compartir. Solo idea futura; no implementar todavía.
+
 - Agregar una opción de soporte. El correo de la cuenta permanece sin edición desde el perfil; los cambios de correo requerirán soporte.
 - Incorporar una IA a la que se pueda hablar para hacer consultas. Solo idea futura; no añadir controles ni integración todavía.
 - Estimar calorías y macros (proteínas, carbohidratos y grasas) a partir de una foto de la comida tomada con la cámara o subida por la persona. Mostrar que es una estimación y permitir corregir alimentos y porciones antes de registrar los valores. Solo idea futura; no implementar todavía.
