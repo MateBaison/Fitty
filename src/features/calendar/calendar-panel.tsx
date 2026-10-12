@@ -33,12 +33,20 @@ import { safePhoto } from "@/lib/browser/photos";
 import { shareWorkoutPoster } from "@/features/sharing/workout-poster";
 import { useRuntime } from "@/state/runtime-provider";
 
-export function CalendarPanel() {
+export function CalendarPanel({
+  initialDate = null,
+  dialogOnly = false,
+  onClose,
+}: {
+  initialDate?: string | null;
+  dialogOnly?: boolean;
+  onClose?: () => void;
+} = {}) {
   const { snapshot, change, notify, t } = useApp(),
     [month, setMonth] = useState(
       () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     ),
-    [selectedDate, setSelectedDate] = useState<string | null>(null);
+    [selectedDate, setSelectedDate] = useState<string | null>(initialDate);
   const { clipboard, setClipboard } = useRuntime();
   const [editing, setEditing] = useState<{
       id: string | null;
@@ -123,101 +131,108 @@ export function CalendarPanel() {
       ),
     );
   return (
-    <section className="panel calendar-panel">
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <Button
-          variant="ghost"
-          aria-label={t("Mes anterior", "Previous month")}
-          onClick={() => setMonth(new Date(year, number - 1, 1))}
-        >
-          ‹
-        </Button>
-        <h2 className="text-lg font-bold">
-          {new Intl.DateTimeFormat(locale, { month: "long" }).format(month)}{" "}
-          {year}
-        </h2>
-        <Button
-          variant="ghost"
-          aria-label={t("Mes siguiente", "Next month")}
-          onClick={() => setMonth(new Date(year, number + 1, 1))}
-        >
-          ›
-        </Button>
-      </div>
-      <div className="calendar-grid">
-        {Array.from({ length: 7 }, (_, index) => (
-          <small key={index}>
-            {new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
-              new Date(2024, 0, 1 + index),
-            )}
-          </small>
-        ))}
-        {Array.from({ length: first }, (_, index) => (
-          <span key={`empty-${index}`} />
-        ))}
-        {Array.from({ length: count }, (_, index) => {
-          const date = localDateKey(new Date(year, number, index + 1)),
-            recorded = snapshot.sessions.filter(
-              (session) => localDateKey(session.date) === date,
-            ),
-            colors = [
-              ...new Set(recorded.map((session) => color(session.color))),
-            ],
-            menstrualTraining =
-              menstrualCalendarEnabled(snapshot.profile) &&
-              recorded.length > 0 &&
-              snapshot.profile.menstrualCalendar?.dates?.includes(date) ===
-                true;
-          return (
-            <button
-              type="button"
-              key={date}
-              data-calendar-date={date}
-              aria-label={`${date}, ${recorded.length} entrenamientos${menstrualTraining ? t(", sangrado menstrual registrado", ", recorded menstrual bleeding") : ""}`}
-              data-menstrual-training={menstrualTraining || undefined}
-              className={date === localDateKey(new Date()) ? "today" : ""}
-              style={
-                colors.length
-                  ? {
-                      background:
-                        colors.length === 1
-                          ? colors[0]
-                          : `linear-gradient(135deg,${colors.flatMap((value, number) => [`${value} ${(number / colors.length) * 100}%`, `${value} ${((number + 1) / colors.length) * 100}%`]).join(",")})`,
-                      color: "#090b10",
-                    }
-                  : undefined
-              }
-              onClick={() => setSelectedDate(date)}
+    <section className={dialogOnly ? undefined : "panel calendar-panel"}>
+      {!dialogOnly && (
+        <>
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <Button
+              variant="ghost"
+              aria-label={t("Mes anterior", "Previous month")}
+              onClick={() => setMonth(new Date(year, number - 1, 1))}
             >
-              {index + 1}
-              <span className="calendar-dots">
-                {colors.map((value) => (
-                  <i
-                    key={value}
-                    style={{
-                      background: `color-mix(in srgb, ${value} 72%, black)`,
-                    }}
-                  />
-                ))}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-      {menstrualCalendarEnabled(snapshot.profile) && (
-        <p className="mt-3 text-sm text-muted-foreground">
-          <span aria-hidden="true" style={{ color: "#c4b5fd" }}>
-            ▢
-          </span>{" "}
-          {t(
-            "Borde violeta: entrenamiento con sangrado menstrual registrado.",
-            "Purple border: workout with recorded menstrual bleeding.",
+              ‹
+            </Button>
+            <h2 className="text-lg font-bold">
+              {new Intl.DateTimeFormat(locale, { month: "long" }).format(month)}{" "}
+              {year}
+            </h2>
+            <Button
+              variant="ghost"
+              aria-label={t("Mes siguiente", "Next month")}
+              onClick={() => setMonth(new Date(year, number + 1, 1))}
+            >
+              ›
+            </Button>
+          </div>
+          <div className="calendar-grid">
+            {Array.from({ length: 7 }, (_, index) => (
+              <small key={index}>
+                {new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
+                  new Date(2024, 0, 1 + index),
+                )}
+              </small>
+            ))}
+            {Array.from({ length: first }, (_, index) => (
+              <span key={`empty-${index}`} />
+            ))}
+            {Array.from({ length: count }, (_, index) => {
+              const date = localDateKey(new Date(year, number, index + 1)),
+                recorded = snapshot.sessions.filter(
+                  (session) => localDateKey(session.date) === date,
+                ),
+                colors = [
+                  ...new Set(recorded.map((session) => color(session.color))),
+                ],
+                menstrualTraining =
+                  menstrualCalendarEnabled(snapshot.profile) &&
+                  recorded.length > 0 &&
+                  snapshot.profile.menstrualCalendar?.dates?.includes(date) ===
+                    true;
+              return (
+                <button
+                  type="button"
+                  key={date}
+                  data-calendar-date={date}
+                  aria-label={`${date}, ${recorded.length} entrenamientos${menstrualTraining ? t(", sangrado menstrual registrado", ", recorded menstrual bleeding") : ""}`}
+                  data-menstrual-training={menstrualTraining || undefined}
+                  className={date === localDateKey(new Date()) ? "today" : ""}
+                  style={
+                    colors.length
+                      ? {
+                          background:
+                            colors.length === 1
+                              ? colors[0]
+                              : `linear-gradient(135deg,${colors.flatMap((value, number) => [`${value} ${(number / colors.length) * 100}%`, `${value} ${((number + 1) / colors.length) * 100}%`]).join(",")})`,
+                          color: "#090b10",
+                        }
+                      : undefined
+                  }
+                  onClick={() => setSelectedDate(date)}
+                >
+                  {index + 1}
+                  <span className="calendar-dots">
+                    {colors.map((value) => (
+                      <i
+                        key={value}
+                        style={{
+                          background: `color-mix(in srgb, ${value} 72%, black)`,
+                        }}
+                      />
+                    ))}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {menstrualCalendarEnabled(snapshot.profile) && (
+            <p className="mt-3 text-sm text-muted-foreground">
+              <span aria-hidden="true" style={{ color: "#c4b5fd" }}>
+                ▢
+              </span>{" "}
+              {t(
+                "Borde violeta: entrenamiento con sangrado menstrual registrado.",
+                "Purple border: workout with recorded menstrual bleeding.",
+              )}
+            </p>
           )}
-        </p>
+        </>
       )}
       <AppDialog
         open={selectedDate !== null && !editing && !picking}
-        onClose={() => setSelectedDate(null)}
+        onClose={() => {
+          setSelectedDate(null);
+          onClose?.();
+        }}
         title={
           selectedDate
             ? new Date(`${selectedDate}T12:00:00`).toLocaleDateString(locale, {

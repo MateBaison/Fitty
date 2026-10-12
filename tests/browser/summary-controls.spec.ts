@@ -52,6 +52,17 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
   await summary.locator(".weekly-duration-day").nth(weekday).click();
   await expect(page.getByRole("dialog")).toContainText("Pecho y tríceps");
   await expect(page.getByRole("dialog")).toContainText("400 kg");
+  const training = page.getByRole("dialog").locator(".calendar-workout");
+  await expect(training).not.toHaveAttribute("open", "");
+  await expect(
+    page.getByRole("dialog").getByText("Serie 1:", { exact: false }).first(),
+  ).not.toBeVisible();
+  await training.locator("summary").click();
+  await expect(training).toHaveAttribute("open", "");
+  await expect(training).toContainText("40 kg × 10 reps");
+  await expect(
+    training.getByRole("button", { name: "Editar", exact: true }),
+  ).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Siempre", exact: true }).click();
   await expect(

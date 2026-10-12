@@ -1,4 +1,5 @@
 "use client";
+import { CalendarPanel } from "@/features/calendar/calendar-panel";
 import { recordPanel } from "@/domain/personal-records";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { localizedSetTypes } from "@/data/set-types";
@@ -41,9 +42,6 @@ export function ProgressScreen() {
   const activeDays = snapshot.routines.find(
     (routine) => routine.id === snapshot.selected,
   )?.days.length;
-  const dailySessions = snapshot.sessions.filter(
-    (session) => dayDetails && localDateKey(session.date) === dayDetails,
-  );
   const moveWeek = (offset: number) => {
     const next = new Date(weekly.start);
     next.setDate(next.getDate() + offset * 7);
@@ -83,90 +81,14 @@ export function ProgressScreen() {
   )[0];
   return (
     <>
-      <AppDialog
-        open={dayDetails !== null}
-        onClose={() => setDayDetails(null)}
-        title={
-          dayDetails
-            ? new Date(`${dayDetails}T12:00:00`).toLocaleDateString(locale, {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })
-            : ""
-        }
-      >
-        <div className="metric-grid">
-          <div>
-            <strong>{dailySessions.length}</strong>
-            <small>{t("sesiones", "sessions")}</small>
-          </div>
-          <div>
-            <strong>
-              {duration(
-                dailySessions.reduce(
-                  (sum, session) => sum + (session.duration ?? 0),
-                  0,
-                ),
-              )}
-            </strong>
-            <small>{t("Tiempo registrado", "Recorded time")}</small>
-          </div>
-          <div>
-            <strong>
-              {Math.round(
-                dailySessions.reduce(
-                  (sum, session) => sum + sessionVolumeKg(session),
-                  0,
-                ) * factor,
-              ).toLocaleString(locale)}{" "}
-              {unit}
-            </strong>
-            <small>{t("Volumen", "Volume")}</small>
-          </div>
-        </div>
-        {dailySessions.map((session) => (
-          <details key={session.id} className="routine-day">
-            <summary>
-              {session.day} · {session.routine}
-            </summary>
-            <p>
-              {session.duration == null
-                ? t("Sin registro", "Not recorded")
-                : duration(session.duration)}{" "}
-              ·{" "}
-              {Math.round(sessionVolumeKg(session) * factor).toLocaleString(
-                locale,
-              )}{" "}
-              {unit}
-            </p>
-            {session.exercises?.map((exercise, index) => (
-              <div key={index}>
-                <strong>
-                  {catalog.find((item) => item.id === exercise.id)?.name ??
-                    exercise.id}
-                </strong>
-                {exercise.performedSets?.map((set, number) => (
-                  <p key={number}>
-                    {set.kg ?? 0} {session.weightUnit ?? "kg"} ×{" "}
-                    {set.seconds ?? set.reps ?? 0}{" "}
-                    {set.seconds != null ? "s" : t("Rep", "Reps")}
-                  </p>
-                ))}
-              </div>
-            ))}
-          </details>
-        ))}
-        {!dailySessions.length && (
-          <p>
-            {t(
-              "No hay entrenamientos guardados este día.",
-              "No workouts saved for this day.",
-            )}
-          </p>
-        )}
-      </AppDialog>
+      {dayDetails && (
+        <CalendarPanel
+          key={dayDetails}
+          initialDate={dayDetails}
+          dialogOnly
+          onClose={() => setDayDetails(null)}
+        />
+      )}
       <section
         className="panel weekly-summary"
         aria-labelledby="weekly-summary-title"
