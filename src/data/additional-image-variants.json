@@ -1,4 +1,8 @@
 {
+  "extension-de-triceps-en-polea": {
+    "hombre": "exercises/additions/extension-de-triceps-en-polea-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-en-polea-femenino.jpg"
+  },
   "plancha-con-flexion": {
     "hombre": "exercises/additions/plancha-con-flexion-masculino.jpg",
     "mujer": "exercises/additions/plancha-con-flexion-femenino.jpg"

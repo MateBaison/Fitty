@@ -95,6 +95,7 @@ test("calf images follow profile gender without changing historical exercise def
     "elevaciones-de-cadera-con-barra",
     "plancha",
     "plancha-con-flexion",
+    "extension-de-triceps-en-polea",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
