@@ -1,4 +1,8 @@
 {
+  "plancha": {
+    "hombre": "exercises/additions/plancha-masculino.jpg",
+    "mujer": "exercises/additions/plancha-femenino.jpg"
+  },
   "elevaciones-de-cadera-con-barra": {
     "hombre": "exercises/additions/elevaciones-de-cadera-con-barra-masculino.jpg",
     "mujer": "exercises/additions/elevaciones-de-cadera-con-barra-femenino.jpg"
