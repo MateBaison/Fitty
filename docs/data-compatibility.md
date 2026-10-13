@@ -59,12 +59,13 @@ The calendar shows localized type letters/colors; editing preserves session dura
 
 ## Workout and summary controls — 2026-10-12
 
-## GPS live pace — 2026-10-13
-
-Active tracking displays recent speed/pace rather than the whole-route average. Transient readings prefer the device's speed in meters/second, with short smoothing and a coordinate fallback. GPS accuracy, actual sample timestamps, noise thresholds and mode-specific plausibility bounds filter new distance increments. Stale readings are hidden; gaps over 15 seconds re-anchor without adding a jump. Finalized routes keep average pace from saved distance/time. Existing routes and their totals are not recalculated, and the saved point/session format remains unchanged. Real-device GPS accuracy and background delivery still need field verification.
 
 New workout entries initialize blank sets from the latest recorded set count for that exercise (three when no history exists). Grouped drops count once; aggregate-only historical set totals are supported. Initialization is bounded at 200 sets and never copies completed values or flags. Routine-derived calendar entries follow the same count.
 
 The repetitions/time switch retains both quantities and the shared load in the draft. Optional `metricStates` preserves entered/done flags separately for repetitions and seconds, including through account cache round trips. Returning to the prior metric restores its flags; switching does not convert one quantity into another or complete untouched defaults. Finalization still saves only the selected performance metric.
 
 Weekly summaries normalize volume to kilograms before display conversion, and the sessions denominator uses the currently active routine's day count. The former independent weekly-goal control is superseded in the UI; its historical setting remains readable. Lifetime totals count all valid recorded sessions and distinct local training dates; unknown durations remain excluded from known time. Weekly day buttons reveal account-local records without changing them.
+
+## GPS live pace — 2026-10-13
+
+Active tracking displays recent speed/pace rather than the whole-route average. Transient readings prefer the device's speed in meters/second, with short smoothing and a coordinate fallback. GPS accuracy, actual sample timestamps, noise thresholds and mode-specific plausibility bounds filter new distance increments. Stale readings are hidden; gaps over 15 seconds re-anchor without adding a jump. Finalized routes keep average pace from saved distance/time. Existing routes and their totals are not recalculated, and the saved point/session format remains unchanged. Real-device GPS accuracy and background delivery still need field verification.
