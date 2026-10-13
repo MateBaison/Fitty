@@ -7,7 +7,12 @@ import {
 } from "@/domain/combat";
 import { useScreenWakeLock } from "@/lib/browser/use-screen-wake-lock";
 import { CombatAudio } from "@/lib/browser/combat-audio";
-import { haversine, recordedRoute, type Point } from "@/domain/tracking";
+import {
+  gpsReading,
+  recordedRoute,
+  type GPSReading,
+  type Point,
+} from "@/domain/tracking";
 import { useApp } from "@/state/app-provider";
 type Track = {
   mode: "run" | "cycle";
@@ -21,6 +26,8 @@ type Track = {
   points: Point[];
   error: string;
   saved: boolean;
+  currentSpeed: number;
+  fixTime: number;
 };
 type ClockContext = {
   now: number;
@@ -62,6 +69,8 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
     points: [],
     error: "",
     saved: false,
+    currentSpeed: 0,
+    fixTime: 0,
   });
   const combat = useRef(new CombatMachine()),
     audio = useRef(new CombatAudio()),
@@ -85,7 +94,9 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
       navigator.geolocation?.clearWatch(watch.current);
     watch.current = null;
   };
+  const gps = useRef<GPSReading | null>(null);
   const startGPS = () => {
+    gps.current = null;
     if (!navigator.geolocation) {
       setTrack((previous) => ({
         ...previous,
@@ -99,6 +110,8 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
       ...previous,
       running: true,
       preparing: false,
+      currentSpeed: 0,
+      fixTime: 0,
       started: Date.now() - (previous.saved ? 0 : previous.elapsed) * 1000,
       ...(previous.saved
         ? { elapsed: 0, points: [], distance: 0, saved: false }
@@ -107,31 +120,38 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
     }));
     watch.current = navigator.geolocation.watchPosition(
       (position) => {
-        const point = {
+        if (!trackRef.current.running) return;
+        const result = gpsReading(
+          gps.current,
+          {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+            time: position.timestamp,
+            speed: position.coords.speed,
+            accuracy: position.coords.accuracy,
+          },
+          trackRef.current.mode,
+          Date.now(),
+        );
+        if (!result) return;
+        gps.current = result.reading;
+        const point: Point = {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
-          time: Date.now(),
-          speed: Number.isFinite(position.coords.speed)
-            ? Math.max(0, position.coords.speed ?? 0)
-            : 0,
+          time: position.timestamp,
+          speed: result.reading.speed,
         };
-        if (
-          !Number.isFinite(point.lat) ||
-          !Number.isFinite(point.lon) ||
-          Math.abs(point.lat) > 90 ||
-          Math.abs(point.lon) > 180
-        )
-          return;
-        setTrack((previous) => {
-          if (!previous.running) return previous;
-          const last = previous.points.at(-1),
-            distance = last ? haversine(last, point) : 0;
-          return {
-            ...previous,
-            distance: previous.distance + (distance < 200 ? distance : 0),
-            points: [...previous.points, point],
-          };
-        });
+        setTrack((previous) =>
+          previous.running
+            ? {
+                ...previous,
+                distance: previous.distance + result.distance,
+                points: [...previous.points, point],
+                currentSpeed: result.reading.speed,
+                fixTime: point.time,
+              }
+            : previous,
+        );
       },
       () => {
         stopWatch();
@@ -143,7 +163,7 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
             "No se pudo acceder a tu ubicación. Revisá el permiso del navegador.",
         }));
       },
-      { enableHighAccuracy: true, maximumAge: 3000, timeout: 12000 },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 12000 },
     );
   };
   const startGPSRef = useRef(startGPS);

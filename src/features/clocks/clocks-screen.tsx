@@ -31,11 +31,18 @@ export function ClocksScreen() {
   const kg =
       Number(snapshot.profile.weight ?? 75) /
       (snapshot.settings.weight === "lb" ? 2.20462 : 1),
+    speed = track.running
+      ? clock.now - track.fixTime <= 10000
+        ? track.currentSpeed
+        : 0
+      : track.elapsed
+        ? track.distance / track.elapsed
+        : 0,
     pace =
-      distance && track.elapsed
+      speed >= 0.5
         ? track.mode === "cycle"
-          ? `${(distance / (track.elapsed / 3600)).toFixed(1)} ${snapshot.settings.distance === "mi" ? "mph" : "km/h"}`
-          : `${timeFormat(track.elapsed / distance)} /${snapshot.settings.distance}`
+          ? `${(speed * (snapshot.settings.distance === "mi" ? 2.236936 : 3.6)).toFixed(1)} ${snapshot.settings.distance === "mi" ? "mph" : "km/h"}`
+          : `${timeFormat((snapshot.settings.distance === "mi" ? 1609.344 : 1000) / speed)} /${snapshot.settings.distance}`
         : "—";
   return (
     <>
