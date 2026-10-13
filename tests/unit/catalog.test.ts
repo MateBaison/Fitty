@@ -48,7 +48,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(21);
+    expect(Object.keys(imageVariants)).toHaveLength(22);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -90,6 +90,7 @@ test("calf images follow profile gender without changing historical exercise def
     "elevacion-de-gemelos-sentado",
     "elevacion-de-gemelos-de-pie",
     "elevaciones-de-cadera-acostado-lateralmente",
+    "elevaciones-de-cadera-con-barra",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(

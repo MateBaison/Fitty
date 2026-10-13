@@ -1,4 +1,8 @@
 {
+  "elevaciones-de-cadera-con-barra": {
+    "hombre": "exercises/additions/elevaciones-de-cadera-con-barra-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-de-cadera-con-barra-femenino.jpg"
+  },
   "elevaciones-de-cadera-acostado-lateralmente": {
     "hombre": "exercises/additions/elevaciones-de-cadera-acostado-lateralmente-masculino.jpg",
     "mujer": "exercises/additions/elevaciones-de-cadera-acostado-lateralmente-femenino.jpg"
