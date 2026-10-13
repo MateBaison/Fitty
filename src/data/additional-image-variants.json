@@ -1,4 +1,12 @@
 {
+  "extension-de-triceps-tumbado": {
+    "hombre": "exercises/additions/extension-de-triceps-tumbado-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-tumbado-femenino.jpg"
+  },
+  "extension-de-triceps-en-polea-con-cuerda": {
+    "hombre": "exercises/additions/extension-de-triceps-en-polea-con-cuerda-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-en-polea-con-cuerda-femenino.jpg"
+  },
   "extension-de-triceps-en-polea": {
     "hombre": "exercises/additions/extension-de-triceps-en-polea-masculino.jpg",
     "mujer": "exercises/additions/extension-de-triceps-en-polea-femenino.jpg"
