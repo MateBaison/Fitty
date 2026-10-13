@@ -1,4 +1,8 @@
 {
+  "plancha-con-flexion": {
+    "hombre": "exercises/additions/plancha-con-flexion-masculino.jpg",
+    "mujer": "exercises/additions/plancha-con-flexion-femenino.jpg"
+  },
   "plancha": {
     "hombre": "exercises/additions/plancha-masculino.jpg",
     "mujer": "exercises/additions/plancha-femenino.jpg"
@@ -16,8 +20,8 @@
     "mujer": "exercises/additions/sentadilla-femenino.jpg"
   },
   "plancha-lateral": {
-    "hombre": "exercises/additions/plancha-lateral-masculino.jpg",
-    "mujer": "exercises/additions/plancha-lateral-femenino.jpg"
+    "hombre": "exercises/additions/plancha-lateral-v2-masculino.jpg",
+    "mujer": "exercises/additions/plancha-lateral-v2-femenino.jpg"
   },
   "lumbares-superman": {
     "hombre": "exercises/additions/lumbares-superman-masculino.jpg",

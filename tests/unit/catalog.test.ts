@@ -48,7 +48,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(23);
+    expect(Object.keys(imageVariants)).toHaveLength(24);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -61,9 +61,11 @@ describe("Phase 1 catalog/asset parity", () => {
         id === "plancha-lateral" ? "seconds" : "reps",
       );
       expect(exerciseImage(exercise, "hombre")).toContain(
-        `${id}-masculino.jpg`,
+        `${id}${id === "plancha-lateral" ? "-v2" : ""}-masculino.jpg`,
       );
-      expect(exerciseImage(exercise, "mujer")).toContain(`${id}-femenino.jpg`);
+      expect(exerciseImage(exercise, "mujer")).toContain(
+        `${id}${id === "plancha-lateral" ? "-v2" : ""}-femenino.jpg`,
+      );
     }
     expect(
       exercises.find((exercise) => exercise.id === "plancha")?.tracking,
@@ -92,6 +94,7 @@ test("calf images follow profile gender without changing historical exercise def
     "elevaciones-de-cadera-acostado-lateralmente",
     "elevaciones-de-cadera-con-barra",
     "plancha",
+    "plancha-con-flexion",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
