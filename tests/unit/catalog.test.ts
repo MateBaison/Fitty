@@ -44,10 +44,10 @@ describe("Phase 1 catalog/asset parity", () => {
     );
     if (!exercise) throw new Error("Missing canonical exercise");
     expect(exerciseImage(exercise, "hombre")).toBe(
-      "/assets/exercises/additions/extension-de-triceps-con-polea-trasnuca-masculino.jpg",
+      "/assets/exercises/additions/extension-de-triceps-con-polea-trasnuca-v2-masculino.jpg",
     );
     expect(exerciseImage(exercise, "mujer")).toBe(
-      "/assets/exercises/additions/extension-de-triceps-con-polea-trasnuca-femenino.jpg",
+      "/assets/exercises/additions/extension-de-triceps-con-polea-trasnuca-v2-femenino.jpg",
     );
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
@@ -107,10 +107,10 @@ test("calf images follow profile gender without changing historical exercise def
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
-      `/assets/exercises/additions/${id}-masculino.jpg`,
+      `/assets/exercises/additions/${id}${id === "extension-de-triceps-con-polea-trasnuca" ? "-v2" : ""}-masculino.jpg`,
     );
     expect(exerciseImage(exercise, "mujer")).toBe(
-      `/assets/exercises/additions/${id}-femenino.jpg`,
+      `/assets/exercises/additions/${id}${id === "extension-de-triceps-con-polea-trasnuca" ? "-v2" : ""}-femenino.jpg`,
     );
     expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
   }
