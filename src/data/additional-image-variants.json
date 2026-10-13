@@ -1,4 +1,8 @@
 {
+  "elevaciones-de-cadera-acostado-lateralmente": {
+    "hombre": "exercises/additions/elevaciones-de-cadera-acostado-lateralmente-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-de-cadera-acostado-lateralmente-femenino.jpg"
+  },
   "sentadillas-con-propio-peso": {
     "hombre": "exercises/additions/sentadilla-masculino.jpg",
     "mujer": "exercises/additions/sentadilla-femenino.jpg"
