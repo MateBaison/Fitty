@@ -1,4 +1,12 @@
 {
+  "extension-de-triceps-con-polea-trasnuca": {
+    "hombre": "exercises/additions/extension-de-triceps-con-polea-trasnuca-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-con-polea-trasnuca-femenino.jpg"
+  },
+  "press-de-banca-con-barra": {
+    "hombre": "exercises/additions/press-de-banca-con-barra-masculino.jpg",
+    "mujer": "exercises/additions/press-de-banca-con-barra-femenino.jpg"
+  },
   "extension-de-triceps-tumbado": {
     "hombre": "exercises/additions/extension-de-triceps-tumbado-masculino.jpg",
     "mujer": "exercises/additions/extension-de-triceps-tumbado-femenino.jpg"

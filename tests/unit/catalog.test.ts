@@ -43,12 +43,16 @@ describe("Phase 1 catalog/asset parity", () => {
       (item) => item.id === "extension-de-triceps-con-polea-trasnuca",
     );
     if (!exercise) throw new Error("Missing canonical exercise");
-    expect(exerciseImage(exercise, "hombre")).toContain("maniqui-v2.jpg");
-    expect(exerciseImage(exercise, "mujer")).toContain("femenino-v1.jpg");
+    expect(exerciseImage(exercise, "hombre")).toBe(
+      "/assets/exercises/additions/extension-de-triceps-con-polea-trasnuca-masculino.jpg",
+    );
+    expect(exerciseImage(exercise, "mujer")).toBe(
+      "/assets/exercises/additions/extension-de-triceps-con-polea-trasnuca-femenino.jpg",
+    );
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(24);
+    expect(Object.keys(imageVariants)).toHaveLength(25);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -98,6 +102,8 @@ test("calf images follow profile gender without changing historical exercise def
     "extension-de-triceps-en-polea",
     "extension-de-triceps-tumbado",
     "extension-de-triceps-en-polea-con-cuerda",
+    "press-de-banca-con-barra",
+    "extension-de-triceps-con-polea-trasnuca",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
