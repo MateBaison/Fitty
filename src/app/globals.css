@@ -2087,7 +2087,7 @@ input[type="range"] {
   place-items: center;
   background: #052e4f;
   pointer-events: none;
-  animation: launch-splash-dismiss 250ms ease-out 1800ms forwards;
+  animation: launch-splash-dismiss 250ms ease-out 1250ms forwards;
 }
 .launch-splash-isotype {
   display: block;
@@ -2103,6 +2103,6 @@ input[type="range"] {
 @media (prefers-reduced-motion: reduce) {
   .launch-splash {
     animation-duration: 1ms;
-    animation-delay: 2000ms;
+    animation-delay: 1499ms;
   }
 }

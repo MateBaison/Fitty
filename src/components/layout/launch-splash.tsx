@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export function LaunchSplash() {
   const [visible, setVisible] = useState(true);
   useEffect(() => {
-    const timer = window.setTimeout(() => setVisible(false), 2200);
+    const timer = window.setTimeout(() => setVisible(false), 1500);
     return () => window.clearTimeout(timer);
   }, []);
   if (!visible) return null;

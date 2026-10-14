@@ -20,7 +20,7 @@ test("launch isotipo disappears and does not replay during app navigation", asyn
   await page.screenshot({
     path: `artifacts/launch-isotype-${info.project.name}.png`,
   });
-  await expect(splash).toBeHidden({ timeout: 4000 });
+  await expect(splash).toBeHidden({ timeout: 2500 });
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute(
     "href",
     "/assets/brand/fitty-isotype-180.png",
@@ -38,6 +38,10 @@ test("launch isotipo disappears and does not replay during app navigation", asyn
   await expect(page).toHaveURL(/\/library$/);
   await expect(splash).toHaveCount(0);
   await expect(page.locator('img[src*="fitty-isotype"]')).toHaveCount(0);
+  await expect(page.locator('header img[alt="FITTY"]')).toHaveAttribute(
+    "src",
+    "/assets/fitty-logo.png",
+  );
   await page.screenshot({
     path: `artifacts/launch-after-library-${info.project.name}.png`,
   });
