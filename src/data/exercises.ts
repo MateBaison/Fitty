@@ -16,7 +16,10 @@ export const exercises: ReadonlyArray<Exercise> = z
   .array(exerciseSchema)
   .parse([...rawExercises, ...additions]);
 // Keep definitions for saved routines/history while excluding retired choices.
-const retiredExerciseIds = new Set(["abdominales-con-brazos-estirados"]);
+const retiredExerciseIds = new Set([
+  "abdominales-con-brazos-estirados",
+  "extension-de-triceps-con-cable-a-una-mano-con-agarre-supinado",
+]);
 export const availableExercises = exercises.filter(
   (exercise) => !retiredExerciseIds.has(exercise.id),
 );

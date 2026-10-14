@@ -68,3 +68,22 @@ test("new automatic routines never select retired exercises", () => {
     expect(routine.days.flatMap((day) => day.items)).not.toContain(retiredId);
   }
 });
+
+test("single-arm supinated triceps is hidden but its historical definition remains", () => {
+  const snapshot = createDefaultSnapshot();
+  const id = "extension-de-triceps-con-cable-a-una-mano-con-agarre-supinado";
+  expect(catalogFor(snapshot).some((exercise) => exercise.id === id)).toBe(
+    false,
+  );
+  expect(findExercise(snapshot, id)?.group).toBe("Tríceps");
+  expect(
+    findExercise(snapshot, "extension-de-triceps-con-cable-a-una-mano"),
+  ).toBeDefined();
+  for (let days = 1; days <= 7; days++) {
+    const routine = buildAutomaticRoutine(
+      { groups: ["Tríceps"], days },
+      { makeId: () => "triceps-retired", language: "es" },
+    );
+    expect(routine.days.flatMap((day) => day.items)).not.toContain(id);
+  }
+});

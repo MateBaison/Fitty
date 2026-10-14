@@ -91,7 +91,7 @@ describe("Phase 1 catalog/asset parity", () => {
   });
 });
 
-test("calf images follow profile gender without changing historical exercise definitions", () => {
+test("library images follow profile gender without changing historical exercise definitions", () => {
   for (const id of [
     "elevacion-de-gemelos-sentado",
     "elevacion-de-gemelos-de-pie",
@@ -110,13 +110,19 @@ test("calf images follow profile gender without changing historical exercise def
     "abdominales-con-cuerda-en-polea-alta",
     "elevacion-de-piernas",
     "encogimientos-de-rodillas-para-abdominales",
+    "extension-de-triceps-con-mancuernas-por-encima-de-la-cabeza",
+    "press-banca-con-agarre-cerrado",
+    "patadas-traseras",
+    "extension-de-triceps-con-cable-de-agarre-inverso-con-barra",
+    "extension-de-triceps-con-cable-a-una-mano",
+    "press-frances-sentado-con-barra",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
-      `/assets/exercises/additions/${id}${id === "extension-de-triceps-con-polea-trasnuca" ? "-v2" : ""}-masculino.jpg`,
+      `/assets/exercises/additions/${id}${["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta"].includes(id) ? "-v2" : ""}-masculino.jpg`,
     );
     expect(exerciseImage(exercise, "mujer")).toBe(
-      `/assets/exercises/additions/${id}${id === "extension-de-triceps-con-polea-trasnuca" ? "-v2" : ""}-femenino.jpg`,
+      `/assets/exercises/additions/${id}${["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta"].includes(id) ? "-v2" : ""}-femenino.jpg`,
     );
     expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
   }

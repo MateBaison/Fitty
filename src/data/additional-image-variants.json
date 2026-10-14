@@ -72,8 +72,8 @@
     "mujer": "exercises/additions/abdominales-en-maquina-femenino.jpg"
   },
   "abdominales-con-cuerda-en-polea-alta": {
-    "hombre": "exercises/additions/abdominales-con-cuerda-en-polea-alta-masculino.jpg",
-    "mujer": "exercises/additions/abdominales-con-cuerda-en-polea-alta-femenino.jpg"
+    "hombre": "exercises/additions/abdominales-con-cuerda-en-polea-alta-v2-masculino.jpg",
+    "mujer": "exercises/additions/abdominales-con-cuerda-en-polea-alta-v2-femenino.jpg"
   },
   "elevacion-de-piernas": {
     "hombre": "exercises/additions/elevacion-de-piernas-masculino.jpg",
@@ -82,5 +82,29 @@
   "encogimientos-de-rodillas-para-abdominales": {
     "hombre": "exercises/additions/encogimientos-de-rodillas-para-abdominales-masculino.jpg",
     "mujer": "exercises/additions/encogimientos-de-rodillas-para-abdominales-femenino.jpg"
+  },
+  "extension-de-triceps-con-mancuernas-por-encima-de-la-cabeza": {
+    "hombre": "exercises/additions/extension-de-triceps-con-mancuernas-por-encima-de-la-cabeza-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-con-mancuernas-por-encima-de-la-cabeza-femenino.jpg"
+  },
+  "extension-de-triceps-con-cable-a-una-mano": {
+    "hombre": "exercises/additions/extension-de-triceps-con-cable-a-una-mano-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-con-cable-a-una-mano-femenino.jpg"
+  },
+  "press-frances-sentado-con-barra": {
+    "hombre": "exercises/additions/press-frances-sentado-con-barra-masculino.jpg",
+    "mujer": "exercises/additions/press-frances-sentado-con-barra-femenino.jpg"
+  },
+  "press-banca-con-agarre-cerrado": {
+    "hombre": "exercises/additions/press-banca-con-agarre-cerrado-masculino.jpg",
+    "mujer": "exercises/additions/press-banca-con-agarre-cerrado-femenino.jpg"
+  },
+  "patadas-traseras": {
+    "hombre": "exercises/additions/patadas-traseras-masculino.jpg",
+    "mujer": "exercises/additions/patadas-traseras-femenino.jpg"
+  },
+  "extension-de-triceps-con-cable-de-agarre-inverso-con-barra": {
+    "hombre": "exercises/additions/extension-de-triceps-con-cable-de-agarre-inverso-con-barra-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-con-cable-de-agarre-inverso-con-barra-femenino.jpg"
   }
 }

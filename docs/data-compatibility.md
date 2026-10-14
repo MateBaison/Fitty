@@ -72,4 +72,4 @@ Active tracking displays recent speed/pace rather than the whole-route average. 
 
 ## Retired library choices — 2026-10-13
 
-`abdominales-con-brazos-estirados` is excluded from the available library, exercise pickers, replacements and new automatic routines. Its original definition, ID and image remain intact for saved routines, active workouts, imports and history. Progress resolves the complete catalog so older rows without a stored muscle group retain their abdominal set totals. No account snapshot is rewritten or deleted by retirement.
+`abdominales-con-brazos-estirados` and `extension-de-triceps-con-cable-a-una-mano-con-agarre-supinado` are excluded from the available library, exercise pickers, replacements and new automatic routines. Their original definitions, IDs and images remain intact for saved routines, active workouts, imports and history. Progress resolves the complete catalog so older rows without a stored muscle group retain their muscle set totals. No account snapshot is rewritten or deleted by retirement.
