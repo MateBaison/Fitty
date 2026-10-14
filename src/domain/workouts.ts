@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { exercises, muscleImages } from "@/data/exercises";
+import { availableExercises, exercises, muscleImages } from "@/data/exercises";
 import { muscleGroupSchema, type Exercise } from "./schemas/exercise";
 import {
   customExerciseFormSchema,
@@ -9,9 +9,12 @@ import {
 export type CatalogExercise = Exercise & { custom?: boolean };
 export type Session = Snapshot["sessions"][number];
 export type Entry = NonNullable<Snapshot["workout"]>["entries"][number];
-export function catalogFor(snapshot: Snapshot): CatalogExercise[] {
+export function catalogFor(
+  snapshot: Snapshot,
+  includeRetired = false,
+): CatalogExercise[] {
   return [
-    ...exercises,
+    ...(includeRetired ? exercises : availableExercises),
     ...snapshot.customExercises.flatMap((item) => {
       const parsed = customExerciseFormSchema.safeParse({
         id: item.id,
@@ -35,7 +38,7 @@ export function catalogFor(snapshot: Snapshot): CatalogExercise[] {
   ];
 }
 export function findExercise(snapshot: Snapshot, id: string) {
-  return catalogFor(snapshot).find((item) => item.id === id);
+  return catalogFor(snapshot, true).find((item) => item.id === id);
 }
 export function metricFor(
   snapshot: Snapshot,

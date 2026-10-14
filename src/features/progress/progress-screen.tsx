@@ -51,7 +51,7 @@ export function ProgressScreen() {
   const duration = (minutes: number) =>
     `${Math.floor(Math.round(minutes) / 60)} h ${Math.round(minutes) % 60} min`;
   const history = exerciseHistories(snapshot, includeWarmups),
-    catalog = catalogFor(snapshot),
+    catalog = catalogFor(snapshot, true),
     weeks = weeklyData(snapshot, window),
     unit = snapshot.settings.weight ?? "kg",
     factor = unit === "lb" ? 2.20462 : 1;

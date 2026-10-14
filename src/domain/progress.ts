@@ -94,7 +94,7 @@ export function weeklyData(
 ) {
   const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
-  const catalog = catalogFor(snapshot);
+  const catalog = catalogFor(snapshot, true);
   return Array.from({ length: count }, (_, index) => {
     const start = new Date(monday);
     start.setDate(start.getDate() - (count - 1 - index) * 7);

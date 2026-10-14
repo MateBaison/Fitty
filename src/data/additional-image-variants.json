@@ -58,5 +58,29 @@
   "elevacion-de-gemelos-de-pie": {
     "hombre": "exercises/additions/elevacion-de-gemelos-de-pie-masculino.jpg",
     "mujer": "exercises/additions/elevacion-de-gemelos-de-pie-femenino.jpg"
+  },
+  "crunch": {
+    "hombre": "exercises/additions/crunch-masculino.jpg",
+    "mujer": "exercises/additions/crunch-femenino.jpg"
+  },
+  "crunch-oblicuo": {
+    "hombre": "exercises/additions/crunch-oblicuo-masculino.jpg",
+    "mujer": "exercises/additions/crunch-oblicuo-femenino.jpg"
+  },
+  "abdominales-en-maquina": {
+    "hombre": "exercises/additions/abdominales-en-maquina-masculino.jpg",
+    "mujer": "exercises/additions/abdominales-en-maquina-femenino.jpg"
+  },
+  "abdominales-con-cuerda-en-polea-alta": {
+    "hombre": "exercises/additions/abdominales-con-cuerda-en-polea-alta-masculino.jpg",
+    "mujer": "exercises/additions/abdominales-con-cuerda-en-polea-alta-femenino.jpg"
+  },
+  "elevacion-de-piernas": {
+    "hombre": "exercises/additions/elevacion-de-piernas-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-de-piernas-femenino.jpg"
+  },
+  "encogimientos-de-rodillas-para-abdominales": {
+    "hombre": "exercises/additions/encogimientos-de-rodillas-para-abdominales-masculino.jpg",
+    "mujer": "exercises/additions/encogimientos-de-rodillas-para-abdominales-femenino.jpg"
   }
 }

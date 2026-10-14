@@ -52,7 +52,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(25);
+    expect(Object.keys(imageVariants)).toHaveLength(31);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -104,6 +104,12 @@ test("calf images follow profile gender without changing historical exercise def
     "extension-de-triceps-en-polea-con-cuerda",
     "press-de-banca-con-barra",
     "extension-de-triceps-con-polea-trasnuca",
+    "crunch",
+    "crunch-oblicuo",
+    "abdominales-en-maquina",
+    "abdominales-con-cuerda-en-polea-alta",
+    "elevacion-de-piernas",
+    "encogimientos-de-rodillas-para-abdominales",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(

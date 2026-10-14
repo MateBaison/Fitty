@@ -1,0 +1,70 @@
+import { expect, test } from "bun:test";
+import { createDefaultSnapshot } from "../../src/domain/legacy/read-snapshot";
+import {
+  catalogFor,
+  findExercise,
+  startWorkout,
+  buildSession,
+} from "../../src/domain/workouts";
+import { weeklyData } from "../../src/domain/progress";
+import { buildAutomaticRoutine } from "../../src/domain/calculations/automatic-routine";
+
+const retiredId = "abdominales-con-brazos-estirados";
+
+test("retired library choice remains usable in saved routines and history", () => {
+  const snapshot = createDefaultSnapshot();
+  expect(
+    catalogFor(snapshot).some((exercise) => exercise.id === retiredId),
+  ).toBe(false);
+  expect(findExercise(snapshot, retiredId)?.name).toBe(
+    "Abdominales con brazos estirados",
+  );
+  const routine = snapshot.routines[0]!;
+  const day = routine.days[0]!;
+  day.items = [retiredId];
+  startWorkout(snapshot, routine.id, day.id);
+  snapshot.workout!.entries[0]!.sets[0] = {
+    kg: 0,
+    reps: 12,
+    entered: true,
+    done: true,
+  };
+  const session = buildSession(
+    snapshot,
+    snapshot.workout!.entries,
+    { routine: routine.name, day: day.name },
+    "2026-10-13T12:00:00",
+    {
+      color: "#4b9bff",
+      comment: "",
+      photos: [],
+      bodyWeightStartKg: null,
+      bodyWeightEndKg: null,
+    },
+  );
+  expect(session.exercises?.[0]?.id).toBe(retiredId);
+  // Historical rows lacking a saved muscle group still resolve their catalog definition.
+  snapshot.sessions = [
+    {
+      ...session,
+      date: "2026-10-13T12:00:00",
+      groupSets: undefined,
+      exercises: [{ id: retiredId, sets: 3 }],
+    },
+  ];
+  expect(
+    weeklyData(snapshot, 1, new Date("2026-10-13T12:00:00"))[0]?.groups
+      .Abdominales,
+  ).toBe(3);
+  expect(day.items).toEqual([retiredId]);
+});
+
+test("new automatic routines never select retired exercises", () => {
+  for (let days = 1; days <= 7; days++) {
+    const routine = buildAutomaticRoutine(
+      { groups: ["Abdominales"], days },
+      { makeId: () => "retired-test", language: "es" },
+    );
+    expect(routine.days.flatMap((day) => day.items)).not.toContain(retiredId);
+  }
+});

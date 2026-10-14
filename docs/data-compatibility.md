@@ -69,3 +69,7 @@ Weekly summaries normalize volume to kilograms before display conversion, and th
 ## GPS live pace — 2026-10-13
 
 Active tracking displays recent speed/pace rather than the whole-route average. Transient readings prefer the device's speed in meters/second, with short smoothing and a coordinate fallback. GPS accuracy, actual sample timestamps, noise thresholds and mode-specific plausibility bounds filter new distance increments. Stale readings are hidden; gaps over 15 seconds re-anchor without adding a jump. Finalized routes keep average pace from saved distance/time. Existing routes and their totals are not recalculated, and the saved point/session format remains unchanged. Real-device GPS accuracy and background delivery still need field verification.
+
+## Retired library choices — 2026-10-13
+
+`abdominales-con-brazos-estirados` is excluded from the available library, exercise pickers, replacements and new automatic routines. Its original definition, ID and image remain intact for saved routines, active workouts, imports and history. Progress resolves the complete catalog so older rows without a stored muscle group retain their abdominal set totals. No account snapshot is rewritten or deleted by retirement.

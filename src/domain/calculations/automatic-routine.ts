@@ -1,6 +1,6 @@
 import { z } from "zod";
 import rawPools from "@/data/legacy/automaticPools.json";
-import { exercises } from "@/data/exercises";
+import { availableExercises } from "@/data/exercises";
 import { translate } from "@/data/translations";
 import {
   muscleGroups,
@@ -63,7 +63,7 @@ export function buildAutomaticRoutine(
     selected.map((group) => [
       group,
       pools[group].filter((id) =>
-        exercises.some(
+        availableExercises.some(
           (exercise) => exercise.id === id && exercise.group === group,
         ),
       ),
