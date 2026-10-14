@@ -1,0 +1,20 @@
+[
+  {
+    "id": "press-banca-con-agarre-cerrado",
+    "male": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-dcdbb0ed-4ff0-42c1-a5bb-6a9a23a8b00f.png",
+    "female": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-36c0fc72-31cc-44d1-9a74-c67ee899951c.png",
+    "suffix": "-v2"
+  },
+  {
+    "id": "extension-de-triceps-con-cable-de-agarre-inverso-con-barra",
+    "male": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-0e4769f3-33ef-4ed0-8af2-8a7bd68bb750.png",
+    "female": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-82f1880c-88f2-432a-bf75-740cffa96ce7.png",
+    "suffix": "-v2"
+  },
+  {
+    "id": "press-banca-inclinado-con-mancuernas",
+    "male": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-e5105e6b-3bd4-4465-a845-b7e2b4fa07d4.png",
+    "female": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-55625426-5501-4e30-8d37-10eb7aab0b6d.png",
+    "suffix": ""
+  }
+]

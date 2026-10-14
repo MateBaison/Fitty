@@ -96,15 +96,19 @@
     "mujer": "exercises/additions/press-frances-sentado-con-barra-femenino.jpg"
   },
   "press-banca-con-agarre-cerrado": {
-    "hombre": "exercises/additions/press-banca-con-agarre-cerrado-masculino.jpg",
-    "mujer": "exercises/additions/press-banca-con-agarre-cerrado-femenino.jpg"
+    "hombre": "exercises/additions/press-banca-con-agarre-cerrado-v2-masculino.jpg",
+    "mujer": "exercises/additions/press-banca-con-agarre-cerrado-v2-femenino.jpg"
   },
   "patadas-traseras": {
     "hombre": "exercises/additions/patadas-traseras-masculino.jpg",
     "mujer": "exercises/additions/patadas-traseras-femenino.jpg"
   },
   "extension-de-triceps-con-cable-de-agarre-inverso-con-barra": {
-    "hombre": "exercises/additions/extension-de-triceps-con-cable-de-agarre-inverso-con-barra-masculino.jpg",
-    "mujer": "exercises/additions/extension-de-triceps-con-cable-de-agarre-inverso-con-barra-femenino.jpg"
+    "hombre": "exercises/additions/extension-de-triceps-con-cable-de-agarre-inverso-con-barra-v2-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-triceps-con-cable-de-agarre-inverso-con-barra-v2-femenino.jpg"
+  },
+  "press-banca-inclinado-con-mancuernas": {
+    "hombre": "exercises/additions/press-banca-inclinado-con-mancuernas-masculino.jpg",
+    "mujer": "exercises/additions/press-banca-inclinado-con-mancuernas-femenino.jpg"
   }
 }

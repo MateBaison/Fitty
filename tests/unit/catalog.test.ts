@@ -52,7 +52,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(31);
+    expect(Object.keys(imageVariants)).toHaveLength(32);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -116,13 +116,14 @@ test("library images follow profile gender without changing historical exercise 
     "extension-de-triceps-con-cable-de-agarre-inverso-con-barra",
     "extension-de-triceps-con-cable-a-una-mano",
     "press-frances-sentado-con-barra",
+    "press-banca-inclinado-con-mancuernas",
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
-      `/assets/exercises/additions/${id}${["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta"].includes(id) ? "-v2" : ""}-masculino.jpg`,
+      `/assets/exercises/additions/${id}${["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta", "press-banca-con-agarre-cerrado", "extension-de-triceps-con-cable-de-agarre-inverso-con-barra"].includes(id) ? "-v2" : ""}-masculino.jpg`,
     );
     expect(exerciseImage(exercise, "mujer")).toBe(
-      `/assets/exercises/additions/${id}${["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta"].includes(id) ? "-v2" : ""}-femenino.jpg`,
+      `/assets/exercises/additions/${id}${["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta", "press-banca-con-agarre-cerrado", "extension-de-triceps-con-cable-de-agarre-inverso-con-barra"].includes(id) ? "-v2" : ""}-femenino.jpg`,
     );
     expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
   }

@@ -2078,3 +2078,31 @@ input[type="range"] {
   padding-inline: 12px;
   font-size: 0.8rem;
 }
+
+.launch-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: grid;
+  place-items: center;
+  background: #052e4f;
+  pointer-events: none;
+  animation: launch-splash-dismiss 250ms ease-out 1800ms forwards;
+}
+.launch-splash-isotype {
+  display: block;
+  width: min(240px, 60vw);
+  height: auto;
+}
+@keyframes launch-splash-dismiss {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-splash {
+    animation-duration: 1ms;
+    animation-delay: 2000ms;
+  }
+}
