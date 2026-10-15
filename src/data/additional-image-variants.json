@@ -1,4 +1,8 @@
 {
+  "cruce-de-poleas": {
+    "hombre": "exercises/additions/cruce-de-poleas-masculino.jpg",
+    "mujer": "exercises/additions/cruce-de-poleas-femenino.jpg"
+  },
   "extension-de-triceps-con-polea-trasnuca": {
     "hombre": "exercises/additions/extension-de-triceps-con-polea-trasnuca-v2-masculino.jpg",
     "mujer": "exercises/additions/extension-de-triceps-con-polea-trasnuca-v2-femenino.jpg"
@@ -114,5 +118,21 @@
   "aperturas-en-maquina-peck-deck-o-contractora": {
     "hombre": "exercises/additions/aperturas-en-maquina-peck-deck-o-contractora-masculino.jpg",
     "mujer": "exercises/additions/aperturas-en-maquina-peck-deck-o-contractora-femenino.jpg"
+  },
+  "press-de-banca-inclinado-con-barra": {
+    "hombre": "exercises/additions/press-de-banca-inclinado-con-barra-v3-masculino.jpg",
+    "mujer": "exercises/additions/press-de-banca-inclinado-con-barra-v3-femenino.jpg"
+  },
+  "press-de-banca-con-mancuernas": {
+    "hombre": "exercises/additions/press-de-banca-con-mancuernas-v3-masculino.jpg",
+    "mujer": "exercises/additions/press-de-banca-con-mancuernas-v3-femenino.jpg"
+  },
+  "aperturas-con-mancuernas": {
+    "hombre": "exercises/additions/aperturas-con-mancuernas-v3-masculino.jpg",
+    "mujer": "exercises/additions/aperturas-con-mancuernas-v3-femenino.jpg"
+  },
+  "aperturas-inclinadas-con-mancuernas": {
+    "hombre": "exercises/additions/aperturas-inclinadas-con-mancuernas-v3-masculino.jpg",
+    "mujer": "exercises/additions/aperturas-inclinadas-con-mancuernas-v3-femenino.jpg"
   }
 }

@@ -13,6 +13,23 @@ test("launch isotipo disappears and does not replay during app navigation", asyn
   await page.goto("/", { waitUntil: "domcontentloaded" });
   const splash = page.getByTestId("launch-splash");
   await expect(splash).toBeVisible();
+  await expect(splash.locator(".launch-splash-wordmark")).toHaveText("Fitty");
+  const brand = await splash.locator(".launch-splash-brand").boundingBox();
+  const icon = await splash.locator("img").boundingBox();
+  const wordmark = await splash
+    .locator(".launch-splash-wordmark")
+    .boundingBox();
+  const viewport = page.viewportSize()!;
+  expect(brand).not.toBeNull();
+  expect(icon).not.toBeNull();
+  expect(wordmark).not.toBeNull();
+  expect(
+    Math.abs(brand!.x + brand!.width / 2 - viewport.width / 2),
+  ).toBeLessThan(2);
+  expect(
+    Math.abs(brand!.y + brand!.height / 2 - viewport.height / 2),
+  ).toBeLessThan(2);
+  expect(wordmark!.y).toBeGreaterThan(icon!.y + icon!.height);
   await expect(splash.locator("img")).toHaveAttribute(
     "src",
     "/assets/brand/fitty-isotype-512.png",

@@ -16,14 +16,17 @@ export function LaunchSplash() {
       aria-hidden="true"
       data-testid="launch-splash"
     >
-      <img
-        src="/assets/brand/fitty-isotype-512.png"
-        width={240}
-        height={240}
-        alt=""
-        fetchPriority="high"
-        className="launch-splash-isotype"
-      />
+      <div className="launch-splash-brand">
+        <img
+          src="/assets/brand/fitty-isotype-512.png"
+          width={240}
+          height={240}
+          alt=""
+          fetchPriority="high"
+          className="launch-splash-isotype"
+        />
+        <span className="launch-splash-wordmark">Fitty</span>
+      </div>
     </div>
   );
 }
