@@ -25,7 +25,14 @@ export function LaunchSplash() {
           fetchPriority="high"
           className="launch-splash-isotype"
         />
-        <span className="launch-splash-wordmark">Fitty</span>
+        <img
+          src="/assets/brand/fitty-launch-wordmark.png"
+          width={480}
+          height={228}
+          alt=""
+          fetchPriority="high"
+          className="launch-splash-wordmark"
+        />
       </div>
     </div>
   );

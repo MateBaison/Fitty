@@ -94,6 +94,9 @@ describe("Phase 1 catalog/asset parity", () => {
 test("library images follow profile gender without changing historical exercise definitions", () => {
   for (const id of [
     "cruce-de-poleas",
+    "fondos-en-barras-paralelas",
+    "fondos-en-banco",
+    "extension-de-triceps-con-mancuernas-tumbado",
     "press-de-banca-inclinado-con-barra",
     "press-de-banca-con-mancuernas",
     "aperturas-con-mancuernas",
