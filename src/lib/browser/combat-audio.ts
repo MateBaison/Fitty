@@ -2,12 +2,67 @@ import type { CombatSignal } from "@/domain/combat";
 export class CombatAudio {
   private context: AudioContext | null = null;
   async unlock() {
-    this.context ??= new AudioContext();
-    if (this.context.state === "suspended") await this.context.resume();
+    // Safari's ambient audio can be muted by the phone's silent switch.
+    const session = (
+      navigator as Navigator & {
+        audioSession?: { type: string };
+      }
+    ).audioSession;
+    try {
+      if (session) session.type = "playback";
+    } catch {
+      // Browsers without configurable audio sessions still use Web Audio.
+    }
+    const Audio =
+      globalThis.AudioContext ??
+      (
+        globalThis as typeof globalThis & {
+          webkitAudioContext?: typeof AudioContext;
+        }
+      ).webkitAudioContext;
+    if (!Audio) throw new Error("Audio unavailable");
+    if (!this.context || this.context.state === "closed")
+      this.context = new Audio();
+    const context = this.context;
+    // Resume also handles Safari's `interrupted` state. Prime the output in
+    // the original user gesture, before awaiting the resume promise.
+    const resumed =
+      context.state !== "running" ? context.resume() : Promise.resolve();
+    const source = context.createBufferSource();
+    source.buffer = context.createBuffer(1, 1, context.sampleRate);
+    source.connect(context.destination);
+    source.onended = () => source.disconnect();
+    source.start();
+    await resumed;
+    if (context.state !== "running")
+      throw new Error("Audio output is not running");
   }
-  async play(signal: CombatSignal | "timer") {
+  async play(signal: CombatSignal | "timer" | "boards") {
     if (!this.context) return;
-    if (this.context.state === "suspended") await this.context.resume();
+    if (this.context.state !== "running") await this.unlock();
+    if (signal === "boards") {
+      // Three short, pitched impacts imitate the wooden 15-second clapper.
+      for (let hit = 0; hit < 3; hit++) {
+        const oscillator = this.context.createOscillator();
+        const gain = this.context.createGain();
+        const start = this.context.currentTime + hit * 0.2;
+        oscillator.type = "triangle";
+        oscillator.frequency.setValueAtTime(1200, start);
+        oscillator.frequency.exponentialRampToValueAtTime(420, start + 0.045);
+        gain.gain.setValueAtTime(0.001, start);
+        gain.gain.linearRampToValueAtTime(0.5, start + 0.001);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.075);
+        oscillator.connect(gain);
+        gain.connect(this.context.destination);
+        oscillator.start(start);
+        oscillator.stop(start + 0.09);
+        oscillator.onended = () => {
+          oscillator.disconnect();
+          gain.disconnect();
+        };
+      }
+      return;
+    }
     if (signal === "round" || signal === "rest" || signal === "finish") {
       // Inharmonic partials and a sharp attack imitate a struck boxing bell.
       const strikes = signal === "rest" ? 2 : 3;
@@ -38,9 +93,14 @@ export class CombatAudio {
           };
         }
       }
-      return;
+      if (signal !== "finish") return;
     }
-    const patterns: Record<"warning" | "timer", number[][]> = {
+    const patterns: Record<"warning" | "timer" | "finish", number[][]> = {
+      finish: [
+        [880, 1.1, 0.3],
+        [660, 1.45, 0.3],
+        [440, 1.8, 0.7],
+      ],
       warning: [
         [1100, 0, 0.12],
         [1100, 0.23, 0.12],
@@ -77,7 +137,8 @@ export class CombatAudio {
     }
   }
   close() {
-    void this.context?.close();
+    if (this.context && this.context.state !== "closed")
+      void this.context.close().catch(() => {});
     this.context = null;
   }
 }

@@ -404,7 +404,8 @@
     "Siempre": "Depuis toujours",
     "Todos los entrenamientos registrados": "Tous les entraînements enregistrés",
     "Reducción sugerida": "Réduction suggérée",
-    "Ajustable": "Ajustable"
+    "Ajustable": "Ajustable",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Le son n’a pas pu démarrer. Vérifiez le volume et l’autorisation audio du navigateur, puis appuyez de nouveau sur Démarrer."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -811,7 +812,8 @@
     "Siempre": "全部时间",
     "Todos los entrenamientos registrados": "所有已记录的训练",
     "Reducción sugerida": "建议减重比例",
-    "Ajustable": "可调整"
+    "Ajustable": "可调整",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "无法启用声音。请检查音量和浏览器的音频权限，然后再次点击开始。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1218,7 +1220,8 @@
     "Siempre": "सभी समय",
     "Todos los entrenamientos registrados": "सभी दर्ज प्रशिक्षण",
     "Reducción sugerida": "सुझाई गई कमी",
-    "Ajustable": "समायोज्य"
+    "Ajustable": "समायोज्य",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "आवाज़ शुरू नहीं हो सकी। वॉल्यूम और ब्राउज़र की ऑडियो अनुमति जाँचें, फिर शुरू करें दोबारा दबाएँ।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1625,7 +1628,8 @@
     "Siempre": "كل الوقت",
     "Todos los entrenamientos registrados": "جميع التدريبات المسجلة",
     "Reducción sugerida": "التخفيض المقترح",
-    "Ajustable": "قابل للتعديل"
+    "Ajustable": "قابل للتعديل",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "تعذر تشغيل الصوت. تحقق من مستوى الصوت وإذن الصوت في المتصفح، ثم اضغط على بدء مرة أخرى."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2032,7 +2036,8 @@
     "Siempre": "Gesamter Zeitraum",
     "Todos los entrenamientos registrados": "Alle gespeicherten Trainings",
     "Reducción sugerida": "Empfohlene Reduktion",
-    "Ajustable": "Anpassbar"
+    "Ajustable": "Anpassbar",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Der Ton konnte nicht gestartet werden. Prüfe Lautstärke und Audioberechtigung des Browsers und drücke erneut auf Start."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2439,7 +2444,8 @@
     "Siempre": "Da sempre",
     "Todos los entrenamientos registrados": "Tutti gli allenamenti registrati",
     "Reducción sugerida": "Riduzione suggerita",
-    "Ajustable": "Regolabile"
+    "Ajustable": "Regolabile",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Impossibile avviare l’audio. Controlla il volume e l’autorizzazione audio del browser, poi premi nuovamente Avvia."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2846,7 +2852,8 @@
     "Siempre": "Desde sempre",
     "Todos los entrenamientos registrados": "Todos os treinos registrados",
     "Reducción sugerida": "Redução sugerida",
-    "Ajustable": "Ajustável"
+    "Ajustable": "Ajustável",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Não foi possível ativar o som. Verifique o volume e a permissão de áudio do navegador e pressione Iniciar novamente."
   },
   "en": {
     "Sexo": "Sex",
@@ -3058,6 +3065,7 @@
     "Recorrido guardado": "Saved route",
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Finish the activity to save the route. Keep the app visible: the browser may limit GPS in the background.",
     "Reducción sugerida": "Suggested reduction",
-    "Ajustable": "Adjustable"
+    "Ajustable": "Adjustable",
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Sound could not start. Check your volume and browser audio permission, then press Start again."
   }
 }

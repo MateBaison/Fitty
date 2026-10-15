@@ -84,9 +84,24 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
       track.preparing,
   );
   trackRef.current = track;
+  const soundFailed = useRef(false);
+  const reportSoundFailure = () => {
+    if (soundFailed.current) return;
+    soundFailed.current = true;
+    notify(
+      t(
+        "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.",
+        "Sound could not start. Check your volume and browser audio permission, then press Start again.",
+      ),
+    );
+  };
+  const reportSoundFailureRef = useRef(reportSoundFailure);
+  reportSoundFailureRef.current = reportSoundFailure;
   const signal = (signals: CombatSignal[]) => {
     signals.forEach((signal) => {
-      void audio.current.play(signal).catch(() => {});
+      void audio.current
+        .play(signal === "warning" ? "boards" : signal)
+        .catch(() => reportSoundFailureRef.current());
     });
   };
   const stopWatch = () => {
@@ -169,6 +184,19 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
   const startGPSRef = useRef(startGPS);
   startGPSRef.current = startGPS;
   useEffect(() => {
+    const recoverAudio = () => {
+      if (
+        document.visibilityState === "visible" &&
+        (combat.current.state.running || timerRef.current.running)
+      ) {
+        void audio.current
+          .unlock()
+          .catch(() => reportSoundFailureRef.current());
+      }
+    };
+    document.addEventListener("visibilitychange", recoverAudio);
+    window.addEventListener("pageshow", recoverAudio);
+    window.addEventListener("pointerdown", recoverAudio);
     const interval = setInterval(() => {
       const time = Date.now();
       setNow(time);
@@ -205,6 +233,9 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
     }, 100);
     return () => {
       clearInterval(interval);
+      document.removeEventListener("visibilitychange", recoverAudio);
+      window.removeEventListener("pageshow", recoverAudio);
+      window.removeEventListener("pointerdown", recoverAudio);
       if (watch.current !== null)
         navigator.geolocation?.clearWatch(watch.current);
       audio.current.close();
@@ -273,6 +304,12 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
           }
         },
         toggleCombat: () => {
+          soundFailed.current = false;
+          if (combat.current.state.running) {
+            signal(combat.current.toggle(Date.now()));
+            setNow(Date.now());
+            return;
+          }
           void audio.current
             .unlock()
             .then(() => {
@@ -281,7 +318,7 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
             })
             .catch(() => {
               signal(combat.current.toggle(Date.now()));
-              notify("El sonido no está disponible en este navegador.");
+              reportSoundFailureRef.current();
             });
         },
         track,

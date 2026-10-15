@@ -110,5 +110,9 @@
   "press-banca-inclinado-con-mancuernas": {
     "hombre": "exercises/additions/press-banca-inclinado-con-mancuernas-masculino.jpg",
     "mujer": "exercises/additions/press-banca-inclinado-con-mancuernas-femenino.jpg"
+  },
+  "aperturas-en-maquina-peck-deck-o-contractora": {
+    "hombre": "exercises/additions/aperturas-en-maquina-peck-deck-o-contractora-masculino.jpg",
+    "mujer": "exercises/additions/aperturas-en-maquina-peck-deck-o-contractora-femenino.jpg"
   }
 }
