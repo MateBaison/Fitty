@@ -1,0 +1,314 @@
+[
+  {
+    "i": 0,
+    "id": "remo-con-mancuerna-a-una-mano",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-6b516eb1-ec5f-4c88-93e7-b5f705cfff32.png"
+  },
+  {
+    "i": 0,
+    "id": "remo-con-mancuerna-a-una-mano",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-5ee960c0-ea8c-4b5b-a0c6-cd4f91e79f4e.png"
+  },
+  {
+    "i": 1,
+    "id": "jalon-con-agarre-ancho",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-554790cf-63d3-467d-b2d3-4d088e3a6570.png"
+  },
+  {
+    "i": 1,
+    "id": "jalon-con-agarre-ancho",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-1f89fad0-d720-4718-8a5f-52cae754cf2a.png"
+  },
+  {
+    "i": 2,
+    "id": "remo-en-maquina",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-1e176b5b-e223-481f-8d46-456d193a3043.png"
+  },
+  {
+    "i": 2,
+    "id": "remo-en-maquina",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-fb34b6bd-ddc4-4b98-a273-e97d4329f125.png"
+  },
+  {
+    "i": 3,
+    "id": "jalon-al-pecho-con-agarre-cerrado",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-90838ee4-b379-48e1-a149-bd7da8432b24.png"
+  },
+  {
+    "i": 3,
+    "id": "jalon-al-pecho-con-agarre-cerrado",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-58d295af-a27c-4d4c-9cb3-3802524e42a1.png"
+  },
+  {
+    "i": 4,
+    "id": "remo-con-barra",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-2de4bd08-94c7-4f53-a446-600327bfb0e3.png"
+  },
+  {
+    "i": 4,
+    "id": "remo-con-barra",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-fa674a01-7121-4dd8-8b2b-9c007ec7656e.png"
+  },
+  {
+    "i": 5,
+    "id": "jalon-tras-nuca",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-d64e1d7e-02c9-4080-9df8-fa9a037557d6.png"
+  },
+  {
+    "i": 5,
+    "id": "jalon-tras-nuca",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-197d62f1-b4d8-4ede-aa49-f2b8714fed15.png"
+  },
+  {
+    "i": 6,
+    "id": "jalon-al-pecho-con-agarre-invertido",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-b69d7a20-56dd-46ce-8d47-b382ef5fd664.png"
+  },
+  {
+    "i": 6,
+    "id": "jalon-al-pecho-con-agarre-invertido",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-10952a02-6e43-420e-b4f5-22214e24a0da.png"
+  },
+  {
+    "i": 7,
+    "id": "jalon-en-polea-con-cuerda",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-d8d9c245-19e4-4017-a99f-1c30c0d67354.png"
+  },
+  {
+    "i": 7,
+    "id": "jalon-en-polea-con-cuerda",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-0fc9fb22-30be-4afe-976f-0b8d8e9ef207.png"
+  },
+  {
+    "i": 8,
+    "id": "remo-en-barra-t",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-f1914792-8b6e-4d9c-9a8a-299ef98a5886.png"
+  },
+  {
+    "i": 8,
+    "id": "remo-en-barra-t",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-e528cd21-a990-4954-82f6-d844116bc397.png"
+  },
+  {
+    "i": 9,
+    "id": "remo-inclinado-con-barra-con-agarre-supinado",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-4db2d7e5-02d8-4fe9-ac91-ee35170273f4.png"
+  },
+  {
+    "i": 9,
+    "id": "remo-inclinado-con-barra-con-agarre-supinado",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-3ee08044-5785-408e-b7f7-01da0bc184d3.png"
+  },
+  {
+    "i": 10,
+    "id": "elevaciones-en-barra-fija",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-b782b97a-78b9-4811-ae14-67fef5d96513.png"
+  },
+  {
+    "i": 10,
+    "id": "elevaciones-en-barra-fija",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-99bf3d6f-3fac-4272-93af-1c33ea2094a3.png"
+  },
+  {
+    "i": 11,
+    "id": "elevaciones-en-barra-fija-con-agarre-supinado",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-00e48a2e-0d8f-4dc6-8f58-7467abcbd6aa.png"
+  },
+  {
+    "i": 11,
+    "id": "elevaciones-en-barra-fija-con-agarre-supinado",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-7eb663e5-6302-4889-8151-6dae5fc15c9d.png"
+  },
+  {
+    "i": 12,
+    "id": "jalon-dorsal-con-brazos-rectos",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-5e7edfe4-7727-4659-9d83-4cea5e1bff42.png"
+  },
+  {
+    "i": 12,
+    "id": "jalon-dorsal-con-brazos-rectos",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-07c1ba1c-d001-4298-95fa-39a871717ae3.png"
+  },
+  {
+    "i": 13,
+    "id": "remo-inclinado-con-mancuernas",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-19a07e07-bf84-4885-b50a-c8b948029f50.png"
+  },
+  {
+    "i": 13,
+    "id": "remo-inclinado-con-mancuernas",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-6f86cbd8-e5d3-4283-bb23-fe735f21929d.png"
+  },
+  {
+    "i": 14,
+    "id": "pullover-con-mancuerna",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-145e5dbb-e7f2-4e06-82c7-8d7c3fbe7e37.png"
+  },
+  {
+    "i": 14,
+    "id": "pullover-con-mancuerna",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-6f7bb8e5-595a-4f8a-93b1-332d9ee014d6.png"
+  },
+  {
+    "i": 15,
+    "id": "pullover-con-barra",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-44dc1bf4-8162-4519-93b1-0336c45dafe2.png"
+  },
+  {
+    "i": 15,
+    "id": "pullover-con-barra",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-f5d547bb-a837-4e9c-bf5f-cf34c0146ec7.png"
+  },
+  {
+    "i": 16,
+    "id": "peso-muerto-con-barra",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-5e21c2ba-cdb9-40ca-8937-5411a641f146.png"
+  },
+  {
+    "i": 16,
+    "id": "peso-muerto-con-barra",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-1612c40d-a880-4d43-8d5c-fa8b69d92cfe.png"
+  },
+  {
+    "i": 17,
+    "id": "peso-muerto-sumo-con-barra",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-ac2774a4-5e0b-4bfe-962d-617da15f0767.png"
+  },
+  {
+    "i": 17,
+    "id": "peso-muerto-sumo-con-barra",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-29443f9a-cc09-4258-a4b5-4dc04c62196b.png"
+  },
+  {
+    "i": 18,
+    "id": "peso-muerto-con-barra-hexagonal",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-6df55311-efa1-4c51-87e9-8e7e29870511.png"
+  },
+  {
+    "i": 18,
+    "id": "peso-muerto-con-barra-hexagonal",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-edb816b7-82a8-4d98-9f9f-61e07b85f2a0.png"
+  },
+  {
+    "i": 19,
+    "id": "peso-muerto-con-mancuernas",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-e992cda8-1906-4c82-9f2e-a9c7e49ce7d0.png"
+  },
+  {
+    "i": 19,
+    "id": "peso-muerto-con-mancuernas",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-be4008f8-3b11-4492-917c-ad1f3c2b9e37.png"
+  },
+  {
+    "i": 20,
+    "id": "encogimiento-de-hombros-con-barra",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-5d4ab0f7-5f88-438f-971b-5ee904a08633.png"
+  },
+  {
+    "i": 20,
+    "id": "encogimiento-de-hombros-con-barra",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-aced903d-c29e-40bb-8183-d8aa166234b6.png"
+  },
+  {
+    "i": 21,
+    "id": "encogimiento-de-hombros-con-mancuernas",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-54396688-4ee9-4ac3-b078-daf349aa619c.png"
+  },
+  {
+    "i": 21,
+    "id": "encogimiento-de-hombros-con-mancuernas",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-d88657cf-98d0-4f11-ae44-97cac5203f4a.png"
+  },
+  {
+    "i": 22,
+    "id": "extensiones-lumbares-en-banco-a-45",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-c0222e3e-c129-43f3-b69e-18cb41b7afd2.png"
+  },
+  {
+    "i": 22,
+    "id": "extensiones-lumbares-en-banco-a-45",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-353d2267-30e4-4b72-982c-eb52cb7b6033.png"
+  },
+  {
+    "i": 23,
+    "id": "extension-de-tronco-en-decubito-prono-colchoneta",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-28034b75-3908-4601-a451-e46075bb9379.png"
+  },
+  {
+    "i": 23,
+    "id": "extension-de-tronco-en-decubito-prono-colchoneta",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-b4e12a76-bf63-4d1f-9b7d-99f42a5e1dab.png"
+  },
+  {
+    "i": 24,
+    "id": "lumbares-superman",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-ffe3fc1a-f83d-4a15-8521-6a704a519d2e.png"
+  },
+  {
+    "i": 24,
+    "id": "lumbares-superman",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-2e615bc7-ab77-469f-bc89-ef30a971fd3b.png"
+  },
+  {
+    "i": 25,
+    "id": "lumbares-cruzados",
+    "sex": "masculino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-a33b8c61-8bee-499a-a06a-08fa701551f4.png"
+  },
+  {
+    "i": 25,
+    "id": "lumbares-cruzados",
+    "sex": "femenino",
+    "path": "/Users/mb/.codex/generated_images/01a1126a-750b-7f13-a03c-77d5fd78d677/exec-fc5273c9-5b07-44c8-8f07-b401e5a726ec.png"
+  }
+]

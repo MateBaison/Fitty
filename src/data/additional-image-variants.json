@@ -48,12 +48,12 @@
     "mujer": "exercises/additions/plancha-lateral-v2-femenino.jpg"
   },
   "lumbares-superman": {
-    "hombre": "exercises/additions/lumbares-superman-masculino.jpg",
-    "mujer": "exercises/additions/lumbares-superman-femenino.jpg"
+    "hombre": "exercises/additions/lumbares-superman-espalda-masculino.jpg",
+    "mujer": "exercises/additions/lumbares-superman-espalda-femenino.jpg"
   },
   "lumbares-cruzados": {
-    "hombre": "exercises/additions/lumbares-cruzados-masculino.jpg",
-    "mujer": "exercises/additions/lumbares-cruzados-femenino.jpg"
+    "hombre": "exercises/additions/lumbares-cruzados-espalda-masculino.jpg",
+    "mujer": "exercises/additions/lumbares-cruzados-espalda-femenino.jpg"
   },
   "elevacion-de-gemelos-sentado": {
     "hombre": "exercises/additions/elevacion-de-gemelos-sentado-masculino.jpg",
@@ -242,5 +242,101 @@
   "elevacion-frontal-con-mancuerna-a-dos-manos": {
     "hombre": "exercises/additions/elevacion-frontal-con-mancuerna-a-dos-manos-hombros-masculino.jpg",
     "mujer": "exercises/additions/elevacion-frontal-con-mancuerna-a-dos-manos-hombros-femenino.jpg"
+  },
+  "remo-con-mancuerna-a-una-mano": {
+    "hombre": "exercises/additions/remo-con-mancuerna-a-una-mano-espalda-masculino.jpg",
+    "mujer": "exercises/additions/remo-con-mancuerna-a-una-mano-espalda-femenino.jpg"
+  },
+  "jalon-con-agarre-ancho": {
+    "hombre": "exercises/additions/jalon-con-agarre-ancho-espalda-masculino.jpg",
+    "mujer": "exercises/additions/jalon-con-agarre-ancho-espalda-femenino.jpg"
+  },
+  "remo-en-maquina": {
+    "hombre": "exercises/additions/remo-en-maquina-espalda-masculino.jpg",
+    "mujer": "exercises/additions/remo-en-maquina-espalda-femenino.jpg"
+  },
+  "jalon-al-pecho-con-agarre-cerrado": {
+    "hombre": "exercises/additions/jalon-al-pecho-con-agarre-cerrado-espalda-masculino.jpg",
+    "mujer": "exercises/additions/jalon-al-pecho-con-agarre-cerrado-espalda-femenino.jpg"
+  },
+  "remo-con-barra": {
+    "hombre": "exercises/additions/remo-con-barra-espalda-masculino.jpg",
+    "mujer": "exercises/additions/remo-con-barra-espalda-femenino.jpg"
+  },
+  "jalon-tras-nuca": {
+    "hombre": "exercises/additions/jalon-tras-nuca-espalda-masculino.jpg",
+    "mujer": "exercises/additions/jalon-tras-nuca-espalda-femenino.jpg"
+  },
+  "jalon-al-pecho-con-agarre-invertido": {
+    "hombre": "exercises/additions/jalon-al-pecho-con-agarre-invertido-espalda-masculino.jpg",
+    "mujer": "exercises/additions/jalon-al-pecho-con-agarre-invertido-espalda-femenino.jpg"
+  },
+  "jalon-en-polea-con-cuerda": {
+    "hombre": "exercises/additions/jalon-en-polea-con-cuerda-espalda-masculino.jpg",
+    "mujer": "exercises/additions/jalon-en-polea-con-cuerda-espalda-femenino.jpg"
+  },
+  "remo-en-barra-t": {
+    "hombre": "exercises/additions/remo-en-barra-t-espalda-masculino.jpg",
+    "mujer": "exercises/additions/remo-en-barra-t-espalda-femenino.jpg"
+  },
+  "remo-inclinado-con-barra-con-agarre-supinado": {
+    "hombre": "exercises/additions/remo-inclinado-con-barra-con-agarre-supinado-espalda-masculino.jpg",
+    "mujer": "exercises/additions/remo-inclinado-con-barra-con-agarre-supinado-espalda-femenino.jpg"
+  },
+  "elevaciones-en-barra-fija": {
+    "hombre": "exercises/additions/elevaciones-en-barra-fija-espalda-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-en-barra-fija-espalda-femenino.jpg"
+  },
+  "elevaciones-en-barra-fija-con-agarre-supinado": {
+    "hombre": "exercises/additions/elevaciones-en-barra-fija-con-agarre-supinado-espalda-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-en-barra-fija-con-agarre-supinado-espalda-femenino.jpg"
+  },
+  "jalon-dorsal-con-brazos-rectos": {
+    "hombre": "exercises/additions/jalon-dorsal-con-brazos-rectos-espalda-masculino.jpg",
+    "mujer": "exercises/additions/jalon-dorsal-con-brazos-rectos-espalda-femenino.jpg"
+  },
+  "remo-inclinado-con-mancuernas": {
+    "hombre": "exercises/additions/remo-inclinado-con-mancuernas-espalda-masculino.jpg",
+    "mujer": "exercises/additions/remo-inclinado-con-mancuernas-espalda-femenino.jpg"
+  },
+  "pullover-con-mancuerna": {
+    "hombre": "exercises/additions/pullover-con-mancuerna-espalda-masculino.jpg",
+    "mujer": "exercises/additions/pullover-con-mancuerna-espalda-femenino.jpg"
+  },
+  "pullover-con-barra": {
+    "hombre": "exercises/additions/pullover-con-barra-espalda-masculino.jpg",
+    "mujer": "exercises/additions/pullover-con-barra-espalda-femenino.jpg"
+  },
+  "peso-muerto-con-barra": {
+    "hombre": "exercises/additions/peso-muerto-con-barra-espalda-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-con-barra-espalda-femenino.jpg"
+  },
+  "peso-muerto-sumo-con-barra": {
+    "hombre": "exercises/additions/peso-muerto-sumo-con-barra-espalda-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-sumo-con-barra-espalda-femenino.jpg"
+  },
+  "peso-muerto-con-barra-hexagonal": {
+    "hombre": "exercises/additions/peso-muerto-con-barra-hexagonal-espalda-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-con-barra-hexagonal-espalda-femenino.jpg"
+  },
+  "peso-muerto-con-mancuernas": {
+    "hombre": "exercises/additions/peso-muerto-con-mancuernas-espalda-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-con-mancuernas-espalda-femenino.jpg"
+  },
+  "encogimiento-de-hombros-con-barra": {
+    "hombre": "exercises/additions/encogimiento-de-hombros-con-barra-espalda-masculino.jpg",
+    "mujer": "exercises/additions/encogimiento-de-hombros-con-barra-espalda-femenino.jpg"
+  },
+  "encogimiento-de-hombros-con-mancuernas": {
+    "hombre": "exercises/additions/encogimiento-de-hombros-con-mancuernas-espalda-masculino.jpg",
+    "mujer": "exercises/additions/encogimiento-de-hombros-con-mancuernas-espalda-femenino.jpg"
+  },
+  "extensiones-lumbares-en-banco-a-45": {
+    "hombre": "exercises/additions/extensiones-lumbares-en-banco-a-45-espalda-masculino.jpg",
+    "mujer": "exercises/additions/extensiones-lumbares-en-banco-a-45-espalda-femenino.jpg"
+  },
+  "extension-de-tronco-en-decubito-prono-colchoneta": {
+    "hombre": "exercises/additions/extension-de-tronco-en-decubito-prono-colchoneta-espalda-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-tronco-en-decubito-prono-colchoneta-espalda-femenino.jpg"
   }
 }
