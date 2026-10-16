@@ -190,5 +190,57 @@
   "curl-de-barra-invertido": {
     "hombre": "exercises/additions/curl-de-barra-invertido-masculino.jpg",
     "mujer": "exercises/additions/curl-de-barra-invertido-femenino.jpg"
+  },
+  "press-de-hombro-con-mancuernas": {
+    "hombre": "exercises/additions/press-de-hombro-con-mancuernas-hombros-masculino.jpg",
+    "mujer": "exercises/additions/press-de-hombro-con-mancuernas-hombros-femenino.jpg"
+  },
+  "elevacion-lateral-con-mancuernas": {
+    "hombre": "exercises/additions/elevacion-lateral-con-mancuernas-hombros-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-lateral-con-mancuernas-hombros-femenino.jpg"
+  },
+  "elevacion-frontal-con-mancuernas": {
+    "hombre": "exercises/additions/elevacion-frontal-con-mancuernas-hombros-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-frontal-con-mancuernas-hombros-femenino.jpg"
+  },
+  "press-de-hombros-en-maquina-smith": {
+    "hombre": "exercises/additions/press-de-hombros-en-maquina-smith-hombros-masculino.jpg",
+    "mujer": "exercises/additions/press-de-hombros-en-maquina-smith-hombros-femenino.jpg"
+  },
+  "remo-alto-con-barra": {
+    "hombre": "exercises/additions/remo-alto-con-barra-hombros-masculino.jpg",
+    "mujer": "exercises/additions/remo-alto-con-barra-hombros-femenino.jpg"
+  },
+  "elevaciones-posteriores-para-hombros-pajaro": {
+    "hombre": "exercises/additions/elevaciones-posteriores-para-hombros-pajaro-hombros-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-posteriores-para-hombros-pajaro-hombros-femenino.jpg"
+  },
+  "elevacion-lateral-con-cable-a-una-mano": {
+    "hombre": "exercises/additions/elevacion-lateral-con-cable-a-una-mano-hombros-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-lateral-con-cable-a-una-mano-hombros-femenino.jpg"
+  },
+  "press-militar": {
+    "hombre": "exercises/additions/press-militar-hombros-masculino.jpg",
+    "mujer": "exercises/additions/press-militar-hombros-femenino.jpg"
+  },
+  "elevaciones-frontales-con-cable-a-una-mano": {
+    "hombre": "exercises/additions/elevaciones-frontales-con-cable-a-una-mano-hombros-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-frontales-con-cable-a-una-mano-hombros-femenino.jpg"
+  },
+  "press-militar-sentado-con-barra": {
+    "hombre": "exercises/additions/press-militar-sentado-con-barra-hombros-masculino.jpg",
+    "mujer": "exercises/additions/press-militar-sentado-con-barra-hombros-femenino.jpg"
+  },
+  "press-militar-de-pie": {
+    "hombre": "exercises/additions/press-militar-de-pie-hombros-masculino.jpg",
+    "mujer": "exercises/additions/press-militar-de-pie-hombros-femenino.jpg"
+  },
+  "elevacion-frontal-con-un-brazo-en-polea-baja-agarre-neutro": {
+    "hombre": "exercises/additions/elevacion-frontal-con-un-brazo-en-polea-baja-agarre-neutro-hombros-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-frontal-con-un-brazo-en-polea-baja-agarre-neutro-hombros-femenino.jpg"
+  },
+  "elevacion-frontal-con-mancuerna-a-dos-manos": {
+    "hombre": "exercises/additions/elevacion-frontal-con-mancuerna-a-dos-manos-hombros-masculino.jpg",
+    "mujer": "exercises/additions/elevacion-frontal-con-mancuerna-a-dos-manos-hombros-femenino.jpg"
   }
 }

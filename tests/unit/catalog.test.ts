@@ -52,7 +52,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(49);
+    expect(Object.keys(imageVariants)).toHaveLength(62);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
