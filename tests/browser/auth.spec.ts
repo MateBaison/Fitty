@@ -57,6 +57,45 @@ test("new accounts complete onboarding before protected app access", async ({
   ).json();
   expect(audit).toEqual({ writes: ["11111111-1111-4111-8111-111111111111"] });
 });
+test("onboarding keeps its card below the header and all header controls inside the viewport", async ({
+  page,
+}, testInfo) => {
+  await page.request.get("http://127.0.0.1:54329/__reset?new=1");
+  await login(page);
+  for (const width of [320, 390, 818, 1280]) {
+    await page.setViewportSize({ width, height: 700 });
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const layout = await page.locator(".app-header").evaluate((header) => {
+      const bounds = header.getBoundingClientRect();
+      const card = document.querySelector("main")!.getBoundingClientRect();
+      const brand = header.querySelector(".brand")!.getBoundingClientRect();
+      const exit = header.querySelector("button")!.getBoundingClientRect();
+      return {
+        gap: card.top - bounds.bottom,
+        fits:
+          brand.left >= 0 &&
+          brand.right <= exit.left &&
+          exit.right <= document.documentElement.clientWidth,
+        overflows:
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth,
+      };
+    });
+    expect(layout.gap).toBeGreaterThanOrEqual(24);
+    expect(layout.fits).toBe(true);
+    expect(layout.overflows).toBe(false);
+    await page.evaluate(() => window.scrollTo(0, 150));
+    await expect(
+      page.getByRole("button", { name: "Salir de la cuenta" }),
+    ).toBeInViewport();
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.getByTestId("launch-splash")).toHaveCount(0);
+  await page.screenshot({
+    path: `artifacts/onboarding-layout-${testInfo.project.name}.png`,
+  });
+});
 test("Google PKCE callback preserves verified session and rejects arbitrary return paths", async ({
   page,
 }) => {

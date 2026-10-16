@@ -319,6 +319,7 @@ a {
   overflow-y: auto;
 }
 .app-shell {
+  min-width: 0;
   max-width: 720px;
   margin: auto;
   min-height: 100dvh;
@@ -326,14 +327,26 @@ a {
 }
 .app-header {
   position: sticky;
+  isolation: isolate;
   top: 0;
   z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 18px 6px 14px;
-  background: linear-gradient(var(--background) 78%, transparent);
+  padding: max(18px, env(safe-area-inset-top)) 6px 14px;
+  background: var(--background);
+}
+/* Paint to both viewport edges without adding a scrollbar-width overflow. */
+.app-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--background);
+  box-shadow: 0 0 0 100vmax var(--background);
+  clip-path: inset(0 -100vmax);
+  z-index: -1;
+  pointer-events: none;
 }
 .brand {
   display: flex;
@@ -1101,14 +1114,11 @@ strong {
   grid-column: 1;
   grid-row: 1;
 }
-.app-header-section::before,
 .bottom-nav::before {
   content: "";
   position: absolute;
-  inset-block: 0;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
+  inset: 0;
+  clip-path: inset(0 -100vmax);
   z-index: -1;
   pointer-events: none;
 }
@@ -1118,6 +1128,7 @@ strong {
 }
 .bottom-nav::before {
   background: color-mix(in srgb, var(--card) 96%, transparent);
+  box-shadow: 0 0 0 100vmax color-mix(in srgb, var(--card) 96%, transparent);
   border-top: 1px solid var(--border);
 }
 .app-header-section .header-actions {
@@ -1758,25 +1769,7 @@ input[type="range"] {
 }
 
 .app-header-welcome {
-  background: transparent;
-  isolation: isolate;
-}
-.app-header-welcome::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: -88px;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    to bottom,
-    var(--background) 0%,
-    var(--background) 48%,
-    transparent 100%
-  );
-  z-index: -1;
-  pointer-events: none;
+  margin-bottom: 24px;
 }
 
 .automatic-muscle-picker {
