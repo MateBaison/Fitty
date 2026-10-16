@@ -2,7 +2,7 @@
 
 The supplied isotipo is used for the browser/home-screen icons and the launch screen only. Interior navigation and FITTY wordmark remain unchanged.
 
-`src/app/manifest.ts` advertises FITTY in standalone mode with 192/512 PNG icons, a padded maskable icon and `/home` as the launch URL. Apple touch metadata uses a 180px icon. The original archived `public/hercules.webmanifest` remains preserved and is no longer linked by the app.
+`src/app/manifest.ts` advertises FITTY in standalone mode with 192/512 PNG icons, a padded maskable icon and `/home` as the launch URL. The shortcut icons combine the isotipo above the supplied Fitty wordmark with safe outer margins; Apple touch metadata uses the same composition at 180px. The new `fitty-lockup-*` filenames avoid reusing cached isotype-only assets. The original archived `public/hercules.webmanifest` remains preserved and is no longer linked by the app.
 
 The root launch overlay displays for 1.5 seconds on a full page/app launch, including a final 250ms fade. Root-layout persistence prevents replay during internal navigation. CSS also hides it if JavaScript cannot start; reduced-motion preferences disable the fade. It does not postpone auth, data loading or normal app interaction.
 

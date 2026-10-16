@@ -43,7 +43,7 @@ test("launch isotipo disappears and does not replay during app navigation", asyn
   await expect(splash).toBeHidden({ timeout: 2500 });
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute(
     "href",
-    "/assets/brand/fitty-isotype-180.png",
+    "/assets/brand/fitty-lockup-180.png",
   );
   const response = await page.request.get("/manifest.webmanifest");
   expect(response.ok()).toBe(true);

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
       type: "image/png",
     },
     apple: {
-      url: "/assets/brand/fitty-isotype-180.png",
+      url: "/assets/brand/fitty-lockup-180.png",
       sizes: "180x180",
       type: "image/png",
     },
