@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { readFile } from "node:fs/promises";
 import { runInNewContext } from "node:vm";
 import rawPools from "../../src/data/legacy/automaticPools.json";
-import { exercises } from "../../src/data/exercises";
+import { availableExercises } from "../../src/data/exercises";
 import { muscleGroups } from "../../src/domain/schemas/exercise";
 import { buildAutomaticRoutine } from "../../src/domain/calculations/automatic-routine";
 import { routineSchema } from "../../src/domain/schemas/snapshot";
@@ -16,7 +16,10 @@ test("typed generator matches the preserved legacy algorithm for all 1,785 combi
   if (start < 0 || end < 0)
     throw new Error("Legacy generator boundaries changed");
   const source = html.slice(start, end);
-  const catalog = new Map(exercises.map((exercise) => [exercise.id, exercise]));
+  // Compare algorithms against the same currently selectable catalog.
+  const catalog = new Map(
+    availableExercises.map((exercise) => [exercise.id, exercise]),
+  );
   for (let mask = 1; mask < 256; mask++) {
     const groups = muscleGroups.filter(
       (_, index) => (mask & (1 << index)) !== 0,

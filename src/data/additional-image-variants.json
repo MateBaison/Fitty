@@ -146,5 +146,49 @@
   "extension-de-triceps-con-mancuernas-tumbado": {
     "hombre": "exercises/additions/extension-de-triceps-con-mancuernas-tumbado-masculino.jpg",
     "mujer": "exercises/additions/extension-de-triceps-con-mancuernas-tumbado-femenino.jpg"
+  },
+  "curl-con-barra": {
+    "hombre": "exercises/additions/curl-con-barra-masculino.jpg",
+    "mujer": "exercises/additions/curl-con-barra-femenino.jpg"
+  },
+  "curl-alterno-con-mancuernas": {
+    "hombre": "exercises/additions/curl-alterno-con-mancuernas-masculino.jpg",
+    "mujer": "exercises/additions/curl-alterno-con-mancuernas-femenino.jpg"
+  },
+  "curl-con-barra-ez": {
+    "hombre": "exercises/additions/curl-con-barra-ez-masculino.jpg",
+    "mujer": "exercises/additions/curl-con-barra-ez-femenino.jpg"
+  },
+  "curl-de-predicador-con-barra-ez": {
+    "hombre": "exercises/additions/curl-de-predicador-con-barra-ez-masculino.jpg",
+    "mujer": "exercises/additions/curl-de-predicador-con-barra-ez-femenino.jpg"
+  },
+  "curl-alterno-de-martillo-con-mancuernas": {
+    "hombre": "exercises/additions/curl-alterno-de-martillo-con-mancuernas-masculino.jpg",
+    "mujer": "exercises/additions/curl-alterno-de-martillo-con-mancuernas-femenino.jpg"
+  },
+  "curl-inclinado-con-mancuernas": {
+    "hombre": "exercises/additions/curl-inclinado-con-mancuernas-masculino.jpg",
+    "mujer": "exercises/additions/curl-inclinado-con-mancuernas-femenino.jpg"
+  },
+  "curl-concentrado-con-mancuernas": {
+    "hombre": "exercises/additions/curl-concentrado-con-mancuernas-masculino.jpg",
+    "mujer": "exercises/additions/curl-concentrado-con-mancuernas-femenino.jpg"
+  },
+  "curl-de-cable-en-polea-baja-a-una-mano": {
+    "hombre": "exercises/additions/curl-de-cable-en-polea-baja-a-una-mano-masculino.jpg",
+    "mujer": "exercises/additions/curl-de-cable-en-polea-baja-a-una-mano-femenino.jpg"
+  },
+  "curl-de-cable-con-barra-recta-en-polea-baja": {
+    "hombre": "exercises/additions/curl-de-cable-con-barra-recta-en-polea-baja-masculino.jpg",
+    "mujer": "exercises/additions/curl-de-cable-con-barra-recta-en-polea-baja-femenino.jpg"
+  },
+  "curl-de-muneca-con-barra-sentado": {
+    "hombre": "exercises/additions/curl-de-muneca-con-barra-sentado-masculino.jpg",
+    "mujer": "exercises/additions/curl-de-muneca-con-barra-sentado-femenino.jpg"
+  },
+  "curl-de-barra-invertido": {
+    "hombre": "exercises/additions/curl-de-barra-invertido-masculino.jpg",
+    "mujer": "exercises/additions/curl-de-barra-invertido-femenino.jpg"
   }
 }

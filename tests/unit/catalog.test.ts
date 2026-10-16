@@ -52,7 +52,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(38);
+    expect(Object.keys(imageVariants)).toHaveLength(49);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -94,6 +94,17 @@ describe("Phase 1 catalog/asset parity", () => {
 test("library images follow profile gender without changing historical exercise definitions", () => {
   for (const id of [
     "cruce-de-poleas",
+    "curl-con-barra",
+    "curl-alterno-con-mancuernas",
+    "curl-con-barra-ez",
+    "curl-de-predicador-con-barra-ez",
+    "curl-alterno-de-martillo-con-mancuernas",
+    "curl-inclinado-con-mancuernas",
+    "curl-concentrado-con-mancuernas",
+    "curl-de-cable-en-polea-baja-a-una-mano",
+    "curl-de-cable-con-barra-recta-en-polea-baja",
+    "curl-de-muneca-con-barra-sentado",
+    "curl-de-barra-invertido",
     "fondos-en-barras-paralelas",
     "fondos-en-banco",
     "extension-de-triceps-con-mancuernas-tumbado",

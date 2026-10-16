@@ -17,6 +17,10 @@ export const exercises: ReadonlyArray<Exercise> = z
   .parse([...rawExercises, ...additions]);
 // Keep definitions for saved routines/history while excluding retired choices.
 const retiredExerciseIds = new Set([
+  "press-militar-con-mancuernas",
+  "cruces-inversos-en-polea-alta",
+  "elevaciones-frontales-con-barra",
+  "elevacion-frontal-con-mancuernas-alternas-agarre-neutro",
   "abdominales-con-brazos-estirados",
   "extension-de-triceps-con-cable-a-una-mano-con-agarre-supinado",
 ]);

@@ -11,6 +11,36 @@ import { buildAutomaticRoutine } from "../../src/domain/calculations/automatic-r
 
 const retiredId = "abdominales-con-brazos-estirados";
 
+test("retired shoulder choices remain available to saved workouts only", () => {
+  const ids = [
+    "press-militar-con-mancuernas",
+    "cruces-inversos-en-polea-alta",
+    "elevaciones-frontales-con-barra",
+    "elevacion-frontal-con-mancuernas-alternas-agarre-neutro",
+  ];
+  const snapshot = createDefaultSnapshot();
+  for (const id of ids) {
+    expect(catalogFor(snapshot).some((exercise) => exercise.id === id)).toBe(
+      false,
+    );
+    expect(findExercise(snapshot, id)?.group).toBe("Hombros");
+    const routine = snapshot.routines[0]!;
+    const day = routine.days[0]!;
+    day.items = [id];
+    snapshot.workout = null;
+    startWorkout(snapshot, routine.id, day.id);
+    expect(snapshot.workout!.entries[0]!.id).toBe(id);
+  }
+  for (let days = 1; days <= 7; days++) {
+    const routine = buildAutomaticRoutine(
+      { groups: ["Hombros"], days },
+      { makeId: () => "shoulder-retired", language: "es" },
+    );
+    for (const id of ids)
+      expect(routine.days.flatMap((day) => day.items)).not.toContain(id);
+  }
+});
+
 test("retired library choice remains usable in saved routines and history", () => {
   const snapshot = createDefaultSnapshot();
   expect(
