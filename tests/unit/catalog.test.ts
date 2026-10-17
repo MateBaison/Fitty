@@ -165,17 +165,18 @@ test("all 45 requested leg exercises resolve both new mannequins while excluded 
     const version =
       exercise.id === "sentadilla-frontal"
         ? "v4"
-        : [
-              "sentadilla",
-              "zancada",
-              "extension-a-una-pierna",
-              "peso-muerto-rumano-con-mancuernas",
-              "peso-muerto-rumano-con-barra",
-              "sentadilla-goblet-con-mancuerna",
-              "salto-rodillas-al-pecho",
-            ].includes(exercise.id)
-          ? "v2"
-          : "v1";
+        : exercise.id === "peso-muerto-rumano-con-barra"
+          ? "v3"
+          : [
+                "sentadilla",
+                "zancada",
+                "extension-a-una-pierna",
+                "peso-muerto-rumano-con-mancuernas",
+                "sentadilla-goblet-con-mancuerna",
+                "salto-rodillas-al-pecho",
+              ].includes(exercise.id)
+            ? "v2"
+            : "v1";
     expect(exerciseImage(exercise, "hombre")).toBe(
       `/assets/exercises/additions/${exercise.id}-legs-${version}-masculino.jpg`,
     );
