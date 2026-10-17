@@ -338,5 +338,17 @@
   "extension-de-tronco-en-decubito-prono-colchoneta": {
     "hombre": "exercises/additions/extension-de-tronco-en-decubito-prono-colchoneta-espalda-v2-masculino.jpg",
     "mujer": "exercises/additions/extension-de-tronco-en-decubito-prono-colchoneta-espalda-v2-femenino.jpg"
+  },
+  "press-de-banca-en-maquina-sentado": {
+    "hombre": "exercises/additions/press-de-banca-en-maquina-sentado-masculino.jpg",
+    "mujer": "exercises/additions/press-de-banca-en-maquina-sentado-femenino.jpg"
+  },
+  "press-de-banca-declinado-con-barra": {
+    "hombre": "exercises/additions/press-de-banca-declinado-con-barra-masculino.jpg",
+    "mujer": "exercises/additions/press-de-banca-declinado-con-barra-femenino.jpg"
+  },
+  "flexiones": {
+    "hombre": "exercises/additions/flexiones-masculino.jpg",
+    "mujer": "exercises/additions/flexiones-femenino.jpg"
   }
 }
