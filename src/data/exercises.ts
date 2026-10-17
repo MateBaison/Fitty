@@ -24,6 +24,13 @@ const retiredExerciseIds = new Set([
   "abdominales-con-brazos-estirados",
   "extension-de-triceps-con-cable-a-una-mano-con-agarre-supinado",
   "press-de-banca-declinado-con-mancuernas",
+  "sentadillas-con-propio-peso",
+  "sentadillas-con-balon-medicinal",
+  "peso-muerto-con-balon-medicinal",
+  "sentadilla-con-minibanda",
+  "puente-con-bandas",
+  "elevaciones-de-cadera-con-maquina-smith",
+  "elevaciones-cortas-en-posicion-de-rana-con-maquina-smith",
 ]);
 export const availableExercises = exercises.filter(
   (exercise) => !retiredExerciseIds.has(exercise.id),

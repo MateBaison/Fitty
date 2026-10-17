@@ -11,6 +11,68 @@ import { buildAutomaticRoutine } from "../../src/domain/calculations/automatic-r
 
 const retiredId = "abdominales-con-brazos-estirados";
 
+test("seven retired leg choices stay readable in saved workouts and history", () => {
+  const ids = [
+    "sentadillas-con-propio-peso",
+    "sentadillas-con-balon-medicinal",
+    "peso-muerto-con-balon-medicinal",
+    "sentadilla-con-minibanda",
+    "puente-con-bandas",
+    "elevaciones-de-cadera-con-maquina-smith",
+    "elevaciones-cortas-en-posicion-de-rana-con-maquina-smith",
+  ];
+  const snapshot = createDefaultSnapshot();
+  const selectableIds = catalogFor(snapshot).map((exercise) => exercise.id);
+  for (const id of ids) {
+    expect(selectableIds).not.toContain(id);
+    expect(findExercise(snapshot, id)?.group).toBe("Piernas");
+  }
+  expect(selectableIds).toContain("sentadilla");
+  expect(selectableIds).toContain("sentadilla-frontal");
+  const routine = snapshot.routines[0]!;
+  const day = routine.days[0]!;
+  day.items = [...ids];
+  startWorkout(snapshot, routine.id, day.id);
+  expect(snapshot.workout!.entries.map((entry) => entry.id)).toEqual(ids);
+  for (const entry of snapshot.workout!.entries) {
+    entry.sets[0] = { kg: 10, reps: 12, entered: true, done: true };
+  }
+  const session = buildSession(
+    snapshot,
+    snapshot.workout!.entries,
+    { routine: routine.name, day: day.name },
+    "2026-10-17T12:00:00",
+    {
+      color: "#4b9bff",
+      comment: "",
+      photos: [],
+      bodyWeightStartKg: null,
+      bodyWeightEndKg: null,
+    },
+  );
+  expect(session.exercises?.map((exercise) => exercise.id)).toEqual(ids);
+  snapshot.sessions = [
+    {
+      ...session,
+      groupSets: undefined,
+      exercises: ids.map((id) => ({ id, sets: 3 })),
+    },
+  ];
+  expect(
+    weeklyData(snapshot, 1, new Date("2026-10-17T12:00:00"))[0]?.groups.Piernas,
+  ).toBe(21);
+  expect(day.items).toEqual(ids);
+  for (let days = 1; days <= 7; days++) {
+    const generated = buildAutomaticRoutine(
+      { groups: ["Piernas"], days },
+      { makeId: () => "legs-retired", language: "es" },
+    );
+    const generatedIds = generated.days.flatMap((day) => day.items);
+    expect(generatedIds.length).toBeGreaterThan(0);
+    for (const id of ids) expect(generatedIds).not.toContain(id);
+  }
+});
+
 test("decline dumbbell press is retired without breaking saved workouts", () => {
   const id = "press-de-banca-declinado-con-mancuernas";
   const snapshot = createDefaultSnapshot();

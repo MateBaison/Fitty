@@ -151,7 +151,7 @@ test("library images follow profile gender without changing historical exercise 
   }
 });
 
-test("all 45 requested leg exercises resolve both new mannequins while excluded hip exercises retain their images", () => {
+test("available leg exercises resolve both new mannequins while excluded hip exercises retain their images", () => {
   const excluded = [
     "elevaciones-de-cadera-acostado-lateralmente",
     "elevaciones-de-cadera-con-barra",
@@ -160,7 +160,7 @@ test("all 45 requested leg exercises resolve both new mannequins while excluded 
     (exercise) =>
       exercise.group === "Piernas" && !excluded.includes(exercise.id),
   );
-  expect(legs).toHaveLength(45);
+  expect(legs).toHaveLength(38);
   for (const exercise of legs) {
     const version =
       exercise.id === "sentadilla-frontal"
