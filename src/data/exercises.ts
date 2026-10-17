@@ -11,10 +11,16 @@ import {
   type Exercise,
 } from "@/domain/schemas/exercise";
 
-// Preserve the captured catalog and append new exercises without changing historical IDs.
-export const exercises: ReadonlyArray<Exercise> = z
-  .array(exerciseSchema)
-  .parse([...rawExercises, ...additions]);
+// Keep the archived definitions intact; current classification can change without changing IDs.
+const groupOverrides: Partial<Record<string, Exercise["group"]>> = {
+  "elevaciones-de-cadera-acostado-lateralmente": "Abdominales",
+};
+export const exercises: ReadonlyArray<Exercise> = z.array(exerciseSchema).parse(
+  [...rawExercises, ...additions].map((exercise) => ({
+    ...exercise,
+    group: groupOverrides[exercise.id] ?? exercise.group,
+  })),
+);
 // Keep definitions for saved routines/history while excluding retired choices.
 const retiredExerciseIds = new Set([
   "press-militar-con-mancuernas",

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { languages } from "@/data/translations";
 import { useApp } from "@/state/app-provider";
 import { AppDialog } from "@/components/ui/app-dialog";
@@ -25,6 +25,7 @@ const languageNames: Record<string, string> = {
 };
 export function ProfileScreen() {
   const importInput = useRef<HTMLInputElement>(null);
+  const settingsFormId = useId();
   const { snapshot, change, user, notify, t, holdRefresh } = useApp(),
     [settings, setSettings] = useState(false),
     [social, setSocial] = useState({
@@ -186,7 +187,8 @@ export function ProfileScreen() {
         title={t("Configuración", "Settings")}
       >
         <form
-          className="space-y-4"
+          id={settingsFormId}
+          className="settings-form"
           onSubmit={(event) => {
             event.preventDefault();
             const form = new FormData(event.currentTarget),
@@ -229,42 +231,50 @@ export function ProfileScreen() {
             }
           }}
         >
-          <label className="block">
-            {t("Peso", "Weight")}
-            <select name="weight" defaultValue={snapshot.settings.weight}>
-              <option value="kg">kg</option>
-              <option value="lb">lb</option>
-            </select>
-          </label>
-          <label className="block">
-            {t("Altura", "Height")}
-            <select name="height" defaultValue={snapshot.settings.height}>
-              <option value="cm">cm</option>
-              <option value="ft">ft</option>
-            </select>
-          </label>
-          <label className="block">
-            {t("Distancia", "Distance")}
-            <select name="distance" defaultValue={snapshot.settings.distance}>
-              <option value="km">km</option>
-              <option value="mi">mi</option>
-            </select>
-          </label>
-          <label className="block">
-            {t("Idioma", "Language")}
-            <select name="language" defaultValue={snapshot.settings.language}>
-              {languages.map((language) => (
-                <option key={language} value={language}>
-                  {languageNames[language]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <Button type="submit">
-            {t("Guardar configuración", "Save settings")}
-          </Button>
+          <fieldset className="settings-fields">
+            <legend className="sr-only">
+              {t("Configuración", "Settings")}
+            </legend>
+            <label>
+              {t("Peso", "Weight")}
+              <select name="weight" defaultValue={snapshot.settings.weight}>
+                <option value="kg">kg</option>
+                <option value="lb">lb</option>
+              </select>
+            </label>
+            <label>
+              {t("Altura", "Height")}
+              <select name="height" defaultValue={snapshot.settings.height}>
+                <option value="cm">cm</option>
+                <option value="ft">ft</option>
+              </select>
+            </label>
+            <label>
+              {t("Distancia", "Distance")}
+              <select name="distance" defaultValue={snapshot.settings.distance}>
+                <option value="km">km</option>
+                <option value="mi">mi</option>
+              </select>
+            </label>
+            <label>
+              {t("Idioma", "Language")}
+              <select name="language" defaultValue={snapshot.settings.language}>
+                {languages.map((language) => (
+                  <option key={language} value={language}>
+                    {languageNames[language]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </fieldset>
         </form>
-        <DeleteAccount />
+        <DeleteAccount
+          saveAction={
+            <Button type="submit" form={settingsFormId} size="sm">
+              {t("Guardar configuración", "Save settings")}
+            </Button>
+          }
+        />
       </AppDialog>
     </>
   );

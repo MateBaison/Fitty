@@ -17,6 +17,36 @@ import {
   setInputSchema,
 } from "../../src/domain/schemas/snapshot";
 import { appReducer, initialAppState } from "../../src/state/reducer";
+import { findExercise, startWorkout } from "../../src/domain/workouts";
+import { weeklyData } from "../../src/domain/progress";
+
+test("moving lateral hip raises to abs preserves stored routine and session groups", () => {
+  const id = "elevaciones-de-cadera-acostado-lateralmente";
+  const snapshot = createDefaultSnapshot();
+  const routine = snapshot.routines[0]!;
+  const day = routine.days[0]!;
+  day.items = [id];
+  snapshot.sessions = [
+    {
+      id: "before-group-change",
+      date: "2026-10-17T12:00:00",
+      routine: routine.name,
+      day: day.name,
+      exercises: [{ id, group: "Piernas", sets: 3, note: "keep this history" }],
+    },
+  ];
+  const restored = readSnapshotJson(JSON.stringify(snapshot));
+  if (!restored.ok) throw new Error("Could not restore account");
+  expect(restored.snapshot.routines[0]!.days[0]!.items).toEqual([id]);
+  expect(restored.snapshot.sessions).toEqual(snapshot.sessions);
+  expect(findExercise(restored.snapshot, id)?.group).toBe("Abdominales");
+  expect(
+    weeklyData(restored.snapshot, 1, new Date("2026-10-17T12:00:00"))[0]?.groups
+      .Piernas,
+  ).toBe(3);
+  startWorkout(restored.snapshot, routine.id, day.id);
+  expect(restored.snapshot.workout!.entries[0]!.id).toBe(id);
+});
 
 function memoryStorage(): StoragePort {
   const data = new Map<string, string>();

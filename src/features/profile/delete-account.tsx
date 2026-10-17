@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Trash2, ShieldCheck } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { deleteAccount } from "@/lib/supabase/auth-actions";
 import { browserClient } from "@/lib/supabase/browser";
 import { accountCacheKey } from "@/lib/storage/account-cache";
 
-export function DeleteAccount() {
+export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
   const { user, t, disposeDeletedAccount } = useApp();
   const [unlocked, setUnlocked] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
@@ -17,16 +17,20 @@ export function DeleteAccount() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   return (
-    <section className="mt-6 space-y-4 border-t border-border pt-5">
-      <Button
-        type="button"
-        variant="destructive"
-        onClick={() => setUnlocked(true)}
-        disabled={busy}
-      >
-        <Trash2 aria-hidden="true" />
-        {t("Eliminar cuenta", "Delete account")}
-      </Button>
+    <section className="flex flex-col gap-4">
+      <div className="settings-actions">
+        <Button
+          type="button"
+          variant="destructive"
+          size="sm"
+          onClick={() => setUnlocked(true)}
+          disabled={busy}
+        >
+          <Trash2 aria-hidden="true" data-icon="inline-start" />
+          {t("Eliminar cuenta", "Delete account")}
+        </Button>
+        {saveAction}
+      </div>
       {unlocked && (
         <form
           className="space-y-4"

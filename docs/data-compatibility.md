@@ -78,3 +78,8 @@ Active tracking displays recent speed/pace rather than the whole-route average. 
 ## Retired leg choices — 2026-10-17
 
 `sentadillas-con-propio-peso`, `sentadillas-con-balon-medicinal`, `peso-muerto-con-balon-medicinal`, `sentadilla-con-minibanda`, `puente-con-bandas`, `elevaciones-de-cadera-con-maquina-smith` and `elevaciones-cortas-en-posicion-de-rana-con-maquina-smith` are excluded from the available library, exercise pickers, replacements and new automatic routines. Original IDs, definitions and image variants remain readable for saved routines, active workouts, imports, history and progress totals. Existing account records are not rewritten or deleted. Other squat and hip exercises remain selectable.
+
+
+## Current exercise classification — 2026-10-17
+
+`elevaciones-de-cadera-acostado-lateralmente` is shown under Abdominales through a current-catalog group override. Its original ID, archived Piernas definition and images remain intact. Saved routines continue referencing the same ID; stored session groups and totals are not rewritten. Historical entries without a stored group use the current catalog classification when a fallback is required.

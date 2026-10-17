@@ -18,7 +18,13 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exercises).toHaveLength(139);
     expect(new Set(exercises.map((exercise) => exercise.id)).size).toBe(139);
     expect(JSON.stringify(exercises.slice(0, 136))).toBe(
-      JSON.stringify(legacyExercises),
+      JSON.stringify(
+        legacyExercises.map((exercise) =>
+          exercise.id === "elevaciones-de-cadera-acostado-lateralmente"
+            ? { ...exercise, group: "Abdominales" }
+            : exercise,
+        ),
+      ),
     );
     expect(new Set(exercises.map((exercise) => exercise.group))).toEqual(
       new Set(muscleGroups),
@@ -90,6 +96,18 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(matchesEquipment(row, "Barra")).toBe(true);
     expect(matchesEquipment(row, "Mancuernas")).toBe(false);
   });
+});
+
+test("lateral lying hip raises move to abs without changing their archived ID or images", () => {
+  const id = "elevaciones-de-cadera-acostado-lateralmente";
+  const current = availableExercises.find((exercise) => exercise.id === id)!;
+  const archived = legacyExercises.find((exercise) => exercise.id === id)!;
+  expect(archived.group).toBe("Piernas");
+  expect(JSON.stringify(current)).toBe(
+    JSON.stringify({ ...archived, group: "Abdominales" }),
+  );
+  expect(exerciseImage(current, "hombre")).toContain(`${id}-masculino.jpg`);
+  expect(exerciseImage(current, "mujer")).toContain(`${id}-femenino.jpg`);
 });
 
 test("library images follow profile gender without changing historical exercise definitions", () => {
@@ -174,6 +192,9 @@ test("available leg exercises resolve both new mannequins while excluded hip exe
                 "peso-muerto-rumano-con-mancuernas",
                 "sentadilla-goblet-con-mancuerna",
                 "salto-rodillas-al-pecho",
+                "caminata-lateral-con-minibanda",
+                "step-up-con-mancuernas",
+                "groiners",
               ].includes(exercise.id)
             ? "v2"
             : "v1";

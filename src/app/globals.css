@@ -2111,3 +2111,40 @@ input[type="range"] {
     animation-delay: 1499ms;
   }
 }
+
+/* Compact preferences keep both columns usable on narrow screens. */
+.settings-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+.settings-fields > label {
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+.settings-fields select {
+  min-width: 0;
+  min-height: 42px;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 0.875rem;
+}
+.settings-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 10px;
+}
+.settings-actions > button {
+  min-width: 0;
+  min-height: 44px;
+  height: auto;
+  padding: 8px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  white-space: normal;
+}
