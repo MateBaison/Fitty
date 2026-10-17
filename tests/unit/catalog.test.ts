@@ -162,11 +162,14 @@ test("all 45 requested leg exercises resolve both new mannequins while excluded 
   );
   expect(legs).toHaveLength(45);
   for (const exercise of legs) {
+    const version = ["sentadilla", "zancada"].includes(exercise.id)
+      ? "v2"
+      : "v1";
     expect(exerciseImage(exercise, "hombre")).toBe(
-      `/assets/exercises/additions/${exercise.id}-legs-v1-masculino.jpg`,
+      `/assets/exercises/additions/${exercise.id}-legs-${version}-masculino.jpg`,
     );
     expect(exerciseImage(exercise, "mujer")).toBe(
-      `/assets/exercises/additions/${exercise.id}-legs-v1-femenino.jpg`,
+      `/assets/exercises/additions/${exercise.id}-legs-${version}-femenino.jpg`,
     );
     expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
   }

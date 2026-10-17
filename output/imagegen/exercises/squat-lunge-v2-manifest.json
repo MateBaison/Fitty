@@ -1,0 +1,46 @@
+{
+  "tool": "built-in image_gen",
+  "assets": [
+    {
+      "id": "sentadilla",
+      "sex": "masculino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-6a5bbf69-d640-4677-b852-7545662c7ba8.png",
+      "source": "output/imagegen/exercises/sentadilla-legs-v2-masculino.png",
+      "web": "public/assets/exercises/additions/sentadilla-legs-v2-masculino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use case scientific-educational. Create a NEW polished Fitty exercise tutorial image 1536x1024 landscape, exactly TWO equal panels separated by a thin white vertical line. Reference image defines male athletic faceless gray mannequin appearance only. Clean dark charcoal studio floor and background. Full black athletic tank top, intact black mid-thigh shorts and black athletic shoes. BODYWEIGHT SQUAT, no equipment. Both panels same fixed front-side three-quarter camera, same orientation and scale, full body with comfortable margins all around including hands and shoes. LEFT starting position standing tall, feet shoulder-width, toes slightly turned out, arms extended forward at shoulder height. RIGHT bottom of controlled squat: hips back and down, thighs approximately parallel to floor, knees tracking toes, entire feet and heels firmly planted, neutral back with natural moderate torso inclination, arms forward for balance. The mannequin's clothing must remain fully intact and visibly black. Highlight working quadriceps and visible gluteus maximus on BOTH panels with anatomically accurate VOLUMETRIC translucent red muscle fiber overlays projected ON TOP OF intact shorts/gray legs. Fine muscle fibers follow actual anatomy, soft transparent gradient feathering around EVERY highlight edge, preserve fabric visible beneath red overlay. NOT solid red blobs, NOT holes cut from shorts, NOT exposed flesh or surgical anatomy. Gray skin remains intact, head featureless. Same light and body proportions both phases. No text labels, arrows, watermarks, logos, scenery or extra people. Make correct squat depth and knee/ankle geometry clear.",
+      "correctionPrompt": "Precise edit of this Fitty squat image. Preserve exactly the 1536x1024 two-panel layout, poses, gray male mannequin, black tank top and shoes, camera lighting and dark background. CORRECT ONLY THE SHORTS AND ANATOMY OVERLAY: both panels must show complete continuous black athletic shorts covering the entire pelvis buttocks and upper half of both thighs, with a single clear continuous horizontal hem around each thigh at mid-thigh. No high-cut sections, no diagonal slits, no missing cloth around red muscles. Red quadriceps and gluteal anatomical fibers must be a SEMITRANSPARENT OVERLAY painted onto the surface of those complete black shorts, black fabric texture and folds clearly visible THROUGH red highlights. Muscle highlight contours softly fade at EVERY edge. Under the shorts hem remaining lower quadriceps can be highlighted over gray skin, continuing naturally. Never expose muscles or depict skin removed. The black shorts garment silhouette must be intact in standing and squatting phase, exactly like ordinary full shorts. No additional panels, text or props."
+    },
+    {
+      "id": "zancada",
+      "sex": "masculino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-e5af4a3f-f3ee-4f3f-bd55-7e482480e068.png",
+      "source": "output/imagegen/exercises/zancada-legs-v2-masculino.png",
+      "web": "public/assets/exercises/additions/zancada-legs-v2-masculino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use case scientific-educational. Create NEW polished Fitty exercise tutorial image 1536x1024 horizontal, exactly TWO equal panels, thin white vertical separator. Reference image defines athletic MALE faceless gray 3D mannequin style only. Full black tank top, complete intact black mid-thigh shorts and black athletic shoes. Minimal dark charcoal studio background and floor. BODYWEIGHT FORWARD LUNGE, no equipment. Same fixed SIDE three-quarter camera both panels, same orientation toward image right, same body scale and ground height; all of body fits with comfortable margin including shoes and elbows. LEFT start standing upright feet hip-width, hands naturally resting on hips, neutral spine. RIGHT final phase one long step forward with near leg: front foot entirely flat, knee bent about 90 degrees and tracks forward over foot, front thigh near horizontal, rear knee bends downward hovering just above floor under rear hip, rear heel lifted with ball of foot supported. Torso upright, pelvis level, legs remain on two hip-width parallel tracks rather than crossing. Visible right lunge leg points same direction as standing phase, hands remain on hips. Highlight working quadriceps and gluteus maximus on both panels using anatomically accurate volumetric translucent red fine muscle fiber OVERLAYS ON TOP OF intact black clothing/gray legs. Feather all highlight edges smoothly with transparent gradient, show clothing fabric beneath red overlay. No solid red blobs, no cutaway shorts, no exposed flesh or dissection, no muscle highlighting on arms. Skin remains gray intact. No text arrows logos watermarks extra people or decorations. Clear correct lunge mechanics, exactly 2 feet and 2 hands per mannequin."
+    },
+    {
+      "id": "zancada",
+      "sex": "femenino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-61cf46e0-884e-4e86-8126-f09e97c44693.png",
+      "source": "output/imagegen/exercises/zancada-legs-v2-femenino.png",
+      "web": "public/assets/exercises/additions/zancada-legs-v2-femenino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Create female counterpart of image 1, same Fitty bodyweight FORWARD LUNGE exercise. Output 1536x1024 horizontal exactly two equal panels separated by a thin white line. Image 1 defines pose, framing, dark charcoal background and camera. Image 2 defines FEMALE gray athletic faceless mannequin style with full black sports top, black shorts and black shoes. Left standing upright hands on hips feet hip-width; right long forward lunge, near/front foot flat, front thigh horizontal with knee approximately 90 degrees, rear knee hovering just above floor and rear heel up. Same three-quarter side camera facing right, identical scale and light both panels, full body all shoes with comfortable margins. ANATOMY HIGHLIGHTS: translucent red volumetric quadriceps and gluteus maximus with fine fibers in BOTH panels, every contour softly feathered with transparent gradient. Preserve continuous intact black shorts with clear mid-thigh hem, covering pelvis buttocks and upper thighs. Red muscles overlay the surface of fabric so black fabric folds remain clearly visible beneath the translucent red; never cut holes in clothing or show exposed flesh. Complete sports top and shoes. Natural knee/hip/ankle geometry, two legs and two hands per figure. No equipment, text arrows logos or decorations. Match male lunge mechanics and composition closely."
+    },
+    {
+      "id": "sentadilla",
+      "sex": "femenino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-92b60f51-8f73-4cf9-8dc5-430972e9481c.png",
+      "source": "output/imagegen/exercises/sentadilla-legs-v2-femenino.png",
+      "web": "public/assets/exercises/additions/sentadilla-legs-v2-femenino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Create female counterpart of image 1 Fitty bodyweight SQUAT tutorial. Output exactly 1536x1024 landscape with TWO equal panels and thin white vertical dividing line. Image 1 defines exact camera, poses, composition, black clothing with muscle overlays, dark charcoal studio backdrop. Image 2 defines FEMALE athletic faceless gray mannequin style. Female wears complete black sports top, intact black mid-thigh shorts and black shoes. LEFT standing tall feet shoulder-width toes slightly out arms extended forward; RIGHT squat bottom thighs approximately parallel floor, knees track toes, hips back, neutral spine and moderate forward torso tilt, whole feet including heels firmly flat. Fixed front-side three-quarter view, same orientation light body scale both phases, full body with comfortable margins including hands and shoes. Anatomical quadriceps and visible gluteal volume with fine red muscle fibers shown in BOTH phases as translucent surface OVERLAY. All edges smoothly fade via transparent gradient into black fabric/gray skin. Black shorts must remain continuous with clear mid-thigh hems around both legs, covering pelvis buttocks and upper thighs in both phases, fabric folds visible THROUGH the red overlay. No cutout holes, no exposed muscles, no skin removed. Match the successful intact shorts of image 1. No equipment, text labels arrows logos or additional people."
+    }
+  ]
+}
