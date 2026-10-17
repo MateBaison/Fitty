@@ -1,0 +1,46 @@
+{
+  "tool": "built-in image_gen",
+  "assets": [
+    {
+      "id": "sentadilla-frontal",
+      "sex": "masculino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-c23e686d-001d-4ad5-9ff4-9068f976ad04.png",
+      "source": "output/imagegen/exercises/sentadilla-frontal-legs-v2-masculino.png",
+      "web": "public/assets/exercises/additions/sentadilla-frontal-legs-v2-masculino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use case: scientific-educational. Fitty exercise tutorial 1536x1024 landscape, exactly TWO equal panels divided by thin vertical white line. Athletic MALE faceless gray 3D mannequin matching reference, complete black tank top, complete black shorts with continuous mid-thigh hems and black shoes. Clean dark charcoal studio floor/background. FRONT BARBELL SQUAT. Same fixed front-side three-quarter camera and same body scale in both panels. Entire mannequin and entire barbell including both plate ends fit comfortably in each panel with generous margins, no cropping. Left start standing tall feet shoulder width toes slightly out, barbell supported ON FRONT DELTOIDS at collarbone level in clean front rack, fingertips under bar outside shoulder width, wrists extended naturally and ELBOWS POINTING FORWARD HIGH, upper arms near horizontal, bar rests on shoulders rather than held in hands. Right squat bottom thighs near parallel to floor, whole feet and heels planted, knees tracking toes, torso relatively upright and spine neutral, elbows stay high and bar stays supported on front deltoids. Same bar with equal modest black plates and collars at both ends in both phases, correct hands no duplicate fingers. Quadriceps and visible gluteal muscle volume highlighted in BOTH phases with fine anatomical red fibers as TRANSLUCENT OVERLAY on intact shorts and gray legs, softly feathered gradient around EVERY edge; black fabric folds and full continuous shorts hems remain visible through overlay. No exposed muscles, no cutaway clothing. No text arrows logos scenery or extra people. Correct front-rack mechanics are essential; not a back squat, no bar behind neck.",
+      "correctionPrompt": "Precise edit of image 1 front barbell squat. Keep all poses, barbell, front rack, mannequin, camera, lighting, layout and 1536x1024 dimensions exactly the same. Change ONLY shorts and red overlay treatment. Image 2 is a REFERENCE FOR INTACT SHORTS AND OVERLAY ONLY, do not use image 2 poses or remove barbell. Both panels of image 1 must have continuous complete black shorts covering buttocks pelvis and upper half of BOTH thighs, with visible unbroken BLACK HEM circling each mid thigh, no diagonal slits or missing cloth. Match the continuous black shorts hems in image 2. Red quadriceps and gluteal fibers are SEMITRANSPARENT SURFACE OVERLAYS, fabric folds show THROUGH the red overlay. Red fades softly into black cloth or gray skin at every outer edge. No exposed flesh and no anatomy replacing clothing. Keep clear front barbell rack with high elbows, full bar and plates visible. No text."
+    },
+    {
+      "id": "extension-a-una-pierna",
+      "sex": "masculino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-d0ecc635-7a81-4605-898f-b03a7bd34af5.png",
+      "source": "output/imagegen/exercises/extension-a-una-pierna-legs-v2-masculino.png",
+      "web": "public/assets/exercises/additions/extension-a-una-pierna-legs-v2-masculino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use case scientific-educational. Fitty exercise tutorial 1536x1024 horizontal with exactly TWO equal panels divided by thin white vertical line. Athletic MALE faceless gray 3D mannequin matching reference wearing full black tank top, intact black mid-thigh shorts with complete continuous hems and black athletic shoes. Dark charcoal clean studio. SINGLE LEG SEATED MACHINE KNEE EXTENSION on a dedicated selectorized leg-extension machine. Same fixed SIDE three-quarter camera in both panels, same orientation scale and equipment. Entire mannequin, feet and complete machine fit inside each panel with generous margins. Padded seat supports full thighs, back rests against inclined backrest, hips and knees aligned, hands hold side handles. Machine pivot aligned with knee joint, one small individual ankle roller attached to coherent lever and weight-stack linkage. Working leg is NEAR camera and its quadriceps is highlighted red in BOTH phases. Left near working knee bent about 90 degrees, roller contacts front of lower shin just ABOVE ankle, working foot relaxed below knee. Right SAME near leg extends to almost straight (not hyperextended), thigh stays on seat, roller remains on distal front shin and rotates forward/up with lever around knee axis, shoe and ankle completely visible beyond roller. Far NONWORKING leg remains bent and relaxed on floor in both phases, clear separation from working lever; exactly one knee extends. Working quadriceps shown with anatomical volumetric translucent red muscle fibers, all edges smoothly gradient-feathered, overlay on intact shorts/gray skin with black fabric folds and shorts hem visible through highlight. No exposed flesh, no cutouts, no text arrows logos extra people or decorations. Clear mechanical single-leg knee extension, no hip lift, no floating roller, no extra legs."
+    },
+    {
+      "id": "extension-a-una-pierna",
+      "sex": "femenino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-7c2a5af3-5e90-45fe-bccc-9996ec3ac8e8.png",
+      "source": "output/imagegen/exercises/extension-a-una-pierna-legs-v2-femenino.png",
+      "web": "public/assets/exercises/additions/extension-a-una-pierna-legs-v2-femenino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Create FEMALE counterpart of image 1: Fitty SINGLE LEG MACHINE KNEE EXTENSION tutorial, 1536x1024 horizontal exactly TWO equal panels divided by thin white line. Image 1 is composition, machine and pose reference; image 2 female gray athletic faceless mannequin identity/style. Match image 1 equipment camera framing and working leg exactly, with complete black sports top, complete black mid-thigh shorts and black shoes. Dark charcoal studio background. Left working knee bent about90 degrees and front lower shin resting behind padded roller just above ankle. Right SAME working leg extends nearly straight while roller remains against distal front shin and coherent lever rotates around knee axis; shoe beyond roller clearly visible. Other leg remains bent foot on floor BOTH phases. Thighs stay supported by seat, back on backrest, hands hold side handles. Show only ONE quadriceps highlighted: the SAME leg that extends, in both phases. Fine anatomical muscle fibers forming quadriceps volumes in translucent red, smoothly transparent feathering around all edges; overlay over gray skin and INTACT black shorts, black fabric folds and continuous mid-thigh hems visible beneath overlay. No exposed flesh, no shorts cutouts. Keep whole body and entire machine visible with margin around feet head and tower. Exactly2 legs no floating machine parts, no text arrows labels logos or extra people."
+    },
+    {
+      "id": "sentadilla-frontal",
+      "sex": "femenino",
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-a456e066-b126-4767-a9a2-8af5cca5c87d.png",
+      "source": "output/imagegen/exercises/sentadilla-frontal-legs-v2-femenino.png",
+      "web": "public/assets/exercises/additions/sentadilla-frontal-legs-v2-femenino.jpg",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Create FEMALE counterpart of image1 Fitty FRONT BARBELL SQUAT tutorial. Image1 defines poses front-rack bar placement equipment lighting camera dark charcoal backdrop and complete shorts with translucent muscle overlays. Image2 defines athletic gray faceless FEMALE mannequin style with complete black sports top and black shoes. 1536x1024 horizontal exactly TWO equal panels separated by thin white line. Match same fixed front-side three-quarter view and body scale both panels, full body and complete barbell plates inside each panel with comfortable margins. Left standing tall shoulder-width feet toes slightly out, bar rests across FRONT deltoids/clavicle shelf, fingertips support bar just outside shoulders, wrists naturally extended and elbows raised forward high. Right controlled front squat bottom thighs near parallel floor, torso relatively upright neutral spine, knees track toes, full feet heels firmly planted, elbows stay high bar stays on FRONT shoulders. Same bar and equal modest black plates collars both panels. Full complete black mid-thigh shorts with continuous BLACK HEM around each leg, no slits no missing clothing. Anatomical red quadriceps and visible gluteal fibers as volumetric TRANSLUCENT SURFACE OVERLAY in BOTH phases, black fabric folds clearly visible beneath red, every highlight edge softly fades into fabric/gray skin. Match successful intact shorts treatment image1. No exposed anatomy. No text arrows logos extra people scenery or equipment other than barbell. Exactly2 hands 2 feet, correct front rack, not back squat."
+    }
+  ]
+}

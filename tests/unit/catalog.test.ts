@@ -162,7 +162,12 @@ test("all 45 requested leg exercises resolve both new mannequins while excluded 
   );
   expect(legs).toHaveLength(45);
   for (const exercise of legs) {
-    const version = ["sentadilla", "zancada"].includes(exercise.id)
+    const version = [
+      "sentadilla",
+      "zancada",
+      "sentadilla-frontal",
+      "extension-a-una-pierna",
+    ].includes(exercise.id)
       ? "v2"
       : "v1";
     expect(exerciseImage(exercise, "hombre")).toBe(
