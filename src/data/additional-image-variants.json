@@ -40,8 +40,8 @@
     "mujer": "exercises/additions/elevaciones-de-cadera-acostado-lateralmente-femenino.jpg"
   },
   "sentadillas-con-propio-peso": {
-    "hombre": "exercises/additions/sentadilla-masculino.jpg",
-    "mujer": "exercises/additions/sentadilla-femenino.jpg"
+    "hombre": "exercises/additions/sentadillas-con-propio-peso-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadillas-con-propio-peso-legs-v1-femenino.jpg"
   },
   "plancha-lateral": {
     "hombre": "exercises/additions/plancha-lateral-v2-masculino.jpg",
@@ -350,5 +350,181 @@
   "flexiones": {
     "hombre": "exercises/additions/flexiones-masculino.jpg",
     "mujer": "exercises/additions/flexiones-femenino.jpg"
+  },
+  "sentadilla": {
+    "hombre": "exercises/additions/sentadilla-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-legs-v1-femenino.jpg"
+  },
+  "prensa-de-piernas": {
+    "hombre": "exercises/additions/prensa-de-piernas-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/prensa-de-piernas-legs-v1-femenino.jpg"
+  },
+  "extension-de-piernas": {
+    "hombre": "exercises/additions/extension-de-piernas-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/extension-de-piernas-legs-v1-femenino.jpg"
+  },
+  "zancada": {
+    "hombre": "exercises/additions/zancada-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/zancada-legs-v1-femenino.jpg"
+  },
+  "curl-de-pierna-tumbado-en-maquina-de-femoral": {
+    "hombre": "exercises/additions/curl-de-pierna-tumbado-en-maquina-de-femoral-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/curl-de-pierna-tumbado-en-maquina-de-femoral-legs-v1-femenino.jpg"
+  },
+  "sentadilla-hack": {
+    "hombre": "exercises/additions/sentadilla-hack-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-hack-legs-v1-femenino.jpg"
+  },
+  "extension-a-una-pierna": {
+    "hombre": "exercises/additions/extension-a-una-pierna-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/extension-a-una-pierna-legs-v1-femenino.jpg"
+  },
+  "sentadilla-frontal": {
+    "hombre": "exercises/additions/sentadilla-frontal-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-frontal-legs-v1-femenino.jpg"
+  },
+  "peso-muerto-rumano-con-mancuernas": {
+    "hombre": "exercises/additions/peso-muerto-rumano-con-mancuernas-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-rumano-con-mancuernas-legs-v1-femenino.jpg"
+  },
+  "peso-muerto-rumano-con-barra": {
+    "hombre": "exercises/additions/peso-muerto-rumano-con-barra-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-rumano-con-barra-legs-v1-femenino.jpg"
+  },
+  "sentadilla-goblet-con-mancuerna": {
+    "hombre": "exercises/additions/sentadilla-goblet-con-mancuerna-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-goblet-con-mancuerna-legs-v1-femenino.jpg"
+  },
+  "salto-rodillas-al-pecho": {
+    "hombre": "exercises/additions/salto-rodillas-al-pecho-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/salto-rodillas-al-pecho-legs-v1-femenino.jpg"
+  },
+  "burpees": {
+    "hombre": "exercises/additions/burpees-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/burpees-legs-v1-femenino.jpg"
+  },
+  "sentadillas-con-balon-medicinal": {
+    "hombre": "exercises/additions/sentadillas-con-balon-medicinal-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadillas-con-balon-medicinal-legs-v1-femenino.jpg"
+  },
+  "sentadilla-bulgara-con-barra": {
+    "hombre": "exercises/additions/sentadilla-bulgara-con-barra-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-bulgara-con-barra-legs-v1-femenino.jpg"
+  },
+  "sentadilla-bulgara-con-propio-peso": {
+    "hombre": "exercises/additions/sentadilla-bulgara-con-propio-peso-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-bulgara-con-propio-peso-legs-v1-femenino.jpg"
+  },
+  "sentadilla-con-minibanda": {
+    "hombre": "exercises/additions/sentadilla-con-minibanda-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-con-minibanda-legs-v1-femenino.jpg"
+  },
+  "sentadilla-con-salto": {
+    "hombre": "exercises/additions/sentadilla-con-salto-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-con-salto-legs-v1-femenino.jpg"
+  },
+  "sentadilla-isometrica-apoyado-sobre-la-pared": {
+    "hombre": "exercises/additions/sentadilla-isometrica-apoyado-sobre-la-pared-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-isometrica-apoyado-sobre-la-pared-legs-v1-femenino.jpg"
+  },
+  "peso-muerto-con-balon-medicinal": {
+    "hombre": "exercises/additions/peso-muerto-con-balon-medicinal-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-con-balon-medicinal-legs-v1-femenino.jpg"
+  },
+  "peso-muerto-a-una-pierna": {
+    "hombre": "exercises/additions/peso-muerto-a-una-pierna-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/peso-muerto-a-una-pierna-legs-v1-femenino.jpg"
+  },
+  "sentadilla-sumo-con-kettlebell": {
+    "hombre": "exercises/additions/sentadilla-sumo-con-kettlebell-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/sentadilla-sumo-con-kettlebell-legs-v1-femenino.jpg"
+  },
+  "buenos-dias-con-barra": {
+    "hombre": "exercises/additions/buenos-dias-con-barra-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/buenos-dias-con-barra-legs-v1-femenino.jpg"
+  },
+  "puente-con-propio-peso": {
+    "hombre": "exercises/additions/puente-con-propio-peso-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/puente-con-propio-peso-legs-v1-femenino.jpg"
+  },
+  "puentes-a-una-pierna": {
+    "hombre": "exercises/additions/puentes-a-una-pierna-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/puentes-a-una-pierna-legs-v1-femenino.jpg"
+  },
+  "puente-con-bandas": {
+    "hombre": "exercises/additions/puente-con-bandas-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/puente-con-bandas-legs-v1-femenino.jpg"
+  },
+  "caminata-de-pato": {
+    "hombre": "exercises/additions/caminata-de-pato-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/caminata-de-pato-legs-v1-femenino.jpg"
+  },
+  "superman-en-cuadrupedia": {
+    "hombre": "exercises/additions/superman-en-cuadrupedia-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/superman-en-cuadrupedia-legs-v1-femenino.jpg"
+  },
+  "groiners": {
+    "hombre": "exercises/additions/groiners-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/groiners-legs-v1-femenino.jpg"
+  },
+  "hidrantes": {
+    "hombre": "exercises/additions/hidrantes-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/hidrantes-legs-v1-femenino.jpg"
+  },
+  "elevaciones-de-cadera-con-maquina-smith": {
+    "hombre": "exercises/additions/elevaciones-de-cadera-con-maquina-smith-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-de-cadera-con-maquina-smith-legs-v1-femenino.jpg"
+  },
+  "abducciones-de-cadera-sentado-con-banda": {
+    "hombre": "exercises/additions/abducciones-de-cadera-sentado-con-banda-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/abducciones-de-cadera-sentado-con-banda-legs-v1-femenino.jpg"
+  },
+  "abduccion-de-cadera-en-maquina": {
+    "hombre": "exercises/additions/abduccion-de-cadera-en-maquina-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/abduccion-de-cadera-en-maquina-legs-v1-femenino.jpg"
+  },
+  "abduccion-con-polea": {
+    "hombre": "exercises/additions/abduccion-con-polea-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/abduccion-con-polea-legs-v1-femenino.jpg"
+  },
+  "elevaciones-en-posicion-de-rana": {
+    "hombre": "exercises/additions/elevaciones-en-posicion-de-rana-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-en-posicion-de-rana-legs-v1-femenino.jpg"
+  },
+  "elevaciones-cortas-en-posicion-de-rana-con-maquina-smith": {
+    "hombre": "exercises/additions/elevaciones-cortas-en-posicion-de-rana-con-maquina-smith-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-cortas-en-posicion-de-rana-con-maquina-smith-legs-v1-femenino.jpg"
+  },
+  "almejas-laterales-con-banda": {
+    "hombre": "exercises/additions/almejas-laterales-con-banda-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/almejas-laterales-con-banda-legs-v1-femenino.jpg"
+  },
+  "levantamiento-de-pierna-acostado-de-lado": {
+    "hombre": "exercises/additions/levantamiento-de-pierna-acostado-de-lado-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/levantamiento-de-pierna-acostado-de-lado-legs-v1-femenino.jpg"
+  },
+  "step-up-con-mancuernas": {
+    "hombre": "exercises/additions/step-up-con-mancuernas-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/step-up-con-mancuernas-legs-v1-femenino.jpg"
+  },
+  "caminata-lateral-con-minibanda": {
+    "hombre": "exercises/additions/caminata-lateral-con-minibanda-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/caminata-lateral-con-minibanda-legs-v1-femenino.jpg"
+  },
+  "elevaciones-de-rodilla": {
+    "hombre": "exercises/additions/elevaciones-de-rodilla-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/elevaciones-de-rodilla-legs-v1-femenino.jpg"
+  },
+  "columpios-con-kettlebell": {
+    "hombre": "exercises/additions/columpios-con-kettlebell-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/columpios-con-kettlebell-legs-v1-femenino.jpg"
+  },
+  "contragolpe-con-cable": {
+    "hombre": "exercises/additions/contragolpe-con-cable-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/contragolpe-con-cable-legs-v1-femenino.jpg"
+  },
+  "patadas-de-burro": {
+    "hombre": "exercises/additions/patadas-de-burro-legs-v1-masculino.jpg",
+    "mujer": "exercises/additions/patadas-de-burro-legs-v1-femenino.jpg"
   }
 }

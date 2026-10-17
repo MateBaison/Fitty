@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { readFile } from "node:fs/promises";
 import {
   exercises,
+  availableExercises,
   exerciseImage,
   imageVariants,
   matchesEquipment,
@@ -52,7 +53,7 @@ describe("Phase 1 catalog/asset parity", () => {
     expect(exerciseImage(exercise, "no_decirlo")).toBe(
       `/assets/${exercise.image}`,
     );
-    expect(Object.keys(imageVariants)).toHaveLength(89);
+    expect(Object.keys(imageVariants)).toHaveLength(133);
   });
   test("static holds use seconds, dynamic planks and presses use reps", () => {
     for (const id of [
@@ -152,18 +153,32 @@ test("library images follow profile gender without changing historical exercise 
   }
 });
 
-test("bodyweight squats use new mannequins and standard squats keep their original images", () => {
-  const bodyweight = exercises.find(
-    (item) => item.id === "sentadillas-con-propio-peso",
-  )!;
-  expect(exerciseImage(bodyweight, "hombre")).toBe(
-    "/assets/exercises/additions/sentadilla-masculino.jpg",
+test("all 45 requested leg exercises resolve both new mannequins while excluded hip exercises retain their images", () => {
+  const excluded = [
+    "elevaciones-de-cadera-acostado-lateralmente",
+    "elevaciones-de-cadera-con-barra",
+  ];
+  const legs = availableExercises.filter(
+    (exercise) =>
+      exercise.group === "Piernas" && !excluded.includes(exercise.id),
   );
-  expect(exerciseImage(bodyweight, "mujer")).toBe(
-    "/assets/exercises/additions/sentadilla-femenino.jpg",
-  );
-  const squat = exercises.find((item) => item.id === "sentadilla")!;
-  expect(imageVariants.sentadilla).toBeUndefined();
-  expect(exerciseImage(squat, "hombre")).toBe(`/assets/${squat.image}`);
-  expect(exerciseImage(squat, "mujer")).toBe(`/assets/${squat.image}`);
+  expect(legs).toHaveLength(45);
+  for (const exercise of legs) {
+    expect(exerciseImage(exercise, "hombre")).toBe(
+      `/assets/exercises/additions/${exercise.id}-legs-v1-masculino.jpg`,
+    );
+    expect(exerciseImage(exercise, "mujer")).toBe(
+      `/assets/exercises/additions/${exercise.id}-legs-v1-femenino.jpg`,
+    );
+    expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
+  }
+  for (const id of excluded) {
+    const exercise = exercises.find((item) => item.id === id)!;
+    expect(exerciseImage(exercise, "hombre")).toBe(
+      `/assets/exercises/additions/${id}-masculino.jpg`,
+    );
+    expect(exerciseImage(exercise, "mujer")).toBe(
+      `/assets/exercises/additions/${id}-femenino.jpg`,
+    );
+  }
 });
