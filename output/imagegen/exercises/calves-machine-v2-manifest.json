@@ -1,0 +1,37 @@
+{
+  "tool": "built-in image_gen",
+  "assets": [
+    {
+      "id": "elevacion-de-gemelos-de-pie",
+      "sex": "femenino",
+      "source": "output/imagegen/exercises/elevacion-de-gemelos-de-pie-maquina-v2-femenino.png",
+      "web": "public/assets/exercises/additions/elevacion-de-gemelos-de-pie-maquina-v2-femenino.jpg",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "elevacion-de-gemelos-sentado",
+      "sex": "masculino",
+      "source": "output/imagegen/exercises/elevacion-de-gemelos-sentado-maquina-v2-masculino.png",
+      "web": "public/assets/exercises/additions/elevacion-de-gemelos-sentado-maquina-v2-masculino.jpg",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "elevacion-de-gemelos-sentado",
+      "sex": "femenino",
+      "source": "output/imagegen/exercises/elevacion-de-gemelos-sentado-maquina-v2-femenino.png",
+      "web": "public/assets/exercises/additions/elevacion-de-gemelos-sentado-maquina-v2-femenino.jpg",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "id": "elevacion-de-gemelos-de-pie",
+      "sex": "masculino",
+      "source": "output/imagegen/exercises/elevacion-de-gemelos-de-pie-maquina-v2-masculino.png",
+      "web": "public/assets/exercises/additions/elevacion-de-gemelos-de-pie-maquina-v2-masculino.jpg",
+      "width": 1536,
+      "height": 1024
+    }
+  ]
+}

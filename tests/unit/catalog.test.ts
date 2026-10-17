@@ -116,8 +116,6 @@ test("library images follow profile gender without changing historical exercise 
     "press-de-banca-con-mancuernas",
     "aperturas-con-mancuernas",
     "aperturas-inclinadas-con-mancuernas",
-    "elevacion-de-gemelos-sentado",
-    "elevacion-de-gemelos-de-pie",
     "elevaciones-de-cadera-acostado-lateralmente",
     "elevaciones-de-cadera-con-barra",
     "plancha",
@@ -180,5 +178,22 @@ test("all 45 requested leg exercises resolve both new mannequins while excluded 
     expect(exerciseImage(exercise, "mujer")).toBe(
       `/assets/exercises/additions/${id}-femenino.jpg`,
     );
+  }
+});
+
+// The machine illustrations replace only the selected variants; historical IDs and neutral assets stay intact.
+test("both calf exercises resolve male and female machine illustrations", () => {
+  for (const id of [
+    "elevacion-de-gemelos-sentado",
+    "elevacion-de-gemelos-de-pie",
+  ]) {
+    const exercise = exercises.find((item) => item.id === id)!;
+    expect(exerciseImage(exercise, "hombre")).toBe(
+      `/assets/exercises/additions/${id}-maquina-v2-masculino.jpg`,
+    );
+    expect(exerciseImage(exercise, "mujer")).toBe(
+      `/assets/exercises/additions/${id}-maquina-v2-femenino.jpg`,
+    );
+    expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
   }
 });
