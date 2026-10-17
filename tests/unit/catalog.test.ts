@@ -164,7 +164,7 @@ test("all 45 requested leg exercises resolve both new mannequins while excluded 
   for (const exercise of legs) {
     const version =
       exercise.id === "sentadilla-frontal"
-        ? "v3"
+        ? "v4"
         : ["sentadilla", "zancada", "extension-a-una-pierna"].includes(
               exercise.id,
             )
