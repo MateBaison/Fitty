@@ -23,6 +23,7 @@ const retiredExerciseIds = new Set([
   "elevacion-frontal-con-mancuernas-alternas-agarre-neutro",
   "abdominales-con-brazos-estirados",
   "extension-de-triceps-con-cable-a-una-mano-con-agarre-supinado",
+  "press-de-banca-declinado-con-mancuernas",
 ]);
 export const availableExercises = exercises.filter(
   (exercise) => !retiredExerciseIds.has(exercise.id),

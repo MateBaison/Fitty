@@ -11,6 +11,29 @@ import { buildAutomaticRoutine } from "../../src/domain/calculations/automatic-r
 
 const retiredId = "abdominales-con-brazos-estirados";
 
+test("decline dumbbell press is retired without breaking saved workouts", () => {
+  const id = "press-de-banca-declinado-con-mancuernas";
+  const snapshot = createDefaultSnapshot();
+  expect(catalogFor(snapshot).some((exercise) => exercise.id === id)).toBe(
+    false,
+  );
+  expect(findExercise(snapshot, id)?.name).toBe(
+    "Press de banca declinado con mancuernas",
+  );
+  const routine = snapshot.routines[0]!;
+  const day = routine.days[0]!;
+  day.items = [id];
+  startWorkout(snapshot, routine.id, day.id);
+  expect(snapshot.workout!.entries[0]!.id).toBe(id);
+  for (let days = 1; days <= 7; days++) {
+    const generated = buildAutomaticRoutine(
+      { groups: ["Pectorales"], days },
+      { makeId: () => "decline-retired", language: "es" },
+    );
+    expect(generated.days.flatMap((day) => day.items)).not.toContain(id);
+  }
+});
+
 test("retired shoulder choices remain available to saved workouts only", () => {
   const ids = [
     "press-militar-con-mancuernas",
