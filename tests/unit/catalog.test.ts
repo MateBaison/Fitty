@@ -65,10 +65,10 @@ describe("Phase 1 catalog/asset parity", () => {
         id === "plancha-lateral" ? "seconds" : "reps",
       );
       expect(exerciseImage(exercise, "hombre")).toContain(
-        `${id}${id === "plancha-lateral" ? "-v2" : "-espalda"}-masculino.jpg`,
+        `${id}${id === "plancha-lateral" ? "-v2" : "-espalda-v2"}-masculino.jpg`,
       );
       expect(exerciseImage(exercise, "mujer")).toContain(
-        `${id}${id === "plancha-lateral" ? "-v2" : "-espalda"}-femenino.jpg`,
+        `${id}${id === "plancha-lateral" ? "-v2" : "-espalda-v2"}-femenino.jpg`,
       );
     }
     expect(
