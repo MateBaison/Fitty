@@ -2821,3 +2821,14 @@ input[type="range"] {
     grid-template-columns: 1fr;
   }
 }
+.professionals-field small,
+.professionals-location-source {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+.professionals-location-source {
+  grid-column: 1 / -1;
+}
+.professionals-location-source a {
+  text-decoration: underline;
+}

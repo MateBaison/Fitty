@@ -19,24 +19,84 @@ test("professional directory filters, empty state and navigation", async ({
   await nav.getByRole("link", { name: "Profesionales", exact: true }).click();
   await expect(page).toHaveURL(/\/professionals$/);
   await expect(
+    page.getByRole("combobox", { name: "País", exact: true }),
+  ).toHaveCount(0);
+  await expect(
     page.getByRole("heading", { name: "Profesionales", exact: true }),
   ).toBeVisible();
+  await expect(
+    page
+      .getByRole("combobox", { name: "Especialidad", exact: true })
+      .getByRole("option", { name: "Todos", exact: true }),
+  ).toBeAttached();
+  await page
+    .getByRole("combobox", { name: "Especialidad", exact: true })
+    .selectOption("sports-psychology");
+  await page
+    .getByRole("combobox", { name: "Especialidad", exact: true })
+    .selectOption("physical-conditioning");
   await page
     .getByRole("combobox", { name: "Especialidad", exact: true })
     .selectOption("nutrition");
-  await page.getByRole("combobox", { name: "Sexo del profesional", exact: true }).selectOption("female");
-  await page.getByRole("combobox", { name: "Modalidad", exact: true }).selectOption("both");
-  await page.getByLabel("Ciudad", { exact: true }).fill("Montevideo");
+  await page
+    .getByRole("combobox", { name: "Sexo del profesional", exact: true })
+    .selectOption("female");
+  await page
+    .getByRole("combobox", { name: "Modalidad", exact: true })
+    .selectOption("both");
+  await expect(
+    page.getByRole("combobox", { name: "Ciudad", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("combobox", { name: "País", exact: true })
+    .selectOption("UY");
+  await expect(
+    page.getByRole("combobox", { name: "Ciudad", exact: true }),
+  ).toBeEnabled();
+  await page
+    .getByRole("combobox", { name: "Ciudad", exact: true })
+    .selectOption("3441575");
+  await page
+    .getByRole("combobox", { name: "País", exact: true })
+    .selectOption("AR");
+  await expect(
+    page.getByRole("combobox", { name: "Ciudad", exact: true }),
+  ).toHaveValue("");
+  await expect(
+    page.getByRole("combobox", { name: "Ciudad", exact: true }),
+  ).toBeEnabled();
+  await expect(
+    page
+      .getByRole("combobox", { name: "Ciudad", exact: true })
+      .locator('option[value="3441575"]'),
+  ).toHaveCount(0);
+  await page
+    .getByRole("combobox", { name: "Modalidad", exact: true })
+    .selectOption("virtual");
+  await expect(
+    page.getByRole("combobox", { name: "País", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("combobox", { name: "Ciudad", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("combobox", { name: "Modalidad", exact: true })
+    .selectOption("in-person");
+  await expect(
+    page.getByRole("combobox", { name: "País", exact: true }),
+  ).toHaveValue("");
   await expect(
     page.getByText(
       "Todavía no hay profesionales publicados. Las postulaciones aún no están habilitadas.",
     ),
   ).toBeVisible();
   await page.getByRole("button", { name: "Limpiar filtros" }).click();
-  await expect(page.getByRole("combobox", { name: "Especialidad", exact: true })).toHaveValue(
-    "",
-  );
-  await expect(page.getByLabel("Ciudad", { exact: true })).toHaveValue("");
+  await expect(
+    page.getByRole("combobox", { name: "Especialidad", exact: true }),
+  ).toHaveValue("");
+  await expect(
+    page.getByRole("combobox", { name: "Ciudad", exact: true }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Limpiar filtros" }),
   ).toBeDisabled();

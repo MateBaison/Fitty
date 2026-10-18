@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { LocationFilters } from "./location-filters";
 import { Search, UsersRound } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,14 @@ export function ProfessionalsScreen() {
   const { t } = useApp();
   const [filters, setFilters] = useState(initial);
   const update = (key: keyof typeof initial, value: string) =>
-    setFilters((current) => ({ ...current, [key]: value }));
+    setFilters((current) => ({
+      ...current,
+      [key]: value,
+      ...(key === "country" ? { city: "" } : {}),
+      ...(key === "mode" && value !== "in-person" && value !== "both"
+        ? { country: "", city: "" }
+        : {}),
+    }));
   const any = Object.values(filters).some(Boolean);
   const select = (
     key: keyof typeof initial,
@@ -31,7 +39,7 @@ export function ProfessionalsScreen() {
         value={filters[key]}
         onChange={(event) => update(key, event.target.value)}
       >
-        <option value="">{t("Sin preferencia", "No preference")}</option>
+        <option value="">{t("Todos", "All")}</option>
         {options.map(([value, name]) => (
           <option key={value} value={value}>
             {name}
@@ -77,6 +85,14 @@ export function ProfessionalsScreen() {
             ["nutrition", t("Nutricionista", "Nutritionist")],
             ["training", t("Entrenador/a", "Trainer")],
             ["physio", t("Kinesiólogo/a", "Physiotherapist")],
+            [
+              "sports-psychology",
+              t("Psicología deportiva", "Sports psychology"),
+            ],
+            [
+              "physical-conditioning",
+              t("Preparación física", "Physical conditioning"),
+            ],
           ])}
           {select("sex", t("Sexo del profesional", "Professional’s sex"), [
             ["female", t("Femenino", "Female")],
@@ -96,22 +112,14 @@ export function ProfessionalsScreen() {
               ["pt", "Português"],
             ],
           )}
-          <label className="professionals-field">
-            <span>{t("País", "Country")}</span>
-            <Input
-              maxLength={80}
-              value={filters.country}
-              onChange={(event) => update("country", event.target.value)}
+          {(filters.mode === "in-person" || filters.mode === "both") && (
+            <LocationFilters
+              country={filters.country}
+              city={filters.city}
+              onCountry={(value) => update("country", value)}
+              onCity={(value) => update("city", value)}
             />
-          </label>
-          <label className="professionals-field">
-            <span>{t("Ciudad", "City")}</span>
-            <Input
-              maxLength={80}
-              value={filters.city}
-              onChange={(event) => update("city", event.target.value)}
-            />
-          </label>
+          )}
         </div>
         <div className="professionals-filter-footer">
           <span>{t("Directorio en preparación", "Directory coming soon")}</span>
