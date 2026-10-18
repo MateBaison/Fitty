@@ -828,7 +828,7 @@ test("weekly summary can select earlier weeks and return to the current week", a
   await expect(page.locator('[data-sync-status="synced"]')).toBeAttached();
   await page.goto("/progress");
   const summary = page.getByRole("region", {
-    name: "Resumen semanal",
+    name: "Resumen",
     exact: true,
   });
   await expect(summary).toContainText("0 h 30 min");
@@ -870,7 +870,7 @@ test("weekly summary and translated screens fit a narrow viewport", async ({
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto("/progress");
   await expect(
-    page.getByRole("heading", { name: "Resumen semanal" }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await expect(page.locator(".progress-week-days button")).toHaveCount(7);
   await expect(page.getByTestId("launch-splash")).toHaveCount(0);
@@ -922,15 +922,17 @@ test("weekly summary and translated screens fit a narrow viewport", async ({
     ),
   ).toBe(true);
   for (const [language, heading, direction] of [
-    ["fr", "Résumé de la semaine", "ltr"],
-    ["ar", "ملخص أسبوعي", "rtl"],
+    ["fr", "Résumé", "ltr"],
+    ["ar", "ملخص", "rtl"],
   ] as const) {
     await page.goto("/profile");
     await page.locator(".page-heading button").last().click();
     await page.locator('select[name="language"]').selectOption(language);
     await page.getByRole("dialog").locator('button[type="submit"]').click();
     await page.goto("/progress");
-    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    await expect(
+      page.getByRole("region", { name: heading, exact: true }),
+    ).toBeVisible();
     await expect(page.locator("html")).toHaveAttribute("dir", direction);
     expect(
       await page.evaluate(

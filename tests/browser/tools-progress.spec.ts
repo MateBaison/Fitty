@@ -187,7 +187,7 @@ test("progress renders empty-state analytics without removed time totals", async
     .getByRole("combobox", { name: "Período", exact: true })
     .selectOption("month");
   await expect(
-    page.getByRole("heading", { name: "Resumen mensual", exact: true }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("img", { name: /Series por zona muscular/ }),

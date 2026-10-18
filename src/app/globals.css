@@ -2672,3 +2672,47 @@ input[type="range"] {
     font-size: 0.8rem;
   }
 }
+
+.progress-period {
+  grid-template-columns: minmax(0, 130px) minmax(0, 340px);
+  max-width: 480px;
+}
+.progress-period-select {
+  display: grid;
+  grid-template-rows: auto 48px;
+}
+.progress-period-select select {
+  height: 40px;
+  min-height: 40px;
+  padding-block: 6px;
+  align-self: center;
+}
+.progress-period-navigation {
+  height: 48px;
+}
+.progress-period-navigation input {
+  height: 40px;
+  min-height: 40px;
+  padding-block: 6px;
+}
+.progress-period-navigation button:last-child {
+  min-width: 58px;
+  min-height: 48px;
+  height: 48px;
+  padding-inline: 12px;
+}
+@media (max-width: 600px) {
+  .progress-period {
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr);
+  }
+  .progress-period-select select,
+  .progress-period-navigation input {
+    height: 40px;
+    min-height: 40px;
+  }
+  .progress-period-navigation button:last-child {
+    min-width: 58px;
+    padding-inline: 10px;
+  }
+}

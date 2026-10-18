@@ -51,25 +51,25 @@ test("period menu, precise custom dates, natural resets and independent collapsi
   await expect(date).toHaveValue(today.month);
   await date.fill("2026-08-20");
   await expect(date).toHaveValue("2026-08-20");
-  await expect(page.locator(".progress-date-range")).toContainText("20 ago");
+  await expect(date).toHaveValue("2026-08-20");
   await page.getByRole("button", { name: "Hoy", exact: true }).click();
   await expect(date).toHaveValue(today.month);
   await period.selectOption("year");
   await expect(date).toHaveValue(today.year);
   await expect(
-    page.getByRole("heading", { name: "Resumen anual", exact: true }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await period.selectOption("day");
   await expect(date).toHaveValue(today.day);
   await expect(
-    page.getByRole("heading", { name: "Resumen diario", exact: true }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await period.selectOption("all");
   await expect(
-    page.getByRole("heading", { name: "Resumen de siempre", exact: true }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await date.fill("2026-08-20");
-  await expect(page.locator(".progress-date-range")).toContainText("20 ago");
+  await expect(date).toHaveValue("2026-08-20");
   const improvements = page.locator(".progress-advances");
   await expect(improvements).toHaveAttribute("open", "");
   await page
@@ -122,7 +122,9 @@ test("horizontal gestures navigate inner tabs then main menus and ignore control
   await page.goto("/progress");
   await expect(page.getByTestId("launch-splash")).toHaveCount(0);
   const intro = page.locator(".progress-intro h2");
+  await expect(page.locator(".progress-advances")).toHaveCount(1);
   await swipe(intro, 250, 100);
+  await expect(page.locator(".progress-advances")).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Ejercicios", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
@@ -130,6 +132,7 @@ test("horizontal gestures navigate inner tabs then main menus and ignore control
   await expect(
     page.getByRole("button", { name: "Cuerpo", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".progress-advances")).toHaveCount(0);
   await swipe(intro, 8, 160);
   await expect(
     page.getByRole("button", { name: "Ejercicios", exact: true }),

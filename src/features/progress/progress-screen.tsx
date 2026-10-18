@@ -207,68 +207,72 @@ export function ProgressScreen() {
           </Button>
         ))}
       </div>
-      <details className="panel progress-advances" open>
-        <summary className="progress-section-heading">
-          <h2>{t("Avances recientes", "Recent improvements")}</h2>
-          <span aria-hidden="true">⌄</span>
-        </summary>
-        <div className="progress-advance-controls">
-          <label>
-            {t("Período de avances", "Improvement period")}
-            <select
-              value={advancePeriod}
-              onChange={(e) =>
-                setAdvancePeriod(e.target.value as typeof advancePeriod)
-              }
-            >
-              <option value="week">{t("1 semana", "1 week")}</option>
-              <option value="month">{t("1 mes", "1 month")}</option>
-              <option value="quarter">{t("3 meses", "3 months")}</option>
-            </select>
-          </label>
-          <Button variant="ghost" onClick={() => setTab("exercises")}>
-            {t("Ver ejercicios", "View exercises")}
-            <ArrowUpRight aria-hidden="true" />
-          </Button>
-        </div>
-        {advances.length ? (
-          <div className="progress-improvements">
-            {advances.slice(0, 3).map((a) => (
-              <button
-                type="button"
-                key={a.id}
-                onClick={() => {
-                  setSelected(a.id);
-                  setTab("exercises");
-                }}
+      {tab === "summary" && (
+        <details className="panel progress-advances" open>
+          <summary className="progress-section-heading">
+            <h2>{t("Avances recientes", "Recent improvements")}</h2>
+            <span aria-hidden="true">⌄</span>
+          </summary>
+          <div className="progress-advance-controls">
+            <label>
+              {t("Período de avances", "Improvement period")}
+              <select
+                value={advancePeriod}
+                onChange={(e) =>
+                  setAdvancePeriod(e.target.value as typeof advancePeriod)
+                }
               >
-                <span>{catalog.find((e) => e.id === a.id)?.name ?? a.id}</span>
-                <strong>
-                  {formatSet(
-                    a.result.before.kg,
-                    a.result.before.value,
-                    a.result.before.metric,
-                  )}{" "}
-                  →{" "}
-                  {formatSet(
-                    a.result.after.kg,
-                    a.result.after.value,
-                    a.result.after.metric,
-                  )}
-                </strong>
-                <small>{a.date.toLocaleDateString(locale)}</small>
-              </button>
-            ))}
+                <option value="week">{t("1 semana", "1 week")}</option>
+                <option value="month">{t("1 mes", "1 month")}</option>
+                <option value="quarter">{t("3 meses", "3 months")}</option>
+              </select>
+            </label>
+            <Button variant="ghost" onClick={() => setTab("exercises")}>
+              {t("Ver ejercicios", "View exercises")}
+              <ArrowUpRight aria-hidden="true" />
+            </Button>
           </div>
-        ) : (
-          <p className="progress-empty">
-            {t(
-              "Las mejoras aparecerán cuando tengas sesiones comparables. Tu primera marca es el punto de partida.",
-              "Improvements will appear when you have comparable sessions. Your first performance is your starting point.",
-            )}
-          </p>
-        )}
-      </details>
+          {advances.length ? (
+            <div className="progress-improvements">
+              {advances.slice(0, 3).map((a) => (
+                <button
+                  type="button"
+                  key={a.id}
+                  onClick={() => {
+                    setSelected(a.id);
+                    setTab("exercises");
+                  }}
+                >
+                  <span>
+                    {catalog.find((e) => e.id === a.id)?.name ?? a.id}
+                  </span>
+                  <strong>
+                    {formatSet(
+                      a.result.before.kg,
+                      a.result.before.value,
+                      a.result.before.metric,
+                    )}{" "}
+                    →{" "}
+                    {formatSet(
+                      a.result.after.kg,
+                      a.result.after.value,
+                      a.result.after.metric,
+                    )}
+                  </strong>
+                  <small>{a.date.toLocaleDateString(locale)}</small>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="progress-empty">
+              {t(
+                "Las mejoras aparecerán cuando tengas sesiones comparables. Tu primera marca es el punto de partida.",
+                "Improvements will appear when you have comparable sessions. Your first performance is your starting point.",
+              )}
+            </p>
+          )}
+        </details>
+      )}
       <section
         className="progress-period"
         aria-label={t("Período de progreso", "Progress period")}
@@ -340,30 +344,10 @@ export function ProgressScreen() {
             </Button>
           </div>
         }
-        <p className="progress-date-range">
-          {period === "all" && !customStart
-            ? t("Todos los entrenamientos registrados", "All recorded workouts")
-            : `${range.start.toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })} — ${new Date(range.end.getTime() - 1).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })}`}
-        </p>
       </section>
       {tab === "summary" && (
         <>
-          <section aria-labelledby="progress-summary-title">
-            <div className="progress-section-heading">
-              <h2 id="progress-summary-title">
-                {period === "week"
-                  ? t("Resumen semanal", "Weekly summary")
-                  : period === "month"
-                    ? t("Resumen mensual", "Monthly summary")
-                    : period === "day"
-                      ? t("Resumen diario", "Daily summary")
-                      : period === "year"
-                        ? t("Resumen anual", "Annual summary")
-                        : period === "all"
-                          ? t("Resumen de siempre", "Lifetime summary")
-                          : t("Resumen de 3 meses", "3-month summary")}
-              </h2>
-            </div>
+          <section aria-label={t("Resumen", "Summary")}>
             <div className="progress-stats">
               {[
                 {

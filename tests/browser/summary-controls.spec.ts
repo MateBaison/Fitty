@@ -69,7 +69,7 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
     .getByRole("combobox", { name: "Período", exact: true })
     .selectOption("all");
   await expect(
-    page.getByRole("heading", { name: "Resumen de siempre", exact: true }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByLabel("Fecha de referencia", { exact: true }),
@@ -78,7 +78,7 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
     .getByRole("combobox", { name: "Período", exact: true })
     .selectOption("week");
   await expect(
-    page.getByRole("heading", { name: "Resumen semanal", exact: true }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await page.screenshot({
     path: `artifacts/weekly-controls-${info.project.name}.png`,

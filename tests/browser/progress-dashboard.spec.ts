@@ -52,7 +52,7 @@ test("unified periods, glute bars, exercise records and body measurements", asyn
     .getByRole("combobox", { name: "Período", exact: true })
     .selectOption("month");
   await expect(
-    page.getByRole("heading", { name: "Resumen mensual", exact: true }),
+    page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
   await expect(page.locator(".progress-muscle-bars")).toContainText("Glúteos");
   await expect(page.locator(".progress-stat").first()).toContainText("2");
