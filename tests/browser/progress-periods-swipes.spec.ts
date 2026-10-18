@@ -85,6 +85,32 @@ test("period menu, precise custom dates, natural resets and independent collapsi
     .first()
     .getAttribute("class");
   expect(first).toContain("progress-advances");
+  expect(
+    await page
+      .locator(".progress-tabs")
+      .evaluate((el) =>
+        el.nextElementSibling?.classList.contains("progress-advances"),
+      ),
+  ).toBe(true);
+  const viewport = page.viewportSize()!;
+  for (const width of [...new Set([320, viewport.width])]) {
+    await page.setViewportSize({ width, height: 900 });
+    const periodBox = await period.boundingBox(),
+      dateBox = await date.boundingBox();
+    expect(
+      Math.abs(
+        periodBox!.y +
+          periodBox!.height / 2 -
+          (dateBox!.y + dateBox!.height / 2),
+      ),
+    ).toBeLessThan(3);
+    expect(dateBox!.x).toBeGreaterThan(periodBox!.x + periodBox!.width);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
   await page.screenshot({
     path: `artifacts/progress-period-menu-${test.info().project.name}.png`,
     fullPage: true,

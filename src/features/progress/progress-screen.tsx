@@ -172,6 +172,41 @@ export function ProgressScreen() {
           onClose={() => setDay(null)}
         />
       )}
+      <div className="progress-intro">
+        <div>
+          <span className="eyebrow">{t("Tu recorrido", "Your journey")}</span>
+          <h2>{t("Cada entrenamiento cuenta", "Every workout counts")}</h2>
+          <p>
+            {t(
+              "Mirá lo que hiciste y cómo venís avanzando.",
+              "See what you did and how you are progressing.",
+            )}
+          </p>
+        </div>
+        <Activity aria-hidden="true" />
+      </div>
+      <div
+        className="progress-tabs"
+        role="group"
+        aria-label={t("Secciones de progreso", "Progress sections")}
+      >
+        {(
+          [
+            ["summary", "Resumen", "Summary"],
+            ["exercises", "Ejercicios", "Exercises"],
+            ["body", "Cuerpo", "Body"],
+          ] as const
+        ).map(([id, es, en]) => (
+          <Button
+            key={id}
+            variant={tab === id ? "default" : "ghost"}
+            aria-pressed={tab === id}
+            onClick={() => setTab(id)}
+          >
+            {t(es, en)}
+          </Button>
+        ))}
+      </div>
       <details className="panel progress-advances" open>
         <summary className="progress-section-heading">
           <h2>{t("Avances recientes", "Recent improvements")}</h2>
@@ -234,41 +269,6 @@ export function ProgressScreen() {
           </p>
         )}
       </details>
-      <div className="progress-intro">
-        <div>
-          <span className="eyebrow">{t("Tu recorrido", "Your journey")}</span>
-          <h2>{t("Cada entrenamiento cuenta", "Every workout counts")}</h2>
-          <p>
-            {t(
-              "Mirá lo que hiciste y cómo venís avanzando.",
-              "See what you did and how you are progressing.",
-            )}
-          </p>
-        </div>
-        <Activity aria-hidden="true" />
-      </div>
-      <div
-        className="progress-tabs"
-        role="group"
-        aria-label={t("Secciones de progreso", "Progress sections")}
-      >
-        {(
-          [
-            ["summary", "Resumen", "Summary"],
-            ["exercises", "Ejercicios", "Exercises"],
-            ["body", "Cuerpo", "Body"],
-          ] as const
-        ).map(([id, es, en]) => (
-          <Button
-            key={id}
-            variant={tab === id ? "default" : "ghost"}
-            aria-pressed={tab === id}
-            onClick={() => setTab(id)}
-          >
-            {t(es, en)}
-          </Button>
-        ))}
-      </div>
       <section
         className="progress-period"
         aria-label={t("Período de progreso", "Progress period")}

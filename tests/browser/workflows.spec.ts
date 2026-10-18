@@ -832,16 +832,28 @@ test("weekly summary can select earlier weeks and return to the current week", a
     exact: true,
   });
   await expect(summary).toContainText("0 h 30 min");
-  await page
-    .getByRole("button", { name: "Período anterior", exact: true })
-    .click();
+  const previousPeriod = page.getByRole("button", {
+    name: "Período anterior",
+    exact: true,
+  });
+  if (await previousPeriod.isVisible()) await previousPeriod.click();
+  else
+    await page
+      .getByLabel("Fecha de referencia", { exact: true })
+      .fill(dates.previous);
   await expect(summary).toContainText("1 h 30 min");
   await expect(
     page.getByLabel("Fecha de referencia", { exact: true }),
   ).toHaveValue(dates.previous);
-  await page
-    .getByRole("button", { name: "Período siguiente", exact: true })
-    .click();
+  const nextPeriod = page.getByRole("button", {
+    name: "Período siguiente",
+    exact: true,
+  });
+  if (await nextPeriod.isVisible()) await nextPeriod.click();
+  else
+    await page
+      .getByLabel("Fecha de referencia", { exact: true })
+      .fill(dates.current);
   await expect(summary).toContainText("0 h 30 min");
   await page
     .getByLabel("Fecha de referencia", { exact: true })

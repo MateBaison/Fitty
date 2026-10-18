@@ -2608,3 +2608,67 @@ input[type="range"] {
     max-width: none;
   }
 }
+
+.progress-period {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(0, 2.4fr);
+  align-items: end;
+  gap: 10px;
+}
+.progress-period-select {
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+.progress-period-navigation {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 32px auto;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  min-width: 0;
+}
+.progress-period-navigation input {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+.progress-period-navigation button {
+  min-width: 0;
+  padding-inline: 8px;
+}
+.progress-period-navigation button:last-child {
+  grid-column: auto;
+  justify-self: stretch;
+}
+.progress-period-select select {
+  width: 100%;
+  min-width: 0;
+}
+.progress-period .progress-date-range {
+  grid-column: 1 / -1;
+}
+@media (max-width: 600px) {
+  .progress-period {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr);
+    gap: 6px;
+  }
+  .progress-period-navigation {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 5px;
+  }
+  .progress-period-navigation button[aria-label] {
+    display: none;
+  }
+  .progress-period-navigation input,
+  .progress-period-select select {
+    font-size: 0.8rem;
+    padding-inline: 6px;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+  .progress-period-navigation button:last-child {
+    padding-inline: 8px;
+    font-size: 0.8rem;
+  }
+}
