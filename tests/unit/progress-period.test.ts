@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import {
   progressRange,
+  shiftProgressDate,
   periodSessions,
   progressTotals,
   muscleTotals,
@@ -15,8 +16,8 @@ test("period boundaries use local calendar dates and exclude adjacent sessions",
   const anchor = new Date("2026-10-18T12:00:00");
   expect(progressRange("week", anchor).start.getDate()).toBe(12);
   const quarter = progressRange("quarter", anchor);
-  expect(quarter.start.getMonth()).toBe(7);
-  expect(quarter.end.getMonth()).toBe(10);
+  expect(quarter.start.getMonth()).toBe(9);
+  expect(quarter.end.getMonth()).toBe(0);
   const s = createDefaultSnapshot();
   s.sessions = [
     { id: "inside", date: "2026-10-18T12:00:00", routine: "r", day: "d" },
@@ -131,4 +132,28 @@ test("body records round trip optional fields and metadata without rewriting acc
       photo: "https://example.com/private.jpg",
     }).success,
   ).toBe(false);
+});
+
+test("custom starts preserve the chosen day and clamp month/year ends", () => {
+  const anchor = new Date("2026-10-20T12:00:00");
+  for (const [period, day] of [
+    ["day", 21],
+    ["week", 27],
+  ] as const) {
+    const r = progressRange(period, anchor, true);
+    expect(r.start.getDate()).toBe(20);
+    expect(r.end.getDate()).toBe(day);
+  }
+  expect(progressRange("month", anchor, true).start.getDate()).toBe(20);
+  expect(progressRange("month", anchor, true).end.getMonth()).toBe(10);
+  expect(progressRange("month", anchor, true).end.getDate()).toBe(20);
+  expect(progressRange("year", anchor).start.getMonth()).toBe(0);
+  expect(progressRange("day", anchor).start.getDate()).toBe(20);
+  expect(shiftProgressDate(new Date(2026, 0, 31), "month", 1).getDate()).toBe(
+    28,
+  );
+  expect(shiftProgressDate(new Date(2024, 1, 29), "year", 1).getDate()).toBe(
+    28,
+  );
+  expect(progressRange("all", anchor, true).start.getDate()).toBe(20);
 });

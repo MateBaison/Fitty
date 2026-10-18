@@ -1,4 +1,5 @@
 "use client";
+import { useSwipeNavigation } from "@/lib/browser/use-swipe-navigation";
 import { useState } from "react";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { useClock } from "./clock-provider";
@@ -44,8 +45,16 @@ export function ClocksScreen() {
           ? `${(speed * (snapshot.settings.distance === "mi" ? 2.236936 : 3.6)).toFixed(1)} ${snapshot.settings.distance === "mi" ? "mph" : "km/h"}`
           : `${timeFormat((snapshot.settings.distance === "mi" ? 1609.344 : 1000) / speed)} /${snapshot.settings.distance}`
         : "—";
+  const swipe = useSwipeNavigation((direction) => {
+    const tabs = ["stopwatch", "timer", "combat", "tracking"];
+    const next =
+      tabs[tabs.indexOf(clock.section) + (direction === "next" ? 1 : -1)];
+    if (!next) return false;
+    clock.setSection(next);
+    return true;
+  });
   return (
-    <>
+    <div className="swipe-navigation" {...swipe}>
       <div className="muscle-chips">
         {[
           ["stopwatch", "Cronómetro"],
@@ -398,6 +407,6 @@ export function ClocksScreen() {
           <TrackingHistory />
         </section>
       )}
-    </>
+    </div>
   );
 }

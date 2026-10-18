@@ -3,31 +3,59 @@ import type { Snapshot } from "./schemas/snapshot";
 import { countSetGroups, localDateKey } from "./workouts";
 import { sessionVolumeKg, groups } from "./progress";
 import { exercises } from "@/data/exercises";
-export type ProgressPeriod = "week" | "month" | "quarter" | "year" | "all";
-export function progressRange(period: ProgressPeriod, anchor: Date) {
+export type ProgressPeriod =
+  "day" | "week" | "month" | "quarter" | "year" | "all";
+/** Shift a calendar date without overflowing the end of a shorter month. */
+export function shiftProgressDate(
+  date: Date,
+  period: ProgressPeriod,
+  direction: number,
+) {
+  const next = new Date(date);
+  if (period === "day" || period === "week")
+    next.setDate(next.getDate() + direction * (period === "day" ? 1 : 7));
+  else if (period !== "all") {
+    const day = next.getDate();
+    next.setDate(1);
+    next.setMonth(
+      next.getMonth() +
+        direction * (period === "quarter" ? 3 : period === "year" ? 12 : 1),
+    );
+    next.setDate(
+      Math.min(
+        day,
+        new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate(),
+      ),
+    );
+  }
+  return next;
+}
+export function progressRange(
+  period: ProgressPeriod,
+  anchor: Date,
+  customStart = false,
+) {
   const start = new Date(
     anchor.getFullYear(),
     anchor.getMonth(),
     anchor.getDate(),
   );
-  const end = new Date(start);
-  if (period === "week") {
-    start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
-    end.setTime(start.getTime());
-    end.setDate(end.getDate() + 7);
-  } else if (period === "month" || period === "quarter") {
-    start.setDate(1);
-    if (period === "quarter") start.setMonth(start.getMonth() - 2);
-    end.setDate(1);
-    end.setMonth(end.getMonth() + 1);
-  } else if (period === "year") {
-    start.setMonth(0, 1);
-    end.setFullYear(start.getFullYear() + 1, 0, 1);
-  } else {
-    start.setTime(0);
-    end.setDate(end.getDate() + 1);
+  if (period === "all") {
+    const today = new Date();
+    return {
+      start: customStart ? start : new Date(0),
+      end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
+    };
   }
-  return { start, end };
+  if (!customStart) {
+    if (period === "week")
+      start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+    if (period === "month") start.setDate(1);
+    if (period === "quarter")
+      start.setMonth(Math.floor(start.getMonth() / 3) * 3, 1);
+    if (period === "year") start.setMonth(0, 1);
+  }
+  return { start, end: shiftProgressDate(start, period, 1) };
 }
 export function periodSessions(
   snapshot: Snapshot,

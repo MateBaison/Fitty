@@ -2556,3 +2556,55 @@ input[type="range"] {
     padding-inline: 6px;
   }
 }
+.swipe-navigation {
+  touch-action: pan-y pinch-zoom;
+}
+.progress-advances > summary {
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 0;
+}
+.progress-advances > summary::-webkit-details-marker {
+  display: none;
+}
+.progress-advances > summary > span {
+  font-size: 1.3rem;
+  color: var(--muted-foreground);
+}
+.progress-advances[open] > summary {
+  margin-bottom: 18px;
+}
+.progress-advance-controls {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.progress-advance-controls label {
+  min-width: 140px;
+  flex: 1;
+  max-width: 220px;
+}
+.progress-period {
+  display: block;
+}
+.progress-period-select {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  max-width: 250px;
+  margin-bottom: 12px;
+}
+.progress-period-navigation {
+  margin-bottom: 12px;
+}
+.progress-period-navigation input {
+  max-width: 210px;
+}
+@media (max-width: 380px) {
+  .progress-period-navigation input {
+    max-width: none;
+  }
+}

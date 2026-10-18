@@ -65,14 +65,18 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
     training.getByRole("button", { name: "Editar", exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Todo", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Período", exact: true })
+    .selectOption("all");
   await expect(
-    page.getByRole("heading", { name: "Resumen del período", exact: true }),
+    page.getByRole("heading", { name: "Resumen de siempre", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByLabel("Fecha de referencia", { exact: true }),
-  ).toHaveCount(0);
-  await page.getByRole("button", { name: "Semana", exact: true }).click();
+  ).toHaveValue("");
+  await page
+    .getByRole("combobox", { name: "Período", exact: true })
+    .selectOption("week");
   await expect(
     page.getByRole("heading", { name: "Resumen semanal", exact: true }),
   ).toBeVisible();

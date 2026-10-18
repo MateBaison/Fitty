@@ -60,3 +60,24 @@ test("recent improvements use 28 days, exclude future and warmups, retain all im
     result.find((item) => item.id === "seconds")?.result.after.metric,
   ).toBe("seconds");
 });
+
+test("an independent three-month window includes older improvements without changing the default month", () => {
+  const snapshot = createDefaultSnapshot();
+  snapshot.sessions = [10, 12].map((kg, i) => ({
+    id: `older-${i}`,
+    date: `2026-08-${10 + i}T12:00:00`,
+    routine: "r",
+    day: "d",
+    exercises: [
+      {
+        id: "sentadilla",
+        performedSets: [{ kg, reps: 8, entered: true, done: true }],
+      },
+    ],
+  }));
+  const now = new Date("2026-10-18T12:00:00");
+  expect(recentImprovements(snapshot, now)).toHaveLength(0);
+  expect(
+    recentImprovements(snapshot, now, new Date("2026-07-18T12:00:00")),
+  ).toHaveLength(1);
+});

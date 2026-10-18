@@ -1,4 +1,5 @@
 "use client";
+import { useSwipeNavigation } from "@/lib/browser/use-swipe-navigation";
 import { useState } from "react";
 import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
@@ -90,8 +91,15 @@ export function CalculatorsScreen() {
       );
     }
   };
+  const swipe = useSwipeNavigation((direction) => {
+    const tabs = ["calories", "macros", "maximum", "goal"];
+    const next = tabs[tabs.indexOf(section) + (direction === "next" ? 1 : -1)];
+    if (!next) return false;
+    setSection(next);
+    return true;
+  });
   return (
-    <>
+    <div className="swipe-navigation" {...swipe}>
       <div className="muscle-chips">
         {[
           ["calories", "Calorías"],
@@ -445,7 +453,7 @@ export function CalculatorsScreen() {
           )}
         </p>
       </section>
-    </>
+    </div>
   );
 }
 function Result({

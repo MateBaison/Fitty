@@ -169,9 +169,13 @@ export function weeklySummary(snapshot: Snapshot, now = new Date()) {
 }
 
 /** Most recent improvement for each exercise in the last 28 local calendar days. */
-export function recentImprovements(snapshot: Snapshot, now = new Date()) {
-  const cutoff = new Date(now);
-  cutoff.setDate(cutoff.getDate() - 28);
+export function recentImprovements(
+  snapshot: Snapshot,
+  now = new Date(),
+  since?: Date,
+) {
+  const cutoff = since ? new Date(since) : new Date(now);
+  if (!since) cutoff.setDate(cutoff.getDate() - 28);
   const history = exerciseHistories(snapshot, false);
   return [...history]
     .flatMap(([id, records]) => {

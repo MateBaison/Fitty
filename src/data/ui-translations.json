@@ -496,7 +496,14 @@
     "Semana": "Semaine",
     "Resumen": "Résumé",
     "No se pudo compartir el entrenamiento.": "Impossible de partager la séance.",
-    "Agregá dos fotos en tus registros para empezar a comparar.": "Ajoutez deux photos à vos entrées pour commencer la comparaison."
+    "Agregá dos fotos en tus registros para empezar a comparar.": "Ajoutez deux photos à vos entrées pour commencer la comparaison.",
+    "Período de avances": "Période des progrès",
+    "1 semana": "1 semaine",
+    "1 mes": "1 mois",
+    "Resumen diario": "Bilan quotidien",
+    "Resumen anual": "Bilan annuel",
+    "Resumen de siempre": "Bilan global",
+    "Resumen de 3 meses": "Bilan sur 3 mois"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -995,7 +1002,14 @@
     "Semana": "周",
     "Resumen": "概览",
     "No se pudo compartir el entrenamiento.": "无法分享训练。",
-    "Agregá dos fotos en tus registros para empezar a comparar.": "在记录中添加两张照片即可开始比较。"
+    "Agregá dos fotos en tus registros para empezar a comparar.": "在记录中添加两张照片即可开始比较。",
+    "Período de avances": "进步周期",
+    "1 semana": "1周",
+    "1 mes": "1个月",
+    "Resumen diario": "每日总结",
+    "Resumen anual": "年度总结",
+    "Resumen de siempre": "全部总结",
+    "Resumen de 3 meses": "三个月总结"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1494,7 +1508,14 @@
     "Semana": "सप्ताह",
     "Resumen": "सारांश",
     "No se pudo compartir el entrenamiento.": "कसरत साझा नहीं हो सकी।",
-    "Agregá dos fotos en tus registros para empezar a comparar.": "तुलना शुरू करने के लिए रिकॉर्ड में दो तस्वीरें जोड़ें।"
+    "Agregá dos fotos en tus registros para empezar a comparar.": "तुलना शुरू करने के लिए रिकॉर्ड में दो तस्वीरें जोड़ें।",
+    "Período de avances": "सुधार अवधि",
+    "1 semana": "1 सप्ताह",
+    "1 mes": "1 महीना",
+    "Resumen diario": "दैनिक सारांश",
+    "Resumen anual": "वार्षिक सारांश",
+    "Resumen de siempre": "समग्र सारांश",
+    "Resumen de 3 meses": "3 महीने का सारांश"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1993,7 +2014,14 @@
     "Semana": "أسبوع",
     "Resumen": "ملخص",
     "No se pudo compartir el entrenamiento.": "تعذر مشاركة التمرين.",
-    "Agregá dos fotos en tus registros para empezar a comparar.": "أضف صورتين إلى سجلاتك لبدء المقارنة."
+    "Agregá dos fotos en tus registros para empezar a comparar.": "أضف صورتين إلى سجلاتك لبدء المقارنة.",
+    "Período de avances": "فترة التحسن",
+    "1 semana": "أسبوع واحد",
+    "1 mes": "شهر واحد",
+    "Resumen diario": "الملخص اليومي",
+    "Resumen anual": "الملخص السنوي",
+    "Resumen de siempre": "الملخص الشامل",
+    "Resumen de 3 meses": "ملخص 3 أشهر"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2492,7 +2520,14 @@
     "Semana": "Woche",
     "Resumen": "Übersicht",
     "No se pudo compartir el entrenamiento.": "Training konnte nicht geteilt werden.",
-    "Agregá dos fotos en tus registros para empezar a comparar.": "Füge deinen Einträgen zwei Fotos hinzu, um zu vergleichen."
+    "Agregá dos fotos en tus registros para empezar a comparar.": "Füge deinen Einträgen zwei Fotos hinzu, um zu vergleichen.",
+    "Período de avances": "Fortschrittszeitraum",
+    "1 semana": "1 Woche",
+    "1 mes": "1 Monat",
+    "Resumen diario": "Tagesübersicht",
+    "Resumen anual": "Jahresübersicht",
+    "Resumen de siempre": "Gesamtübersicht",
+    "Resumen de 3 meses": "3-Monatsübersicht"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2991,7 +3026,14 @@
     "Semana": "Settimana",
     "Resumen": "Riepilogo",
     "No se pudo compartir el entrenamiento.": "Impossibile condividere l’allenamento.",
-    "Agregá dos fotos en tus registros para empezar a comparar.": "Aggiungi due foto ai tuoi dati per iniziare il confronto."
+    "Agregá dos fotos en tus registros para empezar a comparar.": "Aggiungi due foto ai tuoi dati per iniziare il confronto.",
+    "Período de avances": "Periodo dei miglioramenti",
+    "1 semana": "1 settimana",
+    "1 mes": "1 mese",
+    "Resumen diario": "Riepilogo giornaliero",
+    "Resumen anual": "Riepilogo annuale",
+    "Resumen de siempre": "Riepilogo complessivo",
+    "Resumen de 3 meses": "Riepilogo di 3 mesi"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -3490,7 +3532,14 @@
     "Semana": "Semana",
     "Resumen": "Resumo",
     "No se pudo compartir el entrenamiento.": "Não foi possível compartilhar o treino.",
-    "Agregá dos fotos en tus registros para empezar a comparar.": "Adicione duas fotos aos seus registros para começar a comparar."
+    "Agregá dos fotos en tus registros para empezar a comparar.": "Adicione duas fotos aos seus registros para começar a comparar.",
+    "Período de avances": "Período de avanços",
+    "1 semana": "1 semana",
+    "1 mes": "1 mês",
+    "Resumen diario": "Resumo diário",
+    "Resumen anual": "Resumo anual",
+    "Resumen de siempre": "Resumo geral",
+    "Resumen de 3 meses": "Resumo de 3 meses"
   },
   "en": {
     "Sexo": "Sex",

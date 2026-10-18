@@ -1,4 +1,5 @@
 "use client";
+import { useSwipeNavigation } from "@/lib/browser/use-swipe-navigation";
 import { useMemo, useState } from "react";
 import {
   ChevronLeft,
@@ -23,6 +24,7 @@ import {
 import { recordPanel } from "@/domain/personal-records";
 import {
   progressRange,
+  shiftProgressDate,
   periodSessions,
   progressTotals,
   muscleTotals,
@@ -33,38 +35,47 @@ import { ProgressChart, type ChartPoint } from "./progress-chart";
 import { shareWorkoutPoster } from "@/features/sharing/workout-poster";
 import { BodyProgress } from "./body-progress";
 const periods = [
+  ["day", "Día", "Day"],
   ["week", "Semana", "Week"],
   ["month", "Mes", "Month"],
   ["quarter", "3 meses", "3 months"],
   ["year", "Año", "Year"],
-  ["all", "Todo", "All"],
+  ["all", "Siempre", "Lifetime"],
 ] as const;
 export function ProgressScreen() {
   const { snapshot, t, notify } = useApp();
   const [tab, setTab] = useState<"summary" | "exercises" | "body">("summary"),
     [period, setPeriod] = useState<ProgressPeriod>("week"),
     [anchor, setAnchor] = useState(() => new Date()),
+    [customStart, setCustomStart] = useState(false),
+    [advancePeriod, setAdvancePeriod] = useState<"week" | "month" | "quarter">(
+      "month",
+    ),
     [selected, setSelected] = useState(""),
     [metric, setMetric] = useState("weight"),
     [warmups, setWarmups] = useState(false),
     [day, setDay] = useState<string | null>(null);
+  const swipe = useSwipeNavigation((direction) => {
+    const tabs = ["summary", "exercises", "body"] as const;
+    const next = tabs[tabs.indexOf(tab) + (direction === "next" ? 1 : -1)];
+    if (!next) return false;
+    setTab(next);
+    return true;
+  });
   const unit = snapshot.settings.weight ?? "kg",
     factor = unit === "lb" ? 2.20462 : 1,
     locale = snapshot.settings.language ?? "es";
-  const range = progressRange(period, anchor),
+  const range = progressRange(period, anchor, customStart),
     chosenSessions = periodSessions(snapshot, range),
     scoped = { ...snapshot, sessions: chosenSessions },
     totals = progressTotals(scoped);
-  const previousAnchor = new Date(anchor);
-  if (period === "week") previousAnchor.setDate(previousAnchor.getDate() - 7);
-  else if (period === "month")
-    previousAnchor.setMonth(previousAnchor.getMonth() - 1, 1);
-  else if (period === "quarter")
-    previousAnchor.setMonth(previousAnchor.getMonth() - 3, 1);
-  else previousAnchor.setFullYear(previousAnchor.getFullYear() - 1);
+  const previousAnchor = shiftProgressDate(range.start, period, -1);
   const previous = progressTotals({
     ...snapshot,
-    sessions: periodSessions(snapshot, progressRange(period, previousAnchor)),
+    sessions: periodSessions(
+      snapshot,
+      progressRange(period, previousAnchor, true),
+    ),
   });
   const catalog = catalogFor(snapshot, true),
     histories = useMemo(
@@ -84,30 +95,20 @@ export function ProgressScreen() {
         new Date(r.date) >= range.start &&
         new Date(r.date) < range.end,
     );
-  const advances = recentImprovements(snapshot).filter(
-    (a) => a.date >= range.start && a.date < range.end,
-  );
+  const advanceCutoff = shiftProgressDate(new Date(), advancePeriod, -1);
+  const advances = recentImprovements(snapshot, new Date(), advanceCutoff);
   const newRecords = useMemo(
     () => newRecordCount(snapshot, chosenSessions),
-    [snapshot, period, anchor],
+    [snapshot, period, anchor, customStart],
   );
   const counts = muscleTotals(scoped),
     muscles = Object.entries(counts).sort((a, b) => b[1] - a[1]),
     max = Math.max(1, ...Object.values(counts));
-  const weekly = weeklySummary(snapshot, anchor),
+  const weekly = weeklySummary(snapshot, range.start),
     activeDays = snapshot.routines.find((r) => r.id === snapshot.selected)?.days
       .length;
   const move = (direction: number) => {
-    const next = new Date(anchor);
-    if (period === "week") next.setDate(next.getDate() + direction * 7);
-    else if (period === "year")
-      next.setFullYear(next.getFullYear() + direction);
-    else
-      next.setMonth(
-        next.getMonth() + direction * (period === "quarter" ? 3 : 1),
-        1,
-      );
-    setAnchor(next);
+    setAnchor(shiftProgressDate(range.start, period, direction));
   };
   const duration = (minutes: number) =>
     `${Math.floor(minutes / 60)} h ${Math.round(minutes % 60)} min`;
@@ -162,7 +163,7 @@ export function ProgressScreen() {
           ? t("Primer registro", "First entry")
           : "—";
   return (
-    <div className="progress-dashboard">
+    <div className="progress-dashboard swipe-navigation" {...swipe}>
       {day && (
         <CalendarPanel
           key={day}
@@ -171,6 +172,68 @@ export function ProgressScreen() {
           onClose={() => setDay(null)}
         />
       )}
+      <details className="panel progress-advances" open>
+        <summary className="progress-section-heading">
+          <h2>{t("Avances recientes", "Recent improvements")}</h2>
+          <span aria-hidden="true">⌄</span>
+        </summary>
+        <div className="progress-advance-controls">
+          <label>
+            {t("Período de avances", "Improvement period")}
+            <select
+              value={advancePeriod}
+              onChange={(e) =>
+                setAdvancePeriod(e.target.value as typeof advancePeriod)
+              }
+            >
+              <option value="week">{t("1 semana", "1 week")}</option>
+              <option value="month">{t("1 mes", "1 month")}</option>
+              <option value="quarter">{t("3 meses", "3 months")}</option>
+            </select>
+          </label>
+          <Button variant="ghost" onClick={() => setTab("exercises")}>
+            {t("Ver ejercicios", "View exercises")}
+            <ArrowUpRight aria-hidden="true" />
+          </Button>
+        </div>
+        {advances.length ? (
+          <div className="progress-improvements">
+            {advances.slice(0, 3).map((a) => (
+              <button
+                type="button"
+                key={a.id}
+                onClick={() => {
+                  setSelected(a.id);
+                  setTab("exercises");
+                }}
+              >
+                <span>{catalog.find((e) => e.id === a.id)?.name ?? a.id}</span>
+                <strong>
+                  {formatSet(
+                    a.result.before.kg,
+                    a.result.before.value,
+                    a.result.before.metric,
+                  )}{" "}
+                  →{" "}
+                  {formatSet(
+                    a.result.after.kg,
+                    a.result.after.value,
+                    a.result.after.metric,
+                  )}
+                </strong>
+                <small>{a.date.toLocaleDateString(locale)}</small>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p className="progress-empty">
+            {t(
+              "Las mejoras aparecerán cuando tengas sesiones comparables. Tu primera marca es el punto de partida.",
+              "Improvements will appear when you have comparable sessions. Your first performance is your starting point.",
+            )}
+          </p>
+        )}
+      </details>
       <div className="progress-intro">
         <div>
           <span className="eyebrow">{t("Tu recorrido", "Your journey")}</span>
@@ -210,25 +273,30 @@ export function ProgressScreen() {
         className="progress-period"
         aria-label={t("Período de progreso", "Progress period")}
       >
-        <div className="progress-period-options">
-          {periods.map(([id, es, en]) => (
-            <Button
-              key={id}
-              size="sm"
-              variant={period === id ? "secondary" : "ghost"}
-              aria-pressed={period === id}
-              onClick={() => setPeriod(id)}
-            >
-              {t(es, en)}
-            </Button>
-          ))}
-        </div>
-        {period !== "all" && (
+        <label className="progress-period-select">
+          {t("Período", "Period")}
+          <select
+            value={period}
+            onChange={(e) => {
+              setPeriod(e.target.value as ProgressPeriod);
+              setAnchor(new Date());
+              setCustomStart(false);
+            }}
+          >
+            {periods.map(([id, es, en]) => (
+              <option key={id} value={id}>
+                {t(es, en)}
+              </option>
+            ))}
+          </select>
+        </label>
+        {
           <div className="progress-period-navigation">
             <Button
               variant="ghost"
               size="icon"
               aria-label={t("Período anterior", "Previous period")}
+              disabled={period === "all"}
               onClick={() => move(-1)}
             >
               <ChevronLeft aria-hidden="true" />
@@ -239,16 +307,23 @@ export function ProgressScreen() {
             <Input
               id="progress-date"
               type="date"
-              value={localDateKey(period === "week" ? range.start : anchor)}
+              value={
+                period === "all" && !customStart
+                  ? ""
+                  : localDateKey(range.start)
+              }
               onChange={(e) => {
-                if (validDateKey(e.target.value))
+                if (validDateKey(e.target.value)) {
                   setAnchor(new Date(`${e.target.value}T12:00:00`));
+                  setCustomStart(true);
+                }
               }}
             />
             <Button
               variant="ghost"
               size="icon"
               aria-label={t("Período siguiente", "Next period")}
+              disabled={period === "all"}
               onClick={() => move(1)}
             >
               <ChevronRight aria-hidden="true" />
@@ -256,14 +331,17 @@ export function ProgressScreen() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setAnchor(new Date())}
+              onClick={() => {
+                setAnchor(new Date());
+                setCustomStart(false);
+              }}
             >
               {t("Hoy", "Today")}
             </Button>
           </div>
-        )}
+        }
         <p className="progress-date-range">
-          {period === "all"
+          {period === "all" && !customStart
             ? t("Todos los entrenamientos registrados", "All recorded workouts")
             : `${range.start.toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })} — ${new Date(range.end.getTime() - 1).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })}`}
         </p>
@@ -277,7 +355,13 @@ export function ProgressScreen() {
                   ? t("Resumen semanal", "Weekly summary")
                   : period === "month"
                     ? t("Resumen mensual", "Monthly summary")
-                    : t("Resumen del período", "Period summary")}
+                    : period === "day"
+                      ? t("Resumen diario", "Daily summary")
+                      : period === "year"
+                        ? t("Resumen anual", "Annual summary")
+                        : period === "all"
+                          ? t("Resumen de siempre", "Lifetime summary")
+                          : t("Resumen de 3 meses", "3-month summary")}
               </h2>
             </div>
             <div className="progress-stats">
@@ -321,7 +405,7 @@ export function ProgressScreen() {
               ))}
             </div>
           </section>
-          {period === "week" && (
+          {period === "week" && !customStart && (
             <div className="progress-week-days">
               {weekly.days.map((d) => (
                 <button
@@ -351,62 +435,6 @@ export function ProgressScreen() {
               )}
             </p>
           )}
-          <section className="panel">
-            <div className="progress-section-heading">
-              <div>
-                <h2>{t("Avances recientes", "Recent improvements")}</h2>
-                <p>
-                  {t(
-                    "Últimas cuatro semanas, dentro del período elegido.",
-                    "Last four weeks, within the selected period.",
-                  )}
-                </p>
-              </div>
-              <Button variant="ghost" onClick={() => setTab("exercises")}>
-                {t("Ver ejercicios", "View exercises")}
-                <ArrowUpRight aria-hidden="true" />
-              </Button>
-            </div>
-            {advances.length ? (
-              <div className="progress-improvements">
-                {advances.slice(0, 3).map((a) => (
-                  <button
-                    type="button"
-                    key={a.id}
-                    onClick={() => {
-                      setSelected(a.id);
-                      setTab("exercises");
-                    }}
-                  >
-                    <span>
-                      {catalog.find((e) => e.id === a.id)?.name ?? a.id}
-                    </span>
-                    <strong>
-                      {formatSet(
-                        a.result.before.kg,
-                        a.result.before.value,
-                        a.result.before.metric,
-                      )}{" "}
-                      →{" "}
-                      {formatSet(
-                        a.result.after.kg,
-                        a.result.after.value,
-                        a.result.after.metric,
-                      )}
-                    </strong>
-                    <small>{a.date.toLocaleDateString(locale)}</small>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p className="progress-empty">
-                {t(
-                  "Las mejoras aparecerán cuando tengas sesiones comparables. Tu primera marca es el punto de partida.",
-                  "Improvements will appear when you have comparable sessions. Your first performance is your starting point.",
-                )}
-              </p>
-            )}
-          </section>
           <section className="panel">
             <div className="progress-section-heading">
               <div>

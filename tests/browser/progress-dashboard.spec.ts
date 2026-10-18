@@ -48,7 +48,9 @@ test("unified periods, glute bars, exercise records and body measurements", asyn
   });
   await page.goto("/progress");
   await expect(page.getByTestId("launch-splash")).toHaveCount(0);
-  await page.getByRole("button", { name: "Mes", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Período", exact: true })
+    .selectOption("month");
   await expect(
     page.getByRole("heading", { name: "Resumen mensual", exact: true }),
   ).toBeVisible();

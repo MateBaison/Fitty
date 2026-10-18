@@ -183,7 +183,9 @@ test("progress renders empty-state analytics without removed time totals", async
   await expect(
     page.getByRole("heading", { name: "Avances recientes" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Mes", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Período", exact: true })
+    .selectOption("month");
   await expect(
     page.getByRole("heading", { name: "Resumen mensual", exact: true }),
   ).toBeVisible();
