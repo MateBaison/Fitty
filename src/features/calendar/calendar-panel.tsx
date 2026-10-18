@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useApp } from "@/state/app-provider";
 import {
   buildSession,
-  countSetGroups,
+  setNumber,
   blankSet,
   lastSetCount,
   color,
@@ -342,16 +342,9 @@ export function CalendarPanel({
                         ).find((type) => type.id === (set.type ?? "normal"))
                           ?.letter ?? "N"}
                       </span>{" "}
-                      {set.dropGroup &&
-                      exercise.performedSets?.[number - 1]?.dropGroup ===
-                        set.dropGroup
-                        ? "↳ "
-                        : ""}
                       {t("Serie", "Set")}{" "}
-                      {countSetGroups(
-                        (exercise.performedSets ?? []).slice(0, number + 1),
-                      )}
-                      : {set.kg ?? 0} {session.weightUnit ?? "kg"} ×{" "}
+                      {setNumber(exercise.performedSets ?? [], number)}:{" "}
+                      {set.kg ?? 0} {session.weightUnit ?? "kg"} ×{" "}
                       {set.seconds != null
                         ? `${set.seconds} s`
                         : `${set.reps ?? 0} reps`}
@@ -436,7 +429,7 @@ export function CalendarPanel({
                 {t("Compartir imagen", "Share image")}
               </Button>
               <Button
-                variant="ghost"
+                variant="destructive-solid"
                 onClick={() => {
                   if (confirm("¿Eliminar este entrenamiento?"))
                     change((draft) => {

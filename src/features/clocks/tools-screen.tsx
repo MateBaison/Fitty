@@ -20,12 +20,6 @@ export function ToolsScreen() {
   });
   return (
     <div className="swipe-navigation" {...swipe}>
-      <p className="page-description">
-        {t(
-          "Relojes, tracking y calculadoras.",
-          "Clocks, tracking and calculators.",
-        )}
-      </p>
       <div className="muscle-chips">
         <button
           aria-pressed={section === "clocks"}

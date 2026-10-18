@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,11 +25,25 @@ export function BodyProgress({
 }) {
   const { snapshot, change, t, notify } = useApp();
   const [open, setOpen] = useState(false),
+    [photoOnly, setPhotoOnly] = useState(false),
     [photo, setPhoto] = useState<string | undefined>(),
     [busy, setBusy] = useState(false),
     [metric, setMetric] = useState<(typeof fields)[number][0]>("weightKg"),
     [left, setLeft] = useState(""),
     [right, setRight] = useState("");
+  const uploadVersion = useRef(0);
+  const openEntry = (onlyPhoto: boolean) => {
+    uploadVersion.current++;
+    setPhotoOnly(onlyPhoto);
+    setPhoto(undefined);
+    setBusy(false);
+    setOpen(true);
+  };
+  const closeEntry = () => {
+    uploadVersion.current++;
+    setBusy(false);
+    setOpen(false);
+  };
   const unit = snapshot.settings.weight ?? "kg",
     factor = unit === "lb" ? 2.20462 : 1,
     locale = snapshot.settings.language ?? "es";
@@ -105,12 +119,7 @@ export function BodyProgress({
               )}
             </p>
           </div>
-          <Button
-            onClick={() => {
-              setPhoto(undefined);
-              setOpen(true);
-            }}
-          >
+          <Button onClick={() => openEntry(false)}>
             {t("Agregar registro", "Add entry")}
           </Button>
         </div>
@@ -175,13 +184,34 @@ export function BodyProgress({
         </details>
       </section>
       <section className="panel">
-        <h2>{t("Comparar fotos", "Compare photos")}</h2>
+        <div className="progress-section-heading">
+          <h2>{t("Comparar fotos", "Compare photos")}</h2>
+          <Button onClick={() => openEntry(true)}>
+            {t("Subir foto", "Upload photo")}
+          </Button>
+        </div>
         <p className="text-sm text-muted-foreground">
           {t(
             "Tus fotos y medidas son privadas.",
             "Your photos and measurements are private.",
           )}
         </p>
+        {photos.length === 1 && (
+          <figure className="mt-4">
+            <img
+              src={photos[0]!.src}
+              alt={t("Foto de progreso", "Progress photo")}
+              width={600}
+              height={800}
+              className="max-h-72 w-full rounded-xl object-contain"
+            />
+            <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+              {new Date(`${photos[0]!.date}T12:00:00`).toLocaleDateString(
+                locale,
+              )}
+            </figcaption>
+          </figure>
+        )}
         {photos.length > 1 ? (
           <div className="progress-photo-comparison">
             {selectedPhotos.map((p, i) => (
@@ -221,21 +251,27 @@ export function BodyProgress({
         ) : (
           <p className="progress-empty">
             {t(
-              "Agregá dos fotos en tus registros para empezar a comparar.",
-              "Add two photos to your entries to start comparing.",
+              "Subí fotos con sus fechas para comparar tu progreso.",
+              "Upload dated photos to compare your progress.",
             )}
           </p>
         )}
       </section>
       <AppDialog
         open={open}
-        onClose={() => setOpen(false)}
-        title={t("Agregar registro corporal", "Add body entry")}
+        onClose={closeEntry}
+        title={
+          photoOnly
+            ? t("Subir foto", "Upload photo")
+            : t("Agregar registro corporal", "Add body entry")
+        }
       >
         <form
+          key={photoOnly ? "photo" : "measurements"}
           className="grid gap-4"
           onSubmit={(e) => {
             e.preventDefault();
+            if (busy || (photoOnly && !photo)) return;
             const form = new FormData(e.currentTarget);
             const values: Record<string, unknown> = {
               id: crypto.randomUUID(),
@@ -260,8 +296,12 @@ export function BodyProgress({
                 (d.bodyMeasurements ??= []).push(parsed.data);
               })
             ) {
-              setOpen(false);
-              notify(t("Registro corporal guardado", "Body entry saved"));
+              closeEntry();
+              notify(
+                photoOnly
+                  ? t("Foto guardada", "Photo saved")
+                  : t("Registro corporal guardado", "Body entry saved"),
+              );
             }
           }}
         >
@@ -275,34 +315,43 @@ export function BodyProgress({
               required
             />
           </label>
-          <div className="form-grid">
-            {fields.map(([id, es, en]) => (
-              <label key={id}>
-                {t(es, en)} ({id === "weightKg" ? unit : "cm"})
-                <Input
-                  name={id}
-                  type="number"
-                  inputMode="decimal"
-                  min="0.1"
-                  step="0.1"
-                  max={id === "weightKg" ? 700 * factor : 400}
-                />
-              </label>
-            ))}
-          </div>
+          {!photoOnly && (
+            <div className="form-grid">
+              {fields.map(([id, es, en]) => (
+                <label key={id}>
+                  {t(es, en)} ({id === "weightKg" ? unit : "cm"})
+                  <Input
+                    name={id}
+                    type="number"
+                    inputMode="decimal"
+                    min="0.1"
+                    step="0.1"
+                    max={id === "weightKg" ? 700 * factor : 400}
+                  />
+                </label>
+              ))}
+            </div>
+          )}
           <label>
-            {t("Foto opcional", "Optional photo")}
+            {photoOnly
+              ? t("Foto de progreso", "Progress photo")
+              : t("Foto opcional", "Optional photo")}
             <Input
               type="file"
               accept="image/*"
               disabled={busy}
+              required={photoOnly}
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
+                const version = ++uploadVersion.current;
+                setPhoto(undefined);
                 setBusy(true);
                 try {
-                  setPhoto(await compressedPhoto(file));
+                  const result = await compressedPhoto(file);
+                  if (version === uploadVersion.current) setPhoto(result);
                 } catch (error) {
+                  if (version !== uploadVersion.current) return;
                   notify(
                     error instanceof Error
                       ? error.message
@@ -312,7 +361,7 @@ export function BodyProgress({
                         ),
                   );
                 } finally {
-                  setBusy(false);
+                  if (version === uploadVersion.current) setBusy(false);
                 }
               }}
             />
@@ -326,10 +375,12 @@ export function BodyProgress({
               height={240}
             />
           )}
-          <Button type="submit" disabled={busy}>
+          <Button type="submit" disabled={busy || (photoOnly && !photo)}>
             {busy
               ? t("Preparando imagen…", "Preparing image…")
-              : t("Guardar registro", "Save entry")}
+              : photoOnly
+                ? t("Guardar foto", "Save photo")
+                : t("Guardar registro", "Save entry")}
           </Button>
         </form>
       </AppDialog>

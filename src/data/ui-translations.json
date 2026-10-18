@@ -503,7 +503,15 @@
     "Resumen diario": "Bilan quotidien",
     "Resumen anual": "Bilan annuel",
     "Resumen de siempre": "Bilan global",
-    "Resumen de 3 meses": "Bilan sur 3 mois"
+    "Resumen de 3 meses": "Bilan sur 3 mois",
+    "Subir foto": "Importer une photo",
+    "Foto de progreso": "Photo de progression",
+    "Guardar foto": "Enregistrer la photo",
+    "Subí fotos con sus fechas para comparar tu progreso.": "Importez des photos datées pour comparer votre progression.",
+    "Foto guardada": "Photo enregistrée",
+    "Piramidal": "Pyramidale",
+    "Subir peso": "Augmenter le poids",
+    "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.": "Augmentez la charge à chaque étape, puis diminuez-la. Exemple : 20 → 25 → 30 → 25 → 20 kg. Notez la charge et les répétitions de chaque étape séparément et adaptez les charges et le repos à votre entraînement."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1009,7 +1017,15 @@
     "Resumen diario": "每日总结",
     "Resumen anual": "年度总结",
     "Resumen de siempre": "全部总结",
-    "Resumen de 3 meses": "三个月总结"
+    "Resumen de 3 meses": "三个月总结",
+    "Subir foto": "上传照片",
+    "Foto de progreso": "进度照片",
+    "Guardar foto": "保存照片",
+    "Subí fotos con sus fechas para comparar tu progreso.": "上传带日期的照片以比较进步。",
+    "Foto guardada": "照片已保存",
+    "Piramidal": "金字塔",
+    "Subir peso": "增加重量",
+    "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.": "每个阶段逐步增加重量，然后降低。例如：20 → 25 → 30 → 25 → 20 公斤。分别记录各阶段的重量和次数，并根据训练调整重量和休息。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1515,7 +1531,15 @@
     "Resumen diario": "दैनिक सारांश",
     "Resumen anual": "वार्षिक सारांश",
     "Resumen de siempre": "समग्र सारांश",
-    "Resumen de 3 meses": "3 महीने का सारांश"
+    "Resumen de 3 meses": "3 महीने का सारांश",
+    "Subir foto": "तस्वीर अपलोड करें",
+    "Foto de progreso": "प्रगति तस्वीर",
+    "Guardar foto": "तस्वीर सहेजें",
+    "Subí fotos con sus fechas para comparar tu progreso.": "अपनी प्रगति की तुलना करने के लिए तारीख वाली तस्वीरें अपलोड करें।",
+    "Foto guardada": "तस्वीर सहेजी गई",
+    "Piramidal": "पिरामिड",
+    "Subir peso": "वज़न बढ़ाएँ",
+    "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.": "हर चरण में वज़न बढ़ाएँ और फिर घटाएँ। उदाहरण: 20 → 25 → 30 → 25 → 20 किग्रा। हर चरण का वज़न और दोहराव अलग दर्ज करें और अपने प्रशिक्षण के अनुसार वज़न और आराम समायोजित करें।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2021,7 +2045,15 @@
     "Resumen diario": "الملخص اليومي",
     "Resumen anual": "الملخص السنوي",
     "Resumen de siempre": "الملخص الشامل",
-    "Resumen de 3 meses": "ملخص 3 أشهر"
+    "Resumen de 3 meses": "ملخص 3 أشهر",
+    "Subir foto": "رفع صورة",
+    "Foto de progreso": "صورة التقدم",
+    "Guardar foto": "حفظ الصورة",
+    "Subí fotos con sus fechas para comparar tu progreso.": "ارفع صورًا مع تواريخها لمقارنة تقدمك.",
+    "Foto guardada": "تم حفظ الصورة",
+    "Piramidal": "هرمية",
+    "Subir peso": "زيادة الوزن",
+    "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.": "زِد الوزن في كل مرحلة ثم خفّضه. مثال: 20 → 25 → 30 → 25 → 20 كغ. سجّل الوزن والتكرارات لكل مرحلة على حدة، واضبط الأوزان والراحة وفق تدريبك."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2527,7 +2559,15 @@
     "Resumen diario": "Tagesübersicht",
     "Resumen anual": "Jahresübersicht",
     "Resumen de siempre": "Gesamtübersicht",
-    "Resumen de 3 meses": "3-Monatsübersicht"
+    "Resumen de 3 meses": "3-Monatsübersicht",
+    "Subir foto": "Foto hochladen",
+    "Foto de progreso": "Fortschrittsfoto",
+    "Guardar foto": "Foto speichern",
+    "Subí fotos con sus fechas para comparar tu progreso.": "Lade datierte Fotos hoch, um deinen Fortschritt zu vergleichen.",
+    "Foto guardada": "Foto gespeichert",
+    "Piramidal": "Pyramide",
+    "Subir peso": "Gewicht erhöhen",
+    "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.": "Erhöhe das Gewicht schrittweise und senke es anschließend. Beispiel: 20 → 25 → 30 → 25 → 20 kg. Erfasse Gewicht und Wiederholungen jedes Abschnitts getrennt und passe Belastung und Pausen deinem Training an."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -3033,7 +3073,15 @@
     "Resumen diario": "Riepilogo giornaliero",
     "Resumen anual": "Riepilogo annuale",
     "Resumen de siempre": "Riepilogo complessivo",
-    "Resumen de 3 meses": "Riepilogo di 3 mesi"
+    "Resumen de 3 meses": "Riepilogo di 3 mesi",
+    "Subir foto": "Carica foto",
+    "Foto de progreso": "Foto dei progressi",
+    "Guardar foto": "Salva foto",
+    "Subí fotos con sus fechas para comparar tu progreso.": "Carica foto con le date per confrontare i tuoi progressi.",
+    "Foto guardada": "Foto salvata",
+    "Piramidal": "Piramidale",
+    "Subir peso": "Aumentare il peso",
+    "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.": "Aumenta il peso a ogni fase, poi diminuiscilo. Esempio: 20 → 25 → 30 → 25 → 20 kg. Registra peso e ripetizioni separatamente per ogni fase, adattando carichi e recuperi al tuo allenamento."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -3539,7 +3587,15 @@
     "Resumen diario": "Resumo diário",
     "Resumen anual": "Resumo anual",
     "Resumen de siempre": "Resumo geral",
-    "Resumen de 3 meses": "Resumo de 3 meses"
+    "Resumen de 3 meses": "Resumo de 3 meses",
+    "Subir foto": "Enviar foto",
+    "Foto de progreso": "Foto de progresso",
+    "Guardar foto": "Salvar foto",
+    "Subí fotos con sus fechas para comparar tu progreso.": "Envie fotos com suas datas para comparar seu progresso.",
+    "Foto guardada": "Foto salva",
+    "Piramidal": "Piramidal",
+    "Subir peso": "Aumentar peso",
+    "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.": "Aumente o peso em cada etapa e depois diminua. Exemplo: 20 → 25 → 30 → 25 → 20 kg. Registre o peso e as repetições de cada etapa separadamente, ajustando as cargas e os descansos ao seu treino."
   },
   "en": {
     "Sexo": "Sex",

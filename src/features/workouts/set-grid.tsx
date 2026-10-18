@@ -10,7 +10,7 @@ import {
   blankSet,
   switchEntryMetric,
   addDropSegment,
-  countSetGroups,
+  setNumber,
   metricFor,
   previousSets,
   type Entry,
@@ -84,6 +84,15 @@ export function SetGrid({
         "Start with a load you can lift for about 8–12 controlled repetitions, not your maximum weight. At technical failure, reduce the current load by 20–25% and continue with little rest. Use 1–3 drops. Example at 20%: 40 → 32 → 25.5 kg, adjusted to available weights. Log each segment separately.",
       ),
     },
+    {
+      id: "pyramid",
+      letter: "P",
+      name: t("Piramidal", "Pyramid"),
+      help: t(
+        "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado, ajustando las cargas y descansos a tu entrenamiento.",
+        "Increase the weight in each segment, then decrease it. For example: 20 → 25 → 30 → 25 → 20 kg. Log weight and repetitions for each segment separately, adjusting loads and rest to your workout.",
+      ),
+    },
   ].map((type, index) => ({
     ...type,
     ...localizedSetTypes(snapshot.settings.language ?? "es")[index],
@@ -132,7 +141,8 @@ export function SetGrid({
                             (group && current.dropGroup === group)
                           ) {
                             current.type = type.id;
-                            if (type.id !== "drop") delete current.dropGroup;
+                            if (type.id !== "drop" && type.id !== "pyramid")
+                              delete current.dropGroup;
                           }
                       }
                     });
@@ -196,10 +206,7 @@ export function SetGrid({
             data-set-row={number}
           >
             <b className="set-number">
-              {set.dropGroup &&
-              entry.sets[number - 1]?.dropGroup === set.dropGroup
-                ? "↳"
-                : countSetGroups(entry.sets.slice(0, number + 1))}
+              {setNumber(entry.sets, number)}
               {onRest &&
                 (!set.dropGroup ||
                   entry.sets[number + 1]?.dropGroup !== set.dropGroup) && (
@@ -321,10 +328,23 @@ export function SetGrid({
               {types.find((type) => type.id === set.type)?.letter ?? "N"}
             </button>
           </div>
-          {set.type === "drop" &&
+          {(set.type === "drop" || set.type === "pyramid") &&
             (!set.dropGroup ||
               entry.sets[number + 1]?.dropGroup !== set.dropGroup) && (
               <div className="drop-segment-controls">
+                {set.type === "pyramid" && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      onChange((draft) =>
+                        addDropSegment(draft, number, metric, -reduction),
+                      )
+                    }
+                  >
+                    {t("Subir peso", "Increase weight")}
+                  </Button>
+                )}
                 <Button
                   variant="secondary"
                   size="sm"

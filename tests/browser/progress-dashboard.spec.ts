@@ -129,3 +129,79 @@ test("unified periods, glute bars, exercise records and body measurements", asyn
     ),
   ).toBe(true);
 });
+
+test("upload independent dated photos directly from comparison without creating workouts", async ({
+  page,
+}) => {
+  await page.goto("/progress");
+  await page.getByRole("button", { name: "Cuerpo", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Período", exact: true })
+    .selectOption("all");
+  const dialog = page.getByRole("dialog", { name: "Subir foto", exact: true });
+  for (const [index, file] of [
+    "public/assets/grupo-piernas.jpg",
+    "public/assets/grupo-gluteos-v1.jpg",
+  ].entries()) {
+    await page.getByRole("button", { name: "Subir foto", exact: true }).click();
+    await expect(
+      dialog.getByRole("button", { name: "Guardar foto", exact: true }),
+    ).toBeDisabled();
+    await expect(dialog.getByLabel("Peso (kg)", { exact: true })).toHaveCount(
+      0,
+    );
+    const date = await page.evaluate((i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - 1 + i);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }, index);
+    await dialog.getByLabel("Fecha", { exact: true }).fill(date);
+    await dialog
+      .getByLabel("Foto de progreso", { exact: true })
+      .setInputFiles(file);
+    await dialog
+      .getByRole("button", { name: "Guardar foto", exact: true })
+      .click();
+    await expect(dialog).toHaveCount(0);
+    if (index === 0)
+      await expect(
+        page.getByRole("img", { name: "Foto de progreso", exact: true }),
+      ).toBeVisible();
+  }
+  await expect(page.locator(".progress-photo-comparison img")).toHaveCount(2);
+  const stored = await page.evaluate(() => {
+    const s = JSON.parse(
+      localStorage.getItem(
+        "mrgymson-user-11111111-1111-4111-8111-111111111111",
+      )!,
+    );
+    return {
+      sessions: s.sessions.length,
+      photos: s.bodyMeasurements.map(
+        (m: { photo?: string; weightKg?: number }) => ({
+          photo: !!m.photo,
+          weight: m.weightKg,
+        }),
+      ),
+    };
+  });
+  expect(stored.sessions).toBe(0);
+  expect(stored.photos).toEqual([
+    { photo: true, weight: undefined },
+    { photo: true, weight: undefined },
+  ]);
+  await page.reload();
+  await page.getByRole("button", { name: "Cuerpo", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Período", exact: true })
+    .selectOption("all");
+  await expect(page.locator(".progress-photo-comparison img")).toHaveCount(2);
+  await expect(
+    page.getByRole("img", { name: "Foto anterior", exact: true }),
+  ).toHaveJSProperty("naturalWidth", 800);
+  await expect(page.getByTestId("launch-splash")).toHaveCount(0);
+  await page.screenshot({
+    path: `artifacts/direct-body-photos-${test.info().project.name}.png`,
+    fullPage: true,
+  });
+});

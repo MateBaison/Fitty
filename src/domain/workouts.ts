@@ -278,6 +278,19 @@ export function countSetGroups(sets: SavedSet[]): number {
     ),
   ).size;
 }
+export function setNumber(sets: SavedSet[], index: number): string {
+  const set = sets[index];
+  if (!set) return "";
+  const base = countSetGroups(sets.slice(0, index + 1));
+  if (!set.dropGroup && set.type !== "drop" && set.type !== "pyramid")
+    return String(base);
+  const segment = set.dropGroup
+    ? sets
+        .slice(0, index + 1)
+        .filter((item) => item.dropGroup === set.dropGroup).length
+    : 1;
+  return `${base}.${segment}`;
+}
 export function addDropSegment(
   entry: Entry,
   index: number,
@@ -285,19 +298,23 @@ export function addDropSegment(
   reduction = 20,
 ) {
   const source = entry.sets[index];
-  if (!source || source.type !== "drop") return;
+  if (!source || !["drop", "pyramid"].includes(source.type ?? "")) return;
   const group = source.dropGroup ?? crypto.randomUUID();
   source.dropGroup = group;
   const kg =
     Math.round(
       (Number(source.kg) || 0) *
-        (1 - Math.max(20, Math.min(25, reduction)) / 100) *
+        (1 -
+          (source.type === "pyramid"
+            ? Math.max(-25, Math.min(25, reduction))
+            : Math.max(20, Math.min(25, reduction))) /
+            100) *
         10,
     ) / 10;
   entry.sets.splice(index + 1, 0, {
     ...blankSet(metric),
     kg,
-    type: "drop",
+    type: source.type,
     dropGroup: group,
   });
 }

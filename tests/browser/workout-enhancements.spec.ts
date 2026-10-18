@@ -160,3 +160,47 @@ test("compact workout controls, grouped drops, remembered metric and record sour
   await page.locator(".progress-records button").first().click();
   await expect(page.getByRole("dialog")).toContainText("Pecho y tríceps");
 });
+
+test("pyramid help and numbered ascending and descending segments", async ({
+  page,
+}) => {
+  await page.request.get("http://127.0.0.1:54329/__reset");
+  await page.route("**/*", (route) =>
+    new URL(route.request().url()).hostname === "127.0.0.1"
+      ? route.continue()
+      : route.abort(),
+  );
+  await login(page);
+  await page
+    .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .click();
+  const first = page.locator('[data-workout-entry="0"]');
+  await page
+    .getByRole("button", { name: "Tipo de serie 1 serie 1", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Ayuda sobre tipos de serie" })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "20 → 25 → 30 → 25 → 20 kg",
+  );
+  await page.getByRole("button", { name: /Piramidal/ }).click();
+  await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("20");
+  await first.getByRole("button", { name: "Subir peso", exact: true }).click();
+  await expect(page.getByLabel("Peso 1 serie 2", { exact: true })).toHaveValue(
+    "24",
+  );
+  await first.getByRole("button", { name: "Bajar peso", exact: true }).click();
+  await expect(page.getByLabel("Peso 1 serie 3", { exact: true })).toHaveValue(
+    "19.2",
+  );
+  await expect(first.locator(".set-number").nth(0)).toHaveText("1.1");
+  await expect(first.locator(".set-number").nth(1)).toHaveText("1.2");
+  await expect(first.locator(".set-number").nth(2)).toHaveText("1.3");
+  await expect(
+    first.locator('[data-set-row="2"] .set-type-control'),
+  ).toHaveText("P");
+});

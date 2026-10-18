@@ -4,6 +4,7 @@ import {
   addDropSegment,
   buildSession,
   countSetGroups,
+  setNumber,
   metricFor,
   startWorkout,
 } from "../../src/domain/workouts";
@@ -131,4 +132,30 @@ test("record panel separates metrics, converts units, excludes warmup and opens 
     exerciseHistories(snapshot, false).get("plancha")?.[0]?.sets,
   ).toHaveLength(2);
   expect(metricFor(snapshot, "plancha")).toBe("seconds");
+});
+
+test("pyramid segments rise then fall, retain their type and count as one set", () => {
+  const entry: Entry = {
+    id: "press-de-banca-con-barra",
+    sets: [{ kg: 20, reps: 10, type: "pyramid", entered: true }],
+  };
+  addDropSegment(entry, 0, "reps", -25);
+  addDropSegment(entry, 1, "reps", 20);
+  expect(entry.sets.map((set) => set.kg)).toEqual([20, 25, 20]);
+  expect(entry.sets.every((set) => set.type === "pyramid")).toBe(true);
+  expect(entry.sets[1]?.entered).toBe(false);
+  expect(countSetGroups(entry.sets)).toBe(1);
+  expect(entry.sets.map((_, index) => setNumber(entry.sets, index))).toEqual([
+    "1.1",
+    "1.2",
+    "1.3",
+  ]);
+  const session = buildSession(
+    createDefaultSnapshot(),
+    [entry],
+    { routine: "R", day: "D" },
+    "2026-10-11T12:00:00Z",
+    extras,
+  );
+  expect(session.exercises?.[0]?.performedSets?.[0]?.type).toBe("pyramid");
 });

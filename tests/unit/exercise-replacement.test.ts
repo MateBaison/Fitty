@@ -10,7 +10,7 @@ test("set type names and letters follow the selected language", () => {
   expect(localizedSetTypes("es")[0]?.letter).toBe("C");
   expect(localizedSetTypes("en")[0]?.letter).toBe("W");
   for (const lang of Object.keys(setTypeLabels))
-    expect(localizedSetTypes(lang)).toHaveLength(4);
+    expect(localizedSetTypes(lang)).toHaveLength(5);
 });
 test("replacement retains logged original sets and does not convert loads across exercises", () => {
   const snapshot = createDefaultSnapshot();
