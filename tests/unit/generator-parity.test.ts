@@ -20,8 +20,9 @@ test("typed generator matches the preserved legacy algorithm for all 1,785 combi
   const catalog = new Map(
     availableExercises.map((exercise) => [exercise.id, exercise]),
   );
+  const originalGroups = muscleGroups.filter((group) => group !== "Glúteos");
   for (let mask = 1; mask < 256; mask++) {
-    const groups = muscleGroups.filter(
+    const groups = originalGroups.filter(
       (_, index) => (mask & (1 << index)) !== 0,
     );
     for (let days = 1; days <= 7; days++) {
@@ -29,7 +30,9 @@ test("typed generator matches the preserved legacy algorithm for all 1,785 combi
         `${source}\nJSON.stringify(buildAutomaticRoutine(input.groups,input.days))`,
         {
           input: { groups, days },
-          GROUPS: Object.fromEntries(muscleGroups.map((group) => [group, []])),
+          GROUPS: Object.fromEntries(
+            originalGroups.map((group) => [group, []]),
+          ),
           AUTO_ROUTINE_EXERCISES: rawPools,
           byId: (id: string) => catalog.get(id),
           cryptoRoutineId: () => "test",

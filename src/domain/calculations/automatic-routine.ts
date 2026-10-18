@@ -1,6 +1,6 @@
 import { z } from "zod";
 import rawPools from "@/data/legacy/automaticPools.json";
-import { availableExercises } from "@/data/exercises";
+import { availableExercises, gluteExerciseIds } from "@/data/exercises";
 import { translate } from "@/data/translations";
 import {
   muscleGroups,
@@ -9,7 +9,9 @@ import {
 } from "@/domain/schemas/exercise";
 import { routineSchema, type Routine } from "@/domain/schemas/snapshot";
 
-const pools = z.record(muscleGroupSchema, z.array(z.string())).parse(rawPools);
+const pools = z
+  .record(muscleGroupSchema, z.array(z.string()))
+  .parse({ ...rawPools, Glúteos: [...gluteExerciseIds] });
 const requestSchema = z.strictObject({
   groups: z.array(muscleGroupSchema).min(1),
   days: z.number().int().min(1).max(7),
@@ -27,7 +29,7 @@ export function buildAutomaticRoutine(
   if (request.days === 1) splits = [selected];
   else if (request.days === 2) {
     const lower = selected.filter((group) =>
-      ["Piernas", "Gemelos", "Abdominales"].includes(group),
+      ["Piernas", "Glúteos", "Gemelos", "Abdominales"].includes(group),
     );
     const upper = selected.filter((group) => !lower.includes(group));
     splits =
@@ -41,7 +43,7 @@ export function buildAutomaticRoutine(
     const families: MuscleGroup[][] = [
       ["Pectorales", "Hombros", "Tríceps"],
       ["Espalda", "Bíceps"],
-      ["Piernas", "Gemelos"],
+      ["Piernas", "Glúteos", "Gemelos"],
     ];
     splits = families
       .map((family) => family.filter((group) => selected.includes(group)))

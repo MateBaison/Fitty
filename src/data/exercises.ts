@@ -11,9 +11,26 @@ import {
   type Exercise,
 } from "@/domain/schemas/exercise";
 
+export const gluteExerciseIds = [
+  "puente-con-propio-peso",
+  "puentes-a-una-pierna",
+  "hidrantes",
+  "elevaciones-de-cadera-con-barra",
+  "abducciones-de-cadera-sentado-con-banda",
+  "abduccion-de-cadera-en-maquina",
+  "abduccion-con-polea",
+  "elevaciones-en-posicion-de-rana",
+  "almejas-laterales-con-banda",
+  "levantamiento-de-pierna-acostado-de-lado",
+  "caminata-lateral-con-minibanda",
+  "contragolpe-con-cable",
+  "patadas-de-burro",
+] as const;
+
 // Keep the archived definitions intact; current classification can change without changing IDs.
 const groupOverrides: Partial<Record<string, Exercise["group"]>> = {
   "elevaciones-de-cadera-acostado-lateralmente": "Abdominales",
+  ...Object.fromEntries(gluteExerciseIds.map((id) => [id, "Glúteos" as const])),
 };
 export const exercises: ReadonlyArray<Exercise> = z.array(exerciseSchema).parse(
   [...rawExercises, ...additions].map((exercise) => ({
@@ -43,7 +60,8 @@ export const availableExercises = exercises.filter(
 );
 export const muscleImages = z
   .record(muscleGroupSchema, assetPathSchema)
-  .parse(rawMuscles);
+  .parse({ ...rawMuscles, Glúteos: "grupo-gluteos-v1.jpg" });
+export const fullBodyImage = "grupo-full-body-v1.jpg";
 export const imageVariants = z
   .record(z.string(), z.record(z.string(), assetPathSchema))
   .parse({ ...rawVariants, ...additionalVariants });

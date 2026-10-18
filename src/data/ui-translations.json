@@ -425,7 +425,11 @@
     "Superaste el límite de archivos o tamaño.": "Limite de fichiers ou de taille dépassée.",
     "Quitar archivo": "Retirer le fichier",
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "Le brouillon est conservé tant que vous restez sur cette page. Ne partagez pas de mots de passe.",
-    "Enviar consulta (próximamente)": "Envoyer la demande (bientôt)"
+    "Enviar consulta (próximamente)": "Envoyer la demande (bientôt)",
+    "Glúteos": "Fessiers",
+    "Full body: todos los grupos musculares resaltados": "Full body : tous les groupes musculaires surlignés",
+    "Cuerpo completo": "Corps entier",
+    "Todos los ejercicios de la biblioteca.": "Tous les exercices de la bibliothèque."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -853,7 +857,11 @@
     "Superaste el límite de archivos o tamaño.": "超出了文件数量或大小限制。",
     "Quitar archivo": "移除文件",
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "停留在此页面时会保留草稿。请勿分享密码。",
-    "Enviar consulta (próximamente)": "发送咨询（即将推出）"
+    "Enviar consulta (próximamente)": "发送咨询（即将推出）",
+    "Glúteos": "臀部",
+    "Full body: todos los grupos musculares resaltados": "全身：所有肌群均已突出显示",
+    "Cuerpo completo": "全身",
+    "Todos los ejercicios de la biblioteca.": "动作库中的所有动作。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1281,7 +1289,11 @@
     "Superaste el límite de archivos o tamaño.": "फ़ाइलों की संख्या या आकार की सीमा पार हो गई।",
     "Quitar archivo": "फ़ाइल हटाएँ",
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "इस पेज पर रहने तक मसौदा बना रहेगा। पासवर्ड साझा न करें।",
-    "Enviar consulta (próximamente)": "पूछताछ भेजें (जल्द ही)"
+    "Enviar consulta (próximamente)": "पूछताछ भेजें (जल्द ही)",
+    "Glúteos": "ग्लूट्स",
+    "Full body: todos los grupos musculares resaltados": "फुल बॉडी: सभी मांसपेशी समूह हाइलाइट किए गए हैं",
+    "Cuerpo completo": "पूरा शरीर",
+    "Todos los ejercicios de la biblioteca.": "लाइब्रेरी के सभी व्यायाम।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1709,7 +1721,11 @@
     "Superaste el límite de archivos o tamaño.": "تم تجاوز حد عدد الملفات أو حجمها.",
     "Quitar archivo": "إزالة الملف",
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "تُحفظ المسودة ما دمت في هذه الصفحة. لا تشارك كلمات المرور.",
-    "Enviar consulta (próximamente)": "إرسال الاستفسار (قريبًا)"
+    "Enviar consulta (próximamente)": "إرسال الاستفسار (قريبًا)",
+    "Glúteos": "الأرداف",
+    "Full body: todos los grupos musculares resaltados": "الجسم بالكامل: جميع المجموعات العضلية مميزة",
+    "Cuerpo completo": "الجسم بالكامل",
+    "Todos los ejercicios de la biblioteca.": "جميع تمارين المكتبة."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2137,7 +2153,11 @@
     "Superaste el límite de archivos o tamaño.": "Dateianzahl oder Größenlimit überschritten.",
     "Quitar archivo": "Datei entfernen",
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "Der Entwurf bleibt erhalten, solange du auf dieser Seite bleibst. Teile keine Passwörter.",
-    "Enviar consulta (próximamente)": "Anfrage senden (demnächst)"
+    "Enviar consulta (próximamente)": "Anfrage senden (demnächst)",
+    "Glúteos": "Gesäß",
+    "Full body: todos los grupos musculares resaltados": "Full body: alle Muskelgruppen hervorgehoben",
+    "Cuerpo completo": "Ganzer Körper",
+    "Todos los ejercicios de la biblioteca.": "Alle Übungen der Bibliothek."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2565,7 +2585,11 @@
     "Superaste el límite de archivos o tamaño.": "Limite di numero o dimensione dei file superato.",
     "Quitar archivo": "Rimuovi file",
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "La bozza rimane finché resti su questa pagina. Non condividere password.",
-    "Enviar consulta (próximamente)": "Invia richiesta (prossimamente)"
+    "Enviar consulta (próximamente)": "Invia richiesta (prossimamente)",
+    "Glúteos": "Glutei",
+    "Full body: todos los grupos musculares resaltados": "Full body: tutti i gruppi muscolari evidenziati",
+    "Cuerpo completo": "Corpo intero",
+    "Todos los ejercicios de la biblioteca.": "Tutti gli esercizi della libreria."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2993,7 +3017,11 @@
     "Superaste el límite de archivos o tamaño.": "Limite de arquivos ou tamanho excedido.",
     "Quitar archivo": "Remover arquivo",
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "O rascunho é mantido enquanto você permanecer nesta página. Não compartilhe senhas.",
-    "Enviar consulta (próximamente)": "Enviar consulta (em breve)"
+    "Enviar consulta (próximamente)": "Enviar consulta (em breve)",
+    "Glúteos": "Glúteos",
+    "Full body: todos los grupos musculares resaltados": "Full body: todos os grupos musculares destacados",
+    "Cuerpo completo": "Corpo inteiro",
+    "Todos los ejercicios de la biblioteca.": "Todos os exercícios da biblioteca."
   },
   "en": {
     "Sexo": "Sex",
@@ -3206,6 +3234,7 @@
     "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.": "Finish the activity to save the route. Keep the app visible: the browser may limit GPS in the background.",
     "Reducción sugerida": "Suggested reduction",
     "Ajustable": "Adjustable",
-    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Sound could not start. Check your volume and browser audio permission, then press Start again."
+    "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Sound could not start. Check your volume and browser audio permission, then press Start again.",
+    "Glúteos": "Glutes"
   }
 }

@@ -83,3 +83,8 @@ Active tracking displays recent speed/pace rather than the whole-route average. 
 ## Current exercise classification — 2026-10-17
 
 `elevaciones-de-cadera-acostado-lateralmente` is shown under Abdominales through a current-catalog group override. Its original ID, archived Piernas definition and images remain intact. Saved routines continue referencing the same ID; stored session groups and totals are not rewritten. Historical entries without a stored group use the current catalog classification when a fallback is required.
+
+
+## Glutes library category — 2026-10-18
+
+The current catalog classifies 13 dedicated glute movements under `Glúteos` using ID-based overrides. Archived definitions and all exercise IDs/images remain intact, including retired choices. Saved routines still resolve those IDs; recorded session groups are preserved and are not rewritten. Historical entries without a stored group use the current category as fallback. New custom exercises and automatic routines accept Glúteos, with its own available pool and lower-body split. Full body is the library's all-exercises view, not a persisted muscle group.

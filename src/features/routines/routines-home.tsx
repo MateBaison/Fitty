@@ -658,6 +658,7 @@ export function RoutinesHome() {
                               Tríceps: "Triceps",
                               Abdominales: "Abs",
                               Piernas: "Legs",
+                              Glúteos: "Glutes",
                               Gemelos: "Calves",
                             }[group],
                           )}

@@ -68,8 +68,15 @@ test("compact settings keep two columns and aligned independent save/delete acti
       name: "Guardar configuración",
       exact: true,
     });
-    const removeBox = await remove.boundingBox();
-    const saveBox = await save.boundingBox();
+    // Read both rectangles in one frame so the dialog entry animation cannot skew alignment.
+    const [removeBox, saveBox] = await dialog
+      .locator(".settings-actions > button")
+      .evaluateAll((buttons) =>
+        buttons.map((button) => {
+          const { x, y, width, height } = button.getBoundingClientRect();
+          return { x, y, width, height };
+        }),
+      );
     expect(Math.abs(weight!.y - height!.y)).toBeLessThan(1);
     expect(height!.x).toBeGreaterThan(weight!.x + weight!.width);
     expect(distance!.y).toBeGreaterThan(weight!.y + weight!.height);

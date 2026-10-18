@@ -7,6 +7,8 @@ import {
   imageVariants,
   matchesEquipment,
   muscleImages,
+  fullBodyImage,
+  gluteExerciseIds,
   normalizeSearch,
 } from "../../src/data/exercises";
 import { muscleGroups } from "../../src/domain/schemas/exercise";
@@ -14,7 +16,7 @@ import retired from "../../src/data/legacy/retired.json";
 import legacyExercises from "../../src/data/legacy/exercises.json";
 
 describe("Phase 1 catalog/asset parity", () => {
-  test("retains all 136 IDs, eight groups and no retired catalog entries", () => {
+  test("retains all 136 IDs, nine groups and no retired catalog entries", () => {
     expect(exercises).toHaveLength(139);
     expect(new Set(exercises.map((exercise) => exercise.id)).size).toBe(139);
     expect(JSON.stringify(exercises.slice(0, 136))).toBe(
@@ -22,7 +24,9 @@ describe("Phase 1 catalog/asset parity", () => {
         legacyExercises.map((exercise) =>
           exercise.id === "elevaciones-de-cadera-acostado-lateralmente"
             ? { ...exercise, group: "Abdominales" }
-            : exercise,
+            : (gluteExerciseIds as readonly string[]).includes(exercise.id)
+              ? { ...exercise, group: "Glúteos" }
+              : exercise,
         ),
       ),
     );
@@ -37,6 +41,7 @@ describe("Phase 1 catalog/asset parity", () => {
     const paths = new Set([
       ...exercises.map((exercise) => exercise.image),
       ...Object.values(muscleImages),
+      fullBodyImage,
       ...Object.values(imageVariants).flatMap(Object.values),
     ]);
     for (const path of paths) {
@@ -176,7 +181,8 @@ test("available leg exercises resolve both new mannequins while excluded hip exe
   ];
   const legs = availableExercises.filter(
     (exercise) =>
-      exercise.group === "Piernas" && !excluded.includes(exercise.id),
+      ["Piernas", "Glúteos"].includes(exercise.group) &&
+      !excluded.includes(exercise.id),
   );
   expect(legs).toHaveLength(38);
   for (const exercise of legs) {

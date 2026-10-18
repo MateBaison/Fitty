@@ -8,6 +8,7 @@ export const muscleGroups = [
   "Tríceps",
   "Abdominales",
   "Piernas",
+  "Glúteos",
   "Gemelos",
 ] as const;
 export const muscleGroupSchema = z.enum(muscleGroups);

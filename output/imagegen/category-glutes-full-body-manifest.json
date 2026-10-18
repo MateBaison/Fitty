@@ -1,0 +1,15 @@
+{
+  "tool": "built-in image_gen",
+  "assets": [
+    {
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-814c1247-26fe-469d-aafe-45f1902c2824.png",
+      "web": "public/assets/grupo-gluteos-v1.jpg",
+      "prompt": "Use case: scientific-educational. Asset type: fitness app muscle category cover, portrait 1024x1536. Reference image: existing Legs category, match its polished realistic 3D anatomy style, black graphite textured bodysuit mannequin, deep charcoal studio background and luminous warm orange anatomical muscle fibers. Create GLUTES category illustration: one faceless athletic mannequin seen from directly behind with slight three-quarter turn, frame from lower ribs through knees, gluteus maximus and upper outer gluteus medius correctly isolated and highlighted orange on both sides. Remaining torso thighs hands and legs dark matte black, no orange quadriceps. Neutral standing anatomy pose, arms slightly away. Opaque fitted black anatomical suit, continuous waistband and clean garment edges, tasteful scientific visualization, no nudity. Center glute region in upper-middle of portrait, enough margin, same premium lighting as reference. No text, no logos, no labels, no watermark."
+    },
+    {
+      "generatedSource": "/Users/mb/.codex/generated_images/01a14a13-dae2-7eb2-9601-d14e54a54645/exec-71cc24b2-1162-4d09-a55c-bbca68b941ea.png",
+      "web": "public/assets/grupo-full-body-v1.jpg",
+      "prompt": "Use case: scientific-educational. Asset type: fitness app FULL BODY category portrait cover 1024x1536. Reference is existing Legs category: match dark graphite textured faceless mannequin, luminous warm orange anatomical fiber highlights, premium realistic 3D studio lighting and black charcoal background. Show TWO complete athletic mannequins side by side, one front view and one rear view, equal scale from head to shoes, neutral standing with arms slightly away from body. Highlight ALL major trained muscle groups in anatomically correct warm orange fibers: chest, upper/lower back, deltoids, biceps,triceps, forearms, abdominal and obliques, glutes, quadriceps, hamstrings and calves. Heads hands joint connectors and fitted waistband/crotch panels matte black. Tasteful anatomical sport suit, no nudity. Both figures centered with clear margins and no clipped feet or heads. Orange coherent with reference, no extra gym objects, no text, logos, labels or watermark."
+    }
+  ]
+}

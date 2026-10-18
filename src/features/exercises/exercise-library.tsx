@@ -8,6 +8,7 @@ import {
   equipmentFilters,
   matchesEquipment,
   muscleImages,
+  fullBodyImage,
   normalizeSearch,
   type EquipmentFilter,
 } from "@/data/exercises";
@@ -76,9 +77,9 @@ export function ExerciseLibrary() {
             >
               {muscle === "Favoritos" ? "★ " : ""}
               {t(
-                muscle,
+                muscle === "Todos" ? "Full body" : muscle,
                 muscle === "Todos"
-                  ? "All"
+                  ? "Full body"
                   : muscle === "Favoritos"
                     ? "Favorites"
                     : muscle,
@@ -87,22 +88,41 @@ export function ExerciseLibrary() {
           ))}
         </div>
       </div>
-      {group !== "Todos" && group !== "Favoritos" && (
+      {group !== "Favoritos" && (
         <section className="muscle-summary">
           <img
-            src={`/assets/${muscleImages[group]}`}
-            alt={`${group}: zona muscular resaltada`}
+            src={`/assets/${group === "Todos" ? fullBodyImage : muscleImages[group]}`}
+            alt={
+              group === "Todos"
+                ? t(
+                    "Full body: todos los grupos musculares resaltados",
+                    "Full body: all muscle groups highlighted",
+                  )
+                : t(
+                    `${group}: zona muscular resaltada`,
+                    `${group}: highlighted muscle group`,
+                  )
+            }
           />
           <div>
             <span className="eyebrow">
-              {t("Zona principal", "Primary area")}
+              {group === "Todos"
+                ? t("Cuerpo completo", "Whole body")
+                : t("Zona principal", "Primary area")}
             </span>
-            <h2 className="text-xl font-bold">{group}</h2>
+            <h2 className="text-xl font-bold">
+              {group === "Todos" ? "Full body" : t(group, group)}
+            </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              {t(
-                "El naranja señala el grupo elegido.",
-                "Orange marks the selected muscle group.",
-              )}
+              {group === "Todos"
+                ? t(
+                    "Todos los ejercicios de la biblioteca.",
+                    "All exercises in the library.",
+                  )
+                : t(
+                    "El naranja señala el grupo elegido.",
+                    "Orange marks the selected muscle group.",
+                  )}
             </p>
           </div>
         </section>

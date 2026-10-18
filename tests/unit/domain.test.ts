@@ -64,9 +64,9 @@ describe("Phase 2 domain parity", () => {
       reason: "low-weight",
     });
   });
-  test("all 255 nonempty group selections work for 1–7 days with canonical IDs", () => {
+  test("all 511 nonempty group selections work for 1–7 days with canonical IDs", () => {
     const known = new Map(exercises.map((exercise) => [exercise.id, exercise]));
-    for (let mask = 1; mask < 256; mask++) {
+    for (let mask = 1; mask < 1 << muscleGroups.length; mask++) {
       const groups = muscleGroups.filter(
         (_, index) => (mask & (1 << index)) !== 0,
       );
