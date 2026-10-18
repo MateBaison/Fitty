@@ -140,7 +140,6 @@
     " · movimiento similar": " · mouvement similaire",
     ", sangrado menstrual registrado": ", saignement menstruel enregistré",
     "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.": "Ajuste le zoom et la position. Le cercle montre le résultat de ta photo de profil.",
-    "Borde violeta: entrenamiento con sangrado menstrual registrado.": "Bord violet : séance avec saignement menstruel enregistré.",
     "Cambios reales en tus ejercicios y hábitos de entrenamiento.": "L’évolution de tes exercices et habitudes d’entraînement.",
     "Chequeo opcional antes de entrenar. Las sugerencias dependen de cómo te sentís hoy, no de la fase del ciclo.": "Bilan facultatif avant la séance. Les conseils dépendent de ton état aujourd’hui, pas de la phase du cycle.",
     "Con dolor intenso, no fuerces el entrenamiento. Descansá y consultá a un profesional de salud, especialmente si el dolor es nuevo, empeora o te impide tus actividades habituales.": "En cas de douleur intense, ne force pas. Repose-toi et consulte un professionnel de santé, surtout si la douleur est nouvelle, s’aggrave ou gêne tes activités habituelles.",
@@ -429,7 +428,9 @@
     "Glúteos": "Fessiers",
     "Full body: todos los grupos musculares resaltados": "Full body : tous les groupes musculaires surlignés",
     "Cuerpo completo": "Corps entier",
-    "Todos los ejercicios de la biblioteca.": "Tous les exercices de la bibliothèque."
+    "Todos los ejercicios de la biblioteca.": "Tous les exercices de la bibliothèque.",
+    "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Bord rose : séance avec saignement menstruel enregistré.",
+    "Sangrado menstrual registrado": "Saignement menstruel enregistré"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -572,7 +573,6 @@
     " · movimiento similar": " · 相似动作",
     ", sangrado menstrual registrado": "，已记录经期出血",
     "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.": "调整缩放和位置。圆形预览显示头像效果。",
-    "Borde violeta: entrenamiento con sangrado menstrual registrado.": "紫色边框：训练当天记录了经期出血。",
     "Cambios reales en tus ejercicios y hábitos de entrenamiento.": "练习与训练习惯的实际变化。",
     "Chequeo opcional antes de entrenar. Las sugerencias dependen de cómo te sentís hoy, no de la fase del ciclo.": "训练前可选的状态检查。建议根据今天的感受，不根据周期阶段。",
     "Con dolor intenso, no fuerces el entrenamiento. Descansá y consultá a un profesional de salud, especialmente si el dolor es nuevo, empeora o te impide tus actividades habituales.": "剧烈疼痛时不要勉强训练。休息并咨询医护人员，特别是出现新疼痛、疼痛加重或影响日常活动时。",
@@ -861,7 +861,9 @@
     "Glúteos": "臀部",
     "Full body: todos los grupos musculares resaltados": "全身：所有肌群均已突出显示",
     "Cuerpo completo": "全身",
-    "Todos los ejercicios de la biblioteca.": "动作库中的所有动作。"
+    "Todos los ejercicios de la biblioteca.": "动作库中的所有动作。",
+    "Borde rosa: entrenamiento con sangrado menstrual registrado.": "粉色边框：训练当天记录了经期出血。",
+    "Sangrado menstrual registrado": "已记录经期出血"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1004,7 +1006,6 @@
     " · movimiento similar": " · समान गतिविधि",
     ", sangrado menstrual registrado": ", मासिक धर्म रक्तस्राव दर्ज है",
     "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.": "ज़ूम और स्थिति समायोजित करें। गोल पूर्वावलोकन में प्रोफ़ाइल फ़ोटो का परिणाम दिखता है।",
-    "Borde violeta: entrenamiento con sangrado menstrual registrado.": "बैंगनी किनारा: कसरत के दिन मासिक धर्म रक्तस्राव दर्ज है।",
     "Cambios reales en tus ejercicios y hábitos de entrenamiento.": "आपके व्यायाम और कसरत की आदतों में वास्तविक बदलाव।",
     "Chequeo opcional antes de entrenar. Las sugerencias dependen de cómo te sentís hoy, no de la fase del ciclo.": "कसरत से पहले वैकल्पिक जाँच। सुझाव आज की स्थिति पर आधारित हैं, चक्र के चरण पर नहीं।",
     "Con dolor intenso, no fuerces el entrenamiento. Descansá y consultá a un profesional de salud, especialmente si el dolor es nuevo, empeora o te impide tus actividades habituales.": "तेज़ दर्द में कसरत ज़बरदस्ती न करें। आराम करें और स्वास्थ्य विशेषज्ञ से सलाह लें, खासकर अगर दर्द नया है, बढ़ रहा है या दैनिक काम रोकता है।",
@@ -1293,7 +1294,9 @@
     "Glúteos": "ग्लूट्स",
     "Full body: todos los grupos musculares resaltados": "फुल बॉडी: सभी मांसपेशी समूह हाइलाइट किए गए हैं",
     "Cuerpo completo": "पूरा शरीर",
-    "Todos los ejercicios de la biblioteca.": "लाइब्रेरी के सभी व्यायाम।"
+    "Todos los ejercicios de la biblioteca.": "लाइब्रेरी के सभी व्यायाम।",
+    "Borde rosa: entrenamiento con sangrado menstrual registrado.": "गुलाबी किनारा: कसरत के दिन मासिक धर्म रक्तस्राव दर्ज है।",
+    "Sangrado menstrual registrado": "मासिक धर्म रक्तस्राव दर्ज है"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1436,7 +1439,6 @@
     " · movimiento similar": " · حركة مشابهة",
     ", sangrado menstrual registrado": "، نزيف حيض مسجل",
     "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.": "اضبط التكبير والموضع. تعرض المعاينة الدائرية شكل صورة ملفك.",
-    "Borde violeta: entrenamiento con sangrado menstrual registrado.": "حد بنفسجي: تدريب مع نزيف حيض مسجل.",
     "Cambios reales en tus ejercicios y hábitos de entrenamiento.": "التغييرات الفعلية في تمارينك وعادات تدريبك.",
     "Chequeo opcional antes de entrenar. Las sugerencias dependen de cómo te sentís hoy, no de la fase del ciclo.": "فحص اختياري قبل التدريب. تعتمد النصائح على شعورك اليوم، لا على مرحلة الدورة.",
     "Con dolor intenso, no fuerces el entrenamiento. Descansá y consultá a un profesional de salud, especialmente si el dolor es nuevo, empeora o te impide tus actividades habituales.": "مع الألم الشديد، لا تضغطي على نفسك في التدريب. استريحي واستشيري مختصًا صحيًا، خاصة إذا كان الألم جديدًا أو يزداد أو يمنع أنشطتك المعتادة.",
@@ -1725,7 +1727,9 @@
     "Glúteos": "الأرداف",
     "Full body: todos los grupos musculares resaltados": "الجسم بالكامل: جميع المجموعات العضلية مميزة",
     "Cuerpo completo": "الجسم بالكامل",
-    "Todos los ejercicios de la biblioteca.": "جميع تمارين المكتبة."
+    "Todos los ejercicios de la biblioteca.": "جميع تمارين المكتبة.",
+    "Borde rosa: entrenamiento con sangrado menstrual registrado.": "حد وردي: تدريب مع نزيف حيض مسجل.",
+    "Sangrado menstrual registrado": "نزيف حيض مسجل"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -1868,7 +1872,6 @@
     " · movimiento similar": " · ähnliche Bewegung",
     ", sangrado menstrual registrado": ", Menstruationsblutung erfasst",
     "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.": "Passe Zoom und Position an. Die runde Vorschau zeigt dein Profilfoto.",
-    "Borde violeta: entrenamiento con sangrado menstrual registrado.": "Violetter Rand: Training mit erfasster Menstruationsblutung.",
     "Cambios reales en tus ejercicios y hábitos de entrenamiento.": "Veränderungen deiner Übungen und Trainingsgewohnheiten.",
     "Chequeo opcional antes de entrenar. Las sugerencias dependen de cómo te sentís hoy, no de la fase del ciclo.": "Optionaler Check vor dem Training. Tipps richten sich nach deinem Befinden heute, nicht nach der Zyklusphase.",
     "Con dolor intenso, no fuerces el entrenamiento. Descansá y consultá a un profesional de salud, especialmente si el dolor es nuevo, empeora o te impide tus actividades habituales.": "Bei starken Schmerzen nicht weitertrainieren. Ruhe dich aus und hole medizinischen Rat, besonders bei neuen, zunehmenden oder im Alltag einschränkenden Schmerzen.",
@@ -2157,7 +2160,9 @@
     "Glúteos": "Gesäß",
     "Full body: todos los grupos musculares resaltados": "Full body: alle Muskelgruppen hervorgehoben",
     "Cuerpo completo": "Ganzer Körper",
-    "Todos los ejercicios de la biblioteca.": "Alle Übungen der Bibliothek."
+    "Todos los ejercicios de la biblioteca.": "Alle Übungen der Bibliothek.",
+    "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Rosa Rand: Training mit erfasster Menstruationsblutung.",
+    "Sangrado menstrual registrado": "Erfasste Menstruationsblutung"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2300,7 +2305,6 @@
     " · movimiento similar": " · movimento simile",
     ", sangrado menstrual registrado": ", sanguinamento mestruale registrato",
     "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.": "Regola zoom e posizione. L’anteprima circolare mostra la foto del profilo.",
-    "Borde violeta: entrenamiento con sangrado menstrual registrado.": "Bordo viola: allenamento con sanguinamento mestruale registrato.",
     "Cambios reales en tus ejercicios y hábitos de entrenamiento.": "Cambiamenti nei tuoi esercizi e abitudini di allenamento.",
     "Chequeo opcional antes de entrenar. Las sugerencias dependen de cómo te sentís hoy, no de la fase del ciclo.": "Controllo facoltativo prima di allenarti. I consigli dipendono da come ti senti oggi, non dalla fase del ciclo.",
     "Con dolor intenso, no fuerces el entrenamiento. Descansá y consultá a un profesional de salud, especialmente si el dolor es nuevo, empeora o te impide tus actividades habituales.": "Con dolore intenso non forzare l’allenamento. Riposa e consulta un professionista sanitario, soprattutto se il dolore è nuovo, peggiora o limita le attività abituali.",
@@ -2589,7 +2593,9 @@
     "Glúteos": "Glutei",
     "Full body: todos los grupos musculares resaltados": "Full body: tutti i gruppi muscolari evidenziati",
     "Cuerpo completo": "Corpo intero",
-    "Todos los ejercicios de la biblioteca.": "Tutti gli esercizi della libreria."
+    "Todos los ejercicios de la biblioteca.": "Tutti gli esercizi della libreria.",
+    "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Bordo rosa: allenamento con sanguinamento mestruale registrato.",
+    "Sangrado menstrual registrado": "Sanguinamento mestruale registrato"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -2732,7 +2738,6 @@
     " · movimiento similar": " · movimento semelhante",
     ", sangrado menstrual registrado": ", sangramento menstrual registrado",
     "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.": "Ajuste o zoom e a posição. A prévia circular mostra sua foto de perfil.",
-    "Borde violeta: entrenamiento con sangrado menstrual registrado.": "Borda violeta: treino com sangramento menstrual registrado.",
     "Cambios reales en tus ejercicios y hábitos de entrenamiento.": "Mudanças nos seus exercícios e hábitos de treino.",
     "Chequeo opcional antes de entrenar. Las sugerencias dependen de cómo te sentís hoy, no de la fase del ciclo.": "Verificação opcional antes do treino. As sugestões dependem de como você se sente hoje, não da fase do ciclo.",
     "Con dolor intenso, no fuerces el entrenamiento. Descansá y consultá a un profesional de salud, especialmente si el dolor es nuevo, empeora o te impide tus actividades habituales.": "Com dor intensa, não force o treino. Descanse e consulte um profissional de saúde, especialmente se a dor é nova, piora ou impede suas atividades habituais.",
@@ -3021,7 +3026,9 @@
     "Glúteos": "Glúteos",
     "Full body: todos los grupos musculares resaltados": "Full body: todos os grupos musculares destacados",
     "Cuerpo completo": "Corpo inteiro",
-    "Todos los ejercicios de la biblioteca.": "Todos os exercícios da biblioteca."
+    "Todos los ejercicios de la biblioteca.": "Todos os exercícios da biblioteca.",
+    "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Borda rosa: treino com sangramento menstrual registrado.",
+    "Sangrado menstrual registrado": "Sangramento menstrual registrado"
   },
   "en": {
     "Sexo": "Sex",

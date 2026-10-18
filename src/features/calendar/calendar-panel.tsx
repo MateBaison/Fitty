@@ -73,6 +73,11 @@ export function CalendarPanel({
   const sessions = snapshot.sessions.filter(
     (session) => selectedDate && localDateKey(session.date) === selectedDate,
   );
+  const selectedMenstrualTraining =
+    menstrualCalendarEnabled(snapshot.profile) &&
+    selectedDate !== null &&
+    sessions.length > 0 &&
+    snapshot.profile.menstrualCalendar?.dates?.includes(selectedDate) === true;
   const edit = (date: string, session?: Session) => {
     setEditing({ id: session?.id ?? null, date });
     setDetailsEdited(false);
@@ -216,12 +221,12 @@ export function CalendarPanel({
           </div>
           {menstrualCalendarEnabled(snapshot.profile) && (
             <p className="mt-3 text-sm text-muted-foreground">
-              <span aria-hidden="true" style={{ color: "#c4b5fd" }}>
+              <span aria-hidden="true" style={{ color: "#f9a8d4" }}>
                 ▢
               </span>{" "}
               {t(
-                "Borde violeta: entrenamiento con sangrado menstrual registrado.",
-                "Purple border: workout with recorded menstrual bleeding.",
+                "Borde rosa: entrenamiento con sangrado menstrual registrado.",
+                "Pink border: workout with recorded menstrual bleeding.",
               )}
             </p>
           )}
@@ -252,6 +257,22 @@ export function CalendarPanel({
           >
             <summary className="calendar-session-summary">
               <strong>{session.day}</strong>
+              {selectedMenstrualTraining && (
+                <span
+                  role="img"
+                  aria-label={t(
+                    "Sangrado menstrual registrado",
+                    "Recorded menstrual bleeding",
+                  )}
+                  title={t(
+                    "Sangrado menstrual registrado",
+                    "Recorded menstrual bleeding",
+                  )}
+                  className="ms-2 text-xl"
+                >
+                  🩸
+                </span>
+              )}
               {workoutRatings.includes(
                 session.rating as (typeof workoutRatings)[number],
               ) && (

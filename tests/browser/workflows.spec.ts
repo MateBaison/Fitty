@@ -1019,7 +1019,23 @@ test("masculine profiles hide menstrual calendar borders and legend with saved d
   await page.reload();
   await expect(page.locator('[data-sync-status="synced"]')).toBeAttached();
   await expect(page.locator('[data-menstrual-training="true"]')).toHaveCount(1);
-  await expect(page.getByText(/Borde violeta:/)).toBeVisible();
+  await expect(page.getByText(/Borde rosa:/)).toBeVisible();
+  const menstrualDay = page.locator('[data-menstrual-training="true"]');
+  await expect(menstrualDay).toHaveCSS(
+    "box-shadow",
+    "rgb(249, 168, 212) 0px 0px 0px 6px inset",
+  );
+  await menstrualDay.click();
+  const bloodMarker = page.getByRole("img", {
+    name: "Sangrado menstrual registrado",
+    exact: true,
+  });
+  await expect(bloodMarker).toBeVisible();
+  await expect(bloodMarker).toHaveText("🩸");
+  await page.screenshot({
+    path: `artifacts/menstrual-workout-${test.info().project.name}.png`,
+  });
+  await page.keyboard.press("Escape");
   await page.goto("/profile");
   await page
     .getByRole("combobox", { name: "Género", exact: true })
@@ -1030,7 +1046,19 @@ test("masculine profiles hide menstrual calendar borders and legend with saved d
   await expect(page.locator('[data-sync-status="synced"]')).toBeAttached();
   await page.goto("/home");
   await expect(page.locator('[data-menstrual-training="true"]')).toHaveCount(0);
-  await expect(page.getByText(/Borde violeta:/)).toHaveCount(0);
+  await expect(page.getByText(/Borde rosa:/)).toHaveCount(0);
+  const todayKey = await page.evaluate(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  });
+  await page.locator(`[data-calendar-date="${todayKey}"]`).click();
+  await expect(
+    page.getByRole("img", {
+      name: "Sangrado menstrual registrado",
+      exact: true,
+    }),
+  ).toHaveCount(0);
+  await page.keyboard.press("Escape");
   await page
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
