@@ -2674,26 +2674,28 @@ input[type="range"] {
 }
 
 .progress-period {
-  grid-template-columns: minmax(0, 130px) minmax(0, 340px);
-  max-width: 480px;
+  grid-template-columns: minmax(0, 120px) minmax(0, 310px);
+  max-width: 440px;
 }
 .progress-period-select {
   display: grid;
   grid-template-rows: auto 48px;
+  text-align: center;
 }
 .progress-period-select select {
-  height: 40px;
-  min-height: 40px;
-  padding-block: 6px;
+  text-align: start;
+  height: 36px;
+  min-height: 36px;
+  padding-block: 4px;
   align-self: center;
 }
 .progress-period-navigation {
   height: 48px;
 }
 .progress-period-navigation input {
-  height: 40px;
-  min-height: 40px;
-  padding-block: 6px;
+  height: 36px;
+  min-height: 36px;
+  padding-block: 4px;
 }
 .progress-period-navigation button:last-child {
   min-width: 58px;
@@ -2703,13 +2705,13 @@ input[type="range"] {
 }
 @media (max-width: 600px) {
   .progress-period {
-    max-width: none;
+    max-width: 330px;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr);
   }
   .progress-period-select select,
   .progress-period-navigation input {
-    height: 40px;
-    min-height: 40px;
+    height: 36px;
+    min-height: 36px;
   }
   .progress-period-navigation button:last-child {
     min-width: 58px;
