@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   Trophy,
   Activity,
-  Dumbbell,
   Clock,
   CalendarDays,
 } from "lucide-react";
@@ -16,11 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CalendarPanel } from "@/features/calendar/calendar-panel";
 import { catalogFor, localDateKey, validDateKey } from "@/domain/workouts";
-import {
-  exerciseHistories,
-  recentImprovements,
-  weeklySummary,
-} from "@/domain/progress";
+import { exerciseHistories, recentImprovements } from "@/domain/progress";
 import { recordPanel } from "@/domain/personal-records";
 import {
   progressRange,
@@ -33,6 +28,7 @@ import {
 } from "@/domain/progress-period";
 import { ProgressChart, type ChartPoint } from "./progress-chart";
 import { shareWorkoutPoster } from "@/features/sharing/workout-poster";
+import { ProgressComparison } from "./progress-comparison";
 import { BodyProgress } from "./body-progress";
 const periods = [
   ["day", "Día", "Day"],
@@ -54,7 +50,8 @@ export function ProgressScreen() {
     [selected, setSelected] = useState(""),
     [metric, setMetric] = useState("weight"),
     [warmups, setWarmups] = useState(false),
-    [day, setDay] = useState<string | null>(null);
+    [day, setDay] = useState<string | null>(null),
+    [comparing, setComparing] = useState(false);
   const swipe = useSwipeNavigation((direction) => {
     const tabs = ["summary", "exercises", "body"] as const;
     const next = tabs[tabs.indexOf(tab) + (direction === "next" ? 1 : -1)];
@@ -69,14 +66,6 @@ export function ProgressScreen() {
     chosenSessions = periodSessions(snapshot, range),
     scoped = { ...snapshot, sessions: chosenSessions },
     totals = progressTotals(scoped);
-  const previousAnchor = shiftProgressDate(range.start, period, -1);
-  const previous = progressTotals({
-    ...snapshot,
-    sessions: periodSessions(
-      snapshot,
-      progressRange(period, previousAnchor, true),
-    ),
-  });
   const catalog = catalogFor(snapshot, true),
     histories = useMemo(
       () => exerciseHistories(snapshot, warmups),
@@ -104,9 +93,6 @@ export function ProgressScreen() {
   const counts = muscleTotals(scoped),
     muscles = Object.entries(counts).sort((a, b) => b[1] - a[1]),
     max = Math.max(1, ...Object.values(counts));
-  const weekly = weeklySummary(snapshot, range.start),
-    activeDays = snapshot.routines.find((r) => r.id === snapshot.selected)?.days
-      .length;
   const move = (direction: number) => {
     setAnchor(shiftProgressDate(range.start, period, direction));
   };
@@ -154,14 +140,6 @@ export function ProgressScreen() {
         : metric === "seconds"
           ? t("Segundos máximos por serie", "Maximum seconds per set")
           : t("Volumen", "Volume");
-  const delta = (now: number, before: number) =>
-    period === "all"
-      ? null
-      : before > 0
-        ? `${now >= before ? "+" : ""}${Math.round(((now - before) / before) * 100)}%`
-        : now > 0
-          ? t("Primer registro", "First entry")
-          : "—";
   return (
     <div className="progress-dashboard swipe-navigation" {...swipe}>
       {day && (
@@ -347,70 +325,60 @@ export function ProgressScreen() {
       </section>
       {tab === "summary" && (
         <>
+          <div className="progress-comparison-toggle">
+            <p>
+              {t(
+                "Este período: cuánto entrenaste. Ejercicios: cómo cambiaron tus marcas. Cuerpo: tus medidas y fotos.",
+                "This period: how much you trained. Exercises: how your performances changed. Body: your measurements and photos.",
+              )}
+            </p>
+            <Button
+              variant="secondary"
+              aria-expanded={comparing}
+              onClick={() => setComparing((value) => !value)}
+            >
+              {comparing
+                ? t("Cerrar comparación", "Close comparison")
+                : t("Comparar períodos", "Compare periods")}
+            </Button>
+          </div>
+          {comparing && (
+            <ProgressComparison
+              key={`${period}-${localDateKey(range.start)}-${customStart}`}
+              range={range}
+              period={period}
+            />
+          )}
           <section aria-label={t("Resumen", "Summary")}>
             <div className="progress-stats">
               {[
                 {
                   label: t("Entrenamientos", "Workouts"),
-                  value: `${totals.sessions}${period === "week" && activeDays ? `/${activeDays}` : ""}`,
-                  delta: delta(totals.sessions, previous.sessions),
+                  value: String(totals.sessions),
                   icon: CalendarDays,
                 },
                 {
                   label: t("Tiempo registrado", "Recorded time"),
-                  value: duration(totals.minutes),
-                  delta: delta(totals.minutes, previous.minutes),
+                  value:
+                    totals.sessions > 0 && totals.unknown === totals.sessions
+                      ? "—"
+                      : duration(totals.minutes),
                   icon: Clock,
                 },
                 {
-                  label: t("Series", "Sets"),
-                  value: totals.sets.toLocaleString(locale),
-                  delta: delta(totals.sets, previous.sets),
-                  icon: Dumbbell,
-                },
-                {
-                  label: t("Nuevos récords", "New records"),
-                  value: newRecords.toLocaleString(locale),
-                  delta: null,
-                  icon: Trophy,
+                  label: t("Días entrenados", "Training days"),
+                  value: String(totals.days),
+                  icon: CalendarDays,
                 },
               ].map((card) => (
                 <article className="progress-stat" key={card.label}>
                   <card.icon aria-hidden="true" />
                   <span>{card.label}</span>
                   <strong>{card.value}</strong>
-                  {card.delta && (
-                    <small>
-                      {card.delta}{" "}
-                      {t("vs. período anterior", "vs. previous period")}
-                    </small>
-                  )}
                 </article>
               ))}
             </div>
           </section>
-          {period === "week" && !customStart && (
-            <div className="progress-week-days">
-              {weekly.days.map((d) => (
-                <button
-                  type="button"
-                  key={localDateKey(d.date)}
-                  onClick={() => setDay(localDateKey(d.date))}
-                  data-trained={d.sessions > 0}
-                >
-                  <span>
-                    {d.date.toLocaleDateString(locale, { weekday: "short" })}
-                  </span>
-                  <strong>{d.date.getDate()}</strong>
-                  <small>
-                    {d.sessions
-                      ? `${d.sessions} ${t("sesiones", "sessions")}`
-                      : "—"}
-                  </small>
-                </button>
-              ))}
-            </div>
-          )}
           {!totals.sessions && (
             <p className="progress-empty">
               {t(
@@ -419,7 +387,14 @@ export function ProgressScreen() {
               )}
             </p>
           )}
-          <section className="panel">
+          <details className="panel progress-training-details">
+            <summary>
+              {t("Ver detalle del entrenamiento", "View training details")}
+            </summary>
+            <p>
+              {t("Series", "Sets")}: {totals.sets} ·{" "}
+              {t("Nuevos récords", "New records")}: {newRecords}
+            </p>
             <div className="progress-section-heading">
               <div>
                 <h2>
@@ -472,7 +447,7 @@ export function ProgressScreen() {
                 </p>
               )}
             </details>
-          </section>
+          </details>
         </>
       )}
       {tab === "exercises" && (

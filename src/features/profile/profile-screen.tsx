@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { DeleteAccount } from "./delete-account";
 import { PersonalForm } from "./personal-form";
 import { AccountPanel } from "./account-panel";
-import { SupportPanel } from "./support-panel";
 import { readSnapshotJson } from "@/domain/legacy/read-snapshot";
 import { accountCacheKey, backupRawCache } from "@/lib/storage/account-cache";
 import { fingerprint } from "@/lib/storage/fingerprint";
@@ -46,7 +45,6 @@ export function ProfileScreen() {
           <p>{t("Tus datos y preferencias", "Your details and preferences")}</p>
         </div>
         <div className="flex items-center gap-2">
-          <SupportPanel />
           <Button
             variant="secondary"
             aria-label={t("Configuración", "Settings")}

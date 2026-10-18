@@ -2,7 +2,11 @@
 import { useState } from "react";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  equipmentFilters,
+  matchesEquipment,
+  type EquipmentFilter,
+} from "@/data/exercises";
 import { catalogFor, findExercise, type Entry } from "@/domain/workouts";
 import { replacementPlan } from "@/domain/exercise-replacement";
 import { useApp } from "@/state/app-provider";
@@ -17,15 +21,14 @@ export function ReplacementDialog({
 }) {
   const { snapshot, t } = useApp();
   const source = findExercise(snapshot, entry.id);
-  const [query, setQuery] = useState("");
+  const [equipment, setEquipment] = useState<EquipmentFilter>("Todos");
   const [target, setTarget] = useState("");
-  const [all, setAll] = useState(false);
   const list = catalogFor(snapshot)
     .filter(
       (item) =>
         item.id !== entry.id &&
-        (all || item.group === source?.group) &&
-        item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
+        item.group === source?.group &&
+        matchesEquipment(item, equipment),
     )
     .sort(
       (a, b) =>
@@ -40,19 +43,21 @@ export function ReplacementDialog({
       title={t("Reemplazar ejercicio", "Replace exercise")}
       description={source?.name ?? entry.id}
     >
-      <Input
-        aria-label={t("Buscar reemplazo", "Search replacement")}
-        placeholder={t("Buscar ejercicio", "Search exercise")}
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-      />
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={all}
-          onChange={(event) => setAll(event.target.checked)}
-        />
-        {t("Mostrar todas las zonas", "Show all muscle groups")}
+      <label>
+        {t("Equipamiento", "Equipment")}
+        <select
+          value={equipment}
+          onChange={(event) => {
+            setEquipment(event.target.value as EquipmentFilter);
+            setTarget("");
+          }}
+        >
+          {equipmentFilters.map((value) => (
+            <option key={value} value={value}>
+              {t(value, value)}
+            </option>
+          ))}
+        </select>
       </label>
       <label>
         {t("Ejercicio alternativo", "Alternative exercise")}
@@ -73,6 +78,14 @@ export function ReplacementDialog({
           ))}
         </select>
       </label>
+      {!list.length && (
+        <p role="status">
+          {t(
+            "No hay ejercicios con este equipamiento en la misma zona.",
+            "No exercises with this equipment in the same muscle group.",
+          )}
+        </p>
+      )}
       {plan && (
         <div className="space-y-3">
           <strong>

@@ -50,7 +50,23 @@ test("new accounts complete onboarding before protected app access", async ({
   await login(page);
   await expect(page).toHaveURL(/\/onboarding$/);
   await page.getByLabel("Nombre", { exact: true }).fill("New profile");
-  await page.getByRole("button", { name: "Crear perfil y entrar" }).click();
+  await page
+    .getByRole("combobox", { name: "País", exact: true })
+    .selectOption({ label: "Uruguay" });
+  await page.getByRole("button", { name: "Continuar", exact: true }).click();
+  await expect(page.getByText("Paso 2 de 2 · Tu entrenamiento")).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Experiencia previa", exact: true })
+    .selectOption("regular");
+  await expect(
+    page.getByRole("combobox", {
+      name: "Días de entrenamiento por semana",
+      exact: true,
+    }),
+  ).toHaveValue("3");
+  await page
+    .getByRole("button", { name: "Crear rutina y entrar", exact: true })
+    .click();
   await expect(page).toHaveURL(/\/home$/);
   const audit: unknown = await (
     await page.request.get("http://127.0.0.1:54329/__audit")

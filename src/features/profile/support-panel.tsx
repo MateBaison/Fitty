@@ -5,10 +5,10 @@ import { Headset, Paperclip, X } from "lucide-react";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useApp } from "@/state/app-provider";
+import { translate } from "@/data/translations";
 
-export function SupportPanel() {
-  const { t } = useApp();
+export function SupportPanel({ language = "es" }: { language?: string }) {
+  const t = (es: string, en: string) => translate(language, es, en);
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("");
   const [subject, setSubject] = useState("");
@@ -20,6 +20,7 @@ export function SupportPanel() {
     <>
       <Button
         variant="secondary"
+        size="icon-xl"
         aria-label={t("Soporte", "Support")}
         onClick={() => setOpen(true)}
       >

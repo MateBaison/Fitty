@@ -54,7 +54,32 @@ test("unified periods, glute bars, exercise records and body measurements", asyn
   await expect(
     page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
+  await page
+    .getByText("Ver detalle del entrenamiento", { exact: true })
+    .click();
   await expect(page.locator(".progress-muscle-bars")).toContainText("Glúteos");
+  await page
+    .getByRole("button", { name: "Comparar períodos", exact: true })
+    .click();
+  const comparison = page.getByRole("region", {
+    name: "Comparar períodos",
+    exact: true,
+  });
+  await expect(comparison.getByRole("table")).toBeVisible();
+  await comparison
+    .getByRole("group", { name: "Período A", exact: true })
+    .getByLabel("Desde", { exact: true })
+    .fill("2020-01-01");
+  await comparison
+    .getByRole("group", { name: "Período A", exact: true })
+    .getByLabel("Hasta", { exact: true })
+    .fill("2020-01-31");
+  await expect(
+    comparison.getByRole("row", { name: /Entrenamientos/ }),
+  ).toContainText("0");
+  await page
+    .getByRole("button", { name: "Cerrar comparación", exact: true })
+    .click();
   await expect(page.locator(".progress-stat").first()).toContainText("2");
   await page.screenshot({
     path: `artifacts/progress-redesign-${info.project.name}.png`,

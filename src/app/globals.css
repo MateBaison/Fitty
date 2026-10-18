@@ -2832,3 +2832,123 @@ input[type="range"] {
 .professionals-location-source a {
   text-decoration: underline;
 }
+
+.onboarding-choices,
+.onboarding-groups {
+  display: grid;
+  gap: 12px;
+}
+.onboarding-choices label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  background: var(--card);
+}
+.onboarding-groups {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-block: 12px;
+}
+.onboarding-groups label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.onboarding-suggestion {
+  border-inline-start: 3px solid var(--primary);
+  padding-inline-start: 12px;
+  color: var(--muted-foreground);
+}
+.progress-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.progress-comparison-toggle {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.progress-comparison-toggle p,
+.progress-comparison > p {
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+}
+.progress-training-details > summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.progress-training-details > p {
+  margin-block: 14px;
+}
+.comparison-date-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-block: 18px;
+}
+.comparison-date-grid fieldset {
+  min-width: 0;
+}
+.comparison-date-grid legend {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.comparison-date-grid label {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.comparison-date-grid input {
+  width: 100%;
+  min-width: 0;
+}
+.comparison-table-wrap {
+  overflow-x: auto;
+  margin-block: 16px;
+}
+.progress-comparison table {
+  width: 100%;
+  text-align: start;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.progress-comparison th,
+.progress-comparison td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+}
+@media (max-width: 600px) {
+  .progress-comparison-toggle {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .progress-stats {
+    gap: 8px;
+  }
+  .progress-stat {
+    padding: 12px 9px;
+  }
+  .progress-stat strong {
+    font-size: 1.25rem;
+  }
+  .progress-stat span {
+    font-size: 0.75rem;
+  }
+}
+@media (max-width: 480px) {
+  .app-header-section {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .app-header-section .header-actions {
+    grid-column: 2;
+  }
+  .header-section-title {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding-bottom: 6px;
+  }
+}

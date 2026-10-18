@@ -1,4 +1,5 @@
 "use client";
+import type { Snapshot } from "@/domain/schemas/snapshot";
 import { menstrualCalendarAllowed } from "@/domain/menstrual-calendar";
 import { localeFor } from "@/data/translations";
 import { useEffect, useRef, useState } from "react";
@@ -15,14 +16,21 @@ const codes =
     /../g,
   ) ?? [];
 
-export function PersonalForm({ onboarding = false }: { onboarding?: boolean }) {
+export function PersonalForm({
+  onboarding = false,
+  initialProfile,
+  onContinue,
+}: {
+  onboarding?: boolean;
+  initialProfile?: Snapshot["profile"];
+  onContinue?: (profile: Snapshot["profile"]) => void;
+}) {
   const { snapshot, user, change, flush, notify, t, holdRefresh } = useApp(),
     router = useRouter();
   const photoInput = useRef<HTMLInputElement>(null);
   const [photoSource, setPhotoSource] = useState<string | null>(null);
-  const [draft, setDraft] = useState(snapshot.profile),
-    [busy, setBusy] = useState(false),
-    [country, setCountry] = useState(snapshot.profile.country ?? "");
+  const [draft, setDraft] = useState(initialProfile ?? snapshot.profile),
+    [busy, setBusy] = useState(false);
   const displayNames = new Intl.DisplayNames(
     [localeFor(snapshot.settings.language)],
     { type: "region" },
@@ -45,6 +53,10 @@ export function PersonalForm({ onboarding = false }: { onboarding?: boolean }) {
         const name = z.string().trim().min(1).max(80).safeParse(draft.name);
         if (!name.success)
           return notify(t("Ingresá tu nombre.", "Enter your name."));
+        if (onContinue) {
+          onContinue({ ...draft, name: name.data, email: user.email });
+          return;
+        }
         setBusy(true);
         if (
           !change((state) => {
@@ -190,20 +202,23 @@ export function PersonalForm({ onboarding = false }: { onboarding?: boolean }) {
         </label>
         <label>
           {t("País", "Country")}
-          <Input
-            list="countries"
-            value={country}
-            placeholder={t("Buscar país", "Search country")}
-            onChange={(event) => {
-              setCountry(event.target.value);
-              set("country", event.target.value);
-            }}
-          />
-          <datalist id="countries">
+          <select
+            aria-label={t("País", "Country")}
+            value={draft.country ?? ""}
+            onChange={(event) => set("country", event.target.value)}
+          >
+            <option value="">
+              {t("Seleccioná un país", "Select a country")}
+            </option>
+            {draft.country && !countries.includes(draft.country) && (
+              <option value={draft.country}>{draft.country}</option>
+            )}
             {countries.map((name) => (
-              <option key={name} value={name} />
+              <option key={name} value={name}>
+                {name}
+              </option>
             ))}
-          </datalist>
+          </select>
         </label>
         <label>
           {t("Altura", "Height")} ({snapshot.settings.height})
@@ -288,7 +303,7 @@ export function PersonalForm({ onboarding = false }: { onboarding?: boolean }) {
           {busy
             ? t("Guardando…", "Saving…")
             : onboarding
-              ? t("Crear perfil y entrar", "Create profile and enter")
+              ? t("Continuar", "Continue")
               : t("Guardar cambios", "Save changes")}
         </Button>
       )}

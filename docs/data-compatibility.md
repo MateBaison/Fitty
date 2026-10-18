@@ -100,3 +100,9 @@ Progress period controls accept day/week/month/quarter/year/lifetime. Default ra
 The Compare photos section also accepts standalone dated photo uploads, without a workout or measurements. These use the same bounded `bodyMeasurements` entries and account change/sync path; no sessions are created. Existing workout photos remain selectable. Closing or reopening the upload dialog invalidates any pending image conversion so it cannot populate a later draft.
 
 Pyramid sets use `type: "pyramid"` and the existing optional `dropGroup` identifier to link their segments, preserving the same grouped-set counting and per-segment volume as drop sets. Existing drop sets retain their identifiers and values. Both display decimal segment numbers.
+
+## Guided first use — 2026-10-18
+
+New accounts enter personal details, then choose manual or automatic routine setup. Personal details remain a transient draft until the final action. Finalization appends one routine and sets profile completion atomically through the existing change/flush path, preserving pre-existing routines, history and unknown profile fields. Optional private profile metadata `trainingExperience` and `trainingGoal` survives tolerant readers. A failed cloud flush stays on the retry step; refreshing a locally completed onboarding retries synchronization without creating another routine. Existing completed cloud accounts bypass onboarding. Country selection retains saved names (including legacy free-text values) without normalizing away old values.
+
+Progress period comparisons are derived from two inclusive local date ranges; no historical sessions are changed. Unknown durations remain unknown and excluded from recorded minutes. Replacement candidates are now limited to the original primary muscle group and optionally filtered by equipment; logged sets and stored routines retain the existing replacement behavior.

@@ -733,7 +733,7 @@ test("optional menstrual readiness check offers advice before starting", async (
   await expect(page).toHaveURL(/\/workout$/);
 });
 
-test("exercise replacement preserves logged sets and offers a time-based alternative", async ({
+test("exercise replacement preserves logged sets and filters same-zone equipment", async ({
   page,
 }, info) => {
   await page
@@ -752,14 +752,19 @@ test("exercise replacement preserves logged sets and offers a time-based alterna
     name: "Reemplazar ejercicio",
     exact: true,
   });
-  await dialog.getByLabel("Mostrar todas las zonas", { exact: true }).check();
+  await expect(
+    dialog.getByLabel("Mostrar todas las zonas", { exact: true }),
+  ).toHaveCount(0);
+  await dialog
+    .getByRole("combobox", { name: "Equipamiento", exact: true })
+    .selectOption("Mancuernas");
   await dialog
     .getByRole("combobox", { name: "Ejercicio alternativo", exact: true })
-    .selectOption("plancha");
+    .selectOption("press-banca-inclinado-con-mancuernas");
   await expect(
     dialog.getByText("Propuesta inicial: 2 series", { exact: true }),
   ).toBeVisible();
-  await expect(dialog.getByText(/30 segundos/).first()).toBeVisible();
+  await expect(dialog.getByText(/12 repeticiones/).first()).toBeVisible();
   await page.screenshot({
     path: `artifacts/replacement-${info.project.name}.png`,
   });
@@ -770,8 +775,8 @@ test("exercise replacement preserves logged sets and offers a time-based alterna
     "20",
   );
   await expect(
-    page.getByLabel("Segundos 2 serie 1", { exact: true }),
-  ).toHaveValue("30");
+    page.getByLabel("Repeticiones 2 serie 1", { exact: true }),
+  ).toHaveValue("12");
   await expect(
     page.locator('[data-workout-entry="0"] [data-set-row]'),
   ).toHaveCount(1);
@@ -780,8 +785,8 @@ test("exercise replacement preserves logged sets and offers a time-based alterna
   ).toHaveCount(2);
   await page.reload();
   await expect(
-    page.getByLabel("Segundos 2 serie 1", { exact: true }),
-  ).toHaveValue("30");
+    page.getByLabel("Repeticiones 2 serie 1", { exact: true }),
+  ).toHaveValue("12");
 });
 
 test("weekly summary can select earlier weeks and return to the current week", async ({
@@ -872,7 +877,7 @@ test("weekly summary and translated screens fit a narrow viewport", async ({
   await expect(
     page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".progress-week-days button")).toHaveCount(7);
+  await expect(page.locator(".progress-stat")).toHaveCount(3);
   await expect(page.getByTestId("launch-splash")).toHaveCount(0);
   await page.screenshot({
     path: "artifacts/weekly-summary-narrow.png",

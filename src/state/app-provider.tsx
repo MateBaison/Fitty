@@ -15,6 +15,7 @@ import { SyncController, type SyncView } from "@/lib/supabase/sync-controller";
 import type { Snapshot } from "@/domain/schemas/snapshot";
 import { translate } from "@/data/translations";
 import { AppHeader } from "@/components/layout/app-header";
+import { SupportPanel } from "@/features/profile/support-panel";
 import { SignOutButton } from "@/features/auth/sign-out-button";
 import { RuntimeProvider } from "./runtime-provider";
 
@@ -137,13 +138,20 @@ export function AppProvider({
         view.snapshot?.settings.language ?? controller.current?.language
       }
       accountAction={
-        <SignOutButton
-          iconOnly
-          language={
-            view.snapshot?.settings.language ?? controller.current?.language
-          }
-          flush={() => controller.current?.flush() ?? Promise.resolve(false)}
-        />
+        <>
+          <SupportPanel
+            language={
+              view.snapshot?.settings.language ?? controller.current?.language
+            }
+          />
+          <SignOutButton
+            iconOnly
+            language={
+              view.snapshot?.settings.language ?? controller.current?.language
+            }
+            flush={() => controller.current?.flush() ?? Promise.resolve(false)}
+          />
+        </>
       }
     />
   );
