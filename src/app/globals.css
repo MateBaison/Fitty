@@ -2148,3 +2148,411 @@ input[type="range"] {
   line-height: 1.25;
   white-space: normal;
 }
+
+.progress-dashboard {
+  display: grid;
+  gap: 20px;
+}
+.progress-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+}
+.progress-intro h2 {
+  font-size: clamp(1.35rem, 4vw, 1.9rem);
+  font-weight: 750;
+  margin: 5px 0;
+}
+.progress-intro p,
+.progress-section-heading p {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+.progress-intro > svg {
+  width: 42px;
+  height: 42px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.progress-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 5px;
+  gap: 5px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 18px;
+}
+.progress-tabs button {
+  min-width: 0;
+}
+.progress-period {
+  display: grid;
+  gap: 12px;
+}
+.progress-period-options {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.progress-period-options button {
+  flex: 1;
+  min-width: 48px;
+  padding-inline: 8px;
+}
+.progress-period-navigation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.progress-period-navigation input {
+  min-width: 0;
+  max-width: 180px;
+}
+.progress-date-range {
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.progress-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.progress-section-heading h2,
+.progress-dashboard section > h2 {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.progress-stat {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 18px;
+  padding: 18px;
+}
+.progress-stat > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+}
+.progress-stat > span {
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+.progress-stat > strong {
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.progress-stat > small {
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+}
+.progress-week-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+.progress-week-days button {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 0;
+  border-radius: 14px;
+  padding: 12px 3px;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+.progress-week-days button[data-trained="true"] {
+  background: color-mix(in srgb, var(--primary) 16%, var(--card));
+  border-color: var(--primary);
+}
+.progress-week-days span,
+.progress-week-days small {
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+}
+.progress-week-days strong {
+  font-size: 1.1rem;
+}
+.progress-improvements,
+.progress-records {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 12px;
+}
+.progress-improvements button,
+.progress-records button {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-align: start;
+  background: var(--background);
+  min-width: 0;
+}
+.progress-improvements strong {
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+.progress-improvements small,
+.progress-records small {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+.progress-records svg {
+  width: 18px;
+  height: 18px;
+  color: #fbbf24;
+}
+.progress-records span {
+  font-size: 0.8rem;
+}
+.progress-muscle-bars {
+  display: grid;
+  gap: 16px;
+  margin: 20px 0;
+}
+.progress-muscle-bars > div {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr) 30px;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.85rem;
+}
+.progress-muscle-bars strong {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+.progress-muscle-track {
+  height: 10px;
+  background: var(--muted);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-muscle-track i {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 10px;
+}
+.progress-detail {
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.progress-detail p {
+  margin-top: 12px;
+}
+.progress-subheading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 24px 0 12px;
+}
+.progress-empty {
+  padding: 24px 10px;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  text-align: center;
+}
+.progress-exercise-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.progress-exercise-controls > label:first-child {
+  flex: 1;
+  min-width: 180px;
+}
+.progress-warmups {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+.progress-chart {
+  margin: 24px 0;
+  min-width: 0;
+}
+.progress-chart svg {
+  display: block;
+  width: 100%;
+  max-height: 300px;
+}
+.progress-chart-value {
+  display: grid;
+  gap: 4px;
+  margin: 12px 0;
+}
+.progress-chart-value strong {
+  font-size: 1.7rem;
+  font-variant-numeric: tabular-nums;
+}
+.progress-chart-value span {
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+.progress-point-picker {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 6px 0 12px;
+}
+.progress-point-picker button {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.75rem;
+  min-height: 40px;
+}
+.progress-point-picker button[aria-pressed="true"] {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.progress-history-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+}
+.progress-history-row > strong {
+  font-size: 0.85rem;
+}
+.progress-history-row > span,
+.progress-history-row > p {
+  flex: 1;
+  min-width: 130px;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+.progress-history-row > svg {
+  width: 16px;
+  height: 16px;
+}
+.progress-photo-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.progress-photo-comparison > div {
+  min-width: 0;
+}
+.progress-photo-comparison img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/4;
+  object-fit: contain;
+  background: var(--background);
+  border-radius: 14px;
+  margin-top: 12px;
+}
+.progress-dashboard button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.progress-dashboard select {
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 640px) {
+  .progress-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .progress-stat {
+    padding: 14px;
+  }
+  .progress-muscle-bars > div {
+    grid-template-columns: 85px minmax(0, 1fr) 26px;
+    gap: 8px;
+  }
+  .progress-period-navigation {
+    gap: 3px;
+  }
+  .progress-week-days small {
+    font-size: 0.58rem;
+  }
+}
+.progress-dashboard {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+.progress-dashboard > *,
+.progress-intro > div {
+  min-width: 0;
+}
+.progress-period-options button[aria-pressed="true"] {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--card));
+}
+.progress-period-navigation button {
+  padding-inline: 10px;
+}
+.progress-period-navigation button[data-size="icon"] {
+  width: 38px;
+  padding-inline: 8px;
+}
+@media (max-width: 380px) {
+  .progress-tabs button {
+    padding-inline: 8px;
+    font-size: 0.8rem;
+  }
+  .progress-period-options button {
+    font-size: 0.75rem;
+    min-width: 40px;
+  }
+  .progress-intro > svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+.progress-stat > span,
+.progress-stat > small,
+.progress-intro p,
+.progress-intro h2 {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 380px) {
+  .progress-period-navigation {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 38px;
+  }
+  .progress-period-navigation input {
+    max-width: none;
+    width: 100%;
+  }
+  .progress-period-navigation button:last-child {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+  .progress-period-navigation button {
+    min-width: 0;
+    padding-inline: 6px;
+  }
+}

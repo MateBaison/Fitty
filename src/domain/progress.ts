@@ -1,15 +1,7 @@
 import type { Snapshot } from "./schemas/snapshot";
 import { catalogFor, countSetGroups } from "./workouts";
-export const groups = [
-  "Pectorales",
-  "Espalda",
-  "Hombros",
-  "Bíceps",
-  "Tríceps",
-  "Abdominales",
-  "Piernas",
-  "Gemelos",
-] as const;
+export { muscleGroups as groups } from "./schemas/exercise";
+import { muscleGroups as groups } from "./schemas/exercise";
 export type RecordSet = {
   type?: string;
   kg: number;

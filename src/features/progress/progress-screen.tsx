@@ -1,689 +1,624 @@
 "use client";
-import { CalendarPanel } from "@/features/calendar/calendar-panel";
-import { recordPanel } from "@/domain/personal-records";
-import { AppDialog } from "@/components/ui/app-dialog";
-import { localizedSetTypes } from "@/data/set-types";
-import { localeFor } from "@/data/translations";
-import { useState } from "react";
-import { useApp } from "@/state/app-provider";
-import { catalogFor, localDateKey, validDateKey } from "@/domain/workouts";
-import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useMemo, useState } from "react";
 import {
-  comparable,
-  exerciseHistories,
-  groups,
-  improvement,
-  weeklyData,
-  weeklySummary,
-  lifetimeSummary,
-  sessionVolumeKg,
-  recentImprovements,
-  type RecordSet,
-} from "@/domain/progress";
+  ChevronLeft,
+  ChevronRight,
+  ArrowUpRight,
+  Trophy,
+  Activity,
+  Dumbbell,
+  Clock,
+  CalendarDays,
+} from "lucide-react";
+import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { CalendarPanel } from "@/features/calendar/calendar-panel";
+import { catalogFor, localDateKey, validDateKey } from "@/domain/workouts";
+import {
+  exerciseHistories,
+  recentImprovements,
+  weeklySummary,
+} from "@/domain/progress";
+import { recordPanel } from "@/domain/personal-records";
+import {
+  progressRange,
+  periodSessions,
+  progressTotals,
+  muscleTotals,
+  newRecordCount,
+  type ProgressPeriod,
+} from "@/domain/progress-period";
+import { ProgressChart, type ChartPoint } from "./progress-chart";
 import { shareWorkoutPoster } from "@/features/sharing/workout-poster";
+import { BodyProgress } from "./body-progress";
+const periods = [
+  ["week", "Semana", "Week"],
+  ["month", "Mes", "Month"],
+  ["quarter", "3 meses", "3 months"],
+  ["year", "Año", "Year"],
+  ["all", "Todo", "All"],
+] as const;
 export function ProgressScreen() {
-  const { snapshot, t, notify } = useApp(),
-    [window, setWindow] = useState(4),
+  const { snapshot, t, notify } = useApp();
+  const [tab, setTab] = useState<"summary" | "exercises" | "body">("summary"),
+    [period, setPeriod] = useState<ProgressPeriod>("week"),
+    [anchor, setAnchor] = useState(() => new Date()),
     [selected, setSelected] = useState(""),
-    [summaryDate, setSummaryDate] = useState(() => new Date());
-  const [recordSession, setRecordSession] = useState<string | null>(null);
-  const [includeWarmups, setIncludeWarmups] = useState(true);
-  const bestRecords = recordPanel(snapshot);
-  const selectedRecordSession = snapshot.sessions.find(
-    (session) => session.id === recordSession,
+    [metric, setMetric] = useState("weight"),
+    [warmups, setWarmups] = useState(false),
+    [day, setDay] = useState<string | null>(null);
+  const unit = snapshot.settings.weight ?? "kg",
+    factor = unit === "lb" ? 2.20462 : 1,
+    locale = snapshot.settings.language ?? "es";
+  const range = progressRange(period, anchor),
+    chosenSessions = periodSessions(snapshot, range),
+    scoped = { ...snapshot, sessions: chosenSessions },
+    totals = progressTotals(scoped);
+  const previousAnchor = new Date(anchor);
+  if (period === "week") previousAnchor.setDate(previousAnchor.getDate() - 7);
+  else if (period === "month")
+    previousAnchor.setMonth(previousAnchor.getMonth() - 1, 1);
+  else if (period === "quarter")
+    previousAnchor.setMonth(previousAnchor.getMonth() - 3, 1);
+  else previousAnchor.setFullYear(previousAnchor.getFullYear() - 1);
+  const previous = progressTotals({
+    ...snapshot,
+    sessions: periodSessions(snapshot, progressRange(period, previousAnchor)),
+  });
+  const catalog = catalogFor(snapshot, true),
+    histories = useMemo(
+      () => exerciseHistories(snapshot, warmups),
+      [snapshot, warmups],
+    ),
+    recordedCatalog = catalog.filter((e) => histories.has(e.id));
+  const selectedId = selected || recordedCatalog[0]?.id || "",
+    selectedExercise = catalog.find((e) => e.id === selectedId);
+  const history = (histories.get(selectedId) ?? []).filter(
+    (r) => r.date >= range.start && r.date < range.end,
   );
-  const locale = localeFor(snapshot.settings.language);
-  const [allTime, setAllTime] = useState(false);
-  const [dayDetails, setDayDetails] = useState<string | null>(null);
-  const weekly = weeklySummary(snapshot, summaryDate);
-  const summary = allTime ? lifetimeSummary(snapshot) : weekly;
-  const activeDays = snapshot.routines.find(
-    (routine) => routine.id === snapshot.selected,
-  )?.days.length;
-  const moveWeek = (offset: number) => {
-    const next = new Date(weekly.start);
-    next.setDate(next.getDate() + offset * 7);
-    setSummaryDate(next);
-    setAllTime(false);
+  const allRecords = useMemo(() => recordPanel(snapshot), [snapshot]),
+    bestRecords = allRecords.filter(
+      (r) =>
+        r.exerciseId === selectedId &&
+        new Date(r.date) >= range.start &&
+        new Date(r.date) < range.end,
+    );
+  const advances = recentImprovements(snapshot).filter(
+    (a) => a.date >= range.start && a.date < range.end,
+  );
+  const newRecords = useMemo(
+    () => newRecordCount(snapshot, chosenSessions),
+    [snapshot, period, anchor],
+  );
+  const counts = muscleTotals(scoped),
+    muscles = Object.entries(counts).sort((a, b) => b[1] - a[1]),
+    max = Math.max(1, ...Object.values(counts));
+  const weekly = weeklySummary(snapshot, anchor),
+    activeDays = snapshot.routines.find((r) => r.id === snapshot.selected)?.days
+      .length;
+  const move = (direction: number) => {
+    const next = new Date(anchor);
+    if (period === "week") next.setDate(next.getDate() + direction * 7);
+    else if (period === "year")
+      next.setFullYear(next.getFullYear() + direction);
+    else
+      next.setMonth(
+        next.getMonth() + direction * (period === "quarter" ? 3 : 1),
+        1,
+      );
+    setAnchor(next);
   };
   const duration = (minutes: number) =>
-    `${Math.floor(Math.round(minutes) / 60)} h ${Math.round(minutes) % 60} min`;
-  const history = exerciseHistories(snapshot, includeWarmups),
-    catalog = catalogFor(snapshot, true),
-    weeks = weeklyData(snapshot, window),
-    unit = snapshot.settings.weight ?? "kg",
-    factor = unit === "lb" ? 2.20462 : 1;
-  const counts = Object.fromEntries(
-    groups.map((group) => [
-      group,
-      weeks.reduce((sum, week) => sum + (week.groups[group] ?? 0), 0),
-    ]),
-  );
-  const format = (set: RecordSet) =>
-    `${localizedSetTypes(snapshot.settings.language ?? "es").find((type) => type.id === (set.type ?? "normal"))?.letter ?? "N"} · ${(set.kg * factor).toFixed(1)} ${unit} × ${set.value} ${set.metric === "seconds" ? "s" : t("Rep", "Reps")}`;
-  const advances = recentImprovements(snapshot);
-  const records = history.get(selected) ?? [],
-    recent = records.slice(-5),
-    plateau =
-      recent.length === 5 &&
-      Date.now() - recent[4]!.date.getTime() < 60 * 864e5 &&
-      recent
-        .slice(1)
-        .every(
-          (record, index) =>
-            comparable(record, recent[index]) &&
-            !improvement(record, recent[index]),
-        );
-  const lastSession = [...snapshot.sessions].sort(
-    (a, b) => Date.parse(b.date) - Date.parse(a.date),
-  )[0];
+    `${Math.floor(minutes / 60)} h ${Math.round(minutes % 60)} min`;
+  const formatSet = (weight: number, quantity: number, metric: string) =>
+    `${(weight * factor).toLocaleString(locale, { maximumFractionDigits: 1 })} ${unit} × ${quantity} ${metric === "seconds" ? "s" : t("Rep", "Reps")}`;
+  const points: ChartPoint[] = history.flatMap((r) => {
+    const sets = r.sets.filter((s) =>
+      metric === "seconds"
+        ? s.metric === "seconds"
+        : metric === "reps" || metric === "volume"
+          ? s.metric === "reps"
+          : true,
+    );
+    if (!sets.length) return [];
+    return [
+      {
+        date: r.date,
+        value:
+          metric === "weight"
+            ? Math.max(...sets.map((s) => s.kg * factor))
+            : metric === "volume"
+              ? sets.reduce((n, s) => n + s.kg * factor * s.value, 0)
+              : Math.max(...sets.map((s) => s.value)),
+        detail:
+          metric === "weight"
+            ? formatSet(
+                ...(() => {
+                  const s = [...sets].sort(
+                    (a, b) => b.kg - a.kg || b.value - a.value,
+                  )[0]!;
+                  return [s.kg, s.value, s.metric] as const;
+                })(),
+              )
+            : undefined,
+      },
+    ];
+  });
+  const metricLabel =
+    metric === "weight"
+      ? t("Carga máxima", "Maximum load")
+      : metric === "reps"
+        ? t("Repeticiones máximas por serie", "Maximum repetitions per set")
+        : metric === "seconds"
+          ? t("Segundos máximos por serie", "Maximum seconds per set")
+          : t("Volumen", "Volume");
+  const delta = (now: number, before: number) =>
+    period === "all"
+      ? null
+      : before > 0
+        ? `${now >= before ? "+" : ""}${Math.round(((now - before) / before) * 100)}%`
+        : now > 0
+          ? t("Primer registro", "First entry")
+          : "—";
   return (
-    <>
-      {dayDetails && (
+    <div className="progress-dashboard">
+      {day && (
         <CalendarPanel
-          key={dayDetails}
-          initialDate={dayDetails}
+          key={day}
+          initialDate={day}
           dialogOnly
-          onClose={() => setDayDetails(null)}
+          onClose={() => setDay(null)}
         />
       )}
-      <section
-        className="panel weekly-summary"
-        aria-labelledby="weekly-summary-title"
+      <div className="progress-intro">
+        <div>
+          <span className="eyebrow">{t("Tu recorrido", "Your journey")}</span>
+          <h2>{t("Cada entrenamiento cuenta", "Every workout counts")}</h2>
+          <p>
+            {t(
+              "Mirá lo que hiciste y cómo venís avanzando.",
+              "See what you did and how you are progressing.",
+            )}
+          </p>
+        </div>
+        <Activity aria-hidden="true" />
+      </div>
+      <div
+        className="progress-tabs"
+        role="group"
+        aria-label={t("Secciones de progreso", "Progress sections")}
       >
-        <h2 id="weekly-summary-title">
-          {allTime
-            ? t("Resumen total", "Lifetime summary")
-            : t("Resumen semanal", "Weekly summary")}
-        </h2>
-        <div className="my-3 flex flex-wrap items-center gap-2">
+        {(
+          [
+            ["summary", "Resumen", "Summary"],
+            ["exercises", "Ejercicios", "Exercises"],
+            ["body", "Cuerpo", "Body"],
+          ] as const
+        ).map(([id, es, en]) => (
           <Button
-            type="button"
-            variant="secondary"
-            size="icon"
-            aria-label={t("Semana anterior", "Previous week")}
-            onClick={() => moveWeek(-1)}
+            key={id}
+            variant={tab === id ? "default" : "ghost"}
+            aria-pressed={tab === id}
+            onClick={() => setTab(id)}
           >
-            <ChevronLeft aria-hidden="true" />
+            {t(es, en)}
           </Button>
-          <Input
-            type="date"
-            className="summary-week-date min-w-0"
-            aria-label={t("Elegir semana", "Choose week")}
-            value={localDateKey(weekly.start)}
-            disabled={allTime}
-            onChange={(event) => {
-              if (validDateKey(event.target.value)) {
-                setSummaryDate(new Date(`${event.target.value}T12:00:00`));
-                setAllTime(false);
-              }
-            }}
-          />
-          <Button
-            type="button"
-            variant="secondary"
-            size="icon"
-            aria-label={t("Semana siguiente", "Next week")}
-            onClick={() => moveWeek(1)}
-          >
-            <ChevronRight aria-hidden="true" />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="text-xs"
-            onClick={() => {
-              setSummaryDate(new Date());
-              setAllTime(false);
-            }}
-          >
-            {t("Semana actual", "Current week")}
-          </Button>
-          <Button
-            variant="outline"
-            aria-pressed={allTime}
-            onClick={() => setAllTime(true)}
-          >
-            {t("Siempre", "Lifetime")}
-          </Button>
+        ))}
+      </div>
+      <section
+        className="progress-period"
+        aria-label={t("Período de progreso", "Progress period")}
+      >
+        <div className="progress-period-options">
+          {periods.map(([id, es, en]) => (
+            <Button
+              key={id}
+              size="sm"
+              variant={period === id ? "secondary" : "ghost"}
+              aria-pressed={period === id}
+              onClick={() => setPeriod(id)}
+            >
+              {t(es, en)}
+            </Button>
+          ))}
         </div>
-        <p className="text-sm text-muted-foreground">
-          {allTime ? (
-            t("Todos los entrenamientos registrados", "All recorded workouts")
-          ) : (
-            <>
-              {weekly.start.toLocaleDateString(locale, {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}{" "}
-              · {t("Semana de lunes a domingo", "Monday to Sunday")}
-            </>
-          )}
+        {period !== "all" && (
+          <div className="progress-period-navigation">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={t("Período anterior", "Previous period")}
+              onClick={() => move(-1)}
+            >
+              <ChevronLeft aria-hidden="true" />
+            </Button>
+            <label className="sr-only" htmlFor="progress-date">
+              {t("Fecha de referencia", "Reference date")}
+            </label>
+            <Input
+              id="progress-date"
+              type="date"
+              value={localDateKey(period === "week" ? range.start : anchor)}
+              onChange={(e) => {
+                if (validDateKey(e.target.value))
+                  setAnchor(new Date(`${e.target.value}T12:00:00`));
+              }}
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={t("Período siguiente", "Next period")}
+              onClick={() => move(1)}
+            >
+              <ChevronRight aria-hidden="true" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setAnchor(new Date())}
+            >
+              {t("Hoy", "Today")}
+            </Button>
+          </div>
+        )}
+        <p className="progress-date-range">
+          {period === "all"
+            ? t("Todos los entrenamientos registrados", "All recorded workouts")
+            : `${range.start.toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })} — ${new Date(range.end.getTime() - 1).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })}`}
         </p>
-        <div className="metric-grid">
-          <div>
-            <strong>
-              {summary.sessions}
-              {!allTime && activeDays ? `/${activeDays}` : ""}
-            </strong>
-            <small>{t("sesiones", "sessions")}</small>
+      </section>
+      {tab === "summary" && (
+        <>
+          <section aria-labelledby="progress-summary-title">
+            <div className="progress-section-heading">
+              <h2 id="progress-summary-title">
+                {period === "week"
+                  ? t("Resumen semanal", "Weekly summary")
+                  : period === "month"
+                    ? t("Resumen mensual", "Monthly summary")
+                    : t("Resumen del período", "Period summary")}
+              </h2>
+            </div>
+            <div className="progress-stats">
+              {[
+                {
+                  label: t("Entrenamientos", "Workouts"),
+                  value: `${totals.sessions}${period === "week" && activeDays ? `/${activeDays}` : ""}`,
+                  delta: delta(totals.sessions, previous.sessions),
+                  icon: CalendarDays,
+                },
+                {
+                  label: t("Tiempo registrado", "Recorded time"),
+                  value: duration(totals.minutes),
+                  delta: delta(totals.minutes, previous.minutes),
+                  icon: Clock,
+                },
+                {
+                  label: t("Series", "Sets"),
+                  value: totals.sets.toLocaleString(locale),
+                  delta: delta(totals.sets, previous.sets),
+                  icon: Dumbbell,
+                },
+                {
+                  label: t("Nuevos récords", "New records"),
+                  value: newRecords.toLocaleString(locale),
+                  delta: null,
+                  icon: Trophy,
+                },
+              ].map((card) => (
+                <article className="progress-stat" key={card.label}>
+                  <card.icon aria-hidden="true" />
+                  <span>{card.label}</span>
+                  <strong>{card.value}</strong>
+                  {card.delta && (
+                    <small>
+                      {card.delta}{" "}
+                      {t("vs. período anterior", "vs. previous period")}
+                    </small>
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+          {period === "week" && (
+            <div className="progress-week-days">
+              {weekly.days.map((d) => (
+                <button
+                  type="button"
+                  key={localDateKey(d.date)}
+                  onClick={() => setDay(localDateKey(d.date))}
+                  data-trained={d.sessions > 0}
+                >
+                  <span>
+                    {d.date.toLocaleDateString(locale, { weekday: "short" })}
+                  </span>
+                  <strong>{d.date.getDate()}</strong>
+                  <small>
+                    {d.sessions
+                      ? `${d.sessions} ${t("sesiones", "sessions")}`
+                      : "—"}
+                  </small>
+                </button>
+              ))}
+            </div>
+          )}
+          {!totals.sessions && (
+            <p className="progress-empty">
+              {t(
+                "Todavía no hay entrenamientos en este período. Tu progreso va a aparecer después de guardar una sesión.",
+                "No workouts in this period yet. Your progress will appear after you save a session.",
+              )}
+            </p>
+          )}
+          <section className="panel">
+            <div className="progress-section-heading">
+              <div>
+                <h2>{t("Avances recientes", "Recent improvements")}</h2>
+                <p>
+                  {t(
+                    "Últimas cuatro semanas, dentro del período elegido.",
+                    "Last four weeks, within the selected period.",
+                  )}
+                </p>
+              </div>
+              <Button variant="ghost" onClick={() => setTab("exercises")}>
+                {t("Ver ejercicios", "View exercises")}
+                <ArrowUpRight aria-hidden="true" />
+              </Button>
+            </div>
+            {advances.length ? (
+              <div className="progress-improvements">
+                {advances.slice(0, 3).map((a) => (
+                  <button
+                    type="button"
+                    key={a.id}
+                    onClick={() => {
+                      setSelected(a.id);
+                      setTab("exercises");
+                    }}
+                  >
+                    <span>
+                      {catalog.find((e) => e.id === a.id)?.name ?? a.id}
+                    </span>
+                    <strong>
+                      {formatSet(
+                        a.result.before.kg,
+                        a.result.before.value,
+                        a.result.before.metric,
+                      )}{" "}
+                      →{" "}
+                      {formatSet(
+                        a.result.after.kg,
+                        a.result.after.value,
+                        a.result.after.metric,
+                      )}
+                    </strong>
+                    <small>{a.date.toLocaleDateString(locale)}</small>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="progress-empty">
+                {t(
+                  "Las mejoras aparecerán cuando tengas sesiones comparables. Tu primera marca es el punto de partida.",
+                  "Improvements will appear when you have comparable sessions. Your first performance is your starting point.",
+                )}
+              </p>
+            )}
+          </section>
+          <section className="panel">
+            <div className="progress-section-heading">
+              <div>
+                <h2>
+                  {t("Series por zona muscular", "Sets per muscle group")}
+                </h2>
+                <p>
+                  {t(
+                    "Cómo distribuiste el trabajo en este período.",
+                    "How you distributed your training in this period.",
+                  )}
+                </p>
+              </div>
+            </div>
+            <div
+              className="progress-muscle-bars"
+              role="img"
+              aria-label={`${t("Series por zona muscular", "Sets per muscle group")}: ${muscles.map(([g, n]) => `${t(g, g)} ${n}`).join(", ")}`}
+            >
+              {muscles.map(([g, n]) => (
+                <div key={g}>
+                  <span>{t(g, g)}</span>
+                  <div className="progress-muscle-track">
+                    <i style={{ width: `${(n / max) * 100}%` }} />
+                  </div>
+                  <strong>{n}</strong>
+                </div>
+              ))}
+            </div>
+            <details className="progress-detail">
+              <summary>{t("Ver detalle", "View details")}</summary>
+              <p>
+                {t(
+                  "Cada ejercicio cuenta para su zona principal. No mide intensidad, recuperación ni entrenamiento de músculos secundarios.",
+                  "Each exercise counts towards its main muscle group. This does not measure intensity, recovery or secondary muscle training.",
+                )}
+              </p>
+              <p>
+                {t("Días entrenados", "Training days")}: {totals.days} ·{" "}
+                {t("Volumen", "Volume")}:{" "}
+                {Math.round(totals.volumeKg * factor).toLocaleString(locale)}{" "}
+                {unit}
+              </p>
+              {totals.unknown > 0 && (
+                <p>
+                  {totals.unknown}{" "}
+                  {t(
+                    "sesiones sin duración registrada",
+                    "sessions without recorded duration",
+                  )}
+                </p>
+              )}
+            </details>
+          </section>
+        </>
+      )}
+      {tab === "exercises" && (
+        <section className="panel">
+          <div className="progress-section-heading">
+            <div>
+              <h2>{t("Evolución por ejercicio", "Exercise progression")}</h2>
+              <p>
+                {t(
+                  "Tus marcas, evolución e historial en un solo lugar.",
+                  "Your bests, progression and history in one place.",
+                )}
+              </p>
+            </div>
           </div>
-          <div>
-            <strong>{summary.trainedDays}</strong>
-            <small>{t("Días entrenados", "Training days")}</small>
-          </div>
-          <div>
-            <strong>{duration(summary.minutes)}</strong>
-            <small>{t("Tiempo registrado", "Recorded time")}</small>
-          </div>
-          <div>
-            <strong>
-              {Math.round(summary.volumeKg * factor).toLocaleString(locale)}{" "}
-              {unit}
-            </strong>
-            <small>{t("Volumen", "Volume")}</small>
-          </div>
-        </div>
-        {!allTime && (
-          <div className="weekly-duration-days">
-            {weekly.days.map((day) => (
-              <button
-                type="button"
-                onClick={() => setDayDetails(localDateKey(day.date))}
-                key={day.date.toISOString()}
-                className="weekly-duration-day"
+          <label>
+            {t("Elegí un ejercicio", "Choose an exercise")}
+            <select
+              value={selectedId}
+              onChange={(e) => setSelected(e.target.value)}
+            >
+              {!recordedCatalog.length && (
+                <option value="">
+                  {t("Sin ejercicios registrados", "No exercises recorded")}
+                </option>
+              )}
+              {recordedCatalog.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="progress-exercise-controls">
+            <label>
+              {t("Métrica", "Metric")}
+              <select
+                value={metric}
+                onChange={(e) => setMetric(e.target.value)}
               >
-                <strong>
-                  {day.date.toLocaleDateString(locale, { weekday: "short" })}
-                </strong>
+                <option value="weight">
+                  {t("Carga máxima", "Maximum load")} ({unit})
+                </option>
+                <option value="reps">{t("Repeticiones", "Repetitions")}</option>
+                <option value="volume">
+                  {t("Volumen", "Volume")} ({unit})
+                </option>
+                <option value="seconds">{t("Tiempo", "Time")} (s)</option>
+              </select>
+            </label>
+            <label className="progress-warmups">
+              <input
+                type="checkbox"
+                checked={warmups}
+                onChange={(e) => setWarmups(e.target.checked)}
+              />
+              {t("Incluir calentamientos", "Include warm-ups")}
+            </label>
+          </div>
+          <ProgressChart
+            key={`${selectedId}-${metric}-${period}-${localDateKey(anchor)}`}
+            points={points}
+            label={metricLabel}
+            unit={
+              metric === "weight" || metric === "volume"
+                ? unit
+                : metric === "seconds"
+                  ? "s"
+                  : ""
+            }
+          />
+          <h3 className="progress-subheading">
+            {t("Récords personales", "Personal records")}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t(
+              "Mejores marcas históricas logradas en el período elegido. No incluye calentamientos.",
+              "All-time best performances achieved in the selected period. Warm-ups excluded.",
+            )}
+          </p>
+          <div className="progress-records">
+            {bestRecords.map((r, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setDay(localDateKey(r.date))}
+              >
+                <Trophy aria-hidden="true" />
                 <span>
-                  {day.sessions && day.unknown === day.sessions
-                    ? "—"
-                    : duration(day.minutes)}
+                  {r.kind === "weight"
+                    ? t("Mayor peso", "Highest weight")
+                    : r.metric === "seconds"
+                      ? t("Mayor tiempo", "Longest hold")
+                      : t("Más repeticiones", "Most repetitions")}
                 </span>
-                <small>
-                  {day.sessions} {t("sesiones", "sessions")}
-                  {day.unknown ? " *" : ""}
-                </small>
+                <strong>{formatSet(r.weight, r.quantity, r.metric)}</strong>
+                <small>{new Date(r.date).toLocaleDateString(locale)}</small>
               </button>
             ))}
           </div>
-        )}
-        <p className="mt-3 text-sm text-muted-foreground">
-          {t(
-            "El tiempo cuenta desde el inicio hasta que guardás el entrenamiento, incluidos los descansos.",
-            "Time runs from workout start until saving, including rests.",
-          )}
-        </p>
-        {summary.unknown > 0 && (
-          <p role="status" className="text-sm text-muted-foreground">
-            * {summary.unknown}{" "}
-            {t(
-              "sesiones sin duración registrada; no se inventa su tiempo.",
-              "sessions have no recorded duration; their time is not estimated.",
-            )}
-          </p>
-        )}
-      </section>
-      <details className="panel recent-improvements">
-        <summary>
-          <h2>{t("Avances recientes", "Recent improvements")}</h2>
-          <ChevronDown aria-hidden="true" />
-        </summary>
-        <p className="my-3 text-sm text-muted-foreground">
-          {t("Últimas cuatro semanas", "Last four weeks")}
-        </p>
-        {advances.length ? (
-          advances.map(({ id, date, result }) => (
-            <article className="result-card result-maintain" key={id}>
-              <h3>
-                {catalog.find((exercise) => exercise.id === id)?.name ?? id}
-              </h3>
-              <p>
-                {format(result.before)} →{" "}
-                <strong>{format(result.after)}</strong>
-              </p>
-              <small>{date.toLocaleDateString(locale)}</small>
-            </article>
-          ))
-        ) : (
-          <p>
-            {t(
-              "Aún no hay dos sesiones comparables de un ejercicio con una mejora registrada.",
-              "There are not yet two comparable exercise sessions with a recorded improvement.",
-            )}
-          </p>
-        )}
-        <p className="mt-3 text-sm text-muted-foreground">
-          {t(
-            "Más peso, o más repeticiones o segundos con el mismo peso. No incluye calentamientos.",
-            "More weight, or more repetitions or seconds at the same weight. Warm-ups excluded.",
-          )}
-        </p>
-      </details>
-      <section className="panel">
-        <h2>{t("Récords personales", "Personal records")}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t(
-            "Mejores marcas por ejercicio y carga. No incluye calentamientos.",
-            "Best performances by exercise and load. Warm-ups excluded.",
-          )}
-        </p>
-        <label>
-          {t("Ejercicio", "Exercise")}
-          <select
-            value={selected}
-            onChange={(event) => setSelected(event.target.value)}
-          >
-            <option value="">{t("Todos", "All")}</option>
-            {catalog
-              .filter((exercise) =>
-                bestRecords.some((record) => record.exerciseId === exercise.id),
-              )
-              .map((exercise) => (
-                <option key={exercise.id} value={exercise.id}>
-                  {exercise.name}
-                </option>
-              ))}
-          </select>
-        </label>
-        <div className="record-panel-list">
-          {bestRecords
-            .filter((record) => !selected || record.exerciseId === selected)
-            .map((record, index) => (
-              <Button
-                key={index}
-                variant="secondary"
-                className="record-panel-item"
-                onClick={() => setRecordSession(record.sessionId)}
-              >
-                <strong>
-                  {catalog.find((exercise) => exercise.id === record.exerciseId)
-                    ?.name ?? record.exerciseId}
-                </strong>
-                <span>
-                  {record.kind === "weight"
-                    ? t("Mayor peso", "Highest weight")
-                    : record.metric === "seconds"
-                      ? t("Mayor tiempo", "Longest hold")
-                      : t("Más repeticiones", "Most repetitions")}
-                  : {(record.weight * factor).toFixed(1)} {unit} ×{" "}
-                  {record.quantity}{" "}
-                  {record.metric === "seconds" ? "s" : t("Rep", "Reps")}
-                </span>
-                <small>
-                  {new Date(record.date).toLocaleDateString(locale)}
-                </small>
-              </Button>
-            ))}
           {!bestRecords.length && (
-            <p>
+            <p className="progress-empty">
               {t(
-                "Todavía no hay marcas registradas.",
-                "No performances recorded yet.",
+                "No hay mejores marcas históricas en este período.",
+                "No all-time best performances in this period.",
               )}
             </p>
           )}
-        </div>
-      </section>
-      <AppDialog
-        open={!!selectedRecordSession}
-        onClose={() => setRecordSession(null)}
-        title={t("Entrenamiento del récord", "Record workout")}
-      >
-        {selectedRecordSession && (
-          <>
-            <strong>
-              {selectedRecordSession.day} · {selectedRecordSession.routine}
-            </strong>
-            <p>
-              {new Date(selectedRecordSession.date).toLocaleDateString(locale)}
+          <h3 className="progress-subheading">
+            {t("Historial de entrenamientos", "Workout history")}
+          </h3>
+          {[...history].reverse().map((r, i) => (
+            <button
+              className="progress-history-row"
+              type="button"
+              key={i}
+              onClick={() => setDay(localDateKey(r.date))}
+            >
+              <strong>{r.date.toLocaleDateString(locale)}</strong>
+              <span>
+                {r.sets
+                  .map((s) => formatSet(s.kg, s.value, s.metric))
+                  .join(" · ")}
+              </span>
+              <ArrowUpRight aria-hidden="true" />
+            </button>
+          ))}
+          {selectedExercise && !history.length && (
+            <p className="progress-empty">
+              {t(
+                "No hay registros de este ejercicio en el período elegido.",
+                "No entries for this exercise in the selected period.",
+              )}
             </p>
-            {selectedRecordSession.exercises?.map((exercise, index) => (
-              <div key={index}>
-                <strong>
-                  {catalog.find((item) => item.id === exercise.id)?.name ??
-                    exercise.id}
-                </strong>
-                {exercise.performedSets?.map((set, number) => (
-                  <p key={number}>
-                    {
-                      localizedSetTypes(
-                        snapshot.settings.language ?? "es",
-                      ).find((type) => type.id === (set.type ?? "normal"))?.name
-                    }{" "}
-                    · {set.kg ?? 0} {selectedRecordSession.weightUnit ?? "kg"} ×{" "}
-                    {set.seconds ?? set.reps ?? 0}{" "}
-                    {set.seconds != null ? "s" : t("Rep", "Reps")}
-                  </p>
-                ))}
-              </div>
-            ))}
-          </>
-        )}
-      </AppDialog>
-      <label className="mb-4 flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={includeWarmups}
-          onChange={(event) => setIncludeWarmups(event.target.checked)}
-        />
-        {t(
-          "Incluir calentamientos en el historial de progreso",
-          "Include warm-ups in progress history",
-        )}
-      </label>
-      <p className="page-description">
-        {t(
-          "Cambios reales en tus ejercicios y hábitos de entrenamiento.",
-          "Real changes in your exercises and training habits.",
-        )}
-      </p>
-      <section className="panel">
-        <h2>{t("Series por zona muscular", "Sets per muscle group")}</h2>
-        <label>
-          {t("Período", "Period")}
-          <select
-            value={window}
-            onChange={(event) => setWindow(Number(event.target.value))}
-          >
-            <option value={4}>{t("4 semanas", "4 weeks")}</option>
-            <option value={8}>{t("8 semanas", "8 weeks")}</option>
-          </select>
-        </label>
-        <div className="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>{t("Zona", "Muscle group")}</th>
-                {weeks.map((week) => (
-                  <th key={week.start.toISOString()}>
-                    {week.start.toLocaleDateString(locale, {
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {groups.map((group) => (
-                <tr key={group}>
-                  <th>{t(group, group)}</th>
-                  {weeks.map((week) => (
-                    <td key={week.start.toISOString()}>{week.groups[group]}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <Octagon counts={counts} />
-        <p className="text-sm text-muted-foreground">
-          {t(
-            "Cada ejercicio cuenta para su zona principal. No mide intensidad, recuperación ni entrenamiento de músculos secundarios.",
-            "Each exercise counts towards its main muscle group. This does not measure intensity, recovery or secondary muscle training.",
           )}
-        </p>
-      </section>
-      <section className="panel">
-        <h2>{t("Evolución por ejercicio", "Exercise progression")}</h2>
-        <label>
-          {t("Elegí un ejercicio", "Choose an exercise")}
-          <select
-            value={selected}
-            onChange={(event) => setSelected(event.target.value)}
-          >
-            <option value="">
-              {t("Seleccionar ejercicio", "Select exercise")}
-            </option>
-            {[...history.keys()].map((id) => (
-              <option key={id} value={id}>
-                {catalog.find((exercise) => exercise.id === id)?.name ?? id}
-              </option>
-            ))}
-          </select>
-        </label>
-        {selected && (
-          <>
-            {plateau && (
-              <p className="result-card">
-                {t(
-                  "Sin una mejora comparable en las últimas 4 sesiones. Es una señal para revisar tu entrenamiento, no un diagnóstico de estancamiento.",
-                  "No comparable improvement in the last 4 sessions. This is a prompt to review your training, not a diagnosis of a plateau.",
-                )}
-              </p>
-            )}
-            <p className="my-4">
-              {records.length} {t("sesiones ·", "sessions ·")}{" "}
-              {records.length > 1
-                ? Math.round(
-                    (records.at(-1)!.date.getTime() -
-                      records[0]!.date.getTime()) /
-                      864e5,
-                  )
-                : 0}{" "}
-              {t(
-                "días entre la primera y la última",
-                "days between the first and last",
-              )}
-            </p>
-            <Trend
-              values={records.map((record) =>
-                Math.max(...record.sets.map((set) => set.kg * factor)),
-              )}
-              label={`${t("Carga máxima", "Maximum load")} (${unit})`}
-            />
-            <Trend
-              values={records
-                .filter((record) =>
-                  record.sets.some((set) => set.metric === "reps"),
-                )
-                .map((record) =>
-                  Math.max(
-                    ...record.sets
-                      .filter((set) => set.metric === "reps")
-                      .map((set) => set.value),
-                  ),
-                )}
-              label={t(
-                "Repeticiones máximas por serie",
-                "Maximum repetitions per set",
-              )}
-            />
-            <Trend
-              values={records
-                .filter((record) =>
-                  record.sets.some((set) => set.metric === "seconds"),
-                )
-                .map((record) =>
-                  Math.max(
-                    ...record.sets
-                      .filter((set) => set.metric === "seconds")
-                      .map((set) => set.value),
-                  ),
-                )}
-              label={t("Segundos máximos por serie", "Maximum seconds per set")}
-            />
-            <div className="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>{t("Fecha", "Date")}</th>
-                    <th>{t("Series registradas", "Recorded sets")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {records
-                    .slice(-8)
-                    .reverse()
-                    .map((record, index) => (
-                      <tr key={index}>
-                        <td>{record.date.toLocaleDateString(locale)}</td>
-                        <td>{record.sets.map(format).join(" · ")}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t(
-                "Los gráficos muestran máximos por sesión, no una misma serie. Consultá la tabla para comparar peso y cantidad conjuntamente.",
-                "Charts show session maximums, which may come from different sets. Use the table to compare weight and quantity together.",
-              )}
-            </p>
-          </>
-        )}
-      </section>
-      <details className="panel">
-        <summary>{t("Estadísticas acumuladas", "Overall statistics")}</summary>
-        <div className="metric-grid">
-          <div>
-            <strong>
-              {snapshot.sessions.reduce(
-                (sum, session) => sum + (session.sets ?? 0),
-                0,
-              )}
-            </strong>
-            <small>{t("Series", "Sets")}</small>
-          </div>
-          <div>
-            <strong>
-              {Math.round(
-                snapshot.sessions.reduce(
-                  (sum, session) =>
-                    sum +
-                    (session.volumeKg ??
-                      (session.volume ?? 0) /
-                        (session.weightUnit === "lb" ? 2.20462 : 1)),
-                  0,
-                ) * factor,
-              )}{" "}
-              {unit}
-            </strong>
-            <small>{t("Volumen", "Volume")}</small>
-          </div>
-          <div>
-            <strong>
-              {snapshot.sessions.reduce(
-                (sum, session) => sum + (session.reps ?? 0),
-                0,
-              )}
-            </strong>
-            <small>{t("Repeticiones", "Repetitions")}</small>
-          </div>
-        </div>
-      </details>
-      {lastSession && (
+        </section>
+      )}
+      {tab === "exercises" && snapshot.sessions.length > 0 && (
         <Button
-          className="mt-4"
+          variant="secondary"
           onClick={() => {
-            void shareWorkoutPoster(snapshot, lastSession).catch(() =>
-              notify("No se pudo compartir el entrenamiento."),
+            const latest = [...snapshot.sessions].sort(
+              (a, b) => Date.parse(b.date) - Date.parse(a.date),
+            )[0]!;
+            void shareWorkoutPoster(snapshot, latest).catch(() =>
+              notify(
+                t(
+                  "No se pudo compartir el entrenamiento.",
+                  "Could not share workout.",
+                ),
+              ),
             );
           }}
         >
           {t("Compartir último entrenamiento", "Share latest workout")}
         </Button>
       )}
-    </>
-  );
-}
-function Octagon({ counts }: { counts: Record<string, number> }) {
-  const { t } = useApp();
-  const max = Math.max(1, ...Object.values(counts)),
-    point = (index: number, scale: number) => {
-      const angle = -Math.PI / 2 + (index * Math.PI) / 4;
-      return `${180 + Math.cos(angle) * 100 * scale},${170 + Math.sin(angle) * 100 * scale}`;
-    };
-  return (
-    <svg
-      className="octagon-chart"
-      viewBox="0 0 360 340"
-      role="img"
-      aria-label={`${t("Series por zona muscular", "Sets per muscle group")}: ${groups.map((group) => `${group} ${counts[group]}`).join(", ")}`}
-    >
-      {[0.25, 0.5, 0.75, 1].map((level) => (
-        <polygon
-          key={level}
-          points={groups.map((_, index) => point(index, level)).join(" ")}
-          fill="none"
-          stroke="var(--border)"
-        />
-      ))}
-      <polygon
-        points={groups
-          .map((group, index) => point(index, (counts[group] ?? 0) / max))
-          .join(" ")}
-        fill="#ff553850"
-        stroke="#ff8a4c"
-        strokeWidth={2}
-      />
-      {groups.map((group, index) => {
-        const angle = -Math.PI / 2 + (index * Math.PI) / 4;
-        return (
-          <text
-            key={group}
-            x={180 + Math.cos(angle) * 142}
-            y={170 + Math.sin(angle) * 142}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fill="var(--muted-foreground)"
-            fontSize={12}
-          >
-            {t(group, group)}
-          </text>
-        );
-      })}
-    </svg>
-  );
-}
-function Trend({ values, label }: { values: number[]; label: string }) {
-  if (!values.length) return null;
-  const low = Math.min(...values),
-    high = Math.max(...values),
-    points = values
-      .map(
-        (value, index) =>
-          `${30 + (index / Math.max(1, values.length - 1)) * 270},${145 - ((value - low) / Math.max(1, high - low)) * 110}`,
-      )
-      .join(" ");
-  return (
-    <div className="my-4">
-      <h3>{label}</h3>
-      <svg
-        viewBox="0 0 330 180"
-        className="trend-chart"
-        role="img"
-        aria-label={`${label}: ${values.join(", ")}`}
-      >
-        <text x={0} y={20} fill="var(--muted-foreground)">
-          {high.toFixed(1)}
-        </text>
-        <text x={0} y={170} fill="var(--muted-foreground)">
-          {low.toFixed(1)}
-        </text>
-        <polyline
-          points={points}
-          fill="none"
-          stroke="#ff8a4c"
-          strokeWidth={3}
-        />
-        {points.split(" ").map((point, index) => (
-          <circle
-            key={index}
-            cx={point.split(",")[0]}
-            cy={point.split(",")[1]}
-            r={4}
-            fill="#ff8a4c"
-          >
-            <title>{values[index]?.toFixed(1)}</title>
-          </circle>
-        ))}
-      </svg>
+      {tab === "body" && <BodyProgress range={range} period={period} />}
     </div>
   );
 }

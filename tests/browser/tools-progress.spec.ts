@@ -179,27 +179,14 @@ test("progress renders empty-state analytics without removed time totals", async
   page,
 }, info) => {
   await openHomeSection(page, "Progreso");
-  await expect(page.locator("#main-content > .panel").first()).toHaveClass(
-    /weekly-summary/,
-  );
-  await expect(page.locator("#main-content > .panel").nth(1)).toHaveClass(
-    /recent-improvements/,
-  );
+  await expect(page.locator(".progress-stats > article")).toHaveCount(4);
   await expect(
     page.getByRole("heading", { name: "Avances recientes" }),
   ).toBeVisible();
-  await expect(page.locator(".recent-improvements")).not.toHaveAttribute(
-    "open",
-    "",
-  );
-  await page.locator(".recent-improvements summary").click();
+  await page.getByRole("button", { name: "Mes", exact: true }).click();
   await expect(
-    page.getByText("Últimas cuatro semanas", { exact: true }),
+    page.getByRole("heading", { name: "Resumen mensual", exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("combobox", { name: "Período", exact: true })
-    .selectOption("8");
-  await expect(page.locator("table thead th")).toHaveCount(9);
   await expect(
     page.getByRole("img", { name: /Series por zona muscular/ }),
   ).toBeVisible();

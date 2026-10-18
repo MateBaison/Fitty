@@ -142,11 +142,50 @@ export const trackingSessionSchema = z.looseObject({
   points: z.array(trackingPointSchema),
 });
 export type TrackingSession = z.infer<typeof trackingSessionSchema>;
+export const bodyMeasurementSchema = z.looseObject({
+  id: z.string().min(1),
+  date: z.string().min(1),
+  weightKg: nonnegative.optional(),
+  waistCm: nonnegative.optional(),
+  hipsCm: nonnegative.optional(),
+  chestCm: nonnegative.optional(),
+  armCm: nonnegative.optional(),
+  thighCm: nonnegative.optional(),
+  photo: z.string().optional(),
+});
+export const bodyMeasurementInputSchema = z
+  .strictObject({
+    id: z.string().min(1).max(100),
+    date: z.iso.date(),
+    weightKg: z.number().positive().max(700).optional(),
+    waistCm: z.number().positive().max(400).optional(),
+    hipsCm: z.number().positive().max(400).optional(),
+    chestCm: z.number().positive().max(400).optional(),
+    armCm: z.number().positive().max(400).optional(),
+    thighCm: z.number().positive().max(400).optional(),
+    photo: z
+      .string()
+      .max(3000000)
+      .regex(/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/)
+      .optional(),
+  })
+  .refine(
+    (value) =>
+      value.weightKg != null ||
+      value.waistCm != null ||
+      value.hipsCm != null ||
+      value.chestCm != null ||
+      value.armCm != null ||
+      value.thighCm != null ||
+      !!value.photo,
+    "Add a measurement or photo",
+  );
 export const snapshotSchema = z.looseObject({
   routines: z.array(routineSchema),
   selected: z.string().nullable(),
   sessions: z.array(sessionSchema),
   trackingSessions: z.array(trackingSessionSchema).optional(),
+  bodyMeasurements: z.array(bodyMeasurementSchema).optional(),
   workout: workoutSchema.nullable(),
   profile: profileSchema,
   settings: settingsSchema,

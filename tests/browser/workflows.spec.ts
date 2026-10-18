@@ -192,9 +192,13 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
   ).toBe(true);
   expect(errors).toEqual([]);
   await openHomeSection(page, "Progreso");
+  await page.getByRole("button", { name: "Ejercicios", exact: true }).click();
   await page
     .getByRole("combobox", { name: "Elegí un ejercicio", exact: true })
     .selectOption({ label: "Press de banca con barra" });
+  await page
+    .getByRole("combobox", { name: "Métrica", exact: true })
+    .selectOption("reps");
   await expect(
     page.getByRole("img", { name: /Repeticiones máximas por serie/ }),
   ).toBeVisible();
@@ -829,24 +833,24 @@ test("weekly summary can select earlier weeks and return to the current week", a
   });
   await expect(summary).toContainText("0 h 30 min");
   await page
-    .getByRole("button", { name: "Semana anterior", exact: true })
+    .getByRole("button", { name: "Período anterior", exact: true })
     .click();
   await expect(summary).toContainText("1 h 30 min");
-  await expect(page.getByLabel("Elegir semana", { exact: true })).toHaveValue(
-    dates.previous,
-  );
+  await expect(
+    page.getByLabel("Fecha de referencia", { exact: true }),
+  ).toHaveValue(dates.previous);
   await page
-    .getByRole("button", { name: "Semana siguiente", exact: true })
+    .getByRole("button", { name: "Período siguiente", exact: true })
     .click();
   await expect(summary).toContainText("0 h 30 min");
-  await page.getByLabel("Elegir semana", { exact: true }).fill(dates.previous);
-  await expect(summary).toContainText("1 h 30 min");
   await page
-    .getByRole("button", { name: "Semana actual", exact: true })
-    .click();
-  await expect(page.getByLabel("Elegir semana", { exact: true })).toHaveValue(
-    dates.current,
-  );
+    .getByLabel("Fecha de referencia", { exact: true })
+    .fill(dates.previous);
+  await expect(summary).toContainText("1 h 30 min");
+  await page.getByRole("button", { name: "Hoy", exact: true }).click();
+  await expect(
+    page.getByLabel("Fecha de referencia", { exact: true }),
+  ).toHaveValue(dates.current);
 });
 test("weekly summary and translated screens fit a narrow viewport", async ({
   page,
@@ -856,7 +860,8 @@ test("weekly summary and translated screens fit a narrow viewport", async ({
   await expect(
     page.getByRole("heading", { name: "Resumen semanal" }),
   ).toBeVisible();
-  await expect(page.locator(".weekly-duration-day")).toHaveCount(7);
+  await expect(page.locator(".progress-week-days button")).toHaveCount(7);
+  await expect(page.getByTestId("launch-splash")).toHaveCount(0);
   await page.screenshot({
     path: "artifacts/weekly-summary-narrow.png",
     fullPage: true,
@@ -909,7 +914,7 @@ test("weekly summary and translated screens fit a narrow viewport", async ({
     ["ar", "ملخص أسبوعي", "rtl"],
   ] as const) {
     await page.goto("/profile");
-    await page.locator(".page-heading button").click();
+    await page.locator(".page-heading button").last().click();
     await page.locator('select[name="language"]').selectOption(language);
     await page.getByRole("dialog").locator('button[type="submit"]').click();
     await page.goto("/progress");

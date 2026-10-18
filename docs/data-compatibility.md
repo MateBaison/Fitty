@@ -88,3 +88,9 @@ Active tracking displays recent speed/pace rather than the whole-route average. 
 ## Glutes library category — 2026-10-18
 
 The current catalog classifies 13 dedicated glute movements under `Glúteos` using ID-based overrides. Archived definitions and all exercise IDs/images remain intact, including retired choices. Saved routines still resolve those IDs; recorded session groups are preserved and are not rewritten. Historical entries without a stored group use the current category as fallback. New custom exercises and automatic routines accept Glúteos, with its own available pool and lower-body split. Full body is the library's all-exercises view, not a persisted muscle group.
+
+## Progress dashboard and body measurements — 2026-10-18
+
+Progress uses a shared local-calendar period across Summary, Exercises and Body. Muscle totals include Glúteos and preserve historical stored groups. Comparisons normalize volume to kilograms, retain unknown durations and count linked drops as one set. New-record counts exclude warmups, ties and initial baselines. Exercise charts keep repetitions and seconds separate, with dates and individual point selection; existing records remain unchanged.
+
+Optional `bodyMeasurements` contains ID/date, optional weight in kg, optional waist/hips/chest/arm/thigh measurements in cm and an optional compressed photo. Tolerant readers preserve additional metadata; new inputs are bounded and validated. Entries are saved through `useApp().change`, included in private full-account backups and never added to routine shares or workout posters. Historical session weights/photos remain available as body-chart/photo sources. No existing session or profile measurement is rewritten. Body photo comparisons are private account UI, not public shares.

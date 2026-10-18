@@ -153,9 +153,10 @@ test("compact workout controls, grouped drops, remembered metric and record sour
   );
   await page.keyboard.press("Escape");
   await openHomeSection(page, "Progreso");
+  await page.getByRole("button", { name: "Ejercicios", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Récords personales" }),
   ).toBeVisible();
-  await page.locator(".record-panel-item").first().click();
+  await page.locator(".progress-records button").first().click();
   await expect(page.getByRole("dialog")).toContainText("Pecho y tríceps");
 });

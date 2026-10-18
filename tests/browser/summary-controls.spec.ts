@@ -44,12 +44,13 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
     .getByRole("button", { name: "Guardar entrenamiento", exact: true })
     .click();
   await openHomeSection(page, "Progreso");
-  const summary = page.locator(".weekly-summary");
-  await expect(summary.locator(".metric-grid > div")).toHaveCount(4);
-  await expect(summary.locator(".metric-grid")).toContainText("1/3");
-  await expect(summary.locator(".metric-grid")).toContainText("400 kg");
+  const summary = page.locator(".progress-dashboard");
+  await expect(summary.locator(".progress-stats > article")).toHaveCount(4);
+  await expect(summary.locator(".progress-stats")).toContainText("1/3");
+  await page.getByText("Ver detalle", { exact: true }).click();
+  await expect(summary).toContainText("400 kg");
   const weekday = await page.evaluate(() => (new Date().getDay() + 6) % 7);
-  await summary.locator(".weekly-duration-day").nth(weekday).click();
+  await summary.locator(".progress-week-days button").nth(weekday).click();
   await expect(page.getByRole("dialog")).toContainText("Pecho y tríceps");
   await expect(page.getByRole("dialog")).toContainText("400 kg");
   const training = page.getByRole("dialog").locator(".calendar-workout");
@@ -64,16 +65,14 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
     training.getByRole("button", { name: "Editar", exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Siempre", exact: true }).click();
+  await page.getByRole("button", { name: "Todo", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Resumen total", exact: true }),
+    page.getByRole("heading", { name: "Resumen del período", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByLabel("Elegir semana", { exact: true }),
-  ).toBeDisabled();
-  await page
-    .getByRole("button", { name: "Semana actual", exact: true })
-    .click();
+    page.getByLabel("Fecha de referencia", { exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "Semana", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Resumen semanal", exact: true }),
   ).toBeVisible();
