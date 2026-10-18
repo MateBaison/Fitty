@@ -44,6 +44,7 @@ export function safeNext(value: string | null): string {
   return value &&
     [
       "/home",
+      "/professionals",
       "/library",
       "/tools",
       "/progress",

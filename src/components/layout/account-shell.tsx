@@ -8,7 +8,7 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
     router = useRouter();
   const swipe = useSwipeNavigation((direction) => {
     if (pathname === "/workout") return false;
-    const destinations = ["/home", "/tools", "/profile"];
+    const destinations = ["/professionals", "/home", "/tools", "/profile"];
     if (
       ["/library", "/progress"].includes(pathname) &&
       direction === "previous"

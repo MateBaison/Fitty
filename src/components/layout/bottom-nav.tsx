@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/state/app-provider";
-import { House, Timer, UserRound } from "lucide-react";
+import { House, Timer, UserRound, UsersRound } from "lucide-react";
 const destinations = [
+  { href: "/professionals", label: "Profesionales", icon: UsersRound },
   { href: "/home", label: "Inicio", icon: House },
   { href: "/tools", label: "Herramientas", icon: Timer },
   { href: "/profile", label: "Perfil", icon: UserRound },

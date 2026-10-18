@@ -16,6 +16,7 @@ export function AppHeader({
   const welcome = ["/", "/login", "/onboarding"].includes(pathname);
   const showDate = !welcome;
   const section = [
+    { path: "/professionals", es: "Profesionales", en: "Professionals" },
     { path: "/home", es: "Inicio", en: "Home" },
     { path: "/library", es: "Biblioteca", en: "Library" },
     { path: "/tools", es: "Herramientas", en: "Tools" },

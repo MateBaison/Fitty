@@ -26,6 +26,7 @@ export const config = {
   matcher: [
     "/",
     "/home",
+    "/professionals",
     "/library",
     "/workout",
     "/tools",
