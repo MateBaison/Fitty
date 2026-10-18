@@ -130,7 +130,7 @@ test("horizontal gestures navigate inner tabs then main menus and ignore control
   await expect(
     page.getByRole("button", { name: "Cuerpo", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await swipe(intro, 100, 250);
+  await swipe(intro, 8, 160);
   await expect(
     page.getByRole("button", { name: "Ejercicios", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
@@ -146,11 +146,11 @@ test("horizontal gestures navigate inner tabs then main menus and ignore control
   await expect(
     page.getByRole("button", { name: "Resumen", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await swipe(intro, 100, 250);
+  await swipe(page.locator("#main-content"), 8, 160);
   await expect(page).toHaveURL(/\/home$/);
   await swipe(page.locator("#main-content"), 250, 100);
   await expect(page).toHaveURL(/\/tools$/);
-  await swipe(page.locator(".page-description"), 100, 250);
+  await swipe(page.locator(".page-description"), 8, 160);
   await expect(page).toHaveURL(/\/home$/);
   await page.goto("/tools");
   await swipe(

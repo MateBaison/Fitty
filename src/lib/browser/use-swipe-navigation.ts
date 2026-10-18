@@ -28,7 +28,6 @@ export function useSwipeNavigation(
       if (
         event.pointerType !== "touch" ||
         !event.isPrimary ||
-        event.clientX < 24 ||
         event.clientX > window.innerWidth - 24 ||
         document.querySelector('[role="dialog"], [role="alertdialog"]')
       )
