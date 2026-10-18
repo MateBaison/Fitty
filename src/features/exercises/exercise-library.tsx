@@ -68,7 +68,7 @@ export function ExerciseLibrary() {
           role="group"
           aria-label={t("Zonas musculares", "Muscle groups")}
         >
-          {(["Todos", "Favoritos", ...muscleGroups] as const).map((muscle) => (
+          {(["Favoritos", "Todos", ...muscleGroups] as const).map((muscle) => (
             <button
               type="button"
               key={muscle}
@@ -77,9 +77,9 @@ export function ExerciseLibrary() {
             >
               {muscle === "Favoritos" ? "★ " : ""}
               {t(
-                muscle === "Todos" ? "Full body" : muscle,
+                muscle === "Todos" ? "Todo" : muscle,
                 muscle === "Todos"
-                  ? "Full body"
+                  ? "All"
                   : muscle === "Favoritos"
                     ? "Favorites"
                     : muscle,
@@ -95,8 +95,8 @@ export function ExerciseLibrary() {
             alt={
               group === "Todos"
                 ? t(
-                    "Full body: todos los grupos musculares resaltados",
-                    "Full body: all muscle groups highlighted",
+                    "Todo: todos los grupos musculares resaltados",
+                    "All: all muscle groups highlighted",
                   )
                 : t(
                     `${group}: zona muscular resaltada`,
@@ -111,7 +111,7 @@ export function ExerciseLibrary() {
                 : t("Zona principal", "Primary area")}
             </span>
             <h2 className="text-xl font-bold">
-              {group === "Todos" ? "Full body" : t(group, group)}
+              {group === "Todos" ? t("Todo", "All") : t(group, group)}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {group === "Todos"

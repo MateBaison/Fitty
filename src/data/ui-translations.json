@@ -426,11 +426,12 @@
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "Le brouillon est conservé tant que vous restez sur cette page. Ne partagez pas de mots de passe.",
     "Enviar consulta (próximamente)": "Envoyer la demande (bientôt)",
     "Glúteos": "Fessiers",
-    "Full body: todos los grupos musculares resaltados": "Full body : tous les groupes musculaires surlignés",
     "Cuerpo completo": "Corps entier",
     "Todos los ejercicios de la biblioteca.": "Tous les exercices de la bibliothèque.",
     "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Bord rose : séance avec saignement menstruel enregistré.",
-    "Sangrado menstrual registrado": "Saignement menstruel enregistré"
+    "Sangrado menstrual registrado": "Saignement menstruel enregistré",
+    "Todo": "Tout",
+    "Todo: todos los grupos musculares resaltados": "Tout : tous les groupes musculaires surlignés"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -859,11 +860,12 @@
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "停留在此页面时会保留草稿。请勿分享密码。",
     "Enviar consulta (próximamente)": "发送咨询（即将推出）",
     "Glúteos": "臀部",
-    "Full body: todos los grupos musculares resaltados": "全身：所有肌群均已突出显示",
     "Cuerpo completo": "全身",
     "Todos los ejercicios de la biblioteca.": "动作库中的所有动作。",
     "Borde rosa: entrenamiento con sangrado menstrual registrado.": "粉色边框：训练当天记录了经期出血。",
-    "Sangrado menstrual registrado": "已记录经期出血"
+    "Sangrado menstrual registrado": "已记录经期出血",
+    "Todo": "全部",
+    "Todo: todos los grupos musculares resaltados": "全部：所有肌群均已突出显示"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1292,11 +1294,12 @@
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "इस पेज पर रहने तक मसौदा बना रहेगा। पासवर्ड साझा न करें।",
     "Enviar consulta (próximamente)": "पूछताछ भेजें (जल्द ही)",
     "Glúteos": "ग्लूट्स",
-    "Full body: todos los grupos musculares resaltados": "फुल बॉडी: सभी मांसपेशी समूह हाइलाइट किए गए हैं",
     "Cuerpo completo": "पूरा शरीर",
     "Todos los ejercicios de la biblioteca.": "लाइब्रेरी के सभी व्यायाम।",
     "Borde rosa: entrenamiento con sangrado menstrual registrado.": "गुलाबी किनारा: कसरत के दिन मासिक धर्म रक्तस्राव दर्ज है।",
-    "Sangrado menstrual registrado": "मासिक धर्म रक्तस्राव दर्ज है"
+    "Sangrado menstrual registrado": "मासिक धर्म रक्तस्राव दर्ज है",
+    "Todo": "सभी",
+    "Todo: todos los grupos musculares resaltados": "सभी: सभी मांसपेशी समूह हाइलाइट किए गए हैं"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -1725,11 +1728,12 @@
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "تُحفظ المسودة ما دمت في هذه الصفحة. لا تشارك كلمات المرور.",
     "Enviar consulta (próximamente)": "إرسال الاستفسار (قريبًا)",
     "Glúteos": "الأرداف",
-    "Full body: todos los grupos musculares resaltados": "الجسم بالكامل: جميع المجموعات العضلية مميزة",
     "Cuerpo completo": "الجسم بالكامل",
     "Todos los ejercicios de la biblioteca.": "جميع تمارين المكتبة.",
     "Borde rosa: entrenamiento con sangrado menstrual registrado.": "حد وردي: تدريب مع نزيف حيض مسجل.",
-    "Sangrado menstrual registrado": "نزيف حيض مسجل"
+    "Sangrado menstrual registrado": "نزيف حيض مسجل",
+    "Todo": "الكل",
+    "Todo: todos los grupos musculares resaltados": "الكل: جميع المجموعات العضلية مميزة"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2158,11 +2162,12 @@
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "Der Entwurf bleibt erhalten, solange du auf dieser Seite bleibst. Teile keine Passwörter.",
     "Enviar consulta (próximamente)": "Anfrage senden (demnächst)",
     "Glúteos": "Gesäß",
-    "Full body: todos los grupos musculares resaltados": "Full body: alle Muskelgruppen hervorgehoben",
     "Cuerpo completo": "Ganzer Körper",
     "Todos los ejercicios de la biblioteca.": "Alle Übungen der Bibliothek.",
     "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Rosa Rand: Training mit erfasster Menstruationsblutung.",
-    "Sangrado menstrual registrado": "Erfasste Menstruationsblutung"
+    "Sangrado menstrual registrado": "Erfasste Menstruationsblutung",
+    "Todo": "Alle",
+    "Todo: todos los grupos musculares resaltados": "Alle: alle Muskelgruppen hervorgehoben"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -2591,11 +2596,12 @@
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "La bozza rimane finché resti su questa pagina. Non condividere password.",
     "Enviar consulta (próximamente)": "Invia richiesta (prossimamente)",
     "Glúteos": "Glutei",
-    "Full body: todos los grupos musculares resaltados": "Full body: tutti i gruppi muscolari evidenziati",
     "Cuerpo completo": "Corpo intero",
     "Todos los ejercicios de la biblioteca.": "Tutti gli esercizi della libreria.",
     "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Bordo rosa: allenamento con sanguinamento mestruale registrato.",
-    "Sangrado menstrual registrado": "Sanguinamento mestruale registrato"
+    "Sangrado menstrual registrado": "Sanguinamento mestruale registrato",
+    "Todo": "Tutto",
+    "Todo: todos los grupos musculares resaltados": "Tutto: tutti i gruppi muscolari evidenziati"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -3024,11 +3030,12 @@
     "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.": "O rascunho é mantido enquanto você permanecer nesta página. Não compartilhe senhas.",
     "Enviar consulta (próximamente)": "Enviar consulta (em breve)",
     "Glúteos": "Glúteos",
-    "Full body: todos los grupos musculares resaltados": "Full body: todos os grupos musculares destacados",
     "Cuerpo completo": "Corpo inteiro",
     "Todos los ejercicios de la biblioteca.": "Todos os exercícios da biblioteca.",
     "Borde rosa: entrenamiento con sangrado menstrual registrado.": "Borda rosa: treino com sangramento menstrual registrado.",
-    "Sangrado menstrual registrado": "Sangramento menstrual registrado"
+    "Sangrado menstrual registrado": "Sangramento menstrual registrado",
+    "Todo": "Tudo",
+    "Todo: todos los grupos musculares resaltados": "Tudo: todos os grupos musculares destacados"
   },
   "en": {
     "Sexo": "Sex",
@@ -3242,6 +3249,7 @@
     "Reducción sugerida": "Suggested reduction",
     "Ajustable": "Adjustable",
     "No se pudo activar el sonido. Revisá el volumen y el permiso de audio del navegador y volvé a pulsar Iniciar.": "Sound could not start. Check your volume and browser audio permission, then press Start again.",
-    "Glúteos": "Glutes"
+    "Glúteos": "Glutes",
+    "Todo": "All"
   }
 }

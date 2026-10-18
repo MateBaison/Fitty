@@ -19,8 +19,9 @@ test("glutes has its own cover and exercises while Full body includes every choi
     exact: true,
   });
   const summary = page.locator(".muscle-summary");
+  await expect(groups.getByRole("button").first()).toHaveText("★ Favoritos");
   await expect(
-    groups.getByRole("button", { name: "Full body", exact: true }),
+    groups.getByRole("button", { name: "Todo", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(summary.getByRole("img")).toHaveAttribute(
     "src",
@@ -58,7 +59,7 @@ test("glutes has its own cover and exercises while Full body includes every choi
   await expect(
     page.getByRole("button", { name: "Ver Sentadilla", exact: true }),
   ).toBeVisible();
-  await groups.getByRole("button", { name: "Full body", exact: true }).click();
+  await groups.getByRole("button", { name: "Todo", exact: true }).click();
   await expect(page.locator(".exercise-grid > button")).toHaveCount(
     availableExercises.length,
   );
