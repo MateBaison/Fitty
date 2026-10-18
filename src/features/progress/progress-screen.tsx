@@ -325,30 +325,6 @@ export function ProgressScreen() {
       </section>
       {tab === "summary" && (
         <>
-          <div className="progress-comparison-toggle">
-            <p>
-              {t(
-                "Este período: cuánto entrenaste. Ejercicios: cómo cambiaron tus marcas. Cuerpo: tus medidas y fotos.",
-                "This period: how much you trained. Exercises: how your performances changed. Body: your measurements and photos.",
-              )}
-            </p>
-            <Button
-              variant="secondary"
-              aria-expanded={comparing}
-              onClick={() => setComparing((value) => !value)}
-            >
-              {comparing
-                ? t("Cerrar comparación", "Close comparison")
-                : t("Comparar períodos", "Compare periods")}
-            </Button>
-          </div>
-          {comparing && (
-            <ProgressComparison
-              key={`${period}-${localDateKey(range.start)}-${customStart}`}
-              range={range}
-              period={period}
-            />
-          )}
           <section aria-label={t("Resumen", "Summary")}>
             <div className="progress-stats">
               {[
@@ -386,6 +362,30 @@ export function ProgressScreen() {
                 "No workouts in this period yet. Your progress will appear after you save a session.",
               )}
             </p>
+          )}
+          <div className="progress-comparison-toggle">
+            <p>
+              {t(
+                "Este período: cuánto entrenaste. Ejercicios: cómo cambiaron tus marcas. Cuerpo: tus medidas y fotos.",
+                "This period: how much you trained. Exercises: how your performances changed. Body: your measurements and photos.",
+              )}
+            </p>
+            <Button
+              variant="secondary"
+              aria-expanded={comparing}
+              onClick={() => setComparing((value) => !value)}
+            >
+              {comparing
+                ? t("Cerrar comparación", "Close comparison")
+                : t("Comparar períodos", "Compare periods")}
+            </Button>
+          </div>
+          {comparing && (
+            <ProgressComparison
+              key={`${period}-${localDateKey(range.start)}-${customStart}`}
+              range={range}
+              period={period}
+            />
           )}
           <details className="panel progress-training-details">
             <summary>
