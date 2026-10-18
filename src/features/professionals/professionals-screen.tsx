@@ -10,7 +10,7 @@ const initial = {
   search: "",
   specialty: "",
   sex: "",
-  mode: "",
+  mode: "both",
   country: "",
   city: "",
   language: "",
@@ -27,7 +27,9 @@ export function ProfessionalsScreen() {
         ? { country: "", city: "" }
         : {}),
     }));
-  const any = Object.values(filters).some(Boolean);
+  const any = (Object.keys(initial) as (keyof typeof initial)[]).some(
+    (key) => filters[key] !== initial[key],
+  );
   const select = (
     key: keyof typeof initial,
     label: string,
@@ -39,7 +41,7 @@ export function ProfessionalsScreen() {
         value={filters[key]}
         onChange={(event) => update(key, event.target.value)}
       >
-        <option value="">{t("Todos", "All")}</option>
+        {key !== "mode" && <option value="">{t("Todos", "All")}</option>}
         {options.map(([value, name]) => (
           <option key={value} value={value}>
             {name}

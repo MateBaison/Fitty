@@ -20,6 +20,14 @@ test("professional directory filters, empty state and navigation", async ({
   await expect(page).toHaveURL(/\/professionals$/);
   await expect(
     page.getByRole("combobox", { name: "País", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("combobox", { name: "Modalidad", exact: true }),
+  ).toHaveValue("both");
+  await expect(
+    page
+      .getByRole("combobox", { name: "Modalidad", exact: true })
+      .getByRole("option", { name: "Todos", exact: true }),
   ).toHaveCount(0);
   await expect(
     page.getByRole("heading", { name: "Profesionales", exact: true }),
@@ -96,7 +104,7 @@ test("professional directory filters, empty state and navigation", async ({
   ).toHaveValue("");
   await expect(
     page.getByRole("combobox", { name: "Ciudad", exact: true }),
-  ).toHaveCount(0);
+  ).toBeDisabled();
   await expect(
     page.getByRole("button", { name: "Limpiar filtros" }),
   ).toBeDisabled();
