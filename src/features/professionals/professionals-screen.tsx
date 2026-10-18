@@ -81,7 +81,6 @@ export function ProfessionalsScreen() {
           {select("sex", t("Sexo del profesional", "Professional’s sex"), [
             ["female", t("Femenino", "Female")],
             ["male", t("Masculino", "Male")],
-            ["other", t("Otro", "Other")],
           ])}
           {select("mode", t("Modalidad", "Consultation mode"), [
             ["virtual", t("Virtual", "Online")],
