@@ -1032,6 +1032,7 @@ test("masculine profiles hide menstrual calendar borders and legend with saved d
   });
   await expect(bloodMarker).toBeVisible();
   await expect(bloodMarker).toHaveText("🩸");
+  await expect(page.getByTestId("launch-splash")).toHaveCount(0);
   await page.screenshot({
     path: `artifacts/menstrual-workout-${test.info().project.name}.png`,
   });
