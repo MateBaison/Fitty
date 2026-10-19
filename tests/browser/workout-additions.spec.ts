@@ -28,4 +28,28 @@ test("add an extra exercise to an active routine workout and retain it after rel
   );
   await page.reload();
   await expect(page.locator("[data-workout-entry]")).toHaveCount(before + 1);
+  await page
+    .getByRole("button", { name: "Agregar ejercicios", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Crear ejercicio", exact: false })
+    .click();
+  await page
+    .getByRole("textbox", { name: "Nombre", exact: true })
+    .fill("Remo personal de prueba");
+  await page
+    .getByLabel("Grupo muscular", { exact: true })
+    .selectOption("Espalda");
+  await page
+    .getByRole("button", { name: "Guardar ejercicio", exact: true })
+    .click();
+  await expect(
+    page.getByLabel("Seleccionar Remo personal de prueba", { exact: true }),
+  ).toBeChecked();
+  await page.getByRole("button", { name: /Agregar seleccionados/ }).click();
+  await expect(page.locator("[data-workout-entry]")).toHaveCount(before + 2);
+  await page.reload();
+  await expect(
+    page.locator(`[data-workout-entry="${before + 1}"]`),
+  ).toContainText("Remo personal de prueba");
 });

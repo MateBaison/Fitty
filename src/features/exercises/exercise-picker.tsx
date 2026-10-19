@@ -8,6 +8,7 @@ import { normalizeSearch, muscleImages } from "@/data/exercises";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { CustomExerciseForm } from "./custom-exercise-form";
 import { ExerciseVisual } from "./exercise-visual";
 export function ExercisePicker({
   onClose,
@@ -17,6 +18,7 @@ export function ExercisePicker({
   onPick: (ids: string[]) => void;
 }) {
   const { snapshot, change, t } = useApp();
+  const [creating, setCreating] = useState(false);
   const [group, setGroup] = useState<MuscleGroup | "Favoritos" | null>(null),
     [query, setQuery] = useState(""),
     [selected, setSelected] = useState<string[]>([]);
@@ -29,6 +31,26 @@ export function ExercisePicker({
         normalizeSearch(query),
       ),
   );
+  if (creating)
+    return (
+      <AppDialog
+        open
+        onClose={() => setCreating(false)}
+        title={t("Crear ejercicio", "Create exercise")}
+      >
+        <CustomExerciseForm
+          onCreated={(exercise) => {
+            setSelected((previous) => [...previous, exercise.id]);
+            setGroup(exercise.group);
+            setQuery("");
+            setCreating(false);
+          }}
+        />
+        <Button variant="secondary" onClick={() => setCreating(false)}>
+          {t("Cancelar", "Cancel")}
+        </Button>
+      </AppDialog>
+    );
   return (
     <AppDialog
       open
@@ -36,6 +58,9 @@ export function ExercisePicker({
       title={t("Agregar ejercicios", "Add exercises")}
       description="Elegí varios ejercicios y confirmá juntos."
     >
+      <Button variant="secondary" onClick={() => setCreating(true)}>
+        ＋ {t("Crear ejercicio", "Create exercise")}
+      </Button>
       {!group ? (
         <div className="exercise-grid">
           {(["Favoritos", ...muscleGroups] as const).map((muscle) => (

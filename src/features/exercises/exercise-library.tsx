@@ -3,7 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { useApp } from "@/state/app-provider";
 import { catalogFor, type CatalogExercise } from "@/domain/workouts";
 import { muscleGroups, type MuscleGroup } from "@/domain/schemas/exercise";
-import { customExerciseFormSchema } from "@/domain/schemas/snapshot";
+import { CustomExerciseForm } from "./custom-exercise-form";
 import {
   equipmentFilters,
   matchesEquipment,
@@ -246,90 +246,12 @@ export function ExerciseLibrary() {
         onClose={() => setCustom(false)}
         title={t("Crear ejercicio", "Create exercise")}
       >
-        <form
-          className="space-y-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            const form = new FormData(event.currentTarget),
-              parsed = customExerciseFormSchema.safeParse({
-                id: "custom-" + crypto.randomUUID(),
-                name: String(form.get("name") ?? ""),
-                group: form.get("group"),
-                equipment: form.get("equipment"),
-                tracking: form.get("tracking"),
-                steps: String(form.get("steps") ?? "")
-                  .split("\n")
-                  .filter((line) => line.trim()),
-              });
-            if (!parsed.success)
-              return notify(
-                "Revisá el nombre y las instrucciones (máximo 10 líneas).",
-              );
-            if (
-              change((draft) => {
-                draft.customExercises.push({ ...parsed.data, custom: true });
-              })
-            ) {
-              setCustom(false);
-              setGroup(parsed.data.group);
-              notify(
-                t("Ejercicio personalizado guardado", "Custom exercise saved"),
-              );
-            }
+        <CustomExerciseForm
+          onCreated={(exercise) => {
+            setCustom(false);
+            setGroup(exercise.group);
           }}
-        >
-          <label className="block">
-            {t("Nombre", "Name")}
-            <Input name="name" required maxLength={100} />
-          </label>
-          <label className="block">
-            {t("Grupo muscular", "Muscle group")}
-            <select name="group">
-              {muscleGroups.map((muscle) => (
-                <option key={muscle}>{muscle}</option>
-              ))}
-            </select>
-          </label>
-          <label className="block">
-            {t("Equipamiento", "Equipment")}
-            <select name="equipment">
-              {equipmentFilters
-                .filter((item) => item !== "Todos")
-                .map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-            </select>
-          </label>
-          <label className="block">
-            {t("Cómo registrar las series", "How to track sets")}
-            <select name="tracking">
-              <option value="reps">{t("Repeticiones", "Repetitions")}</option>
-              <option value="seconds">
-                {t("Tiempo (segundos)", "Time (seconds)")}
-              </option>
-            </select>
-          </label>
-          <label className="block">
-            {t("Instrucciones (opcional)", "Instructions (optional)")}
-            <textarea
-              name="steps"
-              maxLength={3000}
-              placeholder={t(
-                "Una indicación por línea",
-                "One instruction per line",
-              )}
-            />
-          </label>
-          <p className="text-sm text-muted-foreground">
-            {t(
-              "No se genera una imagen técnica automáticamente.",
-              "A technique image is not generated automatically.",
-            )}
-          </p>
-          <Button type="submit">
-            {t("Guardar ejercicio", "Save exercise")}
-          </Button>
-        </form>
+        />
       </AppDialog>
     </>
   );
