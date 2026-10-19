@@ -377,7 +377,7 @@ export function WorkoutScreen() {
         </Button>
       )}
       <Button
-        variant="ghost"
+        variant="destructive-solid"
         className="mt-3 w-full"
         onClick={() => {
           if (
