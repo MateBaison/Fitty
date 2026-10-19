@@ -2,6 +2,7 @@
 import { useApp } from "@/state/app-provider";
 import { SignOutButton } from "@/features/auth/sign-out-button";
 import { Button } from "@/components/ui/button";
+import { ResetAccount } from "./reset-account";
 export function AccountPanel() {
   const { status, message, retry, flush, t, snapshot } = useApp();
   return (
@@ -23,7 +24,10 @@ export function AccountPanel() {
           </Button>
         </section>
       )}
-      <SignOutButton flush={flush} language={snapshot.settings.language} />
+      <div className="grid grid-cols-2 gap-3">
+        <SignOutButton flush={flush} language={snapshot.settings.language} />
+        <ResetAccount />
+      </div>
     </>
   );
 }

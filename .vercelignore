@@ -7,3 +7,4 @@ playwright-report/
 scripts/mock-supabase.ts
 .env.local
 .env.*.local
+output/

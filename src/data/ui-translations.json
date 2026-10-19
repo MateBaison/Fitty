@@ -578,7 +578,13 @@
     "Volver": "Retour",
     "Zonas que querés entrenar": "Groupes musculaires à entraîner",
     "días por semana": "jours par semaine",
-    "¿Cómo querés empezar?": "Comment souhaitez-vous commencer?"
+    "¿Cómo querés empezar?": "Comment souhaitez-vous commencer?",
+    "Reiniciar cuenta": "Réinitialiser le compte",
+    "Escribí REINICIAR para confirmar": "Saisissez REINICIAR pour confirmer",
+    "Reiniciando…": "Réinitialisation…",
+    "Confirmar reinicio": "Confirmer la réinitialisation",
+    "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Outil de test temporaire. Efface le profil, les programmes et l’historique et relance la configuration. Conserve votre email et votre accès. Une copie locale sera enregistrée pour être importée depuis Profil.",
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Réinitialisation impossible. Vérifiez la synchronisation et le stockage du navigateur, puis réessayez."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1159,7 +1165,13 @@
     "Volver": "返回",
     "Zonas que querés entrenar": "您想训练的肌群",
     "días por semana": "天/周",
-    "¿Cómo querés empezar?": "您想如何开始？"
+    "¿Cómo querés empezar?": "您想如何开始？",
+    "Reiniciar cuenta": "重置账户",
+    "Escribí REINICIAR para confirmar": "输入 REINICIAR 以确认",
+    "Reiniciando…": "正在重置…",
+    "Confirmar reinicio": "确认重置",
+    "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "临时测试工具。清空个人资料、训练计划和历史并重新开始设置，保留邮箱及登录。操作前会保存本地备份，可从个人资料页导入。",
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "无法完成重置。请检查同步和浏览器存储后重试。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1740,7 +1752,13 @@
     "Volver": "वापस",
     "Zonas que querés entrenar": "जिन मांसपेशी समूहों को प्रशिक्षित करना चाहते हैं",
     "días por semana": "दिन प्रति सप्ताह",
-    "¿Cómo querés empezar?": "आप कैसे शुरू करना चाहेंगे?"
+    "¿Cómo querés empezar?": "आप कैसे शुरू करना चाहेंगे?",
+    "Reiniciar cuenta": "खाता रीसेट करें",
+    "Escribí REINICIAR para confirmar": "पुष्टि के लिए REINICIAR लिखें",
+    "Reiniciando…": "रीसेट हो रहा है…",
+    "Confirmar reinicio": "रीसेट की पुष्टि करें",
+    "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "अस्थायी परीक्षण उपकरण। प्रोफ़ाइल, दिनचर्या और इतिहास मिटाकर प्रारंभिक सेटअप पर लौटता है। ईमेल और लॉगिन बने रहेंगे। पहले एक स्थानीय बैकअप सहेजा जाएगा जिसे प्रोफ़ाइल से आयात कर सकते हैं।",
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "रीसेट पूरा नहीं हुआ। सिंक और ब्राउज़र स्टोरेज जाँचें और फिर प्रयास करें।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2321,7 +2339,13 @@
     "Volver": "رجوع",
     "Zonas que querés entrenar": "المجموعات العضلية التي تريد تدريبها",
     "días por semana": "أيام في الأسبوع",
-    "¿Cómo querés empezar?": "كيف تريد البدء؟"
+    "¿Cómo querés empezar?": "كيف تريد البدء؟",
+    "Reiniciar cuenta": "إعادة ضبط الحساب",
+    "Escribí REINICIAR para confirmar": "اكتب REINICIAR للتأكيد",
+    "Reiniciando…": "جارٍ إعادة الضبط…",
+    "Confirmar reinicio": "تأكيد إعادة الضبط",
+    "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "أداة اختبار مؤقتة. تمسح الملف والبرامج والسجل وتعيد الإعداد الأولي مع الاحتفاظ بالبريد وتسجيل الدخول. ستُحفظ نسخة محلية يمكن استيرادها من الملف الشخصي.",
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "تعذر إكمال إعادة الضبط. تحقق من المزامنة وتخزين المتصفح ثم أعد المحاولة."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2902,7 +2926,13 @@
     "Volver": "Zurück",
     "Zonas que querés entrenar": "Muskelgruppen für dein Training",
     "días por semana": "Tage pro Woche",
-    "¿Cómo querés empezar?": "Wie möchtest du beginnen?"
+    "¿Cómo querés empezar?": "Wie möchtest du beginnen?",
+    "Reiniciar cuenta": "Konto zurücksetzen",
+    "Escribí REINICIAR para confirmar": "Zur Bestätigung REINICIAR eingeben",
+    "Reiniciando…": "Wird zurückgesetzt…",
+    "Confirmar reinicio": "Zurücksetzen bestätigen",
+    "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Vorübergehendes Testwerkzeug. Leert Profil, Trainingspläne und Verlauf und startet die Einrichtung neu. E-Mail und Zugang bleiben erhalten. Zuerst wird eine lokale Sicherung zum Import im Profil gespeichert.",
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Zurücksetzen fehlgeschlagen. Synchronisierung und Browserspeicher prüfen und erneut versuchen."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -3483,7 +3513,13 @@
     "Volver": "Indietro",
     "Zonas que querés entrenar": "Gruppi muscolari da allenare",
     "días por semana": "giorni a settimana",
-    "¿Cómo querés empezar?": "Come vuoi iniziare?"
+    "¿Cómo querés empezar?": "Come vuoi iniziare?",
+    "Reiniciar cuenta": "Reimposta account",
+    "Escribí REINICIAR para confirmar": "Scrivi REINICIAR per confermare",
+    "Reiniciando…": "Reimpostazione…",
+    "Confirmar reinicio": "Conferma ripristino",
+    "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Strumento temporaneo di prova. Svuota profilo, programmi e cronologia e riavvia la configurazione. Mantiene email e accesso. Prima viene salvata una copia locale importabile dal Profilo.",
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Ripristino non completato. Controlla sincronizzazione e memoria del browser e riprova."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4064,7 +4100,13 @@
     "Volver": "Voltar",
     "Zonas que querés entrenar": "Regiões musculares que quer treinar",
     "días por semana": "dias por semana",
-    "¿Cómo querés empezar?": "Como quer começar?"
+    "¿Cómo querés empezar?": "Como quer começar?",
+    "Reiniciar cuenta": "Reiniciar conta",
+    "Escribí REINICIAR para confirmar": "Digite REINICIAR para confirmar",
+    "Reiniciando…": "Reiniciando…",
+    "Confirmar reinicio": "Confirmar reinício",
+    "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Ferramenta temporária de testes. Limpa perfil, rotinas e histórico e reinicia a configuração. Mantém email e acesso. Antes, salva uma cópia local que pode ser importada pelo Perfil.",
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Não foi possível concluir o reinício. Verifique a sincronização e o armazenamento do navegador e tente novamente."
   },
   "en": {
     "Sexo": "Sex",

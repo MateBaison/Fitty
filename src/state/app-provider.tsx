@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { browserClient } from "@/lib/supabase/browser";
+import { activityRecorder } from "@/lib/supabase/activity-recorder";
 import { stateRepository } from "@/lib/supabase/state-repository";
 import { SyncController, type SyncView } from "@/lib/supabase/sync-controller";
 import type { Snapshot } from "@/domain/schemas/snapshot";
@@ -65,10 +66,32 @@ export function AppProvider({
         localStorage,
       );
     controller.current = sync;
+    const activityAbort = new AbortController();
+    const activity = activityRecorder(async () => {
+      const { error } = await client
+        .rpc("record_app_activity")
+        .abortSignal(activityAbort.signal);
+      return !error;
+    });
+    const recordActivity = (event?: Event) => {
+      if (document.visibilityState === "visible" && (!event || event.isTrusted))
+        void activity.record();
+    };
+    recordActivity();
+    window.addEventListener("pointerdown", recordActivity, { passive: true });
+    window.addEventListener("keydown", recordActivity);
+    window.addEventListener("scroll", recordActivity, {
+      passive: true,
+      capture: true,
+    });
+    window.addEventListener("focus", recordActivity);
+    document.addEventListener("visibilitychange", recordActivity);
     const unsubscribe = sync.subscribe(setView);
     void sync.start();
     const auth = client.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT" || (session && session.user.id !== user.id)) {
+        activity.dispose();
+        activityAbort.abort();
         sync.dispose();
         setView({
           snapshot: null,
@@ -92,6 +115,13 @@ export function AppProvider({
     document.addEventListener("visibilitychange", refresh);
     window.addEventListener("online", retry);
     return () => {
+      activity.dispose();
+      activityAbort.abort();
+      window.removeEventListener("pointerdown", recordActivity);
+      window.removeEventListener("keydown", recordActivity);
+      window.removeEventListener("scroll", recordActivity, true);
+      window.removeEventListener("focus", recordActivity);
+      document.removeEventListener("visibilitychange", recordActivity);
       unsubscribe();
       auth.data.subscription.unsubscribe();
       window.removeEventListener("online", retry);

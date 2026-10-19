@@ -67,7 +67,7 @@ const server = createServer(async (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:3010");
   response.setHeader(
     "Access-Control-Allow-Headers",
-    "authorization, apikey, content-type, prefer, x-client-info, x-supabase-api-version",
+    "authorization, apikey, content-type, prefer, x-client-info, x-supabase-api-version, accept-profile, content-profile, x-retry-count",
   );
   response.setHeader(
     "Access-Control-Allow-Methods",
