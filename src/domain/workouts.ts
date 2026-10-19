@@ -140,6 +140,37 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
     })),
   };
 }
+// Extra exercises belong to this session; the saved routine stays unchanged.
+export function addWorkoutExercises(snapshot: Snapshot, ids: string[]) {
+  const workout = snapshot.workout;
+  if (!workout) throw new Error("No hay un entrenamiento en curso.");
+  const unique = [...new Set(ids)];
+  if (
+    !unique.length ||
+    unique.length > 200 ||
+    unique.some((id) => !findExercise(snapshot, id))
+  )
+    throw new Error("Elegí ejercicios válidos.");
+  const first = workout.entries.length;
+  workout.entries.push(
+    ...unique.map((id) => {
+      const tracking = metricFor(snapshot, id);
+      return {
+        id,
+        note: "",
+        tracking,
+        sets: Array.from({ length: lastSetCount(snapshot, id) }, () =>
+          blankSet(tracking),
+        ),
+      };
+    }),
+  );
+  workout.openExercises = [
+    ...new Set([...(workout.openExercises ?? [0]), first]),
+  ];
+  workout.index = first;
+}
+
 export const workoutRatings = [
   "excellent",
   "good",

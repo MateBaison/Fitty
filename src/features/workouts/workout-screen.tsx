@@ -6,6 +6,7 @@ import { Timer } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import {
   buildSession,
+  addWorkoutExercises,
   countSetGroups,
   findExercise,
   type CatalogExercise,
@@ -19,9 +20,11 @@ import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { SetGrid } from "./set-grid";
 import { SessionExtras, emptyExtras } from "./session-extras";
 import { useRuntime } from "@/state/runtime-provider";
+import { ExercisePicker } from "@/features/exercises/exercise-picker";
 import { ReplacementDialog } from "./replacement-dialog";
 import { replaceWorkoutExercise } from "@/domain/exercise-replacement";
 export function WorkoutScreen() {
+  const [picking, setPicking] = useState(false);
   const [replacement, setReplacement] = useState<number | null>(null);
   const { snapshot, change, notify, t } = useApp(),
     router = useRouter(),
@@ -58,8 +61,7 @@ export function WorkoutScreen() {
   const routine = snapshot.routines.find(
       (routine) => routine.id === workout.rid,
     ),
-    day = routine?.days.find((day) => day.id === workout.did),
-    individual = snapshot.settings.workoutLayout === "individual";
+    day = routine?.days.find((day) => day.id === workout.did);
   const editEntry = (index: number, edit: (draft: Entry) => void) =>
     change((draft) => {
       const entry = draft.workout?.entries[index];
@@ -68,8 +70,6 @@ export function WorkoutScreen() {
         edit(entry);
       }
     });
-  const selected = workout.entries[workout.index],
-    selectedExercise = selected ? findExercise(snapshot, selected.id) : null;
   const renderEntry = (entry: Entry, index: number) => {
     const exercise = findExercise(snapshot, entry.id),
       opened = workout.openExercises?.includes(index) ?? index === 0;
@@ -95,43 +95,8 @@ export function WorkoutScreen() {
           }
           onChange={(edit) => editEntry(index, edit)}
         />
-        {individual && (
-          <div className="mt-5 flex justify-center gap-3">
-            <Button
-              variant="secondary"
-              disabled={workout.index === 0}
-              onClick={() =>
-                change((draft) => {
-                  if (draft.workout) draft.workout.index--;
-                })
-              }
-            >
-              {t("Anterior", "Previous")}
-            </Button>
-            <Button
-              onClick={() => {
-                if (workout.index === workout.entries.length - 1)
-                  setFinish(true);
-                else
-                  change((draft) => {
-                    if (draft.workout) draft.workout.index++;
-                  });
-              }}
-            >
-              {workout.index === workout.entries.length - 1
-                ? t("Finalizar", "Finish")
-                : t("Siguiente", "Next")}
-            </Button>
-          </div>
-        )}
       </>
     );
-    if (individual)
-      return (
-        <section key={index} className="panel">
-          {content}
-        </section>
-      );
     return (
       <details
         key={index}
@@ -179,6 +144,16 @@ export function WorkoutScreen() {
   };
   return (
     <>
+      {picking && (
+        <ExercisePicker
+          onClose={() => setPicking(false)}
+          onPick={(ids) => {
+            if (change((draft) => addWorkoutExercises(draft, ids))) {
+              setPicking(false);
+            }
+          }}
+        />
+      )}
       {replacement !== null && workout.entries[replacement] && (
         <ReplacementDialog
           entry={workout.entries[replacement]}
@@ -194,55 +169,30 @@ export function WorkoutScreen() {
           {day?.name ?? t("Entrenamiento", "Workout")} · {workout.index + 1}/
           {workout.entries.length}
         </span>
-        <h1>
-          {individual
-            ? (selectedExercise?.name ?? selected?.id)
-            : t("Tu entrenamiento", "Your workout")}
-        </h1>
+        <h1>{t("Tu entrenamiento", "Your workout")}</h1>
       </div>
-      {individual && selectedExercise && (
-        <button
-          type="button"
-          className="mb-4 w-full"
-          aria-label={`${t("Ampliar", "Enlarge")} ${selectedExercise.name}`}
-          onClick={() => setImage(selectedExercise)}
-        >
-          <ExerciseVisual exercise={selectedExercise} large />
-        </button>
-      )}
       <div className="workout-toolbar">
+        <Button variant="secondary" onClick={() => setPicking(true)}>
+          {t("Agregar ejercicios", "Add exercises")}
+        </Button>
         <Button
           variant="secondary"
           onClick={() =>
             change((draft) => {
-              draft.settings.workoutLayout = individual ? "list" : "individual";
+              if (!draft.workout) return;
+              const allOpen =
+                draft.workout.openExercises?.length ===
+                draft.workout.entries.length;
+              draft.workout.openExercises = allOpen
+                ? []
+                : draft.workout.entries.map((_, index) => index);
             })
           }
         >
-          {individual
-            ? t("Ver todos los ejercicios", "View all exercises")
-            : t("Vista individual", "Individual view")}
+          {workout.openExercises?.length === workout.entries.length
+            ? t("Cerrar todos", "Collapse all")
+            : t("Desplegar todos", "Expand all")}
         </Button>
-        {!individual && (
-          <Button
-            variant="secondary"
-            onClick={() =>
-              change((draft) => {
-                if (!draft.workout) return;
-                const allOpen =
-                  draft.workout.openExercises?.length ===
-                  draft.workout.entries.length;
-                draft.workout.openExercises = allOpen
-                  ? []
-                  : draft.workout.entries.map((_, index) => index);
-              })
-            }
-          >
-            {workout.openExercises?.length === workout.entries.length
-              ? t("Cerrar todos", "Collapse all")
-              : t("Desplegar todos", "Expand all")}
-          </Button>
-        )}
         <Button
           variant="secondary"
           onClick={() => {
@@ -316,66 +266,62 @@ export function WorkoutScreen() {
           </div>
         )}
       </section>
-      {individual && selected
-        ? renderEntry(selected, workout.index)
-        : workout.entries.flatMap((entry, index) => {
-            if (!entry.superset) return [renderEntry(entry, index)];
-            const indices = workout.entries.flatMap((item, number) =>
-              item.superset === entry.superset ? [number] : [],
-            );
-            if (indices[0] !== index) return [];
-            return [
-              <section className="panel superset-group" key={entry.superset}>
-                <div className="mb-2 flex items-center justify-between gap-3">
-                  <strong>{t("Superserie", "Superset")}</strong>
-                  <Button
-                    variant="secondary"
-                    onClick={() => {
-                      const next =
-                        indices[
-                          (indices.indexOf(workout.index) + 1) % indices.length
-                        ];
-                      if (next === undefined) return;
-                      change((draft) => {
-                        if (draft.workout) {
-                          draft.workout.index = next;
-                          draft.workout.openExercises = [
-                            ...new Set([
-                              ...(draft.workout.openExercises ?? []),
-                              next,
-                            ]),
-                          ];
-                        }
-                      });
-                      document
-                        .querySelector(`[data-workout-entry="${next}"]`)
-                        ?.scrollIntoView({
-                          behavior: "smooth",
-                          block: "start",
-                        });
-                    }}
-                  >
-                    {t("Alternar ejercicio", "Switch exercise")}
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {t(
-                    "Una serie de cada ejercicio; después, descanso.",
-                    "One set of each exercise, then rest.",
-                  )}
-                </p>
-                {indices.map((number) => {
-                  const item = workout.entries[number];
-                  return item ? renderEntry(item, number) : null;
-                })}
-              </section>,
-            ];
-          })}
-      {!individual && (
-        <Button className="mt-3 w-full" onClick={() => setFinish(true)}>
-          {t("Finalizar entrenamiento", "Finish workout")}
-        </Button>
-      )}
+      {workout.entries.flatMap((entry, index) => {
+        if (!entry.superset) return [renderEntry(entry, index)];
+        const indices = workout.entries.flatMap((item, number) =>
+          item.superset === entry.superset ? [number] : [],
+        );
+        if (indices[0] !== index) return [];
+        return [
+          <section className="panel superset-group" key={entry.superset}>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <strong>{t("Superserie", "Superset")}</strong>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  const next =
+                    indices[
+                      (indices.indexOf(workout.index) + 1) % indices.length
+                    ];
+                  if (next === undefined) return;
+                  change((draft) => {
+                    if (draft.workout) {
+                      draft.workout.index = next;
+                      draft.workout.openExercises = [
+                        ...new Set([
+                          ...(draft.workout.openExercises ?? []),
+                          next,
+                        ]),
+                      ];
+                    }
+                  });
+                  document
+                    .querySelector(`[data-workout-entry="${next}"]`)
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                }}
+              >
+                {t("Alternar ejercicio", "Switch exercise")}
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {t(
+                "Una serie de cada ejercicio; después, descanso.",
+                "One set of each exercise, then rest.",
+              )}
+            </p>
+            {indices.map((number) => {
+              const item = workout.entries[number];
+              return item ? renderEntry(item, number) : null;
+            })}
+          </section>,
+        ];
+      })}
+      <Button className="mt-3 w-full" onClick={() => setFinish(true)}>
+        {t("Finalizar entrenamiento", "Finish workout")}
+      </Button>
       <Button
         variant="destructive-solid"
         className="mt-3 w-full"
