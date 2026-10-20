@@ -596,7 +596,10 @@
     "Volvé a iniciar sesión para enviar la consulta.": "Reconnectez-vous pour envoyer votre demande.",
     "Consulta enviada": "Demande envoyée",
     "Te responderemos por correo.": "Nous vous répondrons par e-mail.",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Ajustez le zoom. L’aperçu circulaire montre votre future photo de profil."
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Ajustez le zoom. L’aperçu circulaire montre votre future photo de profil.",
+    "Completá tus datos": "Complétez vos informations",
+    "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Complétez ou vérifiez ces champs pour continuer. La photo de profil est facultative.",
+    "Revisar datos": "Vérifier les informations"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -2992,7 +2995,10 @@
     "Volvé a iniciar sesión para enviar la consulta.": "Melde dich erneut an, um deine Anfrage zu senden.",
     "Consulta enviada": "Anfrage gesendet",
     "Te responderemos por correo.": "Wir antworten dir per E-Mail.",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Passe den Zoom an. Die runde Vorschau zeigt, wie dein Profilfoto aussehen wird."
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Passe den Zoom an. Die runde Vorschau zeigt, wie dein Profilfoto aussehen wird.",
+    "Completá tus datos": "Vervollständige deine Angaben",
+    "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Vervollständige oder prüfe diese Felder. Das Profilfoto ist optional.",
+    "Revisar datos": "Angaben prüfen"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -3591,7 +3597,10 @@
     "Volvé a iniciar sesión para enviar la consulta.": "Accedi nuovamente per inviare la richiesta.",
     "Consulta enviada": "Richiesta inviata",
     "Te responderemos por correo.": "Ti risponderemo via email.",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Regola lo zoom. L’anteprima circolare mostra come apparirà la tua foto del profilo."
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Regola lo zoom. L’anteprima circolare mostra come apparirà la tua foto del profilo.",
+    "Completá tus datos": "Completa i tuoi dati",
+    "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Completa o controlla questi campi per continuare. La foto del profilo è facoltativa.",
+    "Revisar datos": "Controlla i dati"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4190,7 +4199,10 @@
     "Volvé a iniciar sesión para enviar la consulta.": "Entre novamente para enviar a consulta.",
     "Consulta enviada": "Consulta enviada",
     "Te responderemos por correo.": "Responderemos por e-mail.",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Ajuste o zoom. A prévia circular mostra como ficará sua foto de perfil."
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Ajuste o zoom. A prévia circular mostra como ficará sua foto de perfil.",
+    "Completá tus datos": "Complete seus dados",
+    "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Complete ou revise estes campos para continuar. A foto de perfil é opcional.",
+    "Revisar datos": "Revisar dados"
   },
   "en": {
     "Sexo": "Sex",
@@ -4504,6 +4516,9 @@
     "Sin preferencia": "No preference",
     "Consulta enviada": "Inquiry sent",
     "Te responderemos por correo.": "We will reply by email.",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Adjust the zoom. The circular preview shows how your profile photo will look."
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Adjust the zoom. The circular preview shows how your profile photo will look.",
+    "Completá tus datos": "Complete your details",
+    "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Complete or check these fields to continue. Your profile photo is optional.",
+    "Revisar datos": "Review details"
   }
 }

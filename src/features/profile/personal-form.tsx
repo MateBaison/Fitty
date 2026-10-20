@@ -8,6 +8,11 @@ import { useRouter } from "next/navigation";
 import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AppDialog } from "@/components/ui/app-dialog";
+import {
+  missingProfileFields,
+  type RequiredProfileField,
+} from "@/domain/profile-validation";
 import { ProfilePhotoEditor } from "./profile-photo-editor";
 import { MenstrualCalendar } from "./menstrual-calendar";
 import { compressedPhoto, safePhoto } from "@/lib/browser/photos";
@@ -27,6 +32,19 @@ export function PersonalForm({
 }) {
   const { snapshot, user, change, flush, notify, t, holdRefresh } = useApp(),
     router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [missing, setMissing] = useState<RequiredProfileField[]>([]);
+  const [validationOpen, setValidationOpen] = useState(false);
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const fieldLabels = {
+    name: t("Nombre", "Name"),
+    birth: t("Fecha de nacimiento", "Birth date"),
+    country: t("País", "Country"),
+    height: t("Altura", "Height"),
+    weight: t("Peso", "Weight"),
+    gender: t("Género", "Gender"),
+  };
   const photoInput = useRef<HTMLInputElement>(null);
   const [photoSource, setPhotoSource] = useState<string | null>(null);
   const [draft, setDraft] = useState(initialProfile ?? snapshot.profile),
@@ -43,13 +61,25 @@ export function PersonalForm({
     () => (changed ? holdRefresh() : undefined),
     [changed, holdRefresh],
   );
-  const set = (key: string, value: string | number) =>
+  const set = (key: string, value: string | number) => {
     setDraft((previous) => ({ ...previous, [key]: value }));
+    setMissing((previous) => previous.filter((field) => field !== key));
+  };
   return (
     <form
+      ref={formRef}
+      noValidate={onboarding}
       className="personal-form space-y-4"
       onSubmit={async (event) => {
         event.preventDefault();
+        if (onboarding) {
+          const fields = missingProfileFields(draft, todayKey);
+          setMissing(fields);
+          if (fields.length) {
+            setValidationOpen(true);
+            return;
+          }
+        }
         const name = z.string().trim().min(1).max(80).safeParse(draft.name);
         if (!name.success)
           return notify(t("Ingresá tu nombre.", "Enter your name."));
@@ -87,6 +117,41 @@ export function PersonalForm({
           );
       }}
     >
+      <AppDialog
+        open={validationOpen}
+        onClose={() => {
+          setValidationOpen(false);
+          requestAnimationFrame(() =>
+            formRef.current
+              ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+              ?.focus(),
+          );
+        }}
+        title={t("Completá tus datos", "Complete your details")}
+        description={t(
+          "Completá o revisá estos campos para continuar. La foto de perfil es opcional.",
+          "Complete or check these fields to continue. Your profile photo is optional.",
+        )}
+      >
+        <ul className="list-disc ps-5">
+          {missing.map((field) => (
+            <li key={field}>{fieldLabels[field]}</li>
+          ))}
+        </ul>
+        <Button
+          type="button"
+          onClick={() => {
+            setValidationOpen(false);
+            requestAnimationFrame(() =>
+              formRef.current
+                ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+                ?.focus(),
+            );
+          }}
+        >
+          {t("Revisar datos", "Review details")}
+        </Button>
+      </AppDialog>
       <ProfilePhotoEditor
         source={photoSource}
         onClose={() => setPhotoSource(null)}
@@ -162,6 +227,7 @@ export function PersonalForm({
             {t("Nombre", "Name")}
             <Input
               required
+              aria-invalid={missing.includes("name")}
               maxLength={80}
               value={draft.name ?? ""}
               onChange={(event) => set("name", event.target.value)}
@@ -195,7 +261,9 @@ export function PersonalForm({
           {t("Fecha de nacimiento", "Birth date")}
           <Input
             type="date"
-            max={new Date().toISOString().slice(0, 10)}
+            required={onboarding}
+            aria-invalid={missing.includes("birth")}
+            max={todayKey}
             value={draft.birth ?? ""}
             onChange={(event) => set("birth", event.target.value)}
           />
@@ -203,6 +271,8 @@ export function PersonalForm({
         <label>
           {t("País", "Country")}
           <select
+            required={onboarding}
+            aria-invalid={missing.includes("country")}
             aria-label={t("País", "Country")}
             value={draft.country ?? ""}
             onChange={(event) => set("country", event.target.value)}
@@ -223,9 +293,18 @@ export function PersonalForm({
         <label>
           {t("Altura", "Height")} ({snapshot.settings.height})
           <select
-            value={Number(draft.height) || 175}
+            required={onboarding}
+            aria-invalid={missing.includes("height")}
+            value={
+              onboarding ? (draft.height ?? "") : Number(draft.height) || 175
+            }
             onChange={(event) => set("height", Number(event.target.value))}
           >
+            {onboarding && (
+              <option value="">
+                {t("Seleccioná una opción", "Select an option")}
+              </option>
+            )}
             {[
               ...new Set([
                 Number(draft.height) || 175,
@@ -248,9 +327,18 @@ export function PersonalForm({
         <label>
           {t("Peso", "Weight")} ({snapshot.settings.weight})
           <select
-            value={Number(draft.weight) || 75}
+            required={onboarding}
+            aria-invalid={missing.includes("weight")}
+            value={
+              onboarding ? (draft.weight ?? "") : Number(draft.weight) || 75
+            }
             onChange={(event) => set("weight", Number(event.target.value))}
           >
+            {onboarding && (
+              <option value="">
+                {t("Seleccioná una opción", "Select an option")}
+              </option>
+            )}
             {[
               ...new Set([
                 Number(draft.weight) || 75,
@@ -268,10 +356,23 @@ export function PersonalForm({
         <label>
           {t("Género", "Gender")}
           <select
+            required={onboarding}
+            aria-invalid={missing.includes("gender")}
             value={draft.gender ?? ""}
             onChange={(event) => set("gender", event.target.value)}
           >
-            <option value="">
+            {onboarding && (
+              <option value="">
+                {t("Seleccioná una opción", "Select an option")}
+              </option>
+            )}
+            <option
+              value={
+                onboarding || draft.gender === "undisclosed"
+                  ? "undisclosed"
+                  : ""
+              }
+            >
               {t("Prefiero no decirlo", "Prefer not to say")}
             </option>
             <option value="hombre">{t("Hombre", "Male")}</option>
