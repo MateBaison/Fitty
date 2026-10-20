@@ -1430,8 +1430,8 @@ input[type="range"] {
   background: var(--secondary);
 }
 .menstrual-days button[aria-pressed="true"] {
-  background: var(--primary);
-  color: var(--primary-foreground);
+  background: #f9a8d4;
+  color: #171717;
 }
 .menstrual-days button:disabled {
   opacity: 0.35;
