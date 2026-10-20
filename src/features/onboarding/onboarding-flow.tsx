@@ -18,6 +18,7 @@ export function OnboardingFlow() {
   const [step, setStep] = useState<"profile" | "training">(
     snapshot.profile.onboardingComplete ? "training" : "profile",
   );
+  const [configuring, setConfiguring] = useState(false);
   const [mode, setMode] = useState<"custom" | "auto">("custom");
   const [experience, setExperience] = useState<TrainingExperience>("beginner");
   const [days, setDays] = useState(2);
@@ -113,6 +114,10 @@ export function OnboardingFlow() {
           className="space-y-5"
           onSubmit={(event) => {
             event.preventDefault();
+            if (!pending && mode === "auto" && !configuring) {
+              setConfiguring(true);
+              return;
+            }
             void save();
           }}
         >
@@ -120,36 +125,37 @@ export function OnboardingFlow() {
             <legend className="sr-only">
               {t("Tu entrenamiento", "Your training")}
             </legend>
-            <div className="onboarding-choices">
-              <Button
-                type="button"
-                className="h-auto min-h-12 whitespace-normal py-4"
-                variant={mode === "custom" ? "default" : "secondary"}
-                aria-pressed={mode === "custom"}
-                onClick={() => {
-                  setMode("custom");
-                  void save("custom");
-                }}
-              >
-                {t(
-                  "Tengo una rutina: quiero armarla",
-                  "I have a routine: I want to build it",
-                )}
-              </Button>
-              <Button
-                type="button"
-                className="h-auto min-h-12 whitespace-normal py-4"
-                variant={mode === "auto" ? "default" : "secondary"}
-                aria-pressed={mode === "auto"}
-                onClick={() => setMode("auto")}
-              >
-                {t(
-                  "Necesito una rutina automática",
-                  "I need an automatic routine",
-                )}
-              </Button>
-            </div>
-            {mode === "auto" && (
+            {!configuring && (
+              <div className="onboarding-choices">
+                <Button
+                  type="button"
+                  className="h-auto min-h-12 whitespace-normal py-4"
+                  variant={mode === "custom" ? "default" : "secondary"}
+                  aria-pressed={mode === "custom"}
+                  onClick={() => {
+                    setMode("custom");
+                  }}
+                >
+                  {t(
+                    "Tengo una rutina: quiero armarla",
+                    "I have a routine: I want to build it",
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  className="h-auto min-h-12 whitespace-normal py-4"
+                  variant={mode === "auto" ? "default" : "secondary"}
+                  aria-pressed={mode === "auto"}
+                  onClick={() => setMode("auto")}
+                >
+                  {t(
+                    "Necesito una rutina automática",
+                    "I need an automatic routine",
+                  )}
+                </Button>
+              </div>
+            )}
+            {mode === "auto" && configuring && (
               <>
                 <label className="block">
                   {t("Experiencia previa", "Previous experience")}
@@ -266,22 +272,24 @@ export function OnboardingFlow() {
               type="button"
               variant="secondary"
               disabled={busy || pending}
-              onClick={() => setStep("profile")}
+              onClick={() =>
+                configuring ? setConfiguring(false) : setStep("profile")
+              }
             >
               {t("Volver", "Back")}
             </Button>
-            {(mode === "auto" || pending) && (
-              <Button
-                type="submit"
-                disabled={busy || (mode === "auto" && !groups.length)}
-              >
-                {busy
-                  ? t("Guardando…", "Saving…")
-                  : pending
-                    ? t("Reintentar sincronización", "Retry sync")
-                    : t("Crear rutina y entrar", "Create routine and enter")}
-              </Button>
-            )}
+            <Button
+              type="submit"
+              disabled={busy || (configuring && !groups.length)}
+            >
+              {busy
+                ? t("Guardando…", "Saving…")
+                : pending
+                  ? t("Reintentar sincronización", "Retry sync")
+                  : configuring
+                    ? t("Crear rutina y entrar", "Create routine and enter")
+                    : t("Continuar", "Continue")}
+            </Button>
           </div>
         </form>
       )}
