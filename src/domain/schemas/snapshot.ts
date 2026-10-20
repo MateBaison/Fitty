@@ -113,6 +113,7 @@ export const settingsSchema = z.looseObject({
   distance: z.enum(["km", "mi"]).optional(),
   language: z.string().optional(),
   theme: z.string().optional(),
+  combatClock: z.unknown().optional(),
   exerciseMetrics: z.record(z.string(), z.string()).optional(),
   restEnabled: z.boolean().optional(),
   restSeconds: nonnegative.optional(),

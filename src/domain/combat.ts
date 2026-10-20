@@ -13,6 +13,14 @@ export const combatConfigSchema = z.object({
   prep: z.number().int().min(0).max(600),
 });
 export type CombatConfig = z.infer<typeof combatConfigSchema>;
+// Read optional preferences without rejecting older accounts or future metadata.
+export function readCombatConfig(value: unknown): CombatConfig {
+  const parsed = combatConfigSchema.safeParse(value);
+  return parsed.success
+    ? parsed.data
+    : { mode: "boxeo", ...combatPresets.boxeo, prep: 10 };
+}
+
 export type CombatSignal = "round" | "rest" | "warning" | "finish";
 export type CombatState = {
   phase: "prep" | "work" | "rest" | "done";

@@ -2,6 +2,8 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import {
   CombatMachine,
+  combatConfigSchema,
+  readCombatConfig,
   type CombatConfig,
   type CombatSignal,
 } from "@/domain/combat";
@@ -49,7 +51,7 @@ type ClockContext = {
 };
 const Context = createContext<ClockContext | null>(null);
 export function ClockProvider({ children }: { children: React.ReactNode }) {
-  const { notify, change, t } = useApp(),
+  const { snapshot, notify, change, t } = useApp(),
     [now, setNow] = useState(Date.now()),
     [section, setSection] = useState("stopwatch"),
     [sw, setSw] = useState({ running: false, elapsed: 0, started: 0 }),
@@ -72,7 +74,10 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
     currentSpeed: 0,
     fixTime: 0,
   });
-  const combat = useRef(new CombatMachine()),
+  const [combatMachine] = useState(
+    () => new CombatMachine(readCombatConfig(snapshot.settings.combatClock)),
+  );
+  const combat = useRef(combatMachine),
     audio = useRef(new CombatAudio()),
     watch = useRef<number | null>(null),
     trackRef = useRef(track);
@@ -84,6 +89,21 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
       track.preparing,
   );
   trackRef.current = track;
+  useEffect(() => {
+    const machine = combat.current;
+    // Refresh idle preferences after cloud reconciliation, without restarting
+    // an active or paused session when another device changes its settings.
+    if (
+      machine.state.running ||
+      (machine.state.end !== 0 && machine.state.phase !== "done")
+    )
+      return;
+    const saved = readCombatConfig(snapshot.settings.combatClock);
+    if (JSON.stringify(saved) !== JSON.stringify(machine.config)) {
+      machine.reset(saved);
+      setNow(Date.now());
+    }
+  }, [snapshot.settings.combatClock]);
   const soundFailed = useRef(false);
   const reportSoundFailure = () => {
     if (soundFailed.current) return;
@@ -297,8 +317,23 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
         combat: combat.current,
         configureCombat: (config) => {
           try {
-            combat.current.reset(config);
-            setNow(Date.now());
+            const validated = combatConfigSchema.parse(config);
+            if (
+              change((draft) => {
+                const previous = draft.settings.combatClock;
+                draft.settings.combatClock = {
+                  ...(previous &&
+                  typeof previous === "object" &&
+                  !Array.isArray(previous)
+                    ? previous
+                    : {}),
+                  ...validated,
+                };
+              })
+            ) {
+              combat.current.reset(validated);
+              setNow(Date.now());
+            }
           } catch {
             notify("Revisá los valores del reloj de combate.");
           }

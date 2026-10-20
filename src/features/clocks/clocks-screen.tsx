@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { useClock } from "./clock-provider";
 import { useApp } from "@/state/app-provider";
-import { combatPresets, timeFormat, type CombatConfig } from "@/domain/combat";
+import { timeFormat } from "@/domain/combat";
 import { RouteMap } from "./route-map";
 import { TrackingHistory } from "./tracking-history";
 import { Button } from "@/components/ui/button";
@@ -241,27 +241,6 @@ export function ClocksScreen() {
             aria-label={t("Combate", "Combat")}
           >
             {timeFormat(combat.state.remaining)}
-          </div>
-          <div className="muscle-chips">
-            {Object.entries(combatPresets).map(([mode, preset]) => (
-              <button
-                key={mode}
-                aria-pressed={combat.config.mode === mode}
-                onClick={() =>
-                  clock.configureCombat({
-                    mode: mode as CombatConfig["mode"],
-                    ...preset,
-                    prep: combat.config.prep,
-                  })
-                }
-              >
-                {mode === "muay-thai"
-                  ? "Muay Thai"
-                  : mode === "boxeo"
-                    ? t("Boxeo", "Boxing")
-                    : mode.toUpperCase()}
-              </button>
-            ))}
           </div>
           <div className="form-grid">
             {(["rounds", "work", "rest", "prep"] as const).map(
