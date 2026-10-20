@@ -1030,9 +1030,12 @@ label input[type="checkbox"] {
 }
 .profile-summary-grid {
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
+  grid-template-columns: clamp(112px, 36vw, 144px) minmax(0, 1fr);
   gap: 16px;
   align-items: center;
+}
+.profile-summary-grid > * {
+  min-width: 0;
 }
 .profile-avatar {
   width: 88px;
@@ -1342,8 +1345,9 @@ input[type="range"] {
   gap: 10px;
 }
 .profile-photo-controls .profile-avatar {
-  width: 72px;
-  height: 72px;
+  width: min(120px, 100%);
+  height: auto;
+  aspect-ratio: 1;
 }
 .profile-photo-remove {
   background: #dc2626;
