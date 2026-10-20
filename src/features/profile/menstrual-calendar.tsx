@@ -132,25 +132,6 @@ export function MenstrualCalendar({
                 "Dates stay in your account and are excluded from shared routines. Turning off the calendar keeps your records.",
               )}
             </p>
-            {dates.length > 0 && (
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={() => {
-                  if (
-                    confirm(
-                      t(
-                        "¿Eliminar todas las fechas registradas? Guardá los cambios para confirmar la eliminación.",
-                        "Delete all recorded dates? Save your changes to confirm removal.",
-                      ),
-                    )
-                  )
-                    onChange({ dates: [] });
-                }}
-              >
-                {t("Borrar registro menstrual", "Clear menstrual records")}
-              </Button>
-            )}
           </div>
         </details>
       )}
