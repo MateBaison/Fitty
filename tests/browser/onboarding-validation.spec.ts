@@ -37,4 +37,26 @@ test("onboarding shows missing fields and allows a complete profile without a ph
   await expect(
     page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
   ).toBeVisible();
+  const custom = page.getByRole("button", {
+    name: "Tengo una rutina: quiero armarla",
+    exact: true,
+  });
+  await expect(custom).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("combobox")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Crear rutina y entrar", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("button", {
+      name: "Necesito una rutina automática",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByRole("combobox", { name: /^Experiencia previa/ }),
+  ).toBeVisible();
+  await custom.click();
+  await expect(page).toHaveURL(/\/home$/);
+  await page.reload();
+  await expect(page).toHaveURL(/\/home$/);
 });
