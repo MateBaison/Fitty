@@ -593,7 +593,9 @@
     "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Envoi non confirmé. Votre brouillon est conservé pour réessayer.",
     "Revisá el formato, la cantidad y el tamaño de los archivos.": "Vérifiez le format, le nombre et la taille des fichiers.",
     "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "Votre demande, les pièces jointes et l’adresse e-mail du compte seront envoyées à soporte@fitty.uy via Resend. Nous répondrons par e-mail.",
-    "Volvé a iniciar sesión para enviar la consulta.": "Reconnectez-vous pour envoyer votre demande."
+    "Volvé a iniciar sesión para enviar la consulta.": "Reconnectez-vous pour envoyer votre demande.",
+    "Consulta enviada": "Demande envoyée",
+    "Te responderemos por correo.": "Nous vous répondrons par e-mail."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1189,7 +1191,9 @@
     "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "无法确认发送结果。草稿已保留，您可以重试。",
     "Revisá el formato, la cantidad y el tamaño de los archivos.": "请检查文件格式、数量和大小。",
     "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "您的咨询、附件及账户邮箱将通过 Resend 发送至 soporte@fitty.uy。我们将通过电子邮件回复。",
-    "Volvé a iniciar sesión para enviar la consulta.": "请重新登录后发送咨询。"
+    "Volvé a iniciar sesión para enviar la consulta.": "请重新登录后发送咨询。",
+    "Consulta enviada": "咨询已发送",
+    "Te responderemos por correo.": "我们将通过电子邮件回复。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1785,7 +1789,9 @@
     "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "भेजने की पुष्टि नहीं हो सकी। फिर प्रयास करने के लिए आपका मसौदा सुरक्षित है।",
     "Revisá el formato, la cantidad y el tamaño de los archivos.": "फ़ाइल का प्रारूप, संख्या और आकार जाँचें।",
     "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "आपका प्रश्न, संलग्नक और खाते का ईमेल Resend के माध्यम से soporte@fitty.uy को भेजे जाएँगे। हम ईमेल से उत्तर देंगे।",
-    "Volvé a iniciar sesión para enviar la consulta.": "प्रश्न भेजने के लिए फिर से साइन इन करें।"
+    "Volvé a iniciar sesión para enviar la consulta.": "प्रश्न भेजने के लिए फिर से साइन इन करें।",
+    "Consulta enviada": "पूछताछ भेज दी गई",
+    "Te responderemos por correo.": "हम ईमेल से जवाब देंगे।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2381,7 +2387,9 @@
     "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "تعذر تأكيد الإرسال. احتفظنا بالمسودة لتعيد المحاولة.",
     "Revisá el formato, la cantidad y el tamaño de los archivos.": "تحقق من صيغة الملفات وعددها وحجمها.",
     "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "سيُرسل استفسارك ومرفقاته وبريد حسابك إلى soporte@fitty.uy عبر Resend. سنرد بالبريد الإلكتروني.",
-    "Volvé a iniciar sesión para enviar la consulta.": "سجّل الدخول مجددًا لإرسال الاستفسار."
+    "Volvé a iniciar sesión para enviar la consulta.": "سجّل الدخول مجددًا لإرسال الاستفسار.",
+    "Consulta enviada": "تم إرسال الاستفسار",
+    "Te responderemos por correo.": "سنرد عليك عبر البريد الإلكتروني."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2977,7 +2985,9 @@
     "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Der Versand konnte nicht bestätigt werden. Dein Entwurf bleibt für einen erneuten Versuch erhalten.",
     "Revisá el formato, la cantidad y el tamaño de los archivos.": "Prüfe Dateiformat, Anzahl und Größe.",
     "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "Deine Anfrage, Anhänge und Konto-E-Mail werden über Resend an soporte@fitty.uy gesendet. Wir antworten per E-Mail.",
-    "Volvé a iniciar sesión para enviar la consulta.": "Melde dich erneut an, um deine Anfrage zu senden."
+    "Volvé a iniciar sesión para enviar la consulta.": "Melde dich erneut an, um deine Anfrage zu senden.",
+    "Consulta enviada": "Anfrage gesendet",
+    "Te responderemos por correo.": "Wir antworten dir per E-Mail."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -3573,7 +3583,9 @@
     "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Impossibile confermare l’invio. La bozza è conservata per riprovare.",
     "Revisá el formato, la cantidad y el tamaño de los archivos.": "Controlla formato, numero e dimensioni dei file.",
     "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "La richiesta, gli allegati e l’email dell’account saranno inviati a soporte@fitty.uy tramite Resend. Risponderemo via email.",
-    "Volvé a iniciar sesión para enviar la consulta.": "Accedi nuovamente per inviare la richiesta."
+    "Volvé a iniciar sesión para enviar la consulta.": "Accedi nuovamente per inviare la richiesta.",
+    "Consulta enviada": "Richiesta inviata",
+    "Te responderemos por correo.": "Ti risponderemo via email."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4169,7 +4181,9 @@
     "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Não foi possível confirmar o envio. Seu rascunho foi preservado para tentar novamente.",
     "Revisá el formato, la cantidad y el tamaño de los archivos.": "Confira o formato, a quantidade e o tamanho dos arquivos.",
     "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "Sua consulta, anexos e e-mail da conta serão enviados a soporte@fitty.uy pelo Resend. Responderemos por e-mail.",
-    "Volvé a iniciar sesión para enviar la consulta.": "Entre novamente para enviar a consulta."
+    "Volvé a iniciar sesión para enviar la consulta.": "Entre novamente para enviar a consulta.",
+    "Consulta enviada": "Consulta enviada",
+    "Te responderemos por correo.": "Responderemos por e-mail."
   },
   "en": {
     "Sexo": "Sex",
@@ -4480,6 +4494,8 @@
     "Limpiar filtros": "Clear filters",
     "Próximamente, profesionales en Fitty": "Professionals are coming to Fitty",
     "Todavía no hay profesionales publicados. Las postulaciones aún no están habilitadas.": "No professionals are listed yet. Applications are not open yet.",
-    "Sin preferencia": "No preference"
+    "Sin preferencia": "No preference",
+    "Consulta enviada": "Inquiry sent",
+    "Te responderemos por correo.": "We will reply by email."
   }
 }

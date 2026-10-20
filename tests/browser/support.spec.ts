@@ -64,16 +64,43 @@ test("support retries preserve draft and identity and success confirms only a su
   await dialog
     .getByRole("button", { name: "Enviar consulta", exact: true })
     .click();
+  const confirmation = page.getByRole("dialog", {
+    name: "Consulta enviada",
+    exact: true,
+  });
+  await expect(confirmation).toBeVisible();
   await expect(
-    dialog.getByText("Consulta enviada. Te responderemos por correo.", {
-      exact: true,
-    }),
+    confirmation.getByText("Te responderemos por correo.", { exact: true }),
   ).toBeVisible();
+  await expect(confirmation.getByRole("textbox")).toHaveCount(0);
+  const close = confirmation.getByRole("button", {
+    name: "Cerrar",
+    exact: true,
+  });
+  await expect(close).toBeFocused();
+  await page.screenshot({
+    path: `artifacts/support-confirmation-${test.info().project.name}.png`,
+  });
+  await expect(page.locator('[data-slot="dialog-overlay"]')).toHaveCSS(
+    "backdrop-filter",
+    /blur/,
+  );
+  await page
+    .locator('[data-slot="dialog-overlay"]')
+    .click({ position: { x: 5, y: 5 }, force: true });
+  await expect(confirmation).toBeVisible();
   expect(sent[0]?.id).toBe(sent[1]?.id);
   expect(sent[1]?.attachment).toBe("note.txt");
+  await close.click();
+  await expect(confirmation).not.toBeVisible();
+  await page.getByRole("button", { name: "Soporte", exact: true }).click();
   await expect(
     dialog.getByRole("textbox", { name: "Mensaje", exact: true }),
   ).toHaveValue("");
+  await expect(
+    dialog.getByRole("combobox", { name: "Tipo de consulta", exact: true }),
+  ).toHaveValue("");
+  await expect(dialog.getByText("note.txt", { exact: true })).toHaveCount(0);
 });
 test("anonymous support POST is rejected and malformed authenticated requests do not send", async ({
   page,

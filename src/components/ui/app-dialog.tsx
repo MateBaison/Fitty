@@ -15,6 +15,8 @@ export function AppDialog({
   compactHeader = false,
   description = "",
   children,
+  overlayClassName,
+  disablePointerDismissal = false,
 }: {
   open: boolean;
   onClose: () => void;
@@ -23,15 +25,19 @@ export function AppDialog({
   compactHeader?: boolean;
   description?: string;
   children: React.ReactNode;
+  overlayClassName?: string;
+  disablePointerDismissal?: boolean;
 }) {
   return (
     <Dialog
       open={open}
+      disablePointerDismissal={disablePointerDismissal}
       onOpenChange={(value) => {
         if (!value) onClose();
       }}
     >
       <DialogContent
+        overlayClassName={overlayClassName}
         className={cn(
           "w-[calc(100%-2rem)] max-w-[680px] sm:max-w-[680px] p-5",
           compactHeader && "compact-dialog",
