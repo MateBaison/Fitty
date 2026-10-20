@@ -2,14 +2,14 @@ import type { CombatSignal } from "@/domain/combat";
 export class CombatAudio {
   private context: AudioContext | null = null;
   private configureSession() {
-    // Short clock alerts should mix with music rather than claim exclusive
-    // playback. Safari can reconfigure the session when a context starts or
-    // resumes, so also apply this after activation and before each cue.
+    // Keep alerts audible on iOS. Mixable ambient/transient sessions can
+    // remain silent on physical iPhones even while Web Audio is running.
+    // Playback restores output, but can interrupt music from other apps.
     try {
       const session = (
         navigator as Navigator & { audioSession?: { type: string } }
       ).audioSession;
-      if (session) session.type = "transient";
+      if (session) session.type = "playback";
     } catch {
       // Keep Web Audio available when session configuration is unsupported.
     }

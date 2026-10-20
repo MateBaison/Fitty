@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { CombatAudio } from "../../src/lib/browser/combat-audio";
 
 test.each(["supported", "unavailable", "rejected"] as const)(
-  "mixable clock audio supports interrupted Safari and distinct cues with %s session configuration",
+  "audible clock audio supports interrupted Safari and distinct cues with %s session configuration",
   async (configuration) => {
     const names = ["AudioContext", "webkitAudioContext", "navigator"] as const;
     const descriptors = names.map((name) =>
@@ -32,12 +32,12 @@ test.each(["supported", "unavailable", "rejected"] as const)(
       tones = 0;
       constructor() {
         if (configuration === "supported")
-          expect(session.type).toBe("transient");
+          expect(session.type).toBe("playback");
         contexts.push(this);
       }
       resume() {
         if (configuration === "supported")
-          expect(session.type).toBe("transient");
+          expect(session.type).toBe("playback");
         this.resumes++;
         // Simulate Safari resetting the session during context activation.
         sessionType = "auto";
@@ -108,13 +108,13 @@ test.each(["supported", "unavailable", "rejected"] as const)(
       await audio.unlock();
       const context = contexts[0]!;
       expect(requests).toEqual(
-        configuration === "unavailable" ? [] : ["transient", "transient"],
+        configuration === "unavailable" ? [] : ["playback", "playback"],
       );
       expect(context.resumes).toBe(1);
       expect(context.primed).toBe(1);
       if (configuration === "supported") sessionType = "auto";
       await audio.play("round");
-      if (configuration === "supported") expect(session.type).toBe("transient");
+      if (configuration === "supported") expect(session.type).toBe("playback");
       expect(context.tones).toBe(18);
       await audio.play("boards");
       expect(context.tones).toBe(21);
@@ -130,7 +130,7 @@ test.each(["supported", "unavailable", "rejected"] as const)(
       await audio.unlock();
       expect(contexts).toHaveLength(2);
       audio.close();
-      expect(requests.every((type) => type === "transient")).toBe(true);
+      expect(requests.every((type) => type === "playback")).toBe(true);
     } finally {
       names.forEach((name, index) => {
         const descriptor = descriptors[index];
