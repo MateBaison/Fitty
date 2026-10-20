@@ -55,14 +55,6 @@ export function ResetAccount() {
                 localStorage.setItem(key, raw);
                 if (localStorage.getItem(key) !== raw)
                   throw new Error("backup");
-                const url = URL.createObjectURL(
-                  new Blob([raw], { type: "application/json" }),
-                );
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = "fitty-antes-de-reiniciar.json";
-                link.click();
-                setTimeout(() => URL.revokeObjectURL(url), 30000);
                 if (!change(restartAccount)) throw new Error("reset");
                 setApplied(true);
               }
