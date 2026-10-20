@@ -2,14 +2,16 @@ import type { CombatSignal } from "@/domain/combat";
 export class CombatAudio {
   private context: AudioContext | null = null;
   async unlock() {
-    // Safari's ambient audio can be muted by the phone's silent switch.
+    // Mix clock cues with music from other apps. Do this before creating or
+    // resuming the context so even output priming does not request exclusive
+    // playback. Safari may mute ambient cues when the silent switch is on.
     const session = (
       navigator as Navigator & {
         audioSession?: { type: string };
       }
     ).audioSession;
     try {
-      if (session) session.type = "playback";
+      if (session) session.type = "ambient";
     } catch {
       // Browsers without configurable audio sessions still use Web Audio.
     }
