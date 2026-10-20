@@ -87,7 +87,13 @@ export function OnboardingFlow() {
           ? t("Paso 1 de 2 · Tus datos", "Step 1 of 2 · Your details")
           : t("Paso 2 de 2 · Tu entrenamiento", "Step 2 of 2 · Your training")}
       </p>
-      <h1 className="mb-5 text-2xl font-bold">
+      <h1
+        className={
+          step === "training"
+            ? "mb-5 text-center text-2xl font-bold"
+            : "mb-5 text-2xl font-bold"
+        }
+      >
         {step === "profile"
           ? t("Crear tu perfil", "Create your profile")
           : t("¿Cómo querés empezar?", "How would you like to start?")}
