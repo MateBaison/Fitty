@@ -240,6 +240,20 @@ export function OnboardingFlow() {
                     )}
                   </legend>
                   <div className="onboarding-groups">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={muscleGroups.every((group) =>
+                          groups.includes(group),
+                        )}
+                        onChange={(event) =>
+                          setGroups(
+                            event.target.checked ? [...muscleGroups] : [],
+                          )
+                        }
+                      />
+                      {t("Todo", "All")}
+                    </label>
                     {muscleGroups.map((group) => (
                       <label key={group}>
                         <input

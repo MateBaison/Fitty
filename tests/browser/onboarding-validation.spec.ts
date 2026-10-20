@@ -57,6 +57,18 @@ test("onboarding shows missing fields and allows a complete profile without a ph
   await expect(
     page.getByRole("combobox", { name: /^Experiencia previa/ }),
   ).toBeVisible();
+  const all = page.getByRole("checkbox", { name: "Todo", exact: true });
+  await expect(all).toBeChecked();
+  await all.click();
+  await expect(page.getByRole("checkbox", { checked: true })).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Crear rutina y entrar", exact: true }),
+  ).toBeDisabled();
+  await all.click();
+  await expect(page.getByRole("checkbox", { checked: false })).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Crear rutina y entrar", exact: true }),
+  ).toBeEnabled();
   await page.getByRole("button", { name: "Volver", exact: true }).click();
   await custom.click();
   await expect(
