@@ -31,12 +31,16 @@ test.each(["supported", "unavailable", "rejected"] as const)(
       primed = 0;
       tones = 0;
       constructor() {
-        if (configuration === "supported") expect(session.type).toBe("ambient");
+        if (configuration === "supported")
+          expect(session.type).toBe("transient");
         contexts.push(this);
       }
       resume() {
-        if (configuration === "supported") expect(session.type).toBe("ambient");
+        if (configuration === "supported")
+          expect(session.type).toBe("transient");
         this.resumes++;
+        // Simulate Safari resetting the session during context activation.
+        sessionType = "auto";
         this.state = "running";
         return Promise.resolve();
       }
@@ -104,11 +108,13 @@ test.each(["supported", "unavailable", "rejected"] as const)(
       await audio.unlock();
       const context = contexts[0]!;
       expect(requests).toEqual(
-        configuration === "unavailable" ? [] : ["ambient"],
+        configuration === "unavailable" ? [] : ["transient", "transient"],
       );
       expect(context.resumes).toBe(1);
       expect(context.primed).toBe(1);
+      if (configuration === "supported") sessionType = "auto";
       await audio.play("round");
+      if (configuration === "supported") expect(session.type).toBe("transient");
       expect(context.tones).toBe(18);
       await audio.play("boards");
       expect(context.tones).toBe(21);
@@ -124,7 +130,7 @@ test.each(["supported", "unavailable", "rejected"] as const)(
       await audio.unlock();
       expect(contexts).toHaveLength(2);
       audio.close();
-      expect(requests.every((type) => type === "ambient")).toBe(true);
+      expect(requests.every((type) => type === "transient")).toBe(true);
     } finally {
       names.forEach((name, index) => {
         const descriptor = descriptors[index];

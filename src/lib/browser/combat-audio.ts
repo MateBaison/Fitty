@@ -1,20 +1,21 @@
 import type { CombatSignal } from "@/domain/combat";
 export class CombatAudio {
   private context: AudioContext | null = null;
-  async unlock() {
-    // Mix clock cues with music from other apps. Do this before creating or
-    // resuming the context so even output priming does not request exclusive
-    // playback. Safari may mute ambient cues when the silent switch is on.
-    const session = (
-      navigator as Navigator & {
-        audioSession?: { type: string };
-      }
-    ).audioSession;
+  private configureSession() {
+    // Short clock alerts should mix with music rather than claim exclusive
+    // playback. Safari can reconfigure the session when a context starts or
+    // resumes, so also apply this after activation and before each cue.
     try {
-      if (session) session.type = "ambient";
+      const session = (
+        navigator as Navigator & { audioSession?: { type: string } }
+      ).audioSession;
+      if (session) session.type = "transient";
     } catch {
-      // Browsers without configurable audio sessions still use Web Audio.
+      // Keep Web Audio available when session configuration is unsupported.
     }
+  }
+  async unlock() {
+    this.configureSession();
     const Audio =
       globalThis.AudioContext ??
       (
@@ -36,12 +37,14 @@ export class CombatAudio {
     source.onended = () => source.disconnect();
     source.start();
     await resumed;
+    this.configureSession();
     if (context.state !== "running")
       throw new Error("Audio output is not running");
   }
   async play(signal: CombatSignal | "timer" | "boards") {
     if (!this.context) return;
     if (this.context.state !== "running") await this.unlock();
+    this.configureSession();
     if (signal === "boards") {
       // Three short, pitched impacts imitate the wooden 15-second clapper.
       for (let hit = 0; hit < 3; hit++) {
