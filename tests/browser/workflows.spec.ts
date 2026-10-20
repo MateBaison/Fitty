@@ -557,10 +557,7 @@ test("profile photos can be cropped, cancelled and removed with persisted saves"
   await zoom.focus();
   await page.keyboard.press("Home");
   for (let i = 0; i < 20; i++) await page.keyboard.press("ArrowRight");
-  await page
-    .getByRole("slider", { name: "Posición horizontal de la foto" })
-    .focus();
-  await page.keyboard.press("End");
+  await expect(page.getByRole("slider")).toHaveCount(1);
   await page.screenshot({
     path: `artifacts/profile-crop-${info.project.name}.png`,
     animations: "disabled",
@@ -586,8 +583,9 @@ test("profile photos can be cropped, cancelled and removed with persisted saves"
   });
   expect(cropped.width).toBe(360);
   expect(cropped.height).toBe(360);
-  expect(cropped.pixel[2]!).toBeGreaterThan(200);
-  expect(cropped.pixel[0]!).toBeLessThan(40);
+  // Centered crop retains both halves of the fixture at every zoom.
+  expect(cropped.pixel[2]!).toBeGreaterThan(80);
+  expect(cropped.pixel[0]!).toBeGreaterThan(80);
   await page
     .getByRole("button", { name: "Guardar cambios", exact: true })
     .click();

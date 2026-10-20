@@ -17,14 +17,10 @@ export function ProfilePhotoEditor({
   const canvas = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [zoom, setZoom] = useState(1);
-  const [x, setX] = useState(50);
-  const [y, setY] = useState(50);
   const [error, setError] = useState("");
   useEffect(() => {
     setImage(null);
     setZoom(1);
-    setX(50);
-    setY(50);
     setError("");
     if (!source) return;
     let active = true;
@@ -53,8 +49,8 @@ export function ProfilePhotoEditor({
     ctx.clearRect(0, 0, 360, 360);
     ctx.drawImage(
       image,
-      ((image.naturalWidth - side) * x) / 100,
-      ((image.naturalHeight - side) * y) / 100,
+      (image.naturalWidth - side) / 2,
+      (image.naturalHeight - side) / 2,
       side,
       side,
       0,
@@ -62,15 +58,15 @@ export function ProfilePhotoEditor({
       360,
       360,
     );
-  }, [image, zoom, x, y]);
+  }, [image, zoom]);
   return (
     <AppDialog
       open={source !== null}
       onClose={onClose}
       title={t("Recortar y ajustar foto", "Crop and adjust photo")}
       description={t(
-        "Ajustá el zoom y la posición. La vista circular muestra cómo quedará tu foto de perfil.",
-        "Adjust the zoom and position. The circular preview shows how your profile photo will look.",
+        "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.",
+        "Adjust the zoom. The circular preview shows how your profile photo will look.",
       )}
     >
       <canvas
@@ -95,34 +91,6 @@ export function ProfilePhotoEditor({
             step={0.05}
             value={zoom}
             onChange={(event) => setZoom(Number(event.target.value))}
-          />
-        </label>
-        <label>
-          {t("Posición horizontal", "Horizontal position")}
-          <input
-            type="range"
-            aria-label={t(
-              "Posición horizontal de la foto",
-              "Horizontal photo position",
-            )}
-            min={0}
-            max={100}
-            value={x}
-            onChange={(event) => setX(Number(event.target.value))}
-          />
-        </label>
-        <label>
-          {t("Posición vertical", "Vertical position")}
-          <input
-            type="range"
-            aria-label={t(
-              "Posición vertical de la foto",
-              "Vertical photo position",
-            )}
-            min={0}
-            max={100}
-            value={y}
-            onChange={(event) => setY(Number(event.target.value))}
           />
         </label>
       </div>
