@@ -36,5 +36,6 @@ export const config = {
     "/onboarding",
     "/auth/:path*",
     "/api/account/:path*",
+    "/api/support",
   ],
 };

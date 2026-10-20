@@ -1,0 +1,15 @@
+# Support email delivery
+
+The support form POSTs multipart data to `/api/support`. The Node route verifies the requesting origin and Supabase user remotely. The recipient (`soporte@fitty.uy`) and sender (`Fitty Soporte <soporte@fitty.uy>`) are fixed server-side. Reply-To comes only from the verified account email, never from form fields. The email contains the selected category, subject, message, request reference, reply address and explicitly chosen attachments. No account snapshot, workout history, body photos, GPS route or profile metadata is attached automatically.
+
+Configure **RESEND_API_KEY** as a sensitive, server-only Vercel environment variable for the hercules Production environment. Use a separate Sending access API key restricted to the verified `fitty.uy` domain. Do not reuse the Supabase SMTP key. Never prefix it with NEXT_PUBLIC_, put it in `.env.example`, commit it or display it in logs. Production must be redeployed after configuring it. Preview stays unconfigured unless deliberately assigned its own key; an unconfigured route returns 503 without claiming success.
+
+Zoho owns incoming MX. Resend authenticates outgoing form notifications with its existing DKIM/return-path DNS. Do not replace Zoho MX or its SPF/DKIM, or delete Resend DNS. Human replies are sent from Zoho and use the customer's account email through Reply-To.
+
+Limits: five nonempty files, 3 MiB combined, bounded multipart body, 150-character single-line subject, 5,000-character message and a strict category/UUID. Allowed file extensions are PNG/JPEG/WebP/HEIC/HEIF, PDF, TXT, MP4/WebM/MOV. This is a format allowlist, not malware scanning; attachments are untrusted. The lower total replaces the old unsent 10 MB placeholder because Vercel Functions accept at most 4.5 MB requests. Files are held transiently for delivery, not stored in a public bucket or an account snapshot.
+
+A per-instance burst guard accepts up to three new attempts per account per ten minutes and is bounded to 5,000 recent accounts. It is best-effort protection, not a distributed quota: cold starts, multiple instances and deployments reset/isolate it. Before broad exposure, add a durable shared rate limit or platform WAF rate rule and monitor Resend's shared account quota (the same provider account also sends sign-in emails). Provider quotas are the global ceiling. No database, billing plan or shared SMTP credentials are changed by this feature.
+
+Unchanged retries use the same per-account Resend Idempotency-Key, retained by Resend for 24 hours. After edits or confirmed success a new request UUID is used. On timeout/error the browser retains the draft and files, and does not show success. A success means Resend accepted the email and returned an ID, not that Zoho has delivered it; production verification must also check receipt in Zoho.
+
+References: https://resend.com/docs/api-reference/emails/send-email ; https://resend.com/docs/dashboard/emails/idempotency-keys ; https://vercel.com/docs/functions/limitations .

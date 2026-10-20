@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Headset, Paperclip, X } from "lucide-react";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MAX_SUPPORT_BYTES, validSupportFile } from "@/lib/support/validation";
 import { translate } from "@/data/translations";
 
 export function SupportPanel({ language = "es" }: { language?: string }) {
@@ -16,6 +17,79 @@ export function SupportPanel({ language = "es" }: { language?: string }) {
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const requestId = useRef<string | undefined>(undefined);
+  const inFlight = useRef(false);
+  const [busy, setBusy] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [sent, setSent] = useState(false);
+  useEffect(() => {
+    requestId.current = undefined;
+  }, [category, subject, message, files]);
+  const submit = async () => {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setBusy(true);
+    setFeedback("");
+    setSent(false);
+    requestId.current ??= crypto.randomUUID();
+    const form = new FormData();
+    form.set("requestId", requestId.current);
+    form.set("category", category);
+    form.set("subject", subject);
+    form.set("message", message);
+    for (const file of files) form.append("files", file);
+    try {
+      const response = await fetch("/api/support", {
+        method: "POST",
+        body: form,
+      });
+      const data = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        error?: string;
+      } | null;
+      if (response.ok && data?.ok === true) {
+        setCategory("");
+        setSubject("");
+        setMessage("");
+        setFiles([]);
+        requestId.current = undefined;
+        setSent(true);
+        setFeedback(
+          t(
+            "Consulta enviada. Te responderemos por correo.",
+            "Inquiry sent. We will reply by email.",
+          ),
+        );
+      } else {
+        setFeedback(
+          response.status === 429
+            ? t(
+                "Esperá unos minutos antes de enviar otra consulta.",
+                "Wait a few minutes before sending another inquiry.",
+              )
+            : response.status === 401
+              ? t(
+                  "Volvé a iniciar sesión para enviar la consulta.",
+                  "Sign in again to send your inquiry.",
+                )
+              : t(
+                  "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.",
+                  "We could not confirm delivery. Your draft is preserved so you can retry.",
+                ),
+        );
+      }
+    } catch {
+      setFeedback(
+        t(
+          "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.",
+          "We could not confirm delivery. Your draft is preserved so you can retry.",
+        ),
+      );
+    } finally {
+      inFlight.current = false;
+      setBusy(false);
+    }
+  };
   return (
     <>
       <Button
@@ -28,7 +102,9 @@ export function SupportPanel({ language = "es" }: { language?: string }) {
       </Button>
       <AppDialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          if (!busy) setOpen(false);
+        }}
         title={t("Soporte", "Support")}
         description={t(
           "Contanos cómo podemos ayudarte.",
@@ -37,152 +113,169 @@ export function SupportPanel({ language = "es" }: { language?: string }) {
       >
         <form
           className="flex max-h-[70dvh] flex-col gap-4 overflow-y-auto"
-          onSubmit={(event) => event.preventDefault()}
+          onChange={() => {
+            setFeedback("");
+            setSent(false);
+          }}
+          onSubmit={(event) => {
+            event.preventDefault();
+            void submit();
+          }}
         >
-          <p role="status" className="text-sm text-muted-foreground">
-            {t(
-              "El envío estará disponible cuando habilitemos el correo de soporte. Por ahora no se enviará ningún mensaje ni archivo.",
-              "Sending will be available once our support email is enabled. No messages or files will be sent for now.",
-            )}
-          </p>
-          <label className="flex flex-col gap-2" htmlFor="support-category">
-            {t("Tipo de consulta", "Inquiry type")}
-            <select
-              id="support-category"
-              value={category}
-              onChange={(event) => setCategory(event.target.value)}
-              required
-            >
-              <option value="">
-                {t("Seleccioná una opción", "Select an option")}
-              </option>
-              <option value="account">
-                {t("Cuenta y acceso", "Account and sign-in")}
-              </option>
-              <option value="technical">
-                {t("Problema técnico", "Technical issue")}
-              </option>
-              <option value="exercises">
-                {t("Ejercicios y rutinas", "Exercises and routines")}
-              </option>
-              <option value="suggestion">
-                {t("Sugerencia", "Suggestion")}
-              </option>
-              <option value="privacy">
-                {t("Privacidad y datos", "Privacy and data")}
-              </option>
-              <option value="other">
-                {t("Otra consulta", "Other inquiry")}
-              </option>
-            </select>
-          </label>
-          <label className="flex flex-col gap-2" htmlFor="support-subject">
-            {t("Título", "Subject")}
-            <Input
-              id="support-subject"
-              value={subject}
-              onChange={(event) => setSubject(event.target.value)}
-              maxLength={150}
-              required
-            />
-          </label>
-          <label className="flex flex-col gap-2" htmlFor="support-message">
-            {t("Mensaje", "Message")}
-            <textarea
-              id="support-message"
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              rows={5}
-              maxLength={5000}
-              required
-            />
-          </label>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="support-files">
-              {t("Archivos adjuntos (opcional)", "Attachments (optional)")}
-            </label>
-            <p id="support-file-help" className="text-sm text-muted-foreground">
+          <fieldset disabled={busy} className="flex min-w-0 flex-col gap-4">
+            <p role="status" className="text-sm text-muted-foreground">
               {t(
-                "Hasta 5 archivos y 10 MB en total.",
-                "Up to 5 files and 10 MB in total.",
+                "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.",
+                "Your inquiry, attachments and account email will be sent to soporte@fitty.uy through Resend. We will reply by email.",
               )}
             </p>
-            <input
-              ref={fileInput}
-              id="support-files"
-              type="file"
-              multiple
-              className="sr-only"
-              aria-describedby="support-file-help"
-              onChange={(event) => {
-                const next = [
-                  ...files,
-                  ...Array.from(event.target.files ?? []),
-                ];
-                if (
-                  next.length > 5 ||
-                  next.reduce((sum, file) => sum + file.size, 0) >
-                    10 * 1024 * 1024
-                )
-                  setError(true);
-                else {
-                  setFiles(next);
-                  setError(false);
-                }
-                event.target.value = "";
-              }}
-            />
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => fileInput.current?.click()}
-            >
-              <Paperclip aria-hidden="true" data-icon="inline-start" />
-              {t("Agregar archivos", "Add files")}
-            </Button>
-            {error && (
-              <p role="alert">
+            <label className="flex flex-col gap-2" htmlFor="support-category">
+              {t("Tipo de consulta", "Inquiry type")}
+              <select
+                id="support-category"
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                required
+              >
+                <option value="">
+                  {t("Seleccioná una opción", "Select an option")}
+                </option>
+                <option value="account">
+                  {t("Cuenta y acceso", "Account and sign-in")}
+                </option>
+                <option value="technical">
+                  {t("Problema técnico", "Technical issue")}
+                </option>
+                <option value="exercises">
+                  {t("Ejercicios y rutinas", "Exercises and routines")}
+                </option>
+                <option value="suggestion">
+                  {t("Sugerencia", "Suggestion")}
+                </option>
+                <option value="privacy">
+                  {t("Privacidad y datos", "Privacy and data")}
+                </option>
+                <option value="other">
+                  {t("Otra consulta", "Other inquiry")}
+                </option>
+              </select>
+            </label>
+            <label className="flex flex-col gap-2" htmlFor="support-subject">
+              {t("Título", "Subject")}
+              <Input
+                id="support-subject"
+                value={subject}
+                onChange={(event) => setSubject(event.target.value)}
+                maxLength={150}
+                required
+              />
+            </label>
+            <label className="flex flex-col gap-2" htmlFor="support-message">
+              {t("Mensaje", "Message")}
+              <textarea
+                id="support-message"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                rows={5}
+                maxLength={5000}
+                required
+              />
+            </label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="support-files">
+                {t("Archivos adjuntos (opcional)", "Attachments (optional)")}
+              </label>
+              <p
+                id="support-file-help"
+                className="text-sm text-muted-foreground"
+              >
                 {t(
-                  "Superaste el límite de archivos o tamaño.",
-                  "The file count or size limit was exceeded.",
+                  "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.",
+                  "Up to 5 files and 3 MB total: images, PDF, TXT or MP4, WebM and MOV videos.",
                 )}
               </p>
-            )}
-            {files.length > 0 && (
-              <ul className="flex flex-col gap-2">
-                {files.map((file, index) => (
-                  <li
-                    key={`${file.name}-${file.lastModified}-${index}`}
-                    className="flex items-center justify-between gap-2"
-                  >
-                    <span className="min-w-0 truncate">{file.name}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      aria-label={`${t("Quitar archivo", "Remove file")}: ${file.name}`}
-                      onClick={() => {
-                        setFiles(
-                          files.filter((_, position) => position !== index),
-                        );
-                        setError(false);
-                      }}
+              <input
+                ref={fileInput}
+                id="support-files"
+                type="file"
+                multiple
+                accept=".png,.jpg,.jpeg,.webp,.heic,.heif,.pdf,.txt,.mp4,.webm,.mov"
+                className="sr-only"
+                aria-describedby="support-file-help"
+                onChange={(event) => {
+                  const next = [
+                    ...files,
+                    ...Array.from(event.target.files ?? []),
+                  ];
+                  if (
+                    next.length > 5 ||
+                    next.reduce((sum, file) => sum + file.size, 0) >
+                      MAX_SUPPORT_BYTES ||
+                    next.some((file) => !validSupportFile(file))
+                  )
+                    setError(true);
+                  else {
+                    setFiles(next);
+                    setError(false);
+                  }
+                  event.target.value = "";
+                }}
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => fileInput.current?.click()}
+              >
+                <Paperclip aria-hidden="true" data-icon="inline-start" />
+                {t("Agregar archivos", "Add files")}
+              </Button>
+              {error && (
+                <p role="alert">
+                  {t(
+                    "Revisá el formato, la cantidad y el tamaño de los archivos.",
+                    "Check the file format, count and size.",
+                  )}
+                </p>
+              )}
+              {files.length > 0 && (
+                <ul className="flex flex-col gap-2">
+                  {files.map((file, index) => (
+                    <li
+                      key={`${file.name}-${file.lastModified}-${index}`}
+                      className="flex items-center justify-between gap-2"
                     >
-                      <X aria-hidden="true" />
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <p className="text-sm text-muted-foreground">
-            {t(
-              "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.",
-              "Your draft stays while you remain on this page. Do not share passwords.",
-            )}
-          </p>
-          <Button type="submit" disabled>
-            {t("Enviar consulta (próximamente)", "Send inquiry (coming soon)")}
-          </Button>
+                      <span className="min-w-0 truncate">{file.name}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        aria-label={`${t("Quitar archivo", "Remove file")}: ${file.name}`}
+                        onClick={() => {
+                          setFiles(
+                            files.filter((_, position) => position !== index),
+                          );
+                          setError(false);
+                        }}
+                      >
+                        <X aria-hidden="true" />
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {t(
+                "El borrador se conserva mientras permanezcas en esta página. No compartas contraseñas.",
+                "Your draft stays while you remain on this page. Do not share passwords.",
+              )}
+            </p>
+            <Button type="submit" disabled={busy}>
+              {busy
+                ? t("Enviando…", "Sending…")
+                : t("Enviar consulta", "Send inquiry")}
+            </Button>
+          </fieldset>
+          {feedback && <p role={sent ? "status" : "alert"}>{feedback}</p>}
         </form>
       </AppDialog>
     </>

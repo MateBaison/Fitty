@@ -584,7 +584,16 @@
     "Reiniciando…": "Réinitialisation…",
     "Confirmar reinicio": "Confirmer la réinitialisation",
     "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Outil de test temporaire. Efface le profil, les programmes et l’historique et relance la configuration. Conserve votre email et votre accès. Une copie locale sera enregistrée pour être importée depuis Profil.",
-    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Réinitialisation impossible. Vérifiez la synchronisation et le stockage du navigateur, puis réessayez."
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Réinitialisation impossible. Vérifiez la synchronisation et le stockage du navigateur, puis réessayez.",
+    "Consulta enviada. Te responderemos por correo.": "Demande envoyée. Nous vous répondrons par e-mail.",
+    "Enviando…": "Envoi…",
+    "Enviar consulta": "Envoyer la demande",
+    "Esperá unos minutos antes de enviar otra consulta.": "Attendez quelques minutes avant d’envoyer une autre demande.",
+    "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.": "Jusqu’à 5 fichiers et 3 Mo au total : images, PDF, TXT ou vidéos MP4, WebM et MOV.",
+    "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Envoi non confirmé. Votre brouillon est conservé pour réessayer.",
+    "Revisá el formato, la cantidad y el tamaño de los archivos.": "Vérifiez le format, le nombre et la taille des fichiers.",
+    "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "Votre demande, les pièces jointes et l’adresse e-mail du compte seront envoyées à soporte@fitty.uy via Resend. Nous répondrons par e-mail.",
+    "Volvé a iniciar sesión para enviar la consulta.": "Reconnectez-vous pour envoyer votre demande."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1171,7 +1180,16 @@
     "Reiniciando…": "正在重置…",
     "Confirmar reinicio": "确认重置",
     "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "临时测试工具。清空个人资料、训练计划和历史并重新开始设置，保留邮箱及登录。操作前会保存本地备份，可从个人资料页导入。",
-    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "无法完成重置。请检查同步和浏览器存储后重试。"
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "无法完成重置。请检查同步和浏览器存储后重试。",
+    "Consulta enviada. Te responderemos por correo.": "咨询已发送，我们将通过电子邮件回复。",
+    "Enviando…": "正在发送…",
+    "Enviar consulta": "发送咨询",
+    "Esperá unos minutos antes de enviar otra consulta.": "请稍等几分钟再发送其他咨询。",
+    "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.": "最多 5 个文件，总计 3 MB：图片、PDF、TXT 或 MP4、WebM 和 MOV 视频。",
+    "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "无法确认发送结果。草稿已保留，您可以重试。",
+    "Revisá el formato, la cantidad y el tamaño de los archivos.": "请检查文件格式、数量和大小。",
+    "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "您的咨询、附件及账户邮箱将通过 Resend 发送至 soporte@fitty.uy。我们将通过电子邮件回复。",
+    "Volvé a iniciar sesión para enviar la consulta.": "请重新登录后发送咨询。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1758,7 +1776,16 @@
     "Reiniciando…": "रीसेट हो रहा है…",
     "Confirmar reinicio": "रीसेट की पुष्टि करें",
     "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "अस्थायी परीक्षण उपकरण। प्रोफ़ाइल, दिनचर्या और इतिहास मिटाकर प्रारंभिक सेटअप पर लौटता है। ईमेल और लॉगिन बने रहेंगे। पहले एक स्थानीय बैकअप सहेजा जाएगा जिसे प्रोफ़ाइल से आयात कर सकते हैं।",
-    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "रीसेट पूरा नहीं हुआ। सिंक और ब्राउज़र स्टोरेज जाँचें और फिर प्रयास करें।"
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "रीसेट पूरा नहीं हुआ। सिंक और ब्राउज़र स्टोरेज जाँचें और फिर प्रयास करें।",
+    "Consulta enviada. Te responderemos por correo.": "प्रश्न भेज दिया गया। हम ईमेल से उत्तर देंगे।",
+    "Enviando…": "भेजा जा रहा है…",
+    "Enviar consulta": "प्रश्न भेजें",
+    "Esperá unos minutos antes de enviar otra consulta.": "दूसरा प्रश्न भेजने से पहले कुछ मिनट प्रतीक्षा करें।",
+    "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.": "अधिकतम 5 फ़ाइलें और कुल 3 MB: चित्र, PDF, TXT या MP4, WebM और MOV वीडियो।",
+    "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "भेजने की पुष्टि नहीं हो सकी। फिर प्रयास करने के लिए आपका मसौदा सुरक्षित है।",
+    "Revisá el formato, la cantidad y el tamaño de los archivos.": "फ़ाइल का प्रारूप, संख्या और आकार जाँचें।",
+    "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "आपका प्रश्न, संलग्नक और खाते का ईमेल Resend के माध्यम से soporte@fitty.uy को भेजे जाएँगे। हम ईमेल से उत्तर देंगे।",
+    "Volvé a iniciar sesión para enviar la consulta.": "प्रश्न भेजने के लिए फिर से साइन इन करें।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2345,7 +2372,16 @@
     "Reiniciando…": "جارٍ إعادة الضبط…",
     "Confirmar reinicio": "تأكيد إعادة الضبط",
     "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "أداة اختبار مؤقتة. تمسح الملف والبرامج والسجل وتعيد الإعداد الأولي مع الاحتفاظ بالبريد وتسجيل الدخول. ستُحفظ نسخة محلية يمكن استيرادها من الملف الشخصي.",
-    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "تعذر إكمال إعادة الضبط. تحقق من المزامنة وتخزين المتصفح ثم أعد المحاولة."
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "تعذر إكمال إعادة الضبط. تحقق من المزامنة وتخزين المتصفح ثم أعد المحاولة.",
+    "Consulta enviada. Te responderemos por correo.": "تم إرسال الاستفسار. سنرد عبر البريد الإلكتروني.",
+    "Enviando…": "جارٍ الإرسال…",
+    "Enviar consulta": "إرسال الاستفسار",
+    "Esperá unos minutos antes de enviar otra consulta.": "انتظر بضع دقائق قبل إرسال استفسار آخر.",
+    "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.": "حتى 5 ملفات وبإجمالي 3 ميغابايت: صور أو PDF أو TXT أو فيديو MP4 وWebM وMOV.",
+    "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "تعذر تأكيد الإرسال. احتفظنا بالمسودة لتعيد المحاولة.",
+    "Revisá el formato, la cantidad y el tamaño de los archivos.": "تحقق من صيغة الملفات وعددها وحجمها.",
+    "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "سيُرسل استفسارك ومرفقاته وبريد حسابك إلى soporte@fitty.uy عبر Resend. سنرد بالبريد الإلكتروني.",
+    "Volvé a iniciar sesión para enviar la consulta.": "سجّل الدخول مجددًا لإرسال الاستفسار."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2932,7 +2968,16 @@
     "Reiniciando…": "Wird zurückgesetzt…",
     "Confirmar reinicio": "Zurücksetzen bestätigen",
     "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Vorübergehendes Testwerkzeug. Leert Profil, Trainingspläne und Verlauf und startet die Einrichtung neu. E-Mail und Zugang bleiben erhalten. Zuerst wird eine lokale Sicherung zum Import im Profil gespeichert.",
-    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Zurücksetzen fehlgeschlagen. Synchronisierung und Browserspeicher prüfen und erneut versuchen."
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Zurücksetzen fehlgeschlagen. Synchronisierung und Browserspeicher prüfen und erneut versuchen.",
+    "Consulta enviada. Te responderemos por correo.": "Anfrage gesendet. Wir antworten per E-Mail.",
+    "Enviando…": "Wird gesendet…",
+    "Enviar consulta": "Anfrage senden",
+    "Esperá unos minutos antes de enviar otra consulta.": "Warte einige Minuten, bevor du eine weitere Anfrage sendest.",
+    "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.": "Bis zu 5 Dateien und insgesamt 3 MB: Bilder, PDF, TXT oder MP4-, WebM- und MOV-Videos.",
+    "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Der Versand konnte nicht bestätigt werden. Dein Entwurf bleibt für einen erneuten Versuch erhalten.",
+    "Revisá el formato, la cantidad y el tamaño de los archivos.": "Prüfe Dateiformat, Anzahl und Größe.",
+    "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "Deine Anfrage, Anhänge und Konto-E-Mail werden über Resend an soporte@fitty.uy gesendet. Wir antworten per E-Mail.",
+    "Volvé a iniciar sesión para enviar la consulta.": "Melde dich erneut an, um deine Anfrage zu senden."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -3519,7 +3564,16 @@
     "Reiniciando…": "Reimpostazione…",
     "Confirmar reinicio": "Conferma ripristino",
     "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Strumento temporaneo di prova. Svuota profilo, programmi e cronologia e riavvia la configurazione. Mantiene email e accesso. Prima viene salvata una copia locale importabile dal Profilo.",
-    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Ripristino non completato. Controlla sincronizzazione e memoria del browser e riprova."
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Ripristino non completato. Controlla sincronizzazione e memoria del browser e riprova.",
+    "Consulta enviada. Te responderemos por correo.": "Richiesta inviata. Ti risponderemo via email.",
+    "Enviando…": "Invio…",
+    "Enviar consulta": "Invia richiesta",
+    "Esperá unos minutos antes de enviar otra consulta.": "Attendi qualche minuto prima di inviare un’altra richiesta.",
+    "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.": "Fino a 5 file e 3 MB totali: immagini, PDF, TXT o video MP4, WebM e MOV.",
+    "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Impossibile confermare l’invio. La bozza è conservata per riprovare.",
+    "Revisá el formato, la cantidad y el tamaño de los archivos.": "Controlla formato, numero e dimensioni dei file.",
+    "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "La richiesta, gli allegati e l’email dell’account saranno inviati a soporte@fitty.uy tramite Resend. Risponderemo via email.",
+    "Volvé a iniciar sesión para enviar la consulta.": "Accedi nuovamente per inviare la richiesta."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4106,7 +4160,16 @@
     "Reiniciando…": "Reiniciando…",
     "Confirmar reinicio": "Confirmar reinício",
     "Herramienta temporal de pruebas. Vacía el perfil, rutinas e historial y vuelve a la configuración inicial. Conserva tu correo y acceso. Antes se guardará una copia local que podrás importar desde Perfil.": "Ferramenta temporária de testes. Limpa perfil, rotinas e histórico e reinicia a configuração. Mantém email e acesso. Antes, salva uma cópia local que pode ser importada pelo Perfil.",
-    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Não foi possível concluir o reinício. Verifique a sincronização e o armazenamento do navegador e tente novamente."
+    "No se pudo completar el reinicio. Revisá la sincronización y el almacenamiento del navegador y reintentá.": "Não foi possível concluir o reinício. Verifique a sincronização e o armazenamento do navegador e tente novamente.",
+    "Consulta enviada. Te responderemos por correo.": "Consulta enviada. Responderemos por e-mail.",
+    "Enviando…": "Enviando…",
+    "Enviar consulta": "Enviar consulta",
+    "Esperá unos minutos antes de enviar otra consulta.": "Espere alguns minutos antes de enviar outra consulta.",
+    "Hasta 5 archivos y 3 MB en total: imágenes, PDF, TXT o videos MP4, WebM y MOV.": "Até 5 arquivos e 3 MB no total: imagens, PDF, TXT ou vídeos MP4, WebM e MOV.",
+    "No se pudo confirmar el envío. Conservamos tu borrador para que reintentes.": "Não foi possível confirmar o envio. Seu rascunho foi preservado para tentar novamente.",
+    "Revisá el formato, la cantidad y el tamaño de los archivos.": "Confira o formato, a quantidade e o tamanho dos arquivos.",
+    "Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy a través de Resend. Te responderemos por correo.": "Sua consulta, anexos e e-mail da conta serão enviados a soporte@fitty.uy pelo Resend. Responderemos por e-mail.",
+    "Volvé a iniciar sesión para enviar la consulta.": "Entre novamente para enviar a consulta."
   },
   "en": {
     "Sexo": "Sex",
