@@ -165,10 +165,10 @@ test("library images follow profile gender without changing historical exercise 
   ]) {
     const exercise = exercises.find((item) => item.id === id)!;
     expect(exerciseImage(exercise, "hombre")).toBe(
-      `/assets/exercises/additions/${id}${id === "aperturas-inclinadas-con-mancuernas" ? "-v5" : ["press-de-banca-inclinado-con-barra", "press-de-banca-con-mancuernas", "aperturas-con-mancuernas", "aperturas-inclinadas-con-mancuernas"].includes(id) ? "-v3" : ["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta", "press-banca-con-agarre-cerrado", "extension-de-triceps-con-cable-de-agarre-inverso-con-barra"].includes(id) ? "-v2" : ""}-masculino.jpg`,
+      `/assets/exercises/additions/${id}${id === "aperturas-inclinadas-con-mancuernas" ? "-v5" : ["press-de-banca-inclinado-con-barra", "press-de-banca-con-mancuernas", "aperturas-con-mancuernas", "aperturas-inclinadas-con-mancuernas"].includes(id) ? "-v3" : ["press-de-banca-declinado-con-barra", "extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta", "press-banca-con-agarre-cerrado", "extension-de-triceps-con-cable-de-agarre-inverso-con-barra"].includes(id) ? "-v2" : ""}-masculino.jpg`,
     );
     expect(exerciseImage(exercise, "mujer")).toBe(
-      `/assets/exercises/additions/${id}${id === "aperturas-inclinadas-con-mancuernas" ? "-v5" : ["press-de-banca-inclinado-con-barra", "press-de-banca-con-mancuernas", "aperturas-con-mancuernas", "aperturas-inclinadas-con-mancuernas"].includes(id) ? "-v3" : ["extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta", "press-banca-con-agarre-cerrado", "extension-de-triceps-con-cable-de-agarre-inverso-con-barra"].includes(id) ? "-v2" : ""}-femenino.jpg`,
+      `/assets/exercises/additions/${id}${id === "aperturas-inclinadas-con-mancuernas" ? "-v5" : ["press-de-banca-inclinado-con-barra", "press-de-banca-con-mancuernas", "aperturas-con-mancuernas", "aperturas-inclinadas-con-mancuernas"].includes(id) ? "-v3" : ["press-de-banca-declinado-con-barra", "extension-de-triceps-con-polea-trasnuca", "abdominales-con-cuerda-en-polea-alta", "press-banca-con-agarre-cerrado", "extension-de-triceps-con-cable-de-agarre-inverso-con-barra"].includes(id) ? "-v2" : ""}-femenino.jpg`,
     );
     expect(exerciseImage(exercise, "otro")).toBe(`/assets/${exercise.image}`);
   }
