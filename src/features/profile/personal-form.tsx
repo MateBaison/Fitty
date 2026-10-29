@@ -382,7 +382,9 @@ export function PersonalForm({
           </select>
         </label>
         {menstrualCalendarAllowed(draft) &&
-          (["mujer", "no_binario", "otro"].includes(draft.gender ?? "") ||
+          (["", "undisclosed", "mujer", "no_binario", "otro"].includes(
+            draft.gender ?? "",
+          ) ||
             draft.menstrualCalendar?.enabled ||
             (draft.menstrualCalendar?.dates?.length ?? 0) > 0) && (
             <MenstrualCalendar
