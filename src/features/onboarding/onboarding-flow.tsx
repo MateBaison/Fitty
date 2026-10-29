@@ -31,8 +31,8 @@ export function OnboardingFlow() {
   const currentStep = step === "profile" ? 1 : 2;
   const stepDescription =
     step === "profile"
-      ? t("Paso 1 de 2 · Tus datos", "Step 1 of 2 · Your details")
-      : t("Paso 2 de 2 · Tu entrenamiento", "Step 2 of 2 · Your training");
+      ? t("Tus datos", "Your details")
+      : t("Tu entrenamiento", "Your training");
   const save = async (selectedMode = mode) => {
     if (busy) return;
     setBusy(true);
@@ -88,9 +88,19 @@ export function OnboardingFlow() {
   };
   return (
     <>
+      <h1
+        className={
+          step === "training"
+            ? "mb-5 text-center text-2xl font-bold"
+            : "mb-5 text-2xl font-bold"
+        }
+      >
+        {step === "profile"
+          ? t("Crear tu perfil", "Create your profile")
+          : t("¿Cómo querés empezar?", "How would you like to start?")}
+      </h1>
       <div className="onboarding-progress">
         <div className="onboarding-progress-meta">
-          <p className="eyebrow">{stepDescription}</p>
           <span className="onboarding-progress-count" aria-hidden="true">
             {currentStep} / 2
           </span>
@@ -133,17 +143,6 @@ export function OnboardingFlow() {
           </li>
         </ol>
       </div>
-      <h1
-        className={
-          step === "training"
-            ? "mb-5 text-center text-2xl font-bold"
-            : "mb-5 text-2xl font-bold"
-        }
-      >
-        {step === "profile"
-          ? t("Crear tu perfil", "Create your profile")
-          : t("¿Cómo querés empezar?", "How would you like to start?")}
-      </h1>
       {step === "profile" ? (
         <PersonalForm
           onboarding
