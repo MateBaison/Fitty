@@ -1,9 +1,8 @@
 import type { Snapshot } from "./schemas/snapshot";
 
 export function menstrualCalendarAllowed(profile: Snapshot["profile"]) {
-  return !["hombre", "male", "masculino"].includes(
-    (profile.gender ?? "").trim().toLowerCase(),
-  );
+  const gender = (profile.gender ?? "").trim().toLowerCase();
+  return gender !== "" && !["hombre", "male", "masculino"].includes(gender);
 }
 export function menstrualCalendarEnabled(profile: Snapshot["profile"]) {
   return (
