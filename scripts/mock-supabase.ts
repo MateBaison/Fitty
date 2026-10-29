@@ -180,7 +180,7 @@ const server = createServer(async (request, response) => {
     send({});
     return;
   }
-  if (url.pathname === "/rest/v1/mrgymson_state") {
+  if (url.pathname === "/rest/v1/Fitty_State") {
     if (!owner) {
       send({ message: "Not authenticated" }, 401);
       return;

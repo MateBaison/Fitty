@@ -8,5 +8,5 @@ select
   case when s.user_id is null then 'Sin datos sincronizados'
        else 'Con datos sincronizados' end as estado
 from auth.users u
-left join public.mrgymson_state s on s.user_id = u.id
+left join public."Fitty_State" s on s.user_id = u.id
 order by s.updated_at desc nulls last, u.created_at desc;

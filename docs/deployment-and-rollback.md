@@ -32,7 +32,7 @@ The temporary legacy fragment-session bridge is **off by default**. Only enable 
 
 - Verify a real new email account, onboarding, sign-out and session restoration.
 - Verify Google consent, PKCE return, refreshed cookies and trusted-origin errors.
-- Audit the existing table/policies: `mrgymson_state.user_id` must remain owner-restricted through `auth.uid()`; authenticated accounts must not read/write another UUID, and anonymous access must not expose snapshots.
+- Audit the existing table/policies: `Fitty_State.user_id` must remain owner-restricted through `auth.uid()`; authenticated accounts must not read/write another UUID, and anonymous access must not expose snapshots.
 - Use consenting test accounts: save routines, a workout, notes/photo/preferences; confirm them from a second browser/device.
 - Confirm offline edits/retry and recovery choices without silently replacing data.
 - Check real phone GPS permissions, routes and audible combat cues in foreground; browser/background limitations are intentional.
@@ -42,7 +42,7 @@ The mock service validates local client/server wiring and ownership behavior, **
 
 ## Data handoff and rollback
 
-No schema rewrite or destructive SQL is part of this migration. Keep `public.mrgymson_state`, its columns and user UUIDs. Photos remain in the compatible JSON snapshot; no new Storage bucket was introduced.
+No schema rewrite or destructive SQL is part of this migration. Keep `public.Fitty_State`, its columns and user UUIDs. Photos remain in the compatible JSON snapshot; no new Storage bucket was introduced.
 
 A new origin cannot read old localStorage or auth cookies. Cloud records return after signing into the same account; old-origin unsynced drafts need a private JSON export/import. The new Profile screen includes explicit export/import with confirmation and a local recovery copy. Old sharing links are not automatically redirected to Vercel; choose forwarding behavior before cutover.
 

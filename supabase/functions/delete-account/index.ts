@@ -36,7 +36,7 @@ Deno.serve(async (request: Request) => {
     input?.acknowledged !== true
   )
     return reply({ error: "confirmation" }, 400);
-  // auth.users deletion cascades to mrgymson_state and auth sessions. A database/storage
+  // auth.users deletion cascades to Fitty_State and auth sessions. A database/storage
   // failure must leave the account intact: never delete the snapshot in a separate call.
   const result = await admin.auth.admin.deleteUser(user.id);
   if (result.error) return reply({ error: "deletion_failed" }, 409);

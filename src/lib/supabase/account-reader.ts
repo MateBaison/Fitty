@@ -10,7 +10,7 @@ export async function accountSummary(userId: string) {
   const client = await serverClient();
   // Select only small fields; never serialize photo-heavy snapshots through Next.
   const { data, error } = await client
-    .from("mrgymson_state")
+    .from("Fitty_State")
     .select(
       "name:payload->profile->>name,complete:payload->profile->onboardingComplete",
     )

@@ -1,6 +1,6 @@
 # Data compatibility contract
 
-The existing Supabase table remains `public.mrgymson_state` with `user_id`, `payload` and `updated_at`. No hosted schema, policy or records were changed by this implementation. The archived SQL is a reference, not a fresh audit of actual RLS. The repository validates returned rows with Zod; no fabricated live-generated database type is claimed.
+The existing Supabase table remains `public.Fitty_State` with `user_id`, `payload` and `updated_at`. No hosted schema, policy or records were changed by this implementation. The archived SQL is a reference, not a fresh audit of actual RLS. The repository validates returned rows with Zod; no fabricated live-generated database type is claimed.
 
 Snapshots retain routines, selected routine, sessions, active workout, profile, settings, favorites and custom exercises, plus unknown fields at every persisted object level. Old aggregate sessions need not contain individual sets. Retired exercise history is not deleted. Null blanks, nullable historical durations, string profile weights/heights, photos, notes, original done/entered flags and unknown metadata survive reads/round trips.
 

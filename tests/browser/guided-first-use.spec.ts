@@ -94,7 +94,7 @@ test("failed onboarding sync can retry after reload without duplicating the rout
 }) => {
   await login(page);
   let failWrites = true;
-  await page.route("**/rest/v1/mrgymson_state*", (route) => {
+  await page.route("**/rest/v1/Fitty_State*", (route) => {
     if (failWrites && ["PATCH", "POST"].includes(route.request().method()))
       return route.fulfill({
         status: 503,

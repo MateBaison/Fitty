@@ -22,7 +22,7 @@ export function stateRepository(
     async changed(signal) {
       await checkOwner();
       const { data, error } = await client
-        .from("mrgymson_state")
+        .from("Fitty_State")
         .select("updated_at")
         .eq("user_id", userId)
         .abortSignal(signal)
@@ -38,7 +38,7 @@ export function stateRepository(
     async load(signal) {
       await checkOwner();
       const { data, error } = await client
-        .from("mrgymson_state")
+        .from("Fitty_State")
         .select("payload,updated_at")
         .eq("user_id", userId)
         .abortSignal(signal)
@@ -71,9 +71,9 @@ export function stateRepository(
       };
       const request =
         revision === null
-          ? client.from("mrgymson_state").insert(values)
+          ? client.from("Fitty_State").insert(values)
           : client
-              .from("mrgymson_state")
+              .from("Fitty_State")
               .update(values)
               .eq("user_id", userId)
               .eq("updated_at", revision);

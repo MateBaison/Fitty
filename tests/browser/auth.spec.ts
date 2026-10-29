@@ -224,7 +224,7 @@ test("header sign-out preserves unsynced edits and requires a second confirmatio
 }) => {
   await login(page);
   await page.goto("/profile");
-  await page.route("**/rest/v1/mrgymson_state*", (route) =>
+  await page.route("**/rest/v1/Fitty_State*", (route) =>
     ["POST", "PATCH"].includes(route.request().method())
       ? route.abort()
       : route.continue(),
