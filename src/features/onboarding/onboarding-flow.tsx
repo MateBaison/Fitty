@@ -28,6 +28,11 @@ export function OnboardingFlow() {
   const [pending, setPending] = useState(
     snapshot.profile.onboardingComplete === true,
   );
+  const currentStep = step === "profile" ? 1 : 2;
+  const stepDescription =
+    step === "profile"
+      ? t("Paso 1 de 2 · Tus datos", "Step 1 of 2 · Your details")
+      : t("Paso 2 de 2 · Tu entrenamiento", "Step 2 of 2 · Your training");
   const save = async (selectedMode = mode) => {
     if (busy) return;
     setBusy(true);
@@ -83,11 +88,51 @@ export function OnboardingFlow() {
   };
   return (
     <>
-      <p className="eyebrow">
-        {step === "profile"
-          ? t("Paso 1 de 2 · Tus datos", "Step 1 of 2 · Your details")
-          : t("Paso 2 de 2 · Tu entrenamiento", "Step 2 of 2 · Your training")}
-      </p>
+      <div className="onboarding-progress">
+        <div className="onboarding-progress-meta">
+          <p className="eyebrow">{stepDescription}</p>
+          <span className="onboarding-progress-count" aria-hidden="true">
+            {currentStep} / 2
+          </span>
+        </div>
+        <div
+          className="onboarding-progress-track"
+          role="progressbar"
+          aria-label={t(
+            "Progreso de creación de cuenta",
+            "Account setup progress",
+          )}
+          aria-valuemin={0}
+          aria-valuemax={2}
+          aria-valuenow={currentStep}
+          aria-valuetext={stepDescription}
+        >
+          <span style={{ width: `${currentStep * 50}%` }} />
+        </div>
+        <ol
+          className="onboarding-progress-steps"
+          aria-label={t("Pasos del registro", "Setup steps")}
+        >
+          <li
+            data-state={step === "profile" ? "current" : "complete"}
+            aria-current={step === "profile" ? "step" : undefined}
+          >
+            <span className="onboarding-progress-marker" aria-hidden="true">
+              {step === "profile" ? "1" : "✓"}
+            </span>
+            <span>{t("Tus datos", "Your details")}</span>
+          </li>
+          <li
+            data-state={step === "training" ? "current" : "upcoming"}
+            aria-current={step === "training" ? "step" : undefined}
+          >
+            <span className="onboarding-progress-marker" aria-hidden="true">
+              2
+            </span>
+            <span>{t("Tu entrenamiento", "Your training")}</span>
+          </li>
+        </ol>
+      </div>
       <h1
         className={
           step === "training"
@@ -126,34 +171,55 @@ export function OnboardingFlow() {
               {t("Tu entrenamiento", "Your training")}
             </legend>
             {!configuring && (
-              <div className="onboarding-choices">
-                <Button
-                  type="button"
-                  className="h-auto min-h-12 whitespace-normal py-4"
-                  variant={mode === "custom" ? "default" : "secondary"}
-                  aria-pressed={mode === "custom"}
-                  onClick={() => {
-                    setMode("custom");
-                  }}
-                >
+              <>
+                <p className="onboarding-intro">
                   {t(
-                    "Tengo una rutina: quiero armarla",
-                    "I have a routine: I want to build it",
+                    "Elegí cómo querés empezar. Podés cambiar tu rutina más adelante.",
+                    "Choose how you want to start. You can change your routine later.",
                   )}
-                </Button>
-                <Button
-                  type="button"
-                  className="h-auto min-h-12 whitespace-normal py-4"
-                  variant={mode === "auto" ? "default" : "secondary"}
-                  aria-pressed={mode === "auto"}
-                  onClick={() => setMode("auto")}
-                >
-                  {t(
-                    "Necesito una rutina automática",
-                    "I need an automatic routine",
-                  )}
-                </Button>
-              </div>
+                </p>
+                <div className="onboarding-choices">
+                  <Button
+                    type="button"
+                    className="onboarding-choice-card"
+                    variant={mode === "custom" ? "default" : "secondary"}
+                    aria-pressed={mode === "custom"}
+                    onClick={() => {
+                      setMode("custom");
+                    }}
+                  >
+                    <span className="onboarding-choice-title">
+                      {t("Armar mi rutina después", "Build my routine later")}
+                    </span>
+                    <span className="onboarding-choice-description">
+                      {t(
+                        "Entrá a Fitty y creala desde Inicio cuando quieras.",
+                        "Go to Fitty and create one from Home whenever you are ready.",
+                      )}
+                    </span>
+                  </Button>
+                  <Button
+                    type="button"
+                    className="onboarding-choice-card"
+                    variant={mode === "auto" ? "default" : "secondary"}
+                    aria-pressed={mode === "auto"}
+                    onClick={() => setMode("auto")}
+                  >
+                    <span className="onboarding-choice-title">
+                      {t(
+                        "Crear una rutina sugerida",
+                        "Create a suggested routine",
+                      )}
+                    </span>
+                    <span className="onboarding-choice-description">
+                      {t(
+                        "Fitty te propone una base según tu experiencia, tus días y tu objetivo.",
+                        "Fitty suggests a starting plan based on your experience, days and goal.",
+                      )}
+                    </span>
+                  </Button>
+                </div>
+              </>
             )}
             {mode === "auto" && configuring && (
               <>
@@ -302,7 +368,9 @@ export function OnboardingFlow() {
                   ? t("Reintentar sincronización", "Retry sync")
                   : configuring
                     ? t("Crear rutina y entrar", "Create routine and enter")
-                    : t("Continuar", "Continue")}
+                    : mode === "auto"
+                      ? t("Configurar rutina", "Set up routine")
+                      : t("Entrar a Fitty", "Go to Fitty")}
             </Button>
           </div>
         </form>
