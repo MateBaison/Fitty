@@ -2847,21 +2847,6 @@ input[type="range"] {
   gap: 12px;
   margin-bottom: 24px;
 }
-.onboarding-progress-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.onboarding-progress-meta .eyebrow {
-  margin: 0;
-}
-.onboarding-progress-count {
-  color: var(--muted-foreground);
-  font-size: 0.8rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
 .onboarding-progress-track {
   height: 6px;
   overflow: hidden;

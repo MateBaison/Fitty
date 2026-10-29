@@ -100,11 +100,6 @@ export function OnboardingFlow() {
           : t("¿Cómo querés empezar?", "How would you like to start?")}
       </h1>
       <div className="onboarding-progress">
-        <div className="onboarding-progress-meta">
-          <span className="onboarding-progress-count" aria-hidden="true">
-            {currentStep} / 2
-          </span>
-        </div>
         <div
           className="onboarding-progress-track"
           role="progressbar"
