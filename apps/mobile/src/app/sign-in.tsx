@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Image, KeyboardAvoidingView, Platform } from "react-native";
 import { z } from "zod";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import { signInWithProvider } from "@/lib/oauth";
 import { supabase } from "@/lib/supabase";
 import { colors } from "@/theme";
 
@@ -39,7 +40,8 @@ export default function SignIn() {
       if (error) throw new Error("El código no es válido o venció.");
     },
   });
-  const error = (sentTo ? verify.error : send.error)?.message;
+  const oauth = useMutation({ mutationFn: signInWithProvider });
+  const error = (oauth.error ?? (sentTo ? verify.error : send.error))?.message;
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -104,6 +106,20 @@ export default function SignIn() {
                 loading={send.isPending}
               >
                 Enviar código
+              </Button>
+              <Button
+                variant="secondary"
+                disabled={oauth.isPending}
+                onPress={() => oauth.mutate("google")}
+              >
+                Continuar con Google
+              </Button>
+              <Button
+                variant="secondary"
+                disabled={oauth.isPending}
+                onPress={() => oauth.mutate("apple")}
+              >
+                Continuar con Apple
               </Button>
             </>
           )}

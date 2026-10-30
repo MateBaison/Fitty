@@ -10,6 +10,8 @@ export const supabase = createClient(env.supabaseUrl, env.supabaseKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    // OAuth returns a one-time code to the app; the verifier never leaves the device.
+    flowType: "pkce",
   },
 });
 
