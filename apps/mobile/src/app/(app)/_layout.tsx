@@ -118,6 +118,7 @@ function AccountGate() {
         />
         <Tabs.Screen name="workout" options={{ href: null }} />
         <Tabs.Screen name="routines" options={{ href: null }} />
+        <Tabs.Screen name="body" options={{ href: null }} />
       </Tabs>
     </View>
   );

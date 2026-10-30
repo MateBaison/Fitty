@@ -1,8 +1,11 @@
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { View } from "react-native";
+import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { weeklySummary } from "@fitty/core/domain/progress";
 import { startWorkout } from "@fitty/core/domain/workouts";
 import { Notice } from "@/components/notice";
+import { ReadinessCheck } from "@/components/readiness";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -11,6 +14,14 @@ export default function Home() {
   const snapshot = useSnapshot();
   const { change, t } = useAccount();
   const router = useRouter();
+  const [pending, setPending] = useState<{ rid: string; did: string } | null>(
+    null,
+  );
+  const start = (rid: string, did: string) => {
+    setPending(null);
+    if (change((draft) => startWorkout(draft, rid, did)))
+      router.push("/workout");
+  };
   const week = weeklySummary(snapshot);
   const routine =
     snapshot.routines.find((item) => item.id === snapshot.selected) ??
@@ -58,12 +69,11 @@ export default function Home() {
               <Button
                 variant="secondary"
                 disabled={Boolean(snapshot.workout) || !day.items.length}
-                onPress={() => {
-                  if (
-                    change((draft) => startWorkout(draft, routine.id, day.id))
-                  )
-                    router.push("/workout");
-                }}
+                onPress={() =>
+                  menstrualCalendarEnabled(snapshot.profile)
+                    ? setPending({ rid: routine.id, did: day.id })
+                    : start(routine.id, day.id)
+                }
               >
                 {t("Empezar", "Start")}
               </Button>
@@ -77,6 +87,11 @@ export default function Home() {
           </Label>
         </Card>
       )}
+      <ReadinessCheck
+        visible={pending !== null}
+        onClose={() => setPending(null)}
+        onStart={() => pending && start(pending.rid, pending.did)}
+      />
     </Screen>
   );
 }

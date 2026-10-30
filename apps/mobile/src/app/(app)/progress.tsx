@@ -1,23 +1,28 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, View } from "react-native";
+import { Alert, Switch, View } from "react-native";
+import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { lifetimeSummary, weeklySummary } from "@fitty/core/domain/progress";
 import { findExercise, localDateKey } from "@fitty/core/domain/workouts";
 import { translate } from "@fitty/core/data/translations";
 import { Calendar } from "@/components/calendar";
+import { ManualSession } from "@/components/manual-session";
 import { TextPrompt } from "@/components/prompt";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
-import { space } from "@/theme";
+import { colors, space } from "@/theme";
 
 const KG_TO_LB = 2.20462;
 
 export default function Progress() {
   const snapshot = useSnapshot();
   const { change, t } = useAccount();
+  const router = useRouter();
   const locale = snapshot.settings.language ?? "es";
   const unit = snapshot.settings.weight ?? "kg";
   const [day, setDay] = useState(() => localDateKey(new Date()));
   const [editing, setEditing] = useState<string | null>(null);
+  const [logging, setLogging] = useState(false);
   const volume = (kg: number) =>
     `${Math.round(unit === "lb" ? kg * KG_TO_LB : kg).toLocaleString(locale)} ${unit}`;
   const week = weeklySummary(snapshot);
@@ -53,6 +58,9 @@ export default function Progress() {
           <Label>{volume(total.volumeKg)}</Label>
         </Card>
       </View>
+      <Button variant="secondary" onPress={() => router.push("/body")}>
+        {t("Medidas corporales", "Body measurements")}
+      </Button>
       <Card>
         <Calendar selected={day} onSelect={setDay} />
       </Card>
@@ -63,6 +71,43 @@ export default function Progress() {
           month: "long",
         })}
       </Label>
+      {menstrualCalendarEnabled(snapshot.profile) ? (
+        <View
+          style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
+        >
+          <Label style={{ flex: 1 }}>
+            {t("Sangrado menstrual este día", "Menstrual bleeding this day")}
+          </Label>
+          <Switch
+            accessibilityLabel={t(
+              "Sangrado menstrual este día",
+              "Menstrual bleeding this day",
+            )}
+            value={
+              snapshot.profile.menstrualCalendar?.dates?.includes(day) === true
+            }
+            trackColor={{ true: "#f472b6", false: colors.secondary }}
+            onValueChange={(marked) =>
+              void change((draft) => {
+                const dates = new Set(
+                  draft.profile.menstrualCalendar?.dates ?? [],
+                );
+                if (marked) dates.add(day);
+                else dates.delete(day);
+                draft.profile.menstrualCalendar = {
+                  ...draft.profile.menstrualCalendar,
+                  dates: [...dates].sort(),
+                };
+              })
+            }
+          />
+        </View>
+      ) : null}
+      {day <= localDateKey(new Date()) ? (
+        <Button variant="secondary" onPress={() => setLogging(true)}>
+          {t("+ Registrar entrenamiento", "+ Log workout")}
+        </Button>
+      ) : null}
       {sessions.length ? (
         sessions.map((session) => (
           <Card key={session.id}>
@@ -144,6 +189,11 @@ export default function Progress() {
           </Label>
         </Card>
       )}
+      <ManualSession
+        date={day}
+        visible={logging}
+        onClose={() => setLogging(false)}
+      />
       <TextPrompt
         visible={editing !== null}
         title={t("Comentario", "Comment")}

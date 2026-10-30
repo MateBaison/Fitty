@@ -22,10 +22,15 @@ export function ExercisePicker({
   visible,
   onClose,
   onPick,
+  single,
+  title,
 }: {
   visible: boolean;
   onClose: () => void;
   onPick: (ids: string[]) => void;
+  /** Pick one exercise immediately, e.g. to replace a workout exercise. */
+  single?: boolean;
+  title?: string;
 }) {
   const snapshot = useSnapshot();
   const { t } = useAccount();
@@ -65,7 +70,7 @@ export function ExercisePicker({
           contentContainerStyle={styles.content}
           ListHeaderComponent={
             <View style={{ gap: space(3) }}>
-              <Title>{t("Agregar ejercicios", "Add exercises")}</Title>
+              <Title>{title ?? t("Agregar ejercicios", "Add exercises")}</Title>
               <TextInput
                 value={query}
                 onChangeText={setQuery}
@@ -93,13 +98,18 @@ export function ExercisePicker({
               <Pressable
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked }}
-                onPress={() =>
+                onPress={() => {
+                  if (single) {
+                    onPick([item.id]);
+                    close();
+                    return;
+                  }
                   setSelected((current) =>
                     checked
                       ? current.filter((id) => id !== item.id)
                       : [...current, item.id],
-                  )
-                }
+                  );
+                }}
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
@@ -139,17 +149,19 @@ export function ExercisePicker({
               {t("Cancelar", "Cancel")}
             </Button>
           </View>
-          <View style={{ flex: 1 }}>
-            <Button
-              disabled={!selected.length}
-              onPress={() => {
-                onPick(selected);
-                close();
-              }}
-            >
-              {`${t("Agregar", "Add")} (${selected.length})`}
-            </Button>
-          </View>
+          {single ? null : (
+            <View style={{ flex: 1 }}>
+              <Button
+                disabled={!selected.length}
+                onPress={() => {
+                  onPick(selected);
+                  close();
+                }}
+              >
+                {`${t("Agregar", "Add")} (${selected.length})`}
+              </Button>
+            </View>
+          )}
         </View>
       </SafeAreaView>
     </Modal>

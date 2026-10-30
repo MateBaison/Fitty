@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { color, localDateKey } from "@fitty/core/domain/workouts";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -39,6 +40,12 @@ export function Calendar({
   const shift = (delta: number) =>
     setMonth(new Date(month.getFullYear(), month.getMonth() + delta, 1));
   const today = localDateKey(new Date());
+  // Masculine profiles never show menstrual borders, even with saved dates.
+  const menstrual = new Set(
+    menstrualCalendarEnabled(snapshot.profile)
+      ? (snapshot.profile.menstrualCalendar?.dates ?? [])
+      : [],
+  );
   return (
     <View style={{ gap: space(2) }}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -98,12 +105,13 @@ export function Calendar({
           const key = localDateKey(date);
           const trained = byDay.get(key);
           const active = key === selected;
+          const bleeding = menstrual.has(key);
           return (
             <Pressable
               key={key}
               accessibilityRole="button"
               accessibilityState={{ selected: active }}
-              accessibilityLabel={`${date.toLocaleDateString(locale, { day: "numeric", month: "long" })}${trained ? `, ${t("entrenado", "trained")}` : ""}`}
+              accessibilityLabel={`${date.toLocaleDateString(locale, { day: "numeric", month: "long" })}${trained ? `, ${t("entrenado", "trained")}` : ""}${bleeding ? `, ${t("sangrado menstrual registrado", "recorded menstrual bleeding")}` : ""}`}
               onPress={() => onSelect(key)}
               style={{ width: `${100 / 7}%`, aspectRatio: 1, padding: 2 }}
             >
@@ -113,8 +121,12 @@ export function Calendar({
                   borderRadius: 12,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderWidth: active || key === today ? 2 : 0,
-                  borderColor: active ? colors.primary : colors.border,
+                  borderWidth: active || bleeding || key === today ? 2 : 0,
+                  borderColor: active
+                    ? colors.primary
+                    : bleeding
+                      ? "#f472b6"
+                      : colors.border,
                   backgroundColor: trained ? `${trained}33` : "transparent",
                 }}
               >

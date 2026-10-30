@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import { languages } from "@fitty/core/data/translations";
 import {
   muscleGroups,
@@ -15,24 +15,22 @@ import {
 import { translate } from "@fitty/core/data/translations";
 import { localDateKey } from "@fitty/core/domain/workouts";
 import { ChipGroup } from "@/components/chip";
+import {
+  ProfileFields,
+  profileDraft,
+  profileValues,
+} from "@/components/profile-fields";
 import { Notice } from "@/components/notice";
-import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { makeId } from "@/lib/id";
 import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
-import { space } from "@/theme";
 
 export const goals = [
   ["Fuerza e hipertrofia", "Strength and hypertrophy"],
   ["Baja grasa corporal", "Lose body fat"],
   ["Ganar masa corporal", "Gain body mass"],
   ["Mejorar resistencia cardiovascular", "Improve cardiovascular endurance"],
-] as const;
-export const genders = [
-  ["hombre", "Hombre", "Male"],
-  ["mujer", "Mujer", "Female"],
-  ["no_binario", "No binario", "Non-binary"],
-  ["otro", "Otro", "Other"],
 ] as const;
 const experiences = [
   ["beginner", "Estoy empezando", "I'm starting out"],
@@ -63,14 +61,7 @@ export function Onboarding() {
   const { session } = useSession();
   const language = snapshot.settings.language ?? "es";
   const [step, setStep] = useState<"profile" | "training">("profile");
-  const [profile, setProfile] = useState({
-    name: snapshot.profile.name ?? "",
-    birth: snapshot.profile.birth ?? "",
-    country: snapshot.profile.country ?? "",
-    height: String(snapshot.profile.height ?? ""),
-    weight: String(snapshot.profile.weight ?? ""),
-    gender: snapshot.profile.gender ?? "",
-  });
+  const [profile, setProfile] = useState(() => profileDraft(snapshot.profile));
   const [experience, setExperience] = useState<TrainingExperience>("beginner");
   const [days, setDays] = useState(2);
   const [goal, setGoal] = useState<string>("Fuerza e hipertrofia");
@@ -78,15 +69,7 @@ export function Onboarding() {
   const [preview, setPreview] = useState<Routine | null>(null);
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
-  const setField = (field: keyof typeof profile) => (value: string) =>
-    setProfile((current) => ({ ...current, [field]: value }));
-  const values = {
-    ...profile,
-    name: profile.name.trim(),
-    country: profile.country.trim(),
-    height: Number(profile.height.replace(",", ".")),
-    weight: Number(profile.weight.replace(",", ".")),
-  };
+  const values = profileValues(profile);
   const missing = missingProfileFields(values, localDateKey(new Date()));
   const proposal = (next: number) =>
     createGuidedRoutine(
@@ -161,57 +144,7 @@ export function Onboarding() {
                 change((draft) => void (draft.settings.language = code))
               }
             />
-            <Field
-              label={t("Nombre", "Name")}
-              value={profile.name}
-              onChangeText={setField("name")}
-              maxLength={80}
-              autoComplete="name"
-            />
-            <Field
-              label={t(
-                "Fecha de nacimiento (AAAA-MM-DD)",
-                "Birth date (YYYY-MM-DD)",
-              )}
-              value={profile.birth}
-              onChangeText={setField("birth")}
-              placeholder="1995-04-21"
-              keyboardType="numbers-and-punctuation"
-              maxLength={10}
-            />
-            <Field
-              label={t("País", "Country")}
-              value={profile.country}
-              onChangeText={setField("country")}
-              autoComplete="country"
-            />
-            <View style={{ flexDirection: "row", gap: space(3) }}>
-              <View style={{ flex: 1 }}>
-                <Field
-                  label={`${t("Altura", "Height")} (cm)`}
-                  value={profile.height}
-                  onChangeText={setField("height")}
-                  keyboardType="decimal-pad"
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Field
-                  label={`${t("Peso", "Weight")} (kg)`}
-                  value={profile.weight}
-                  onChangeText={setField("weight")}
-                  keyboardType="decimal-pad"
-                />
-              </View>
-            </View>
-            <Label muted>{t("Género", "Gender")}</Label>
-            <ChipGroup
-              options={genders.map(([value, es, en]) => ({
-                value,
-                label: t(es, en),
-              }))}
-              value={profile.gender}
-              onChange={setField("gender")}
-            />
+            <ProfileFields value={profile} onChange={setProfile} />
             <Button
               disabled={missing.length > 0}
               onPress={() => setStep("training")}
