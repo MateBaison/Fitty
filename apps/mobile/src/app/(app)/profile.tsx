@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { useState } from "react";
 import { Share, Switch, View } from "react-native";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
@@ -13,6 +14,7 @@ import {
 } from "@/components/profile-fields";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
+import { pickPhoto, safePhoto } from "@/lib/photos";
 import { supabase } from "@/lib/supabase";
 import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
@@ -37,6 +39,36 @@ export default function Profile() {
     <Screen>
       <Title>{snapshot.profile.name?.trim() || t("Perfil", "Profile")}</Title>
       <Card>
+        {safePhoto(snapshot.profile.photo) ? (
+          <Image
+            source={snapshot.profile.photo}
+            style={{ width: 96, height: 96, borderRadius: 48 }}
+            accessibilityLabel={t("Foto de perfil", "Profile photo")}
+          />
+        ) : null}
+        <View style={{ flexDirection: "row", gap: space(2) }}>
+          <Button
+            variant="secondary"
+            onPress={async () => {
+              try {
+                const photo = await pickPhoto(1200);
+                if (photo) change((next) => void (next.profile.photo = photo));
+              } catch (error) {
+                notify(error instanceof Error ? error.message : String(error));
+              }
+            }}
+          >
+            {t("Cambiar foto", "Change photo")}
+          </Button>
+          {snapshot.profile.photo ? (
+            <Button
+              variant="ghost"
+              onPress={() => change((next) => void delete next.profile.photo)}
+            >
+              {t("Quitar foto", "Remove photo")}
+            </Button>
+          ) : null}
+        </View>
         <Label muted>{session?.user.email}</Label>
         <SyncStatus />
       </Card>

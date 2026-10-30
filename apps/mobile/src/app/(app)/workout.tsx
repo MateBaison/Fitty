@@ -23,6 +23,7 @@ import {
 import { ExercisePicker } from "@/components/exercise-picker";
 import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
+import { PhotoStrip } from "@/components/photo-strip";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -87,6 +88,7 @@ export default function Workout() {
   const { change, t, notify } = useAccount();
   const router = useRouter();
   const [comment, setComment] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [restEnd, setRestEnd] = useState(0);
   const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(
     null,
@@ -121,7 +123,7 @@ export default function Workout() {
             day: day?.name ?? t("Entrenamiento", "Workout"),
           },
           new Date().toISOString(),
-          { ...emptyExtras, comment: comment.trim() },
+          { ...emptyExtras, comment: comment.trim(), photos },
         );
         record.duration = Math.max(
           0,
@@ -380,6 +382,7 @@ export default function Workout() {
         maxLength={2000}
         multiline
       />
+      <PhotoStrip photos={photos} onChange={setPhotos} />
       <Button onPress={finish}>
         {t("Guardar entrenamiento", "Save workout")}
       </Button>

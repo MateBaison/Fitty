@@ -1,11 +1,14 @@
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, View } from "react-native";
 import { bodyMeasurementInputSchema } from "@fitty/core/domain/schemas/snapshot";
 import { localDateKey } from "@fitty/core/domain/workouts";
 import { Notice } from "@/components/notice";
+import { PhotoStrip } from "@/components/photo-strip";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
 import { makeId } from "@/lib/id";
+import { safePhoto } from "@/lib/photos";
 import { useAccount, useSnapshot } from "@/state/account";
 import { space } from "@/theme";
 
@@ -29,13 +32,18 @@ export default function Body() {
   const locale = snapshot.settings.language ?? "es";
   const [date, setDate] = useState(localDateKey(new Date()));
   const [values, setValues] = useState<Partial<Record<FieldKey, string>>>({});
+  const [photo, setPhoto] = useState<string | null>(null);
   const measurements = [...(snapshot.bodyMeasurements ?? [])].sort((a, b) =>
     b.date.localeCompare(a.date),
   );
   const label = (key: FieldKey, es: string, en: string) =>
     `${t(es, en)} (${key === "weightKg" ? unit : "cm"})`;
   const save = () => {
-    const input: Record<string, unknown> = { id: makeId(), date };
+    const input: Record<string, unknown> = {
+      id: makeId(),
+      date,
+      ...(photo ? { photo } : {}),
+    };
     for (const [key] of fields) {
       const raw = (values[key] ?? "").replace(",", ".").trim();
       if (raw) input[key] = Number(raw) / (key === "weightKg" ? factor : 1);
@@ -52,6 +60,7 @@ export default function Body() {
       change((draft) => void (draft.bodyMeasurements ??= []).push(parsed.data))
     ) {
       setValues({});
+      setPhoto(null);
       notify(t("Registro guardado", "Entry saved"));
     }
   };
@@ -84,6 +93,11 @@ export default function Body() {
             </View>
           ))}
         </View>
+        <PhotoStrip
+          max={1}
+          photos={photo ? [photo] : []}
+          onChange={(next) => setPhoto(next[0] ?? null)}
+        />
         <Button onPress={save}>{t("Guardar registro", "Save entry")}</Button>
       </Card>
       {measurements.map((measurement) => (
@@ -108,6 +122,14 @@ export default function Body() {
               })
               .join(" · ") || t("Foto", "Photo")}
           </Label>
+          {safePhoto(measurement.photo) ? (
+            <Image
+              source={measurement.photo}
+              style={{ width: "100%", aspectRatio: 3 / 4, borderRadius: 12 }}
+              contentFit="cover"
+              accessibilityLabel={t("Foto de progreso", "Progress photo")}
+            />
+          ) : null}
           <Button
             variant="ghost"
             onPress={() =>

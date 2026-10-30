@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Pressable, Share, Text, View } from "react-native";
+import { Alert, Modal, Pressable, Share, Text, View } from "react-native";
 import { buildAutomaticRoutine } from "@fitty/core/domain/calculations/automatic-routine";
 import {
   muscleGroups,
@@ -9,7 +9,7 @@ import {
 import { encodeRoutine } from "@fitty/core/domain/sharing";
 import { findExercise } from "@fitty/core/domain/workouts";
 import { translate } from "@fitty/core/data/translations";
-import { ChipGroup } from "@/components/chip";
+import { Chip, ChipGroup } from "@/components/chip";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { Notice } from "@/components/notice";
 import { goals } from "@/components/onboarding";
@@ -78,6 +78,10 @@ export default function Routines() {
   const [groups, setGroups] = useState<MuscleGroup[]>([]);
   const [days, setDays] = useState(3);
   const [prompt, setPrompt] = useState<Prompt | null>(null);
+  const [superset, setSuperset] = useState<{ rid: string; did: string } | null>(
+    null,
+  );
+  const [members, setMembers] = useState<string[]>([]);
   const [picker, setPicker] = useState<{ rid: string; did: string } | null>(
     null,
   );
@@ -130,6 +134,11 @@ export default function Routines() {
       ],
     );
 
+  const supersetDay = superset
+    ? snapshot.routines
+        .find((item) => item.id === superset.rid)
+        ?.days.find((item) => item.id === superset.did)
+    : undefined;
   return (
     <Screen>
       <Button variant="ghost" onPress={() => router.back()}>
@@ -460,6 +469,19 @@ export default function Routines() {
                     >
                       {t("+ Agregar ejercicios", "+ Add exercises")}
                     </Button>
+                    {day.items.length > 1 ? (
+                      <Button
+                        variant="ghost"
+                        onPress={() => {
+                          setMembers([]);
+                          setSuperset({ rid: routine.id, did: day.id });
+                        }}
+                      >
+                        {day.supersets?.length
+                          ? `${t("Superseries", "Supersets")} (${day.supersets.length})`
+                          : t("Crear superserie", "Create superset")}
+                      </Button>
+                    ) : null}
                   </View>
                 ))}
                 <Button
@@ -510,6 +532,92 @@ export default function Routines() {
             setPrompt(null);
         }}
       />
+      <Modal
+        visible={superset !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSuperset(null)}
+      >
+        <Pressable
+          onPress={() => setSuperset(null)}
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable onPress={() => undefined}>
+            <Card style={{ margin: space(4) }}>
+              <Title>{t("Superseries", "Supersets")}</Title>
+              <Label muted>
+                {t(
+                  "Elegí los ejercicios que se hacen seguidos, sin descanso entre ellos.",
+                  "Choose exercises done back to back, without rest between them.",
+                )}
+              </Label>
+              {supersetDay?.items.map((id, index) => {
+                const exercise = findExercise(snapshot, id);
+                const grouped = supersetDay.supersets?.some((group) =>
+                  group.includes(id),
+                );
+                return (
+                  <Chip
+                    key={`${id}-${index}`}
+                    role="checkbox"
+                    active={members.includes(id)}
+                    label={`${grouped ? "🔗 " : ""}${exercise ? translate(language, exercise.name, exercise.name) : id}`}
+                    onPress={() =>
+                      setMembers((current) =>
+                        current.includes(id)
+                          ? current.filter((item) => item !== id)
+                          : [...current, id],
+                      )
+                    }
+                  />
+                );
+              })}
+              <Button
+                disabled={members.length < 2}
+                onPress={() => {
+                  if (
+                    superset &&
+                    editDay(superset.rid, superset.did, (day) => {
+                      day.supersets = [
+                        ...(day.supersets ?? []).filter(
+                          (group) => !group.some((id) => members.includes(id)),
+                        ),
+                        members,
+                      ];
+                    })
+                  )
+                    setSuperset(null);
+                }}
+              >
+                {t("Guardar superserie", "Save superset")}
+              </Button>
+              {supersetDay?.supersets?.length ? (
+                <Button
+                  variant="ghost"
+                  onPress={() => {
+                    if (superset)
+                      editDay(
+                        superset.rid,
+                        superset.did,
+                        (day) => void (day.supersets = []),
+                      );
+                    setSuperset(null);
+                  }}
+                >
+                  {t(
+                    "Quitar superseries de este día",
+                    "Remove supersets from this day",
+                  )}
+                </Button>
+              ) : null}
+            </Card>
+          </Pressable>
+        </Pressable>
+      </Modal>
       <ExercisePicker
         visible={picker !== null}
         onClose={() => setPicker(null)}

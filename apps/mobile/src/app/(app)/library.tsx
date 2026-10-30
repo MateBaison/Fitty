@@ -20,7 +20,9 @@ import { translate } from "@fitty/core/data/translations";
 import { muscleGroups } from "@fitty/core/domain/schemas/exercise";
 import { catalogFor } from "@fitty/core/domain/workouts";
 import { Chip } from "@/components/chip";
-import { Label, styles, Title } from "@/components/ui";
+import { CustomExerciseForm } from "@/components/custom-exercise-form";
+import { Notice } from "@/components/notice";
+import { Button, Label, styles, Title } from "@/components/ui";
 import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, radius, space } from "@/theme";
@@ -33,6 +35,7 @@ export default function Library() {
   const [group, setGroup] = useState<string | null>(null);
   const [equipment, setEquipment] = useState<EquipmentFilter>("Todos");
   const [open, setOpen] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
   const exercises = useMemo(() => {
     const search = normalizeSearch(query);
     return catalogFor(snapshot).filter(
@@ -56,6 +59,10 @@ export default function Library() {
         ListHeaderComponent={
           <View style={{ gap: space(3) }}>
             <Title>{t("Ejercicios", "Exercises")}</Title>
+            <Notice />
+            <Button variant="secondary" onPress={() => setCreating(true)}>
+              {t("+ Crear ejercicio", "+ Create exercise")}
+            </Button>
             <TextInput
               value={query}
               onChangeText={setQuery}
@@ -178,6 +185,10 @@ export default function Library() {
             </Pressable>
           );
         }}
+      />
+      <CustomExerciseForm
+        visible={creating}
+        onClose={() => setCreating(false)}
       />
     </SafeAreaView>
   );

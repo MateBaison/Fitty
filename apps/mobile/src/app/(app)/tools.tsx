@@ -1,5 +1,6 @@
 import { useKeepAwake } from "expo-keep-awake";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import {
@@ -304,9 +305,22 @@ function Calories() {
 
 export default function Tools() {
   const { t } = useAccount();
+  const router = useRouter();
   return (
     <Screen>
       <Title>{t("Herramientas", "Tools")}</Title>
+      <View style={{ flexDirection: "row", gap: space(3) }}>
+        <View style={{ flex: 1 }}>
+          <Button variant="secondary" onPress={() => router.push("/tracking")}>
+            {t("Recorrido GPS", "GPS route")}
+          </Button>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button variant="secondary" onPress={() => router.push("/combat")}>
+            {t("Combate", "Combat")}
+          </Button>
+        </View>
+      </View>
       <Stopwatch />
       <Timer />
       <OneRepMax />

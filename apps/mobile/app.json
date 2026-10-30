@@ -11,7 +11,9 @@
     "ios": {
       "bundleIdentifier": "uy.fitty.app",
       "supportsTablet": true,
-      "config": { "usesNonExemptEncryption": false }
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "uy.fitty.app",
@@ -31,6 +33,19 @@
           "backgroundColor": "#090b10",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 160
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Fitty usa tus fotos para tu perfil, tus entrenamientos y tu progreso corporal.",
+          "cameraPermission": "Fitty usa la c\u00e1mara para fotos de perfil, entrenamientos y progreso corporal."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Fitty usa tu ubicaci\u00f3n para registrar el recorrido mientras corr\u00e9s o pedale\u00e1s con la app abierta."
         }
       ]
     ],
