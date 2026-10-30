@@ -482,6 +482,10 @@ main > h1 {
 .login-panel {
   width: min(100%, 520px);
   margin-inline: auto;
+  min-height: calc(100dvh - 150px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .login-panel > h1 {
   text-align: center;
