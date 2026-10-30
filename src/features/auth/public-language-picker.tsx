@@ -14,6 +14,17 @@ const names: Record<(typeof languages)[number], string> = {
   it: "Italiano",
   pt: "Português",
 };
+const flags: Record<(typeof languages)[number], string> = {
+  es: "🇪🇸",
+  en: "🇬🇧",
+  fr: "🇫🇷",
+  zh: "🇨🇳",
+  hi: "🇮🇳",
+  ar: "🇸🇦",
+  de: "🇩🇪",
+  it: "🇮🇹",
+  pt: "🇵🇹",
+};
 
 export function PublicLanguagePicker() {
   const [language, setLanguage] = useState<(typeof languages)[number]>("es");
@@ -38,7 +49,7 @@ export function PublicLanguagePicker() {
         }}
       >
         {languages.map((item) => (
-          <option value={item} key={item}>{names[item]}</option>
+          <option value={item} key={item}>{flags[item]} {names[item]}</option>
         ))}
       </select>
     </label>
