@@ -3091,6 +3091,11 @@ input[type="range"] {
   min-width: 0;
   margin: 0;
 }
+.onboarding-add-exercise-button {
+  width: 100%;
+  justify-content: flex-start;
+  border-style: dashed;
+}
 .onboarding-choices {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;

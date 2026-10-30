@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
+import { ExercisePicker } from "@/features/exercises/exercise-picker";
 export function OnboardingFlow() {
   const { snapshot, change, flush, notify, t, user } = useApp();
   const router = useRouter();
@@ -32,9 +33,7 @@ export function OnboardingFlow() {
   const [previewRoutine, setPreviewRoutine] = useState<Routine | null>(null);
   const [editingDayId, setEditingDayId] = useState<string | null>(null);
   const [previewImageExercise, setPreviewImageExercise] = useState<(typeof availableExercises)[number] | null>(null);
-  const [previewExerciseChoice, setPreviewExerciseChoice] = useState<
-    Record<string, string>
-  >({});
+  const [pickingForDayId, setPickingForDayId] = useState<string | null>(null);
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState(
@@ -425,11 +424,6 @@ export function OnboardingFlow() {
                 </p>
               )}
               {previewRoutine.days.map((day) => {
-                const addable = availableExercises.filter(
-                  (exercise) =>
-                    groups.includes(exercise.group) &&
-                    !day.items.includes(exercise.id),
-                );
                 return (
                   <details
                     className="panel onboarding-preview-day"
@@ -546,62 +540,15 @@ export function OnboardingFlow() {
                         </li>
                       ))}
                     </ul>
-                    <div className="onboarding-preview-add">
-                      <select
-                        aria-label={
-                          t("Agregar ejercicio a", "Add exercise to") +
-                          " " +
-                          day.name
-                        }
-                        disabled={busy || pending}
-                        value={previewExerciseChoice[day.id] ?? ""}
-                        onChange={(event) =>
-                          setPreviewExerciseChoice((current) => ({
-                            ...current,
-                            [day.id]: event.target.value,
-                          }))
-                        }
-                      >
-                        <option value="">
-                          {t("Elegir ejercicio", "Choose exercise")}
-                        </option>
-                        {addable.map((exercise) => (
-                          <option key={exercise.id} value={exercise.id}>
-                            {exercise.name}
-                          </option>
-                        ))}
-                      </select>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        disabled={
-                          busy || pending || !previewExerciseChoice[day.id]
-                        }
-                        onClick={() => {
-                          const id = previewExerciseChoice[day.id];
-                          if (!id) return;
-                          setPreviewRoutine((current) =>
-                            current
-                              ? {
-                                  ...current,
-                                  days: current.days.map((item) =>
-                                    item.id === day.id &&
-                                    !item.items.includes(id)
-                                      ? { ...item, items: [...item.items, id] }
-                                      : item,
-                                  ),
-                                }
-                              : current,
-                          );
-                          setPreviewExerciseChoice((current) => ({
-                            ...current,
-                            [day.id]: "",
-                          }));
-                        }}
-                      >
-                        {t("Agregar", "Add")}
-                      </Button>
-                    </div>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="onboarding-add-exercise-button"
+                      disabled={busy || pending}
+                      onClick={() => setPickingForDayId(day.id)}
+                    >
+                      ＋ {t("Agregar ejercicio", "Add exercise")}
+                    </Button>
                     {!day.items.length && (
                       <p className="text-sm text-muted-foreground">
                         {t(
@@ -664,6 +611,27 @@ export function OnboardingFlow() {
         exercise={previewImageExercise}
         onClose={() => setPreviewImageExercise(null)}
       />
+      {pickingForDayId && (
+        <ExercisePicker
+          onClose={() => setPickingForDayId(null)}
+          onPick={(ids) => {
+            const dayId = pickingForDayId;
+            setPreviewRoutine((current) =>
+              current
+                ? {
+                    ...current,
+                    days: current.days.map((day) =>
+                      day.id === dayId
+                        ? { ...day, items: [...day.items, ...ids.filter((id) => !day.items.includes(id))] }
+                        : day,
+                    ),
+                  }
+                : current,
+            );
+            setPickingForDayId(null);
+          }}
+        />
+      )}
     </>
   );
 }
