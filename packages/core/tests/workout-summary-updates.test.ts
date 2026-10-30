@@ -16,8 +16,8 @@ test("latest recorded set count initializes blanks and groups drops once", () =>
     {
       id: "old",
       date: "2026-09-01",
-      routine: "R",
-      day: "D",
+      routine: "Rutina principal",
+      day: "Pecho y tríceps",
       exercises: [{ id, sets: 5 }],
     },
     {
@@ -42,11 +42,13 @@ test("latest recorded set count initializes blanks and groups drops once", () =>
   s.sessions[0]!.date = "2026-10-02";
   expect(lastSetCount(s, id)).toBe(5);
   startWorkout(s, "r1", "d1");
-  expect(s.workout?.entries[0]?.sets).toHaveLength(5);
+  // Same routine and day: previous 5 sets plus the warm-up added to the first compound lift.
+  expect(s.workout?.entries[0]?.sets).toHaveLength(6);
+  expect(s.workout?.entries[0]?.sets[0]?.type).toBe("warmup");
+  // Suggested rep targets may be prefilled, but nothing counts as recorded until entered.
+  expect(s.workout?.entries[0]?.sets[0]?.reps).toBeNull();
   expect(
-    s.workout?.entries[0]?.sets.every(
-      (set) => set.entered === false && set.reps === null,
-    ),
+    s.workout?.entries[0]?.sets.every((set) => set.entered === false),
   ).toBe(true);
 });
 test("metric switch restores values and original flags even through cache serialization", () => {

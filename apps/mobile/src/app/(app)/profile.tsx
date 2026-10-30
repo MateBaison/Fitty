@@ -132,6 +132,7 @@ export default function Profile() {
           </Label>
         </Card>
       ) : null}
+      <Label>{t("Configuración", "Settings")}</Label>
       <Card>
         <Label muted>{t("Idioma", "Language")}</Label>
         <ChipGroup
@@ -164,6 +165,7 @@ export default function Profile() {
           }
         />
       </Card>
+      <DeleteAccount />
       <Button
         variant="secondary"
         onPress={() =>
@@ -185,7 +187,6 @@ export default function Profile() {
       >
         {t("Cerrar sesión", "Sign out")}
       </Button>
-      <DeleteAccount />
     </Screen>
   );
 }
