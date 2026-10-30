@@ -12,6 +12,7 @@ import { AppState } from "react-native";
 import { onlineManager } from "@tanstack/react-query";
 import { translate } from "@fitty/core/data/translations";
 import type { Snapshot } from "@fitty/core/domain/schemas/snapshot";
+import { takePendingLanguage } from "@/lib/language";
 import { adoptPreviousAccountCache } from "@fitty/core/storage/account-cache";
 import {
   SyncController,
@@ -81,6 +82,16 @@ export function AccountProvider({
       controller.current = null;
     };
   }, [queryClient, userId]);
+  const loaded = view.snapshot !== null;
+  useEffect(() => {
+    if (!loaded) return;
+    // Keep the language picked on the sign-in screen as the account's language.
+    const chosen = takePendingLanguage();
+    if (chosen)
+      controller.current?.edit(
+        (draft) => void (draft.settings.language = chosen),
+      );
+  }, [loaded]);
   useEffect(() => {
     if (!notice) return;
     const timer = setTimeout(() => setNotice(""), 5000);

@@ -73,11 +73,10 @@ export default function SignIn() {
       >
         <Screen glow>
           <Image
-            source={require("@/assets/images/icon.png")}
+            source={require("@/assets/images/fitty-isotype.png")}
             style={{
-              width: 72,
-              height: 72,
-              borderRadius: 18,
+              width: 84,
+              height: 84,
               alignSelf: "center",
             }}
             accessibilityIgnoresInvertColors
