@@ -75,8 +75,8 @@ export default function SignIn() {
           <Image
             source={require("@/assets/images/fitty-isotype.png")}
             style={{
-              width: 84,
-              height: 84,
+              width: 72,
+              height: 72,
               alignSelf: "center",
             }}
             accessibilityIgnoresInvertColors
