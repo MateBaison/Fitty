@@ -66,7 +66,7 @@ Use the mock backend for automated auth/database checks; keep test-only auth beh
 
 ## Reference documents
 
-Read `docs/data-compatibility.md` before modifying persistence or imports, `docs/deployment-and-rollback.md` for deployment/origin handoff, and `docs/phase-status.md` for release gates. `docs/approved-migration-plan.md` is the archived migration plan. The archived SQL is a reference, not proof of current hosted RLS. A local change or passing mock tests does not establish production deployment or real-provider validation.
+Read `docs/data-compatibility.md` before modifying persistence or imports, `docs/deployment-and-rollback.md` for deployment/origin handoff, `docs/mobile-app.md` for the Expo app and its sign-in setup, and `docs/roadmap.md` for launch status and future ideas (do not implement those ideas unless asked). `docs/archive/` holds the original migration plan and phase status. The archived SQL is a reference, not proof of current hosted RLS. A local change or passing mock tests does not establish production deployment or real-provider validation.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
