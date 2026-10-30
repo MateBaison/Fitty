@@ -88,7 +88,15 @@ export function WorkoutScreen() {
               draft.settings.routineDaySetPlans?.[currentWorkout.rid]?.[
                 currentWorkout.did
               ]?.[entry.id];
-          if (JSON.stringify(previousPlan) !== JSON.stringify(nextPlan)) {
+          if (
+            !previousPlan ||
+            previousPlan.count !== nextPlan.count ||
+            previousPlan.tracking !== nextPlan.tracking ||
+            JSON.stringify(previousPlan.types) !==
+              JSON.stringify(nextPlan.types) ||
+            JSON.stringify(previousPlan.values) !==
+              JSON.stringify(nextPlan.values)
+          ) {
             draft.settings.routineDaySetPlans ??= {};
             draft.settings.routineDaySetPlans[currentWorkout.rid] ??= {};
             draft.settings.routineDaySetPlans[currentWorkout.rid]![
@@ -97,6 +105,9 @@ export function WorkoutScreen() {
             draft.settings.routineDaySetPlans[currentWorkout.rid]![
               currentWorkout.did
             ]![entry.id] = nextPlan;
+            draft.settings.routineDaySetPlans[currentWorkout.rid]![
+              currentWorkout.did
+            ]![entry.id]!.customized = true;
           }
         }
       }

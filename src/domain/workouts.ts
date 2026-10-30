@@ -152,6 +152,10 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
     day = routine?.days.find((item) => item.id === did);
   if (!day?.items.length) throw new Error("Agregá ejercicios a este día.");
   const dayPlans = snapshot.settings.routineDaySetPlans?.[rid]?.[did] ?? {};
+  const warmupId = day.items.find((id) => {
+    const pattern = findExercise(snapshot, id)?.pattern;
+    return ["push", "pull", "squat", "hinge", "hip"].includes(pattern ?? "");
+  });
   const entries = day.items.map((id) => {
     const tracking = metricFor(snapshot, id),
       saved = dayPlans[id],
@@ -163,23 +167,27 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
       defaultCount = suggestedSetCount(snapshot, goal),
       count =
         saved?.count ??
-        (previous?.sets && previous.sets > 0
-          ? Math.floor(previous.sets)
-          : previousSets.length
-            ? countSetGroups(previousSets)
-            : defaultCount),
+        (previousSets.length
+          ? previousSets.length
+          : previous?.sets && previous.sets > 0
+            ? Math.floor(previous.sets) + (id === warmupId ? 1 : 0)
+            : defaultCount + (id === warmupId ? 1 : 0)),
       types = saved?.types ?? previousSets.map((set) => set.type ?? "normal"),
       values =
         saved?.values ?? previousSets.map((set) => set[tracking] ?? null),
-      target = goalRepTarget(goal);
+      target = goalRepTarget(goal),
+      addWarmup = id === warmupId && !saved && !previousSets.length;
     const plannedSets = Array.from(
       { length: Math.min(200, count) },
       (_, index) => {
         const set = blankSet(tracking);
-        set.type = types[index] ?? "normal";
-        set[tracking] =
-          values[index] !== undefined
-            ? values[index]
+        const warmup = addWarmup && index === 0,
+          previousIndex = index - (addWarmup ? 1 : 0);
+        set.type = warmup ? "warmup" : (types[previousIndex] ?? "normal");
+        set[tracking] = warmup
+          ? null
+          : values[previousIndex] !== undefined
+            ? values[previousIndex]
             : tracking === "reps"
               ? target
               : null;
@@ -194,6 +202,7 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
       tracking,
       types: plannedSets.map((set) => set.type ?? "normal"),
       values: plannedSets.map((set) => set[tracking] ?? null),
+      customized: false,
     };
     return {
       id,
@@ -380,14 +389,17 @@ export function copySessions(sessions: Session[], date: string): Session[] {
 
 export function countSetGroups(sets: SavedSet[]): number {
   return new Set(
-    sets.map((set, index) =>
-      set.dropGroup ? `group:${set.dropGroup}` : `set:${index}`,
+    sets.flatMap((set, index) =>
+      set.type === "warmup"
+        ? []
+        : [set.dropGroup ? `group:${set.dropGroup}` : `set:${index}`],
     ),
   ).size;
 }
 export function setNumber(sets: SavedSet[], index: number): string {
   const set = sets[index];
   if (!set) return "";
+  if (set.type === "warmup") return "C";
   const base = countSetGroups(sets.slice(0, index + 1));
   if (!set.dropGroup && set.type !== "drop" && set.type !== "pyramid")
     return String(base);

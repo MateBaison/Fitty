@@ -9,6 +9,7 @@ const routineDaySetPlanSchema = z.looseObject({
   tracking: trackingSchema,
   types: z.array(z.string()).max(200),
   values: z.array(optionalValue).max(200),
+  customized: z.boolean().optional(),
 });
 
 // Tolerant persisted-data readers: never strip metadata or retired exercise IDs.
