@@ -2970,6 +2970,21 @@ input[type="range"] {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
+.onboarding-preview-overview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--secondary);
+  font-size: 0.9rem;
+}
+.onboarding-preview-overview > span:last-child {
+  color: var(--muted-foreground);
+}
 .onboarding-preview-summary > div {
   display: grid;
   gap: 4px;
@@ -3022,9 +3037,19 @@ input[type="range"] {
   align-items: center;
   gap: 6px;
 }
+.onboarding-preview-day-name-stack {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
 .onboarding-preview-day-name {
   overflow-wrap: anywhere;
   font-weight: 600;
+}
+.onboarding-preview-day-groups {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 .onboarding-preview-edit-name {
   display: inline-grid;

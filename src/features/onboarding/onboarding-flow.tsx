@@ -394,6 +394,13 @@ export function OnboardingFlow() {
                   )}
                 </p>
               </div>
+              <p className="onboarding-preview-overview">
+                <strong>{previewRoutine.days.length} {t("días", "days")}</strong>
+                <span aria-hidden="true">·</span>
+                <span>
+                  {t("Grupos incluidos", "Muscle groups")}: {groups.join(", ")}
+                </span>
+              </p>
               <div className="onboarding-preview-summary">
                 <div>
                   <span>{t("Frecuencia", "Frequency")}</span>
@@ -424,6 +431,11 @@ export function OnboardingFlow() {
                 </p>
               )}
               {previewRoutine.days.map((day) => {
+                const dayGroups = [...new Set(
+                  day.items
+                    .map((id) => availableExercises.find((exercise) => exercise.id === id)?.group)
+                    .filter((group): group is MuscleGroup => Boolean(group)),
+                )];
                 return (
                   <details
                     className="panel onboarding-preview-day"
@@ -460,7 +472,10 @@ export function OnboardingFlow() {
                           />
                         ) : (
                           <>
-                            <span className="onboarding-preview-day-name">{day.name}</span>
+                            <span className="onboarding-preview-day-name-stack">
+                              <span className="onboarding-preview-day-name">{day.name}</span>
+                              <span className="onboarding-preview-day-groups">{dayGroups.join(" · ")}</span>
+                            </span>
                             <button
                               type="button"
                               className="onboarding-preview-edit-name"
