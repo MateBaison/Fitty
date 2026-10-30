@@ -13,6 +13,7 @@ import {
 import { recommendedRepRange, recommendedSetCount } from "@/domain/workouts";
 import { PersonalForm } from "@/features/profile/personal-form";
 import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
 export function OnboardingFlow() {
@@ -29,6 +30,7 @@ export function OnboardingFlow() {
   const [goal, setGoal] = useState("Fuerza e hipertrofia");
   const [groups, setGroups] = useState<MuscleGroup[]>([...muscleGroups]);
   const [previewRoutine, setPreviewRoutine] = useState<Routine | null>(null);
+  const [editingDayId, setEditingDayId] = useState<string | null>(null);
   const [previewImageExercise, setPreviewImageExercise] = useState<(typeof availableExercises)[number] | null>(null);
   const [previewExerciseChoice, setPreviewExerciseChoice] = useState<
     Record<string, string>
@@ -434,27 +436,53 @@ export function OnboardingFlow() {
                     key={day.id}
                   >
                     <summary className="onboarding-preview-day-summary">
-                      <input
-                        aria-label={t("Nombre del día", "Day name")}
-                        value={day.name}
-                        disabled={busy || pending}
-                        onClick={(event) => event.stopPropagation()}
-                        onKeyDown={(event) => event.stopPropagation()}
-                        onChange={(event) =>
-                          setPreviewRoutine((current) =>
-                            current
-                              ? {
-                                  ...current,
-                                  days: current.days.map((item) =>
-                                    item.id === day.id
-                                      ? { ...item, name: event.target.value }
-                                      : item,
-                                  ),
-                                }
-                              : current,
-                          )
-                        }
-                      />
+                      <span className="onboarding-preview-day-title">
+                        {editingDayId === day.id ? (
+                          <input
+                            autoFocus
+                            aria-label={t("Nombre del día", "Day name")}
+                            value={day.name}
+                            disabled={busy || pending}
+                            onClick={(event) => event.stopPropagation()}
+                            onKeyDown={(event) => {
+                              event.stopPropagation();
+                              if (event.key === "Enter") setEditingDayId(null);
+                            }}
+                            onBlur={() => setEditingDayId(null)}
+                            onChange={(event) =>
+                              setPreviewRoutine((current) =>
+                                current
+                                  ? {
+                                      ...current,
+                                      days: current.days.map((item) =>
+                                        item.id === day.id
+                                          ? { ...item, name: event.target.value }
+                                          : item,
+                                      ),
+                                    }
+                                  : current,
+                              )
+                            }
+                          />
+                        ) : (
+                          <>
+                            <span className="onboarding-preview-day-name">{day.name}</span>
+                            <button
+                              type="button"
+                              className="onboarding-preview-edit-name"
+                              aria-label={t("Editar nombre del día", "Edit day name")}
+                              disabled={busy || pending}
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                setEditingDayId(day.id);
+                              }}
+                            >
+                              <Pencil aria-hidden="true" />
+                            </button>
+                          </>
+                        )}
+                      </span>
                       <span className="onboarding-preview-day-count">
                         {day.items.length} {t("ejercicios", "exercises")}
                       </span>
@@ -585,17 +613,14 @@ export function OnboardingFlow() {
                   </details>
                 );
               })}
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={busy || pending}
-                onClick={showRoutinePreview}
-              >
-                {t("Generar otra propuesta", "Generate another suggestion")}
-              </Button>
             </div>
           )}
-          <div className="flex flex-wrap justify-between gap-3">
+          <div className={`onboarding-actions ${previewRoutine ? "has-preview" : ""}`}>
+            {previewRoutine && (
+              <Button type="button" variant="secondary" disabled={busy || pending} onClick={showRoutinePreview}>
+                {t("Generar otra propuesta", "Generate another suggestion")}
+              </Button>
+            )}
             <Button
               type="button"
               variant="secondary"
@@ -609,7 +634,7 @@ export function OnboardingFlow() {
               }}
             >
               {previewRoutine
-                ? t("Cambiar datos", "Edit details")
+                ? t("Atrás", "Back")
                 : t("Volver", "Back")}
             </Button>
             <Button
@@ -627,10 +652,7 @@ export function OnboardingFlow() {
                   : configuring && !previewRoutine
                     ? t("Ver vista previa", "Preview routine")
                     : previewRoutine
-                      ? t(
-                          "Crear esta rutina y entrar",
-                          "Create this routine and enter",
-                        )
+                      ? t("Continuar", "Continue")
                       : mode === "auto"
                         ? t("Configurar rutina", "Set up routine")
                         : t("Entrar a Fitty", "Go to Fitty")}

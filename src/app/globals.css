@@ -2973,7 +2973,6 @@ input[type="range"] {
 .onboarding-preview-day > summary {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   cursor: pointer;
   list-style: none;
@@ -2990,15 +2989,58 @@ input[type="range"] {
   content: "⌃";
 }
 .onboarding-preview-day-summary input {
+  width: 100%;
   min-width: 0;
   margin: 0;
   padding: 4px 8px;
   font-weight: 600;
 }
+.onboarding-preview-day-title {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+}
+.onboarding-preview-day-name {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+.onboarding-preview-edit-name {
+  display: inline-grid;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+.onboarding-preview-edit-name svg {
+  width: 15px;
+  height: 15px;
+}
 .onboarding-preview-day-count {
   flex: none;
+  margin-left: auto;
   color: var(--muted-foreground);
   font-size: 0.8rem;
+}
+.onboarding-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.onboarding-actions.has-preview > [data-slot="button"] {
+  min-width: 0;
+  flex: 1 1 0;
+  padding-inline: 8px;
+  white-space: normal;
+  line-height: 1.2;
 }
 .onboarding-preview-exercises {
   display: grid;
