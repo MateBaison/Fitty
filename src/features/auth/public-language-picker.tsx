@@ -28,30 +28,42 @@ const flags: Record<(typeof languages)[number], string> = {
 
 export function PublicLanguagePicker() {
   const [language, setLanguage] = useState<(typeof languages)[number]>("es");
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     const saved = window.localStorage.getItem("fitty-language");
     if (languages.some((item) => item === saved))
       setLanguage(saved as (typeof languages)[number]);
   }, []);
+  const choose = (item: (typeof languages)[number]) => {
+    const next = localeFor(item);
+    window.localStorage.setItem("fitty-language", next);
+    document.documentElement.lang = next;
+    document.documentElement.dir = next === "ar" ? "rtl" : "ltr";
+    setLanguage(item);
+    setOpen(false);
+    window.dispatchEvent(new CustomEvent("fitty-language-change", { detail: next }));
+  };
   return (
-    <label className="public-language-picker">
-      <span className="sr-only">Idioma / Language</span>
-      <select
-        aria-label="Idioma / Language"
-        value={language}
-        onChange={(event) => {
-          const next = localeFor(event.target.value);
-          window.localStorage.setItem("fitty-language", next);
-          document.documentElement.lang = next;
-          document.documentElement.dir = next === "ar" ? "rtl" : "ltr";
-          setLanguage(next as (typeof languages)[number]);
-          window.dispatchEvent(new CustomEvent("fitty-language-change", { detail: next }));
-        }}
-      >
+    <details
+      className="public-language-picker"
+      open={open}
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
+      <summary aria-label="Idioma / Language">{names[language]}</summary>
+      <div className="public-language-options" role="listbox" aria-label="Idiomas">
         {languages.map((item) => (
-          <option value={item} key={item}>{flags[item]} {names[item]}</option>
+          <button
+            type="button"
+            role="option"
+            aria-selected={language === item}
+            key={item}
+            onClick={() => choose(item)}
+          >
+            <span aria-hidden="true">{flags[item]}</span>
+            {names[item]}
+          </button>
         ))}
-      </select>
-    </label>
+      </div>
+    </details>
   );
 }
