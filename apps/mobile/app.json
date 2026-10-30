@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Fitty",
+    "slug": "fitty",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "fitty",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#090b10",
+    "ios": {
+      "bundleIdentifier": "uy.fitty.app",
+      "supportsTablet": true,
+      "config": { "usesNonExemptEncryption": false }
+    },
+    "android": {
+      "package": "uy.fitty.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#052e4f",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#090b10",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 160
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

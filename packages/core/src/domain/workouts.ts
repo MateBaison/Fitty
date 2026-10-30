@@ -294,6 +294,13 @@ export const extrasSchema = z.object({
   bodyWeightEndKg: z.number().positive().nullable(),
 });
 export type Extras = z.infer<typeof extrasSchema>;
+export const emptyExtras: Extras = {
+  color: "#ff5538",
+  comment: "",
+  photos: [],
+  bodyWeightStartKg: null,
+  bodyWeightEndKg: null,
+};
 export function buildSession(
   snapshot: Snapshot,
   entries: Entry[],

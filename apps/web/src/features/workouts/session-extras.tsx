@@ -17,13 +17,7 @@ export const trainingColors = [
   { value: "#a78bfa", es: "Violeta", en: "Purple" },
   { value: "#f472b6", es: "Rosa", en: "Pink" },
 ] as const;
-export const emptyExtras: Extras = {
-  color: "#ff5538",
-  comment: "",
-  photos: [],
-  bodyWeightStartKg: null,
-  bodyWeightEndKg: null,
-};
+export { emptyExtras } from "@fitty/core/domain/workouts";
 export function SessionExtras({
   value,
   onChange,
