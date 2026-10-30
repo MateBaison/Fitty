@@ -501,19 +501,19 @@ main > h1 {
   align-items: center;
   gap: 4px;
   min-height: 40px;
-  padding-inline: 8px 2px;
+  padding-inline: 6px 2px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--secondary);
 }
 .public-language-flag {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   line-height: 1;
 }
 .public-language-picker select {
   min-height: 40px;
-  width: 154px;
-  max-width: 154px;
+  width: 132px;
+  max-width: 132px;
   margin: 0;
   appearance: none;
   padding: 6px 28px 6px 4px;
@@ -524,12 +524,12 @@ main > h1 {
   background-repeat: no-repeat;
   background-position: right 15px center;
   color: var(--foreground);
-  color-scheme: dark;
-  font-size: 0.85rem;
+  color-scheme: light;
+  font-size: 0.8rem;
 }
 .public-language-picker select option {
-  background: #151a24;
-  color: #f4f7fb;
+  background: #ffffff;
+  color: #1f2937;
 }
 .eyebrow {
   color: var(--accent-foreground);
