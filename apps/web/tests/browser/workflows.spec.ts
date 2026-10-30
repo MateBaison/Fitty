@@ -167,9 +167,12 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
   await page.keyboard.press("Escape");
   const another = today.slice(0, 8) + (today.endsWith("01") ? "02" : "01");
   await page.locator(`[data-calendar-date="${another}"]`).click();
-  page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("button", { name: "Pegar entrenamientos copiados", exact: true })
+    .click();
+  await page
+    .getByRole("dialog", { name: "Confirmar" })
+    .getByRole("button", { name: "Pegar", exact: true })
     .click();
   await expect(page.locator(".calendar-workout")).toHaveCount(1);
   await page.keyboard.press("Escape");

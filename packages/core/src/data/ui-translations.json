@@ -599,7 +599,13 @@
     "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Ajustez le zoom. L’aperçu circulaire montre votre future photo de profil.",
     "Completá tus datos": "Complétez vos informations",
     "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Complétez ou vérifiez ces champs pour continuer. La photo de profil est facultative.",
-    "Revisar datos": "Vérifier les informations"
+    "Revisar datos": "Vérifier les informations",
+    "Confirmar": "Confirmer",
+    "Pegar": "Coller",
+    "Reemplazar": "Remplacer",
+    "¿Eliminar este entrenamiento?": "Supprimer cet entraînement ?",
+    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?": "Des copies sans photos ni poids corporels seront ajoutées sans remplacer l’existant. Coller ?",
+    "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.": "Remplacer les données de ce compte par la copie ? Une récupération locale des données actuelles sera conservée."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1198,7 +1204,13 @@
     "Volvé a iniciar sesión para enviar la consulta.": "请重新登录后发送咨询。",
     "Consulta enviada": "咨询已发送",
     "Te responderemos por correo.": "我们将通过电子邮件回复。",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "调整缩放。圆形预览展示头像的最终效果。"
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "调整缩放。圆形预览展示头像的最终效果。",
+    "Confirmar": "确认",
+    "Pegar": "粘贴",
+    "Reemplazar": "替换",
+    "¿Eliminar este entrenamiento?": "删除这次训练吗？",
+    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?": "将添加不含照片和体重的副本，不会替换现有内容。要粘贴吗？",
+    "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.": "用此备份替换此账户的数据吗？当前数据会保留一份本地恢复副本。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1797,7 +1809,13 @@
     "Volvé a iniciar sesión para enviar la consulta.": "प्रश्न भेजने के लिए फिर से साइन इन करें।",
     "Consulta enviada": "पूछताछ भेज दी गई",
     "Te responderemos por correo.": "हम ईमेल से जवाब देंगे।",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "ज़ूम समायोजित करें। गोल पूर्वावलोकन दिखाता है कि आपकी प्रोफ़ाइल फ़ोटो कैसी दिखेगी।"
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "ज़ूम समायोजित करें। गोल पूर्वावलोकन दिखाता है कि आपकी प्रोफ़ाइल फ़ोटो कैसी दिखेगी।",
+    "Confirmar": "पुष्टि करें",
+    "Pegar": "चिपकाएँ",
+    "Reemplazar": "बदलें",
+    "¿Eliminar este entrenamiento?": "क्या यह वर्कआउट हटाएँ?",
+    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?": "फ़ोटो और शरीर के वज़न के बिना प्रतियाँ जोड़ी जाएँगी, मौजूदा को बदले बिना। चिपकाएँ?",
+    "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.": "क्या इस खाते का डेटा प्रति से बदलें? मौजूदा डेटा की एक स्थानीय रिकवरी प्रति रखी जाएगी।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2396,7 +2414,13 @@
     "Volvé a iniciar sesión para enviar la consulta.": "سجّل الدخول مجددًا لإرسال الاستفسار.",
     "Consulta enviada": "تم إرسال الاستفسار",
     "Te responderemos por correo.": "سنرد عليك عبر البريد الإلكتروني.",
-    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "اضبط التكبير. تُظهر المعاينة الدائرية كيف ستبدو صورة ملفك الشخصي."
+    "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "اضبط التكبير. تُظهر المعاينة الدائرية كيف ستبدو صورة ملفك الشخصي.",
+    "Confirmar": "تأكيد",
+    "Pegar": "لصق",
+    "Reemplazar": "استبدال",
+    "¿Eliminar este entrenamiento?": "هل تريد حذف هذا التمرين؟",
+    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?": "ستُضاف نسخ بدون صور أو أوزان جسم دون استبدال الموجود. هل تريد اللصق؟",
+    "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.": "هل تريد استبدال بيانات هذا الحساب بالنسخة؟ سيتم الاحتفاظ بنسخة استرداد محلية من البيانات الحالية."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -2998,7 +3022,13 @@
     "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Passe den Zoom an. Die runde Vorschau zeigt, wie dein Profilfoto aussehen wird.",
     "Completá tus datos": "Vervollständige deine Angaben",
     "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Vervollständige oder prüfe diese Felder. Das Profilfoto ist optional.",
-    "Revisar datos": "Angaben prüfen"
+    "Revisar datos": "Angaben prüfen",
+    "Confirmar": "Bestätigen",
+    "Pegar": "Einfügen",
+    "Reemplazar": "Ersetzen",
+    "¿Eliminar este entrenamiento?": "Dieses Training löschen?",
+    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?": "Kopien ohne Fotos und Körpergewicht werden hinzugefügt, ohne Vorhandenes zu ersetzen. Einfügen?",
+    "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.": "Die Daten dieses Kontos durch die Kopie ersetzen? Eine lokale Wiederherstellung der aktuellen Daten bleibt erhalten."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -3600,7 +3630,13 @@
     "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Regola lo zoom. L’anteprima circolare mostra come apparirà la tua foto del profilo.",
     "Completá tus datos": "Completa i tuoi dati",
     "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Completa o controlla questi campi per continuare. La foto del profilo è facoltativa.",
-    "Revisar datos": "Controlla i dati"
+    "Revisar datos": "Controlla i dati",
+    "Confirmar": "Conferma",
+    "Pegar": "Incolla",
+    "Reemplazar": "Sostituisci",
+    "¿Eliminar este entrenamiento?": "Eliminare questo allenamento?",
+    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?": "Verranno aggiunte copie senza foto né pesi corporei, senza sostituire quelle esistenti. Incollare?",
+    "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.": "Sostituire i dati di questo account con la copia? Verrà conservato un ripristino locale dei dati attuali."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4202,7 +4238,13 @@
     "Ajustá el zoom. La vista circular muestra cómo quedará tu foto de perfil.": "Ajuste o zoom. A prévia circular mostra como ficará sua foto de perfil.",
     "Completá tus datos": "Complete seus dados",
     "Completá o revisá estos campos para continuar. La foto de perfil es opcional.": "Complete ou revise estes campos para continuar. A foto de perfil é opcional.",
-    "Revisar datos": "Revisar dados"
+    "Revisar datos": "Revisar dados",
+    "Confirmar": "Confirmar",
+    "Pegar": "Colar",
+    "Reemplazar": "Substituir",
+    "¿Eliminar este entrenamiento?": "Excluir este treino?",
+    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?": "Serão adicionadas cópias sem fotos nem pesos corporais, sem substituir o que existe. Colar?",
+    "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.": "Substituir os dados desta conta pela cópia? Uma recuperação local dos dados atuais será mantida."
   },
   "en": {
     "Sexo": "Sex",

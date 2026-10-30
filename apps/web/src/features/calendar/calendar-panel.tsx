@@ -6,6 +6,7 @@ import { Trophy } from "lucide-react";
 import { localeFor } from "@fitty/core/data/translations";
 import { useState } from "react";
 import { useApp } from "@/state/app-provider";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import {
   buildSession,
   setNumber,
@@ -42,6 +43,7 @@ export function CalendarPanel({
   dialogOnly?: boolean;
   onClose?: () => void;
 } = {}) {
+  const [ask, confirmDialog] = useConfirm();
   const { snapshot, change, notify, t } = useApp(),
     [month, setMonth] = useState(
       () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -125,11 +127,11 @@ export function CalendarPanel({
       bodyWeightEndKg: session?.bodyWeightEndKg ?? null,
     });
   };
-  const canReplaceEntries = () =>
+  const canReplaceEntries = async () =>
     !entries.some((entry) =>
       entry.sets.some((set) => set.entered || set.done),
     ) ||
-    confirm(
+    ask(
       t(
         "Cambiar la selección reemplazará los datos que ingresaste en este formulario. ¿Continuar?",
         "Changing the selection will replace the values entered in this form. Continue?",
@@ -430,8 +432,19 @@ export function CalendarPanel({
               </Button>
               <Button
                 variant="destructive-solid"
-                onClick={() => {
-                  if (confirm("¿Eliminar este entrenamiento?"))
+                onClick={async () => {
+                  if (
+                    await ask(
+                      t(
+                        "¿Eliminar este entrenamiento?",
+                        "Delete this workout?",
+                      ),
+                      {
+                        confirmLabel: t("Eliminar", "Delete"),
+                        destructive: true,
+                      },
+                    )
+                  )
                     change((draft) => {
                       draft.sessions = draft.sessions.filter(
                         (item) => item.id !== session.id,
@@ -463,12 +476,16 @@ export function CalendarPanel({
         {clipboard.length > 0 && (
           <Button
             variant="secondary"
-            onClick={() => {
+            onClick={async () => {
               if (
                 selectedDate &&
-                confirm(
-                  "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?",
-                )
+                (await ask(
+                  t(
+                    "Se agregarán copias sin fotos ni pesos corporales, sin reemplazar lo existente. ¿Pegar?",
+                    "Copies without photos or body weights will be added without replacing existing workouts. Paste?",
+                  ),
+                  { confirmLabel: t("Pegar", "Paste") },
+                ))
               )
                 change((draft) => {
                   draft.sessions.push(...copySessions(clipboard, selectedDate));
@@ -516,9 +533,9 @@ export function CalendarPanel({
             ) : (
               <select
                 value={chosenRoutine}
-                onChange={(event) => {
-                  if (!canReplaceEntries()) return;
+                onChange={async (event) => {
                   const id = event.target.value;
+                  if (!(await canReplaceEntries())) return;
                   const routine = snapshot.routines.find(
                     (item) => item.id === id,
                   );
@@ -549,10 +566,10 @@ export function CalendarPanel({
             {!editing?.id && routineChoice ? (
               <select
                 value={chosenDay}
-                onChange={(event) => {
-                  if (!canReplaceEntries()) return;
-                  const id = event.target.value,
-                    day = routineChoice.days.find((item) => item.id === id);
+                onChange={async (event) => {
+                  const id = event.target.value;
+                  if (!(await canReplaceEntries())) return;
+                  const day = routineChoice.days.find((item) => item.id === id);
                   setChosenDay(id);
                   setNames({
                     routine: routineChoice.name,
@@ -721,6 +738,7 @@ export function CalendarPanel({
           }}
         />
       )}
+      {confirmDialog}
     </section>
   );
 }

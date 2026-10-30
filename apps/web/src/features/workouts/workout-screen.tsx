@@ -4,6 +4,7 @@ import { Switch } from "@base-ui/react/switch";
 import { useRouter } from "next/navigation";
 import { Timer } from "lucide-react";
 import { useApp } from "@/state/app-provider";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import {
   buildSession,
   addWorkoutExercises,
@@ -27,6 +28,7 @@ import { replaceWorkoutExercise } from "@fitty/core/domain/exercise-replacement"
 export function WorkoutScreen() {
   const [picking, setPicking] = useState(false);
   const [replacement, setReplacement] = useState<number | null>(null);
+  const [ask, confirmDialog] = useConfirm();
   const { snapshot, change, notify, t } = useApp(),
     router = useRouter(),
     workout = snapshot.workout;
@@ -367,11 +369,15 @@ export function WorkoutScreen() {
       <Button
         variant="destructive-solid"
         className="mt-3 w-full"
-        onClick={() => {
+        onClick={async () => {
           if (
-            confirm(
+            (await ask(
               t("¿Cancelar este entrenamiento?", "Cancel this workout?"),
-            ) &&
+              {
+                confirmLabel: t("Cancelar entrenamiento", "Cancel workout"),
+                destructive: true,
+              },
+            )) &&
             change((draft) => {
               draft.workout = null;
             })
@@ -381,6 +387,7 @@ export function WorkoutScreen() {
       >
         {t("Cancelar entrenamiento", "Cancel workout")}
       </Button>
+      {confirmDialog}
       <ExerciseDetails exercise={image} onClose={() => setImage(null)} />
       <AppDialog
         open={finish}

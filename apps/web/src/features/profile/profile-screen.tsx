@@ -2,6 +2,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { languages } from "@fitty/core/data/translations";
 import { useApp } from "@/state/app-provider";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,10 @@ import { DeleteAccount } from "./delete-account";
 import { PersonalForm } from "./personal-form";
 import { AccountPanel } from "./account-panel";
 import { readSnapshotJson } from "@fitty/core/domain/legacy/read-snapshot";
-import { accountCacheKey, backupRawCache } from "@fitty/core/storage/account-cache";
+import {
+  accountCacheKey,
+  backupRawCache,
+} from "@fitty/core/storage/account-cache";
 import { fingerprint } from "@fitty/core/storage/fingerprint";
 const languageNames: Record<string, string> = {
   es: "🇪🇸 Español",
@@ -25,6 +29,7 @@ const languageNames: Record<string, string> = {
 export function ProfileScreen() {
   const importInput = useRef<HTMLInputElement>(null);
   const settingsFormId = useId();
+  const [ask, confirmDialog] = useConfirm();
   const { snapshot, change, user, notify, t, holdRefresh } = useApp(),
     [settings, setSettings] = useState(false),
     [social, setSocial] = useState({
@@ -154,9 +159,13 @@ export function ProfileScreen() {
                 "La copia no es válida. No se reemplazó ningún dato.",
               );
             if (
-              !confirm(
-                "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.",
-              )
+              !(await ask(
+                t(
+                  "¿Reemplazar los datos de esta cuenta con la copia? Se conservará una recuperación local de los datos actuales.",
+                  "Replace this account's data with the backup? A local recovery copy of the current data will be kept.",
+                ),
+                { confirmLabel: t("Reemplazar", "Replace"), destructive: true },
+              ))
             )
               return;
             try {
@@ -274,6 +283,7 @@ export function ProfileScreen() {
           }
         />
       </AppDialog>
+      {confirmDialog}
     </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { useApp } from "@/state/app-provider";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AppDialog } from "@/components/ui/app-dialog";
@@ -24,6 +25,7 @@ export function BodyProgress({
   period: ProgressPeriod;
 }) {
   const { snapshot, change, t, notify } = useApp();
+  const [ask, confirmDialog] = useConfirm();
   const [open, setOpen] = useState(false),
     [photoOnly, setPhotoOnly] = useState(false),
     [photo, setPhoto] = useState<string | undefined>(),
@@ -161,13 +163,17 @@ export function BodyProgress({
               </p>
               <Button
                 variant="ghost"
-                onClick={() => {
+                onClick={async () => {
                   if (
-                    confirm(
+                    await ask(
                       t(
                         "¿Eliminar este registro corporal?",
                         "Delete this body entry?",
                       ),
+                      {
+                        confirmLabel: t("Eliminar", "Delete"),
+                        destructive: true,
+                      },
                     )
                   )
                     change((d) => {
@@ -384,6 +390,7 @@ export function BodyProgress({
           </Button>
         </form>
       </AppDialog>
+      {confirmDialog}
     </>
   );
 }
