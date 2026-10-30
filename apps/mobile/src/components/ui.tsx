@@ -11,19 +11,40 @@ import {
   type ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 import { colors, radius, space } from "@/theme";
+
+/** Blue light fading from the top-right corner, like the web body background. */
+function Glow() {
+  return (
+    <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+      <Defs>
+        <RadialGradient id="glow" cx="90%" cy="-5%" r="95%">
+          <Stop offset="0" stopColor="#1d6a99" stopOpacity="1" />
+          <Stop offset="0.45" stopColor="#153f5a" stopOpacity="0.55" />
+          <Stop offset="1" stopColor="#153f5a" stopOpacity="0" />
+        </RadialGradient>
+      </Defs>
+      <Rect width="100%" height="100%" fill="url(#glow)" />
+    </Svg>
+  );
+}
 
 export function Screen({
   children,
   scroll = true,
+  glow = false,
 }: {
   children: ReactNode;
   scroll?: boolean;
+  glow?: boolean;
 }) {
   return (
     <SafeAreaView style={styles.screen} edges={["top", "left", "right"]}>
+      {glow ? <Glow /> : null}
       {scroll ? (
         <ScrollView
+          style={glow ? { backgroundColor: "transparent" } : undefined}
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
         >

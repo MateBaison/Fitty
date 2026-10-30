@@ -47,18 +47,25 @@ export default function SignIn() {
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Screen>
+      <Screen glow>
         <Image
           source={require("@/assets/images/icon.png")}
           style={{
-            width: 96,
-            height: 96,
-            borderRadius: 24,
+            width: 72,
+            height: 72,
+            borderRadius: 18,
             alignSelf: "center",
           }}
           accessibilityIgnoresInvertColors
         />
-        <Title>Fitty</Title>
+        <Image
+          source={require("@/assets/images/fitty-wordmark.png")}
+          style={{ width: 220, height: 107, alignSelf: "center" }}
+          resizeMode="contain"
+          accessibilityLabel="Fitty"
+          accessibilityIgnoresInvertColors
+        />
+        <Title>Iniciar sesión</Title>
         <Label muted>Tu entrenamiento, tus rutinas y tu progreso.</Label>
         <Card>
           {sentTo ? (
