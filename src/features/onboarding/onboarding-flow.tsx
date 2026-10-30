@@ -14,6 +14,7 @@ import { recommendedRepRange, recommendedSetCount } from "@/domain/workouts";
 import { PersonalForm } from "@/features/profile/personal-form";
 import { Button } from "@/components/ui/button";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
+import { ExerciseDetails } from "@/features/exercises/exercise-details";
 export function OnboardingFlow() {
   const { snapshot, change, flush, notify, t, user } = useApp();
   const router = useRouter();
@@ -28,6 +29,7 @@ export function OnboardingFlow() {
   const [goal, setGoal] = useState("Fuerza e hipertrofia");
   const [groups, setGroups] = useState<MuscleGroup[]>([...muscleGroups]);
   const [previewRoutine, setPreviewRoutine] = useState<Routine | null>(null);
+  const [previewImageExercise, setPreviewImageExercise] = useState<(typeof availableExercises)[number] | null>(null);
   const [previewExerciseChoice, setPreviewExerciseChoice] = useState<
     Record<string, string>
   >({});
@@ -466,7 +468,14 @@ export function OnboardingFlow() {
                             );
                             return exercise ? (
                               <div className="onboarding-preview-exercise-card">
-                                <ExerciseVisual exercise={exercise} />
+                                <button
+                                  type="button"
+                                  className="onboarding-preview-image-button"
+                                  aria-label={t("Ver imagen completa de", "View full image of") + " " + exercise.name}
+                                  onClick={() => setPreviewImageExercise(exercise)}
+                                >
+                                  <ExerciseVisual exercise={exercise} />
+                                </button>
                                 <span>{exercise.name}</span>
                               </div>
                             ) : <span>{id}</span>;
@@ -629,6 +638,10 @@ export function OnboardingFlow() {
           </div>
         </form>
       )}
+      <ExerciseDetails
+        exercise={previewImageExercise}
+        onClose={() => setPreviewImageExercise(null)}
+      />
     </>
   );
 }

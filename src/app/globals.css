@@ -2999,6 +2999,19 @@ input[type="range"] {
   border-radius: 12px;
   object-fit: cover;
 }
+.onboarding-preview-image-button {
+  display: block;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: zoom-in;
+}
+.onboarding-preview-image-button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
 .onboarding-preview-add select {
   min-width: 0;
   margin: 0;
