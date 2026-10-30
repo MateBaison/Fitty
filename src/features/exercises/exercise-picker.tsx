@@ -56,7 +56,10 @@ export function ExercisePicker({
       open
       onClose={onClose}
       title={t("Agregar ejercicios", "Add exercises")}
-      description="Elegí varios ejercicios y confirmá juntos."
+      description={t(
+        "Elegí uno o varios ejercicios; podés ver sus imágenes antes de agregarlos.",
+        "Choose one or more exercises and review their images before adding them.",
+      )}
     >
       <Button variant="secondary" onClick={() => setCreating(true)}>
         ＋ {t("Crear ejercicio", "Create exercise")}
@@ -102,7 +105,7 @@ export function ExercisePicker({
             placeholder={t("Buscar…", "Search…")}
           />
           <div className="space-y-2">
-            {list.map((exercise) => (
+            {list.length ? list.map((exercise) => (
               <div className="picker-row" key={exercise.id}>
                 <div className="picker-thumb">
                   <ExerciseVisual exercise={exercise} />
@@ -136,6 +139,7 @@ export function ExercisePicker({
                   type="checkbox"
                   aria-label={`Seleccionar ${exercise.name}`}
                   checked={selected.includes(exercise.id)}
+                  className="exercise-picker-checkbox"
                   onChange={() =>
                     setSelected((previous) =>
                       previous.includes(exercise.id)
@@ -145,13 +149,24 @@ export function ExercisePicker({
                   }
                 />
               </div>
-            ))}
+            )) : (
+              <p className="exercise-picker-empty" role="status">
+                {t("No encontramos ejercicios con esa búsqueda.", "No exercises match that search.")}
+              </p>
+            )}
           </div>
         </>
       )}
-      <Button disabled={!selected.length} onClick={() => onPick(selected)}>
-        {t("Agregar seleccionados", "Add selected")} ({selected.length})
-      </Button>
+      <div className="exercise-picker-confirm">
+        <span aria-live="polite">
+          {selected.length
+            ? `${selected.length} ${t("seleccionados", "selected")}`
+            : t("Elegí ejercicios para continuar", "Select exercises to continue")}
+        </span>
+        <Button disabled={!selected.length} onClick={() => onPick(selected)}>
+          {t("Agregar seleccionados", "Add selected")} ({selected.length})
+        </Button>
+      </div>
     </AppDialog>
   );
 }

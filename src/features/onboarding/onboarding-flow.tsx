@@ -616,6 +616,8 @@ export function OnboardingFlow() {
           onClose={() => setPickingForDayId(null)}
           onPick={(ids) => {
             const dayId = pickingForDayId;
+            const targetDay = previewRoutine?.days.find((day) => day.id === dayId);
+            const addedCount = ids.filter((id) => !targetDay?.items.includes(id)).length;
             setPreviewRoutine((current) =>
               current
                 ? {
@@ -629,6 +631,8 @@ export function OnboardingFlow() {
                 : current,
             );
             setPickingForDayId(null);
+            if (addedCount > 0 && targetDay)
+              notify(t(`${addedCount} ejercicios agregados a ${targetDay.name}.`, `${addedCount} exercises added to ${targetDay.name}.`));
           }}
         />
       )}
