@@ -17,6 +17,7 @@ import {
   findExercise,
   localDateKey,
   metricFor,
+  sessionsOnDay,
   validDateKey,
   workoutRatings,
   type Entry,
@@ -72,9 +73,9 @@ export function CalendarPanel({
     first = (month.getDay() + 6) % 7,
     count = new Date(year, number + 1, 0).getDate(),
     locale = localeFor(snapshot.settings.language);
-  const sessions = snapshot.sessions.filter(
-    (session) => selectedDate && localDateKey(session.date) === selectedDate,
-  );
+  const sessions = selectedDate
+    ? sessionsOnDay(snapshot.sessions, selectedDate)
+    : [];
   const selectedMenstrualTraining =
     menstrualCalendarEnabled(snapshot.profile) &&
     selectedDate !== null &&
@@ -174,9 +175,7 @@ export function CalendarPanel({
             ))}
             {Array.from({ length: count }, (_, index) => {
               const date = localDateKey(new Date(year, number, index + 1)),
-                recorded = snapshot.sessions.filter(
-                  (session) => localDateKey(session.date) === date,
-                ),
+                recorded = sessionsOnDay(snapshot.sessions, date),
                 colors = [
                   ...new Set(recorded.map((session) => color(session.color))),
                 ],

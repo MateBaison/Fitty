@@ -12,6 +12,7 @@ import {
   profileDraft,
   profileValues,
 } from "@/components/profile-fields";
+import { DeleteAccount } from "@/components/delete-account";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { pickPhoto, safePhoto } from "@/lib/photos";
@@ -184,6 +185,7 @@ export default function Profile() {
       >
         {t("Cerrar sesión", "Sign out")}
       </Button>
+      <DeleteAccount />
     </Screen>
   );
 }

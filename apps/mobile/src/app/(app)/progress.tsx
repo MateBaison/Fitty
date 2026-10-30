@@ -3,7 +3,11 @@ import { useState } from "react";
 import { Alert, Switch, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { lifetimeSummary, weeklySummary } from "@fitty/core/domain/progress";
-import { findExercise, localDateKey } from "@fitty/core/domain/workouts";
+import {
+  findExercise,
+  localDateKey,
+  sessionsOnDay,
+} from "@fitty/core/domain/workouts";
 import { translate } from "@fitty/core/data/translations";
 import { Calendar } from "@/components/calendar";
 import { ManualSession } from "@/components/manual-session";
@@ -27,11 +31,7 @@ export default function Progress() {
     `${Math.round(unit === "lb" ? kg * KG_TO_LB : kg).toLocaleString(locale)} ${unit}`;
   const week = weeklySummary(snapshot);
   const total = lifetimeSummary(snapshot);
-  const sessions = snapshot.sessions.filter(
-    (session) =>
-      Number.isFinite(Date.parse(session.date)) &&
-      localDateKey(session.date) === day,
-  );
+  const sessions = sessionsOnDay(snapshot.sessions, day);
   const comment = snapshot.sessions.find(
     (session) => session.id === editing,
   )?.comment;

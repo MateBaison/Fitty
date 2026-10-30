@@ -120,6 +120,24 @@ export function localDateKey(value: string | Date): string {
   const date = value instanceof Date ? value : new Date(value);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
+/** Sessions recorded on a local day, earliest first (stored lists are newest first, which breaks ties). */
+export function sessionsOnDay<T extends { date: string }>(
+  sessions: readonly T[],
+  key: string,
+): T[] {
+  return sessions
+    .map((session, index) => ({
+      session,
+      index,
+      time: Date.parse(session.date),
+    }))
+    .filter(
+      ({ time, session }) =>
+        Number.isFinite(time) && localDateKey(session.date) === key,
+    )
+    .sort((a, b) => a.time - b.time || b.index - a.index)
+    .map(({ session }) => session);
+}
 export function validDateKey(value: string): boolean {
   return (
     /^\d{4}-\d{2}-\d{2}$/.test(value) &&
