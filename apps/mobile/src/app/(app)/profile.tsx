@@ -1,11 +1,12 @@
-import { Pressable, Text, View } from "react-native";
+import { View } from "react-native";
 import { languages } from "@fitty/core/data/translations";
+import { Chip } from "@/components/chip";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
 import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
-import { colors, space } from "@/theme";
+import { space } from "@/theme";
 
 const languageNames: Record<string, string> = {
   es: "Español",
@@ -18,37 +19,6 @@ const languageNames: Record<string, string> = {
   it: "Italiano",
   pt: "Português",
 };
-
-function Option({
-  label,
-  active,
-  onPress,
-}: {
-  label: string;
-  active: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="radio"
-      accessibilityState={{ checked: active }}
-      onPress={onPress}
-      style={{
-        minHeight: 40,
-        paddingHorizontal: space(3.5),
-        borderRadius: 999,
-        justifyContent: "center",
-        backgroundColor: active ? colors.primary : colors.secondary,
-      }}
-    >
-      <Text
-        style={{ color: active ? colors.primaryForeground : colors.foreground }}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 export default function Profile() {
   const snapshot = useSnapshot();
@@ -70,7 +40,8 @@ export default function Profile() {
           style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}
         >
           {languages.map((code) => (
-            <Option
+            <Chip
+              role="radio"
               key={code}
               label={languageNames[code] ?? code}
               active={language === code}
@@ -88,7 +59,8 @@ export default function Profile() {
           style={{ flexDirection: "row", gap: space(2) }}
         >
           {(["kg", "lb"] as const).map((value) => (
-            <Option
+            <Chip
+              role="radio"
               key={value}
               label={value}
               active={unit === value}

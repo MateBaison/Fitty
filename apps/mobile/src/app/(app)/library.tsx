@@ -19,41 +19,11 @@ import {
 import { translate } from "@fitty/core/data/translations";
 import { muscleGroups } from "@fitty/core/domain/schemas/exercise";
 import { catalogFor } from "@fitty/core/domain/workouts";
+import { Chip } from "@/components/chip";
 import { Label, styles, Title } from "@/components/ui";
 import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, radius, space } from "@/theme";
-
-function Chip({
-  label,
-  active,
-  onPress,
-}: {
-  label: string;
-  active: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ selected: active }}
-      onPress={onPress}
-      style={{
-        paddingHorizontal: space(3.5),
-        minHeight: 36,
-        justifyContent: "center",
-        borderRadius: 999,
-        backgroundColor: active ? colors.primary : colors.secondary,
-      }}
-    >
-      <Text
-        style={{ color: active ? colors.primaryForeground : colors.foreground }}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 export default function Library() {
   const snapshot = useSnapshot();

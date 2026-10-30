@@ -43,16 +43,9 @@ export default function Home() {
           {t("días", "days")}
         </Label>
       </Card>
-      {!snapshot.profile.onboardingComplete && !name ? (
-        <Card>
-          <Label>
-            {t(
-              "Completá tu perfil y creá tu primera rutina en fitty.uy.",
-              "Complete your profile and create your first routine at fitty.uy.",
-            )}
-          </Label>
-        </Card>
-      ) : null}
+      <Button variant="secondary" onPress={() => router.push("/routines")}>
+        {t("Mis rutinas", "My routines")}
+      </Button>
       {routine ? (
         <View style={{ gap: 12 }}>
           <Label muted>{routine.name}</Label>

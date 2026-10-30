@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { View, type ColorValue } from "react-native";
+import { Onboarding } from "@/components/onboarding";
 import { Button, Card, Label, Loading, Screen, Title } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
 import { AccountProvider, useAccount } from "@/state/account";
@@ -54,6 +55,12 @@ function AccountGate() {
       </Screen>
     );
   if (!view.snapshot) return <Loading message={view.message} />;
+  // Same rule as the web account summary: a name or the flag marks completion.
+  if (
+    !view.snapshot.profile.onboardingComplete &&
+    !view.snapshot.profile.name?.trim()
+  )
+    return <Onboarding />;
   return (
     <View style={{ flex: 1 }}>
       <Tabs
@@ -93,6 +100,13 @@ function AccountGate() {
           }}
         />
         <Tabs.Screen
+          name="tools"
+          options={{
+            title: t("Herramientas", "Tools"),
+            tabBarIcon: icon({ ios: "stopwatch.fill", android: "timer" }),
+          }}
+        />
+        <Tabs.Screen
           name="profile"
           options={{
             title: t("Perfil", "Profile"),
@@ -103,6 +117,7 @@ function AccountGate() {
           }}
         />
         <Tabs.Screen name="workout" options={{ href: null }} />
+        <Tabs.Screen name="routines" options={{ href: null }} />
       </Tabs>
     </View>
   );
