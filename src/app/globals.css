@@ -482,10 +482,6 @@ main > h1 {
 .login-panel {
   width: min(100%, 520px);
   margin-inline: auto;
-  min-height: calc(100dvh - 150px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 .login-panel > h1 {
   text-align: center;
@@ -496,14 +492,28 @@ main > h1 {
 .login-panel form label [data-slot="input"] {
   text-align: center;
 }
+.public-language-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding-inline: 8px 2px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--secondary);
+}
+.public-language-flag {
+  font-size: 1.1rem;
+  line-height: 1;
+}
 .public-language-picker select {
   min-height: 40px;
   max-width: 132px;
   margin: 0;
-  padding: 6px 40px 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--secondary);
+  padding: 6px 32px 6px 4px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
   color: var(--foreground);
   font-size: 0.85rem;
 }

@@ -36,6 +36,7 @@ export function PublicLanguagePicker() {
   return (
     <label className="public-language-picker">
       <span className="sr-only">Idioma / Language</span>
+      <span className="public-language-flag" aria-hidden="true">{flags[language]}</span>
       <select
         aria-label="Idioma / Language"
         value={language}
@@ -49,7 +50,7 @@ export function PublicLanguagePicker() {
         }}
       >
         {languages.map((item) => (
-          <option value={item} key={item}>{flags[item]} {names[item]}</option>
+          <option value={item} key={item}>{names[item]}</option>
         ))}
       </select>
     </label>
