@@ -20,7 +20,7 @@ test("custom goals, automatic routines, editable days and independent sharing co
     .fill("Custom example");
   await page
     .getByRole("combobox", { name: "Objetivo", exact: true })
-    .selectOption("Ganar masa muscular");
+    .selectOption("Ganar masa corporal");
   await page.getByRole("button", { name: "Guardar", exact: true }).click();
   const custom = page.locator(".routine-card").filter({
     has: page.getByRole("button", {
@@ -129,7 +129,7 @@ test("custom goals, automatic routines, editable days and independent sharing co
         ) ?? "{}",
       ).routines,
   );
-  expect(routines[1].goal).toBe("Ganar masa muscular");
+  expect(routines[1].goal).toBe("Ganar masa corporal");
   expect(routines[2].id).not.toBe(routines[3].id);
   expect(routines[2].days[0].id).not.toBe(routines[3].days[0].id);
 });

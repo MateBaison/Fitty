@@ -64,21 +64,40 @@ export function metricFor(
 export function blankSet(metric: "reps" | "seconds"): SavedSet {
   return { kg: null, [metric]: null, entered: false, done: false };
 }
-type RoutineGoalKind = "strength" | "muscle" | "fitness";
+type RoutineGoalKind =
+  "strength" | "muscle" | "fat-loss" | "cardio" | "fitness";
 function routineGoalKind(goal?: string): RoutineGoalKind {
   const normalized = (goal ?? "").toLowerCase();
   if (normalized.includes("masa") || normalized.includes("muscle"))
     return "muscle";
+  if (normalized.includes("grasa") || normalized.includes("fat"))
+    return "fat-loss";
+  if (
+    normalized.includes("resistencia") ||
+    normalized.includes("cardiovascular") ||
+    normalized.includes("cardio") ||
+    normalized.includes("endurance")
+  )
+    return "cardio";
   if (normalized.includes("condición") || normalized.includes("fitness"))
     return "fitness";
   return "strength";
 }
-function goalRepTarget(goal?: string): number {
+export function recommendedRepTarget(goal?: string): number {
   const kind = routineGoalKind(goal);
-  return kind === "strength" ? 7 : kind === "muscle" ? 10 : 12;
+  if (kind === "strength") return 7;
+  if (kind === "muscle") return 10;
+  if (kind === "cardio") return 15;
+  return 12;
 }
-function suggestedSetCount(snapshot: Snapshot, goal?: string): number {
-  const experience = String(snapshot.profile.trainingExperience ?? "beginner");
+export function recommendedRepRange(goal?: string): string {
+  const kind = routineGoalKind(goal);
+  if (kind === "strength") return "6–8";
+  if (kind === "muscle") return "8–12";
+  if (kind === "cardio") return "12–15";
+  return "10–15";
+}
+export function recommendedSetCount(experience: string, goal?: string): number {
   const experienced = experience === "regular" || experience === "experienced";
   const kind = routineGoalKind(goal);
   if (kind === "strength") return experienced ? 3 : 2;
@@ -164,7 +183,10 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
         : sessionPlan(snapshot, routine!.name, day.name, id),
       previousSets = previous?.performedSets ?? [],
       goal = routine?.goal,
-      defaultCount = suggestedSetCount(snapshot, goal),
+      defaultCount = recommendedSetCount(
+        String(snapshot.profile.trainingExperience ?? "beginner"),
+        goal,
+      ),
       count =
         saved?.count ??
         (previousSets.length
@@ -175,7 +197,7 @@ export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
       types = saved?.types ?? previousSets.map((set) => set.type ?? "normal"),
       values =
         saved?.values ?? previousSets.map((set) => set[tracking] ?? null),
-      target = goalRepTarget(goal),
+      target = recommendedRepTarget(goal),
       addWarmup = id === warmupId && !saved && !previousSets.length;
     const plannedSets = Array.from(
       { length: Math.min(200, count) },

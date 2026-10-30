@@ -601,7 +601,7 @@ export function RoutinesHome() {
               }
             }}
           >
-            {editor?.type === "new" && mode === "custom" && (
+            {editor?.type === "new" && (
               <label className="block">
                 {t("Objetivo", "Goal")}
                 <select
@@ -609,9 +609,13 @@ export function RoutinesHome() {
                   onChange={(event) => setGoal(event.target.value)}
                 >
                   {[
+                    ["Baja grasa corporal", "Lose body fat"],
+                    ["Ganar masa corporal", "Gain body mass"],
                     ["Fuerza e hipertrofia", "Strength and hypertrophy"],
-                    ["Ganar masa muscular", "Build muscle"],
-                    ["Mejorar condición física", "Improve fitness"],
+                    [
+                      "Mejorar resistencia cardiovascular",
+                      "Improve cardiovascular endurance",
+                    ],
                   ].map(([es, en]) => (
                     <option key={es} value={es}>
                       {t(es!, en!)}
@@ -620,6 +624,16 @@ export function RoutinesHome() {
                 </select>
               </label>
             )}
+            {editor?.type === "new" &&
+              mode === "auto" &&
+              goal === "Mejorar resistencia cardiovascular" && (
+                <p className="onboarding-suggestion" role="status">
+                  {t(
+                    "La rutina automática propone ejercicios de fuerza. Para correr o pedalear, usá el seguimiento de actividad de Fitty.",
+                    "The automatic routine suggests strength exercises. Use Fitty activity tracking for running or cycling.",
+                  )}
+                </p>
+              )}
             {mode === "auto" ? (
               <>
                 <div className="automatic-muscle-picker">

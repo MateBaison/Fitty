@@ -2,13 +2,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/state/app-provider";
-import type { Snapshot } from "@/domain/schemas/snapshot";
+import type { Routine, Snapshot } from "@/domain/schemas/snapshot";
 import { muscleGroups, type MuscleGroup } from "@/domain/schemas/exercise";
+import { availableExercises } from "@/data/exercises";
 import {
   createGuidedRoutine,
   recommendedTrainingDays,
   type TrainingExperience,
 } from "@/domain/training-setup";
+import { recommendedRepRange, recommendedSetCount } from "@/domain/workouts";
 import { PersonalForm } from "@/features/profile/personal-form";
 import { Button } from "@/components/ui/button";
 export function OnboardingFlow() {
@@ -22,8 +24,13 @@ export function OnboardingFlow() {
   const [mode, setMode] = useState<"custom" | "auto">("custom");
   const [experience, setExperience] = useState<TrainingExperience>("beginner");
   const [days, setDays] = useState(2);
-  const [goal, setGoal] = useState("Mejorar condición física");
+  const [goal, setGoal] = useState("Fuerza e hipertrofia");
   const [groups, setGroups] = useState<MuscleGroup[]>([...muscleGroups]);
+  const [previewRoutine, setPreviewRoutine] = useState<Routine | null>(null);
+  const [previewExerciseChoice, setPreviewExerciseChoice] = useState<
+    Record<string, string>
+  >({});
+  const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState(
     snapshot.profile.onboardingComplete === true,
@@ -33,6 +40,26 @@ export function OnboardingFlow() {
     step === "profile"
       ? t("Tus datos", "Your details")
       : t("Tu entrenamiento", "Your training");
+  const makeRoutineProposal = (nextVariation: number) =>
+    createGuidedRoutine(
+      {
+        mode: "auto",
+        experience,
+        days,
+        goal,
+        groups,
+        variation: nextVariation,
+      },
+      {
+        makeId: () => crypto.randomUUID(),
+        language: snapshot.settings.language ?? "es",
+      },
+    );
+  const showRoutinePreview = () => {
+    setPreviewRoutine(makeRoutineProposal(variation));
+    setVariation((current) => current + 1);
+    window.scrollTo(0, 0);
+  };
   const save = async (selectedMode = mode) => {
     if (busy) return;
     setBusy(true);
@@ -40,13 +67,7 @@ export function OnboardingFlow() {
       if (!pending) {
         const routine =
           selectedMode === "auto"
-            ? createGuidedRoutine(
-                { mode: selectedMode, experience, days, goal, groups },
-                {
-                  makeId: () => crypto.randomUUID(),
-                  language: snapshot.settings.language ?? "es",
-                },
-              )
+            ? (previewRoutine ?? makeRoutineProposal(variation))
             : null;
         if (
           !change((draft) => {
@@ -91,7 +112,9 @@ export function OnboardingFlow() {
       <h1 className="-translate-y-2 mb-5 text-center text-2xl font-bold">
         {step === "profile"
           ? t("Crear tu perfil", "Create your profile")
-          : t("¿Cómo querés empezar?", "How would you like to start?")}
+          : previewRoutine
+            ? t("Revisá tu rutina", "Review your routine")
+            : t("¿Cómo querés empezar?", "How would you like to start?")}
       </h1>
       <div className="onboarding-progress">
         <div
@@ -149,6 +172,10 @@ export function OnboardingFlow() {
             event.preventDefault();
             if (!pending && mode === "auto" && !configuring) {
               setConfiguring(true);
+              return;
+            }
+            if (!pending && mode === "auto" && !previewRoutine) {
+              showRoutinePreview();
               return;
             }
             void save();
@@ -209,7 +236,7 @@ export function OnboardingFlow() {
                 </div>
               </>
             )}
-            {mode === "auto" && configuring && (
+            {mode === "auto" && configuring && !previewRoutine && (
               <>
                 <label className="block">
                   {t("Experiencia previa", "Previous experience")}
@@ -276,9 +303,13 @@ export function OnboardingFlow() {
                     onChange={(event) => setGoal(event.target.value)}
                   >
                     {[
-                      ["Mejorar condición física", "Improve fitness"],
-                      ["Ganar masa muscular", "Build muscle"],
+                      ["Baja grasa corporal", "Lose body fat"],
+                      ["Ganar masa corporal", "Gain body mass"],
                       ["Fuerza e hipertrofia", "Strength and hypertrophy"],
+                      [
+                        "Mejorar resistencia cardiovascular",
+                        "Improve cardiovascular endurance",
+                      ],
                     ].map(([es, en]) => (
                       <option key={es} value={es}>
                         {t(es!, en!)}
@@ -286,6 +317,14 @@ export function OnboardingFlow() {
                     ))}
                   </select>
                 </label>
+                {goal === "Mejorar resistencia cardiovascular" && (
+                  <p className="onboarding-suggestion" role="status">
+                    {t(
+                      "La vista previa propone ejercicios de fuerza. Para correr o pedalear, podés usar el seguimiento de actividad de Fitty.",
+                      "The preview suggests strength exercises. Use Fitty activity tracking for running or cycling.",
+                    )}
+                  </p>
+                )}
                 <fieldset>
                   <legend>
                     {t(
@@ -335,30 +374,225 @@ export function OnboardingFlow() {
               </>
             )}
           </fieldset>
+          {mode === "auto" && configuring && previewRoutine && (
+            <div className="onboarding-preview space-y-4">
+              <div>
+                <p className="eyebrow">
+                  {t("Vista previa editable", "Editable preview")}
+                </p>
+                <h2 className="text-xl font-bold">
+                  {t("Tu rutina sugerida", "Your suggested routine")}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {t(
+                    "Podés quitar o agregar ejercicios, volver a cambiar tus datos o generar otra propuesta.",
+                    "Remove or add exercises, go back to change your details, or generate another suggestion.",
+                  )}
+                </p>
+              </div>
+              <div className="onboarding-preview-summary">
+                <div>
+                  <span>{t("Frecuencia", "Frequency")}</span>
+                  <strong>
+                    {previewRoutine.days.length} {t("días", "days")}
+                  </strong>
+                </div>
+                <div>
+                  <span>{t("Series de trabajo", "Working sets")}</span>
+                  <strong>
+                    {recommendedSetCount(experience, goal)}{" "}
+                    {t("por ejercicio", "per exercise")}
+                  </strong>
+                </div>
+                <div>
+                  <span>{t("Repeticiones guía", "Suggested reps")}</span>
+                  <strong>
+                    {recommendedRepRange(goal)} {t("reps", "reps")}
+                  </strong>
+                </div>
+              </div>
+              {goal === "Mejorar resistencia cardiovascular" && (
+                <p className="onboarding-suggestion" role="status">
+                  {t(
+                    "Esta rutina usa ejercicios de fuerza; no incluye sesiones de carrera o bicicleta.",
+                    "This routine uses strength exercises; it does not include running or cycling sessions.",
+                  )}
+                </p>
+              )}
+              {previewRoutine.days.map((day) => {
+                const addable = availableExercises.filter(
+                  (exercise) =>
+                    groups.includes(exercise.group) &&
+                    !day.items.includes(exercise.id),
+                );
+                return (
+                  <section
+                    className="panel onboarding-preview-day"
+                    key={day.id}
+                  >
+                    <h3 className="font-semibold">{day.name}</h3>
+                    <ul className="onboarding-preview-exercises">
+                      {day.items.map((id, index) => (
+                        <li key={id + "-" + index}>
+                          <span>
+                            {availableExercises.find(
+                              (exercise) => exercise.id === id,
+                            )?.name ?? id}
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            disabled={busy || pending}
+                            aria-label={
+                              t("Quitar", "Remove") +
+                              " " +
+                              (availableExercises.find(
+                                (exercise) => exercise.id === id,
+                              )?.name ?? id)
+                            }
+                            onClick={() =>
+                              setPreviewRoutine((current) =>
+                                current
+                                  ? {
+                                      ...current,
+                                      days: current.days.map((item) =>
+                                        item.id === day.id
+                                          ? {
+                                              ...item,
+                                              items: item.items.filter(
+                                                (_, itemIndex) =>
+                                                  itemIndex !== index,
+                                              ),
+                                            }
+                                          : item,
+                                      ),
+                                    }
+                                  : current,
+                              )
+                            }
+                          >
+                            {t("Quitar", "Remove")}
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="onboarding-preview-add">
+                      <select
+                        aria-label={
+                          t("Agregar ejercicio a", "Add exercise to") +
+                          " " +
+                          day.name
+                        }
+                        disabled={busy || pending}
+                        value={previewExerciseChoice[day.id] ?? ""}
+                        onChange={(event) =>
+                          setPreviewExerciseChoice((current) => ({
+                            ...current,
+                            [day.id]: event.target.value,
+                          }))
+                        }
+                      >
+                        <option value="">
+                          {t("Elegir ejercicio", "Choose exercise")}
+                        </option>
+                        {addable.map((exercise) => (
+                          <option key={exercise.id} value={exercise.id}>
+                            {exercise.name}
+                          </option>
+                        ))}
+                      </select>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        disabled={
+                          busy || pending || !previewExerciseChoice[day.id]
+                        }
+                        onClick={() => {
+                          const id = previewExerciseChoice[day.id];
+                          if (!id) return;
+                          setPreviewRoutine((current) =>
+                            current
+                              ? {
+                                  ...current,
+                                  days: current.days.map((item) =>
+                                    item.id === day.id &&
+                                    !item.items.includes(id)
+                                      ? { ...item, items: [...item.items, id] }
+                                      : item,
+                                  ),
+                                }
+                              : current,
+                          );
+                          setPreviewExerciseChoice((current) => ({
+                            ...current,
+                            [day.id]: "",
+                          }));
+                        }}
+                      >
+                        {t("Agregar", "Add")}
+                      </Button>
+                    </div>
+                    {!day.items.length && (
+                      <p className="text-sm text-muted-foreground">
+                        {t(
+                          "Agregá al menos un ejercicio para este día.",
+                          "Add at least one exercise for this day.",
+                        )}
+                      </p>
+                    )}
+                  </section>
+                );
+              })}
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={busy || pending}
+                onClick={showRoutinePreview}
+              >
+                {t("Generar otra propuesta", "Generate another suggestion")}
+              </Button>
+            </div>
+          )}
           <div className="flex flex-wrap justify-between gap-3">
             <Button
               type="button"
               variant="secondary"
               disabled={busy || pending}
-              onClick={() =>
-                configuring ? setConfiguring(false) : setStep("profile")
-              }
+              onClick={() => {
+                if (previewRoutine) {
+                  setPreviewRoutine(null);
+                  window.scrollTo(0, 0);
+                } else if (configuring) setConfiguring(false);
+                else setStep("profile");
+              }}
             >
-              {t("Volver", "Back")}
+              {previewRoutine
+                ? t("Cambiar datos", "Edit details")
+                : t("Volver", "Back")}
             </Button>
             <Button
               type="submit"
-              disabled={busy || (configuring && !groups.length)}
+              disabled={
+                busy ||
+                (configuring && !groups.length) ||
+                (previewRoutine?.days.some((day) => !day.items.length) ?? false)
+              }
             >
               {busy
                 ? t("Guardando…", "Saving…")
                 : pending
                   ? t("Reintentar sincronización", "Retry sync")
-                  : configuring
-                    ? t("Crear rutina y entrar", "Create routine and enter")
-                    : mode === "auto"
-                      ? t("Configurar rutina", "Set up routine")
-                      : t("Entrar a Fitty", "Go to Fitty")}
+                  : configuring && !previewRoutine
+                    ? t("Ver vista previa", "Preview routine")
+                    : previewRoutine
+                      ? t(
+                          "Crear esta rutina y entrar",
+                          "Create this routine and enter",
+                        )
+                      : mode === "auto"
+                        ? t("Configurar rutina", "Set up routine")
+                        : t("Entrar a Fitty", "Go to Fitty")}
             </Button>
           </div>
         </form>
