@@ -34,10 +34,10 @@ export function createGuidedRoutine(
     throw new Error("Choose at least one muscle group");
   if (input.mode === "auto") {
     const routine = buildAutomaticRoutine(
-      { groups: input.groups, days: input.days },
+      { groups: input.groups, days: input.days, goal: input.goal },
       options,
     );
-    return { ...routine, goal: input.goal };
+    return routine;
   }
   return {
     id: options.makeId(),

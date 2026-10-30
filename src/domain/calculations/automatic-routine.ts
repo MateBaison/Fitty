@@ -15,6 +15,13 @@ const pools = z
 const requestSchema = z.strictObject({
   groups: z.array(muscleGroupSchema).min(1),
   days: z.number().int().min(1).max(7),
+  goal: z
+    .enum([
+      "Fuerza e hipertrofia",
+      "Ganar masa muscular",
+      "Mejorar condición física",
+    ])
+    .default("Fuerza e hipertrofia"),
 });
 
 export function buildAutomaticRoutine(
@@ -64,11 +71,26 @@ export function buildAutomaticRoutine(
   const availablePools = new Map(
     selected.map((group) => [
       group,
-      pools[group].filter((id) =>
-        availableExercises.some(
-          (exercise) => exercise.id === id && exercise.group === group,
-        ),
-      ),
+      pools[group]
+        .filter((id) =>
+          availableExercises.some(
+            (exercise) => exercise.id === id && exercise.group === group,
+          ),
+        )
+        .sort((firstId, secondId) => {
+          const rank = (id: string) => {
+            const exercise = availableExercises.find((item) => item.id === id);
+            if (!exercise) return 99;
+            const compound = ["push", "pull", "squat", "hinge", "hip"].includes(
+              exercise.pattern,
+            );
+            if (request.goal === "Mejorar condición física")
+              return exercise.level === "Inicial" ? 0 : 1;
+            if (request.goal === "Ganar masa muscular") return compound ? 0 : 1;
+            return compound ? 0 : 1;
+          };
+          return rank(firstId) - rank(secondId);
+        }),
     ]),
   );
   function poolFor(group: MuscleGroup): string[] {
@@ -83,7 +105,12 @@ export function buildAutomaticRoutine(
     const muscles = splits[index % splits.length];
     if (!muscles?.length) throw new Error("Empty routine split");
     const allocation = new Map(muscles.map((group) => [group, 1]));
-    const target = muscles.length === 1 ? 4 : muscles.length === 2 ? 5 : 6;
+    const targetByGoal = {
+      "Fuerza e hipertrofia": [4, 5, 6],
+      "Ganar masa muscular": [5, 6, 7],
+      "Mejorar condición física": [3, 4, 5],
+    }[request.goal];
+    const target = targetByGoal[Math.min(muscles.length, 3) - 1] ?? 4;
     const limit = Math.max(
       muscles.length,
       Math.min(
@@ -125,8 +152,12 @@ export function buildAutomaticRoutine(
     name: `${translate(options.language, "Rutina automática", "Automatic routine")} · ${request.days} ${translate(options.language, "días", "days")}`,
     goal: translate(
       options.language,
-      "Fuerza e hipertrofia",
-      "Strength and hypertrophy",
+      request.goal,
+      request.goal === "Fuerza e hipertrofia"
+        ? "Strength and hypertrophy"
+        : request.goal === "Ganar masa muscular"
+          ? "Build muscle"
+          : "Improve fitness",
     ),
     days,
   });

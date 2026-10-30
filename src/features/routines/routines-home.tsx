@@ -579,7 +579,7 @@ export function RoutinesHome() {
                     const routine =
                       mode === "auto"
                         ? buildAutomaticRoutine(
-                            { groups, days },
+                            { groups, days, goal },
                             {
                               makeId: () => crypto.randomUUID(),
                               language: draft.settings.language ?? "es",
