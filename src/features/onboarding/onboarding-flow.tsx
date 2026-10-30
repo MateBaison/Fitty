@@ -13,6 +13,7 @@ import {
 import { recommendedRepRange, recommendedSetCount } from "@/domain/workouts";
 import { PersonalForm } from "@/features/profile/personal-form";
 import { Button } from "@/components/ui/button";
+import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 export function OnboardingFlow() {
   const { snapshot, change, flush, notify, t, user } = useApp();
   const router = useRouter();
@@ -426,19 +427,50 @@ export function OnboardingFlow() {
                     !day.items.includes(exercise.id),
                 );
                 return (
-                  <section
+                  <details
                     className="panel onboarding-preview-day"
                     key={day.id}
                   >
-                    <h3 className="font-semibold">{day.name}</h3>
+                    <summary className="onboarding-preview-day-summary">
+                      <input
+                        aria-label={t("Nombre del día", "Day name")}
+                        value={day.name}
+                        disabled={busy || pending}
+                        onClick={(event) => event.stopPropagation()}
+                        onKeyDown={(event) => event.stopPropagation()}
+                        onChange={(event) =>
+                          setPreviewRoutine((current) =>
+                            current
+                              ? {
+                                  ...current,
+                                  days: current.days.map((item) =>
+                                    item.id === day.id
+                                      ? { ...item, name: event.target.value }
+                                      : item,
+                                  ),
+                                }
+                              : current,
+                          )
+                        }
+                      />
+                      <span className="onboarding-preview-day-count">
+                        {day.items.length} {t("ejercicios", "exercises")}
+                      </span>
+                    </summary>
                     <ul className="onboarding-preview-exercises">
                       {day.items.map((id, index) => (
                         <li key={id + "-" + index}>
-                          <span>
-                            {availableExercises.find(
-                              (exercise) => exercise.id === id,
-                            )?.name ?? id}
-                          </span>
+                          {(() => {
+                            const exercise = availableExercises.find(
+                              (item) => item.id === id,
+                            );
+                            return exercise ? (
+                              <div className="onboarding-preview-exercise-card">
+                                <ExerciseVisual exercise={exercise} />
+                                <span>{exercise.name}</span>
+                              </div>
+                            ) : <span>{id}</span>;
+                          })()}
                           <Button
                             type="button"
                             variant="ghost"
@@ -541,7 +573,7 @@ export function OnboardingFlow() {
                         )}
                       </p>
                     )}
-                  </section>
+                  </details>
                 );
               })}
               <Button
