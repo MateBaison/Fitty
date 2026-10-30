@@ -512,17 +512,17 @@ main > h1 {
 }
 .public-language-picker select {
   min-height: 40px;
-  width: 132px;
-  max-width: 132px;
+  width: 112px;
+  max-width: 112px;
   margin: 0;
   appearance: none;
-  padding: 6px 28px 6px 4px;
+  padding: 6px 24px 6px 4px;
   border: 0;
   border-radius: 10px;
   background-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23aab6c2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 15px center;
+  background-position: right 12px center;
   color: var(--foreground);
   color-scheme: light;
   font-size: 0.8rem;
