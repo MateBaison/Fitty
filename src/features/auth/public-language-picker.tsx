@@ -50,7 +50,7 @@ export function PublicLanguagePicker() {
         }}
       >
         {languages.map((item) => (
-          <option value={item} key={item}>{names[item]}</option>
+          <option value={item} key={item}>{flags[item]} {names[item]}</option>
         ))}
       </select>
     </label>
