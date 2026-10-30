@@ -56,6 +56,19 @@ export async function googleLogin() {
   if (error || !data.url) throw new Error("No pudimos iniciar Google.");
   redirect(data.url);
 }
+export async function appleLogin() {
+  const origin = await assertOrigin();
+  const client = await serverClient();
+  const { data, error } = await client.auth.signInWithOAuth({
+    provider: "apple",
+    options: {
+      redirectTo: new URL("/auth/callback", origin).href,
+      skipBrowserRedirect: true,
+    },
+  });
+  if (error || !data.url) throw new Error("No pudimos iniciar Apple.");
+  redirect(data.url);
+}
 export async function signOut() {
   await assertOrigin();
   const client = await serverClient();

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  appleLogin,
   googleLogin,
   requestCode,
   verifyCode,
@@ -128,6 +129,11 @@ export function LoginForm() {
       <form action={googleLogin}>
         <Button variant="secondary" className="w-full" type="submit">
           {t("Continuar con Google", "Continue with Google")}
+        </Button>
+      </form>
+      <form action={appleLogin}>
+        <Button variant="secondary" className="w-full" type="submit">
+          {t("Continuar con Apple", "Continue with Apple")}
         </Button>
       </form>
       <p className="text-center text-sm text-muted-foreground">
