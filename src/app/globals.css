@@ -524,12 +524,12 @@ main > h1 {
   background-repeat: no-repeat;
   background-position: right 12px center;
   color: var(--foreground);
-  color-scheme: light;
+  color-scheme: dark;
   font-size: 0.8rem;
 }
 .public-language-picker select option {
-  background: #ffffff;
-  color: #1f2937;
+  background: #151a24;
+  color: #f4f7fb;
 }
 .eyebrow {
   color: var(--accent-foreground);

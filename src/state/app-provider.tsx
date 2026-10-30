@@ -14,7 +14,7 @@ import { activityRecorder } from "@/lib/supabase/activity-recorder";
 import { stateRepository } from "@/lib/supabase/state-repository";
 import { SyncController, type SyncView } from "@/lib/supabase/sync-controller";
 import type { Snapshot } from "@/domain/schemas/snapshot";
-import { translate } from "@/data/translations";
+import { localeFor, translate } from "@/data/translations";
 import { AppHeader } from "@/components/layout/app-header";
 import { SupportPanel } from "@/features/profile/support-panel";
 import { SignOutButton } from "@/features/auth/sign-out-button";
@@ -53,6 +53,7 @@ export function AppProvider({
   });
   const [notice, setNotice] = useState("");
   const controller = useRef<SyncController | null>(null);
+  const appliedAuthLanguage = useRef("");
   const router = useRouter();
   const holdRefresh = useCallback(
     () => controller.current?.holdRefresh() ?? (() => {}),
@@ -143,6 +144,22 @@ export function AppProvider({
     document.documentElement.dir =
       view.snapshot.settings.language === "ar" ? "rtl" : "ltr";
   }, [view.snapshot?.settings.language]);
+  useEffect(() => {
+    if (!view.snapshot || !controller.current) return;
+    const stored = localStorage.getItem("fitty-language");
+    if (!stored) return;
+    const language = localeFor(stored);
+    const applicationKey = `${user.id}:${language}`;
+    if (
+      language === (view.snapshot.settings.language ?? "es") ||
+      appliedAuthLanguage.current === applicationKey
+    ) return;
+    appliedAuthLanguage.current = applicationKey;
+    controller.current.edit((draft) => {
+      draft.settings.language = language;
+    });
+    void controller.current.flush();
+  }, [user.id, view.snapshot?.settings.language]);
   useEffect(() => {
     const root = document.documentElement;
     const theme = "dark";
