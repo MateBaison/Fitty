@@ -1,0 +1,25 @@
+{
+  "name": "@fitty/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./data/*.json": "./src/data/*.json",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "format": "prettier --write src tests"
+  },
+  "dependencies": {
+    "@noble/hashes": "^2.4.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "prettier": "^3.9.9",
+    "typescript": "^5",
+    "vitest": "^5.0.5"
+  }
+}

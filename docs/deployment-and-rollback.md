@@ -5,8 +5,8 @@ The implementation is prepared for a full Next.js deployment. Publication/cutove
 ## Configure Vercel
 
 1. Import the new project/repository or select this folder through an authorized Vercel workflow.
-2. Use the Next.js framework preset, project root, Node.js 24.x (or a supported 20.9+ runtime), install `bun install --frozen-lockfile`, and build `bun run build`.
-3. Retain `bun.lock`. Do not set static export, an `out/` output directory or a custom start command.
+2. Use the Next.js framework preset with Root Directory `apps/web`, Node.js 24.x (or a supported 20.9+ runtime). `apps/web/vercel.json` sets `pnpm install --frozen-lockfile` and builds through Turborepo (`pnpm turbo run build --filter=@fitty/web` from the repository root).
+3. Retain the root `pnpm-lock.yaml`. Do not set static export, an `out/` output directory or a custom start command.
 4. Set `NEXT_PUBLIC_SUPABASE_URL` to the existing Supabase project URL and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to its public publishable key.
 5. Set `NEXT_PUBLIC_SITE_URL` to the exact HTTPS deployment origin, with no path. Use a stable preview URL rather than arbitrary changing preview URLs. Configure Preview and Production environments separately and rebuild after changes.
 

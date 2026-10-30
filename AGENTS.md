@@ -4,24 +4,28 @@ Fitty (formerly HERCULES) is a fitness application migrated from a hosted HTML a
 
 ## Stack and commands
 
-- Bun 1.4.2 is the package manager and unit-test runner; use `bun.lock` and `bun install --frozen-lockfile`.
-- Next.js 16.3.8, React 19.2.8, strict TypeScript with `noUncheckedIndexedAccess`, and the `@/*` alias for `src/*`.
-- Tailwind CSS 4, shadcn/ui with Base UI (`base-nova`), Lucide icons, Zod 4, Leaflet 1.9.4 with MapLibre/OpenFreeMap and Supabase SSR/browser clients.
-- Start locally with `bun run dev --hostname localhost --port 3000`. Node.js 20.9+ is required. Optional `.tools/` runtimes are machine-specific and ignored.
-- Use `bun run typecheck`, `bun run test` (unit tests), `bun run build`, and `bun run baseline:verify` as appropriate for the change. There is no lint script.
-- `bun run format` formats all source, scripts, tests and the Next.js/Playwright configs; prefer formatting only changed files for small changes.
+- Turborepo monorepo with pnpm 10 workspaces (`pnpm-workspace.yaml`, `turbo.json`, hoisted `node_modules` via `.npmrc` for Expo). Use `pnpm install --frozen-lockfile`; never add another lockfile.
+- `apps/web` (`@fitty/web`): Next.js 16.3.8, React 19.2.8, strict TypeScript with `noUncheckedIndexedAccess`, and the `@/*` alias for `apps/web/src/*`. Tailwind CSS 4, shadcn/ui with Base UI (`base-nova`), Lucide icons, Zod 4, Leaflet 1.9.4 with MapLibre/OpenFreeMap and Supabase SSR/browser clients.
+- `apps/mobile` (`@fitty/mobile`): Expo / React Native app. It reads and writes account data through the web app's `/api/v1` routes using TanStack Query and Zod, never directly against the database.
+- `packages/core` (`@fitty/core`): platform-independent TypeScript source shared by both apps, imported by path (`@fitty/core/domain/workouts`). No React, Next.js, Expo or browser APIs; inject storage/network through `StoragePort` and `StateRepository`.
+- Start the web app with `pnpm --filter @fitty/web dev --hostname localhost --port 3000`. Node.js 20.9+ is required. Optional `.tools/` runtimes are machine-specific and ignored.
+- From the root use `pnpm typecheck`, `pnpm test` (Vitest unit tests in every package) and `pnpm build`; use `pnpm --filter @fitty/web baseline:verify` for catalog/asset changes. There is no lint script.
+- `pnpm format` formats every package; prefer formatting only changed files for small changes.
 
 ## Source layout
 
-- `src/app/`: route pages, layouts, loading/error boundaries, authentication callbacks and the account summary API. The `(application)` route group protects `/home`, `/library`, `/workout`, `/tools`, `/progress` and `/profile` and requires completed onboarding.
-- `src/features/`: feature UI and browser interactions. Keep route pages thin and put reusable fitness behavior in the domain layer.
-- `src/domain/`: pure calculations and workout/routine/progress behavior; `schemas/` defines persisted data and command validation, and `legacy/read-snapshot.ts` reads compatible snapshots.
-- `src/data/`: validated exercise catalog and translation helpers. `src/data/legacy/` contains captured catalog/default data, not live user records. Add new exercise definitions/variants in `additional-exercises.json` and `additional-image-variants.json`; preserve the original 136 definitions and baseline assets.
+Web paths are relative to `apps/web`, shared paths to `packages/core`.
+
+- `src/app/`: route pages, layouts, loading/error boundaries, authentication callbacks, the account summary API and the mobile API (`api/v1`). The `(application)` route group protects `/home`, `/library`, `/workout`, `/tools`, `/progress` and `/profile` and requires completed onboarding.
+- `src/features/`: feature UI and browser interactions. Keep route pages thin and put reusable fitness behavior in `@fitty/core`.
+- `packages/core/src/domain/`: pure calculations and workout/routine/progress behavior; `schemas/` defines persisted data and command validation, and `legacy/read-snapshot.ts` reads compatible snapshots.
+- `packages/core/src/data/`: validated exercise catalog and translation helpers. `data/legacy/` contains captured catalog/default data, not live user records. Add new exercise definitions/variants in `additional-exercises.json` and `additional-image-variants.json`; preserve the original 136 definitions and baseline assets (images live in `apps/web/public/assets`).
+- `packages/core/src/storage/` (per-account cache keys/backups), `sync/` (`SyncController` and the `StateRepository` contract) and `state/reducer.ts`.
 - `src/components/ui/`: shared shadcn/Base UI primitives; `src/components/layout/`: account shell, header and navigation. Reuse these components and tokens/styles in `src/app/globals.css`.
 - `src/state/app-provider.tsx`: account context exposed through `useApp()`, backed by `SyncController`. `runtime-provider.tsx` owns transient rest timers and the session clipboard; clocks also have a feature-specific provider.
-- `src/lib/supabase/`: clients, verified authentication, account reads, snapshot repository and synchronization. `src/lib/storage/` owns per-account caches/backups; `src/lib/browser/` contains browser media helpers.
+- `src/lib/supabase/`: clients, verified authentication, account reads and the Supabase `StateRepository`. `src/lib/browser/` contains browser media helpers.
 - `src/proxy.ts`: session cookie refresh and private/no-store response headers for matched account/auth routes.
-- `tests/unit/`: Bun domain, compatibility, catalog and sync tests. `tests/browser/`: Playwright account and feature workflows. `scripts/`: mock backend, test builds and baseline tools.
+- Tests: `packages/core/tests/` and `apps/web/tests/unit/` (Vitest), `apps/web/tests/browser/` (Playwright). `apps/web/scripts/`: mock backend, test builds and baseline tools (run with `tsx`).
 
 ## Account and persistence rules
 
@@ -52,11 +56,11 @@ For code changes, run relevant unit tests and typecheck; add regression coverage
 For browser workflows:
 
 ```sh
-bun run test:build
-bun run test:browser
+pnpm --filter @fitty/web test:build
+pnpm --filter @fitty/web test:browser
 ```
 
-Playwright uses a separate optimized `.next-test` build (`FITTY_TEST_BUILD=1`), a loopback mock Supabase on port 54329 and the app on port 3010. It runs mobile and desktop viewports with one worker. Rebuild the test build after application changes. Use `bun x playwright install chromium` if needed, or set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to an existing Chromium executable. Reports and traces are ignored under `artifacts/` and `test-results/`.
+Playwright uses a separate optimized `.next-test` build (`FITTY_TEST_BUILD=1`), a loopback mock Supabase on port 54329 and the app on port 3010. It runs mobile and desktop viewports with one worker. Rebuild the test build after application changes. Use `pnpm --filter @fitty/web exec playwright install chromium` if needed, or set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to an existing Chromium executable. Reports and traces are ignored under `artifacts/` and `test-results/`.
 
 Use the mock backend for automated auth/database checks; keep test-only auth behavior out of application routes. Report checks actually run and any checks left unverified.
 

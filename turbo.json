@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "env": ["NEXT_PUBLIC_*", "FITTY_TEST_BUILD"],
+      "passThroughEnv": ["VERCEL_*", "RESEND_API_KEY", "LEGACY_AUTH_COMPAT_UNTIL"],
+      "outputs": [".next/**", "!.next/cache/**", ".next-test/**", "!.next-test/cache/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "test": {
+      "dependsOn": ["^test"]
+    },
+    "format": {
+      "cache": false
+    }
+  }
+}
