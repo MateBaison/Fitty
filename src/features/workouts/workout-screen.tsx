@@ -9,6 +9,7 @@ import {
   addWorkoutExercises,
   countSetGroups,
   findExercise,
+  metricFor,
   type CatalogExercise,
   type Entry,
 } from "@/domain/workouts";
@@ -68,6 +69,36 @@ export function WorkoutScreen() {
       if (entry && draft.workout) {
         draft.workout.index = index;
         edit(entry);
+        const currentWorkout = draft.workout,
+          currentRoutine = draft.routines.find(
+            (item) => item.id === currentWorkout.rid,
+          ),
+          currentDay = currentRoutine?.days.find(
+            (item) => item.id === currentWorkout.did,
+          );
+        if (currentDay?.items.includes(entry.id)) {
+          const tracking = metricFor(draft, entry.id, entry),
+            nextPlan = {
+              count: entry.sets.length,
+              tracking,
+              types: entry.sets.map((set) => set.type ?? "normal"),
+              values: entry.sets.map((set) => set[tracking] ?? null),
+            },
+            previousPlan =
+              draft.settings.routineDaySetPlans?.[currentWorkout.rid]?.[
+                currentWorkout.did
+              ]?.[entry.id];
+          if (JSON.stringify(previousPlan) !== JSON.stringify(nextPlan)) {
+            draft.settings.routineDaySetPlans ??= {};
+            draft.settings.routineDaySetPlans[currentWorkout.rid] ??= {};
+            draft.settings.routineDaySetPlans[currentWorkout.rid]![
+              currentWorkout.did
+            ] ??= {};
+            draft.settings.routineDaySetPlans[currentWorkout.rid]![
+              currentWorkout.did
+            ]![entry.id] = nextPlan;
+          }
+        }
       }
     });
   const renderEntry = (entry: Entry, index: number) => {

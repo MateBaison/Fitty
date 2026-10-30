@@ -4,6 +4,12 @@ import { muscleGroupSchema, trackingSchema } from "./exercise";
 const id = z.string().min(1);
 const nonnegative = z.number().finite().nonnegative();
 const optionalValue = nonnegative.nullable().optional();
+const routineDaySetPlanSchema = z.looseObject({
+  count: z.number().int().min(1).max(200),
+  tracking: trackingSchema,
+  types: z.array(z.string()).max(200),
+  values: z.array(optionalValue).max(200),
+});
 
 // Tolerant persisted-data readers: never strip metadata or retired exercise IDs.
 export const savedSetSchema = z.looseObject({
@@ -115,6 +121,12 @@ export const settingsSchema = z.looseObject({
   theme: z.string().optional(),
   combatClock: z.unknown().optional(),
   exerciseMetrics: z.record(z.string(), z.string()).optional(),
+  routineDaySetPlans: z
+    .record(
+      z.string(),
+      z.record(z.string(), z.record(z.string(), routineDaySetPlanSchema)),
+    )
+    .optional(),
   restEnabled: z.boolean().optional(),
   restSeconds: nonnegative.optional(),
   workoutLayout: z.enum(["individual", "list"]).optional(),

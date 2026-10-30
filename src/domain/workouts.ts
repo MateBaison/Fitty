@@ -64,6 +64,39 @@ export function metricFor(
 export function blankSet(metric: "reps" | "seconds"): SavedSet {
   return { kg: null, [metric]: null, entered: false, done: false };
 }
+type RoutineGoalKind = "strength" | "muscle" | "fitness";
+function routineGoalKind(goal?: string): RoutineGoalKind {
+  const normalized = (goal ?? "").toLowerCase();
+  if (normalized.includes("masa") || normalized.includes("muscle"))
+    return "muscle";
+  if (normalized.includes("condición") || normalized.includes("fitness"))
+    return "fitness";
+  return "strength";
+}
+function goalRepTarget(goal?: string): number {
+  const kind = routineGoalKind(goal);
+  return kind === "strength" ? 7 : kind === "muscle" ? 10 : 12;
+}
+function suggestedSetCount(snapshot: Snapshot, goal?: string): number {
+  const experience = String(snapshot.profile.trainingExperience ?? "beginner");
+  const experienced = experience === "regular" || experience === "experienced";
+  const kind = routineGoalKind(goal);
+  if (kind === "strength") return experienced ? 3 : 2;
+  if (kind === "muscle") return experienced ? 4 : 3;
+  return 3;
+}
+function sessionPlan(
+  snapshot: Snapshot,
+  routine: string,
+  day: string,
+  id: string,
+) {
+  return snapshot.sessions
+    .filter((session) => session.routine === routine && session.day === day)
+    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+    .flatMap((session) => session.exercises ?? [])
+    .find((exercise) => exercise.id === id);
+}
 export function localDateKey(value: string | Date): string {
   const date = value instanceof Date ? value : new Date(value);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -115,29 +148,72 @@ export function previousSets(
 }
 export function startWorkout(snapshot: Snapshot, rid: string, did: string) {
   if (snapshot.workout) throw new Error("Ya hay un entrenamiento en curso.");
-  const day = snapshot.routines
-    .find((routine) => routine.id === rid)
-    ?.days.find((day) => day.id === did);
+  const routine = snapshot.routines.find((item) => item.id === rid),
+    day = routine?.days.find((item) => item.id === did);
   if (!day?.items.length) throw new Error("Agregá ejercicios a este día.");
+  const dayPlans = snapshot.settings.routineDaySetPlans?.[rid]?.[did] ?? {};
+  const entries = day.items.map((id) => {
+    const tracking = metricFor(snapshot, id),
+      saved = dayPlans[id],
+      previous = saved
+        ? undefined
+        : sessionPlan(snapshot, routine!.name, day.name, id),
+      previousSets = previous?.performedSets ?? [],
+      goal = routine?.goal,
+      defaultCount = suggestedSetCount(snapshot, goal),
+      count =
+        saved?.count ??
+        (previous?.sets && previous.sets > 0
+          ? Math.floor(previous.sets)
+          : previousSets.length
+            ? countSetGroups(previousSets)
+            : defaultCount),
+      types = saved?.types ?? previousSets.map((set) => set.type ?? "normal"),
+      values =
+        saved?.values ?? previousSets.map((set) => set[tracking] ?? null),
+      target = goalRepTarget(goal);
+    const plannedSets = Array.from(
+      { length: Math.min(200, count) },
+      (_, index) => {
+        const set = blankSet(tracking);
+        set.type = types[index] ?? "normal";
+        set[tracking] =
+          values[index] !== undefined
+            ? values[index]
+            : tracking === "reps"
+              ? target
+              : null;
+        return set;
+      },
+    );
+    snapshot.settings.routineDaySetPlans ??= {};
+    snapshot.settings.routineDaySetPlans[rid] ??= {};
+    snapshot.settings.routineDaySetPlans[rid]![did] ??= {};
+    snapshot.settings.routineDaySetPlans[rid]![did]![id] ??= {
+      count: plannedSets.length,
+      tracking,
+      types: plannedSets.map((set) => set.type ?? "normal"),
+      values: plannedSets.map((set) => set[tracking] ?? null),
+    };
+    return {
+      id,
+      note: "",
+      tracking,
+      sets: plannedSets,
+      ...(day.supersets?.find((group) => group.includes(id))
+        ? {
+            superset: `${rid}-${did}-superset-${day.supersets.findIndex((group) => group.includes(id))}`,
+          }
+        : {}),
+    };
+  });
   snapshot.workout = {
     rid,
     did,
     started: Date.now(),
     index: 0,
     openExercises: [0],
-    entries: day.items.map((id) => ({
-      id,
-      note: "",
-      tracking: metricFor(snapshot, id),
-      sets: Array.from({ length: lastSetCount(snapshot, id) }, () =>
-        blankSet(metricFor(snapshot, id)),
-      ),
-      ...(day.supersets?.find((group) => group.includes(id))
-        ? {
-            superset: `${rid}-${did}-superset-${day.supersets.findIndex((group) => group.includes(id))}`,
-          }
-        : {}),
-    })),
+    entries,
   };
 }
 // Extra exercises belong to this session; the saved routine stays unchanged.
