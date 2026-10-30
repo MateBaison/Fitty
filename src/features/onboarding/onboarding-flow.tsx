@@ -88,13 +88,7 @@ export function OnboardingFlow() {
   };
   return (
     <>
-      <h1
-        className={
-          step === "training"
-            ? "mb-5 text-center text-2xl font-bold"
-            : "mb-5 text-2xl font-bold"
-        }
-      >
+      <h1 className="mb-5 text-center text-2xl font-bold">
         {step === "profile"
           ? t("Crear tu perfil", "Create your profile")
           : t("¿Cómo querés empezar?", "How would you like to start?")}
