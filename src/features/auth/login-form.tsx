@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { buttonVariants, Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   googleLogin,
@@ -10,15 +9,23 @@ import {
   verifyCode,
 } from "@/lib/supabase/auth-actions";
 import { PENDING_EMAIL_KEY } from "@/lib/storage/account-cache";
+import { translate, localeFor } from "@/data/translations";
 import { z } from "zod";
 export function LoginForm() {
   const [email, setEmail] = useState(""),
     [code, setCode] = useState(""),
     [sent, setSent] = useState(false),
     [busy, setBusy] = useState(false),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [language, setLanguage] = useState("es");
+  const t = (es: string, en: string) => translate(language, es, en);
   const router = useRouter();
   useEffect(() => {
+    const savedLanguage = localeFor(localStorage.getItem("fitty-language") ?? "es");
+    setLanguage(savedLanguage);
+    const onLanguageChange = (event: Event) =>
+      setLanguage(localeFor((event as CustomEvent<string>).detail));
+    window.addEventListener("fitty-language-change", onLanguageChange);
     try {
       const saved = z
         .email()
@@ -30,6 +37,7 @@ export function LoginForm() {
     } catch {
       /* Storage can be blocked; login remains usable. */
     }
+    return () => window.removeEventListener("fitty-language-change", onLanguageChange);
   }, []);
   return (
     <div className="space-y-4">
@@ -58,7 +66,7 @@ export function LoginForm() {
             }
           } catch {
             setError(
-              "No pudimos conectar. Revisá la configuración o tu conexión.",
+              t("No pudimos conectar. Revisá la configuración o tu conexión.", "Could not connect. Check your settings or connection."),
             );
           } finally {
             setBusy(false);
@@ -66,7 +74,7 @@ export function LoginForm() {
         }}
       >
         <label className="block">
-          Correo electrónico
+          {t("Correo electrónico", "Email address")}
           <Input
             type="email"
             autoComplete="email"
@@ -78,7 +86,7 @@ export function LoginForm() {
         </label>
         {sent && (
           <label className="block">
-            Código del correo
+            {t("Código del correo", "Email code")}
             <Input
               inputMode="numeric"
               autoComplete="one-time-code"
@@ -97,7 +105,7 @@ export function LoginForm() {
           </p>
         )}
         <Button type="submit" disabled={busy} className="w-full">
-          {busy ? "Conectando…" : sent ? "Verificar código" : "Enviar código"}
+          {busy ? t("Conectando…", "Connecting…") : sent ? t("Verificar código", "Verify code") : t("Enviar código", "Send code")}
         </Button>
       </form>
       {sent && (
@@ -114,28 +122,16 @@ export function LoginForm() {
             setCode("");
           }}
         >
-          Cambiar correo o pedir otro código
+          {t("Cambiar correo o pedir otro código", "Change email or request another code")}
         </Button>
       )}
       <form action={googleLogin}>
         <Button variant="secondary" className="w-full" type="submit">
-          Continuar con Google
+          {t("Continuar con Google", "Continue with Google")}
         </Button>
       </form>
-      <Link
-        href="/"
-        className={buttonVariants({ variant: "ghost", className: "w-full" })}
-        onClick={() => {
-          try {
-            sessionStorage.removeItem(PENDING_EMAIL_KEY);
-          } catch {}
-        }}
-      >
-        Volver al inicio
-      </Link>
-      <p className="text-sm text-muted-foreground">
-        Tu cuenta guarda rutinas y entrenamientos en la nube. Nunca compartas el
-        código recibido.
+      <p className="text-center text-sm text-muted-foreground">
+        {t("Tu cuenta guarda rutinas y entrenamientos en la nube. Nunca compartas el código recibido.", "Your account saves routines and workouts in the cloud. Never share your verification code.")}
       </p>
     </div>
   );

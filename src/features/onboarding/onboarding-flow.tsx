@@ -17,6 +17,7 @@ import { Pencil } from "lucide-react";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
+import { localeFor } from "@/data/translations";
 export function OnboardingFlow() {
   const { snapshot, change, flush, notify, t, user } = useApp();
   const router = useRouter();
@@ -69,6 +70,13 @@ export function OnboardingFlow() {
     setBusy(true);
     try {
       if (!pending) {
+        let preferredLanguage: string | null = null;
+        try {
+          const storedLanguage = localStorage.getItem("fitty-language");
+          if (storedLanguage) preferredLanguage = localeFor(storedLanguage);
+        } catch {
+          /* The onboarding flow remains usable when browser storage is unavailable. */
+        }
         const routine =
           selectedMode === "auto"
             ? (previewRoutine ?? makeRoutineProposal(variation))
@@ -84,6 +92,7 @@ export function OnboardingFlow() {
                 ? { trainingExperience: experience, trainingGoal: goal }
                 : {}),
             };
+          if (preferredLanguage) draft.settings.language = preferredLanguage;
             if (routine) {
               draft.routines.push(routine);
               draft.selected = routine.id;

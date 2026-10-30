@@ -479,6 +479,30 @@ main > h1 {
   color: var(--muted-foreground);
   margin-bottom: 20px;
 }
+.login-panel {
+  width: min(100%, 520px);
+  margin-inline: auto;
+}
+.login-panel > h1 {
+  text-align: center;
+}
+.login-panel form label {
+  text-align: center;
+}
+.login-panel form label [data-slot="input"] {
+  text-align: center;
+}
+.public-language-picker select {
+  min-height: 40px;
+  max-width: 132px;
+  margin: 0;
+  padding: 6px 28px 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--secondary);
+  color: var(--foreground);
+  font-size: 0.85rem;
+}
 .eyebrow {
   color: var(--accent-foreground);
   text-transform: uppercase;
