@@ -125,7 +125,7 @@ test("custom goals, automatic routines, editable days and independent sharing co
     () =>
       JSON.parse(
         localStorage.getItem(
-          "mrgymson-user-11111111-1111-4111-8111-111111111111",
+          "fitty-user-11111111-1111-4111-8111-111111111111",
         ) ?? "{}",
       ).routines,
   );
@@ -155,7 +155,7 @@ test("routine activation slides, supports keyboard and persists an inactive sele
         () =>
           JSON.parse(
             localStorage.getItem(
-              "mrgymson-user-11111111-1111-4111-8111-111111111111",
+              "fitty-user-11111111-1111-4111-8111-111111111111",
             )!,
           ).selected,
       ),

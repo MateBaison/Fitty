@@ -9,7 +9,7 @@ Saved data uses tolerant Zod readers; new commands use bounded/strict input sche
 ## Persistence and recovery
 
 - Verified account UUID owns its provider, local cache and repository.
-- Account keys remain `mrgymson-user-<UUID>`; the legacy guest key is preserved, never automatically uploaded into another account.
+- Account keys are `fitty-user-<UUID>` (caches saved under the previous `mrgymson-user-<UUID>` key are moved on load); the legacy guest key is preserved, never automatically uploaded into another account.
 - Initial cloud read/reconciliation happens before writes; initial defaults are not automatically uploaded.
 - Local input persistence is immediate. Cloud uploads debounce 900ms, run serially and capture edits made during an in-flight upload.
 - Failed cloud reads allow local cached editing but block cloud uploads until recovery. Disposed account work cancels requests/timers.

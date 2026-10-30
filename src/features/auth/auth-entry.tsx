@@ -1,10 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  INCOMING_ROUTINE_KEY,
-  LEGACY_AUTH_KEY,
-} from "@/lib/storage/account-cache";
+import { INCOMING_ROUTINE_KEY } from "@/lib/storage/account-cache";
 export function AuthEntry() {
   const router = useRouter();
   useEffect(() => {
@@ -24,7 +21,6 @@ export function AuthEntry() {
       body: JSON.stringify({ access_token, refresh_token }),
     }).then((response) => {
       if (response.ok) {
-        localStorage.removeItem(LEGACY_AUTH_KEY);
         router.replace("/home");
         router.refresh();
       }

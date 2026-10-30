@@ -48,7 +48,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
       () =>
         JSON.parse(
           localStorage.getItem(
-            "mrgymson-user-11111111-1111-4111-8111-111111111111",
+            "fitty-user-11111111-1111-4111-8111-111111111111",
           ) ?? "{}",
         ).workout.entries[0].sets[0].reps,
     ),
@@ -180,7 +180,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
       () =>
         JSON.parse(
           localStorage.getItem(
-            "mrgymson-user-11111111-1111-4111-8111-111111111111",
+            "fitty-user-11111111-1111-4111-8111-111111111111",
           ) ?? "{}",
         ).sessions.length,
     ),
@@ -228,7 +228,7 @@ test("personal record highlights appear while logging and remain in the calendar
   if (info.project.name === "mobile")
     await page.setViewportSize({ width: 320, height: 844 });
   await page.evaluate(() => {
-    const key = "mrgymson-user-11111111-1111-4111-8111-111111111111";
+    const key = "fitty-user-11111111-1111-4111-8111-111111111111";
     const snapshot = JSON.parse(localStorage.getItem(key)!);
     const id = snapshot.routines[0].days[0].items[0];
     snapshot.sessions = [
@@ -791,7 +791,7 @@ test("weekly summary can select earlier weeks and return to the current week", a
   page,
 }) => {
   const dates = await page.evaluate(() => {
-    const key = "mrgymson-user-11111111-1111-4111-8111-111111111111";
+    const key = "fitty-user-11111111-1111-4111-8111-111111111111";
     const snapshot = JSON.parse(localStorage.getItem(key)!);
     const now = new Date();
     const monday = new Date(
@@ -1020,7 +1020,7 @@ test("masculine profiles hide menstrual calendar borders and legend with saved d
 }) => {
   // Seed a pending offline copy in the isolated account cache; normal reconciliation uploads it.
   await page.evaluate(() => {
-    const key = "mrgymson-user-11111111-1111-4111-8111-111111111111";
+    const key = "fitty-user-11111111-1111-4111-8111-111111111111";
     const snapshot = JSON.parse(localStorage.getItem(key)!);
     const today = new Date();
     const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;

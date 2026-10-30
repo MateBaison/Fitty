@@ -893,12 +893,7 @@
       "sha256": "365eced50d111f17885c125e0368664bb3a6c697cbee511f8c6e121a6f3f459d"
     },
     {
-      "path": "public/assets/hercules-logo-v1.jpg",
-      "bytes": 51711,
-      "sha256": "41163b886c4dd3d324e585411700c9461873d58492e29ba0375faf353c0cffa8"
-    },
-    {
-      "path": "public/assets/press-banca-barra-mrgymson.jpg",
+      "path": "public/assets/press-banca-barra.jpg",
       "bytes": 226258,
       "sha256": "1b870b7d35063dc7d905c06bb67265ce7e4ccc257e0d886c38eb4a0dc64cd7fe"
     },
@@ -931,11 +926,6 @@
       "path": "public/assets/press-de-banca-inclinado-con-barra.jpg",
       "bytes": 228200,
       "sha256": "f712b5da145726ff27d49f81c3ce35dda70ab28b80a4f7267a742a1e79bd2b08"
-    },
-    {
-      "path": "public/hercules.webmanifest",
-      "bytes": 239,
-      "sha256": "99db7cd0466729d5b4206c5e3ad2dc655623709b885e1242e2b820b807ce8a1b"
     }
   ]
 }

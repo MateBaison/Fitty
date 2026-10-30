@@ -166,7 +166,7 @@ test("account switches isolate caches and restore each account's own cloud data"
       () =>
         JSON.parse(
           localStorage.getItem(
-            "mrgymson-user-22222222-2222-4222-8222-222222222222",
+            "fitty-user-22222222-2222-4222-8222-222222222222",
           ) ?? "{}",
         ).profile.name,
     ),
@@ -254,7 +254,7 @@ test("header sign-out preserves unsynced edits and requires a second confirmatio
       () =>
         JSON.parse(
           localStorage.getItem(
-            "mrgymson-user-11111111-1111-4111-8111-111111111111",
+            "fitty-user-11111111-1111-4111-8111-111111111111",
           )!,
         ).profile.name,
     ),
@@ -319,11 +319,11 @@ test("confirmed mock deletion signs out and removes only this account's local re
   await page.goto("/profile");
   await page.evaluate(() => {
     localStorage.setItem(
-      "mrgymson-user-11111111-1111-4111-8111-111111111111:test-backup",
+      "fitty-user-11111111-1111-4111-8111-111111111111:test-backup",
       "private",
     );
     localStorage.setItem(
-      "mrgymson-user-22222222-2222-4222-8222-222222222222:test-backup",
+      "fitty-user-22222222-2222-4222-8222-222222222222:test-backup",
       "other",
     );
   });
@@ -348,14 +348,14 @@ test("confirmed mock deletion signs out and removes only this account's local re
   expect(
     await page.evaluate(() =>
       Object.keys(localStorage).filter((key) =>
-        key.startsWith("mrgymson-user-11111111-1111-4111-8111-111111111111"),
+        key.startsWith("fitty-user-11111111-1111-4111-8111-111111111111"),
       ),
     ),
   ).toEqual([]);
   expect(
     await page.evaluate(() =>
       localStorage.getItem(
-        "mrgymson-user-22222222-2222-4222-8222-222222222222:test-backup",
+        "fitty-user-22222222-2222-4222-8222-222222222222:test-backup",
       ),
     ),
   ).toBe("other");

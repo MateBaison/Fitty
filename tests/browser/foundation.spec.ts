@@ -38,12 +38,10 @@ test("welcome, all navigation routes, active tab, brand home and reload", async 
   ] as const) {
     if (label === "Biblioteca" || label === "Progreso")
       await openHomeSection(page, label);
-    const link = page
-      .getByRole("navigation")
-      .getByRole("link", {
-        name: label === "Biblioteca" || label === "Progreso" ? "Inicio" : label,
-        exact: true,
-      });
+    const link = page.getByRole("navigation").getByRole("link", {
+      name: label === "Biblioteca" || label === "Progreso" ? "Inicio" : label,
+      exact: true,
+    });
     if (label !== "Biblioteca" && label !== "Progreso") await link.click();
     await expect(page).toHaveURL(new RegExp(`${url}$`));
     await expect(link).toHaveAttribute("aria-current", "page");
@@ -82,13 +80,11 @@ test("welcome, all navigation routes, active tab, brand home and reload", async 
     await page.evaluate(() => getComputedStyle(document.body).backgroundColor),
   ).toBe("rgb(9, 11, 16)");
   expect(
-    await page.evaluate(() => localStorage.getItem("mrgymson-mobile-v1")),
+    await page.evaluate(() => localStorage.getItem("fitty-mobile-v1")),
   ).toBeNull();
   expect(
     await page.evaluate(() =>
-      localStorage.getItem(
-        "mrgymson-user-11111111-1111-4111-8111-111111111111",
-      ),
+      localStorage.getItem("fitty-user-11111111-1111-4111-8111-111111111111"),
     ),
   ).not.toBeNull();
   expect(errors).toEqual([]);

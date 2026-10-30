@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test";
 import { trustedOrigin, safeNext } from "../../src/lib/env";
-test("production domain handoff accepts only the two explicitly owned HTTPS origins", () => {
-  for (const site of ["https://fitty.uy", "https://hercules-navy.vercel.app"]) {
+test("production accepts only the exact configured Fitty origin", () => {
+  for (const site of ["https://fitty.uy"]) {
     expect(trustedOrigin("https://fitty.uy", site)).toBe(true);
-    expect(trustedOrigin("https://hercules-navy.vercel.app", site)).toBe(true);
     for (const origin of [
+      "https://hercules-navy.vercel.app",
       null,
       "http://fitty.uy",
       "https://fitty.uy.evil.example",

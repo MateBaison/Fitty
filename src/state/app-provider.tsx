@@ -13,6 +13,7 @@ import { browserClient } from "@/lib/supabase/browser";
 import { activityRecorder } from "@/lib/supabase/activity-recorder";
 import { stateRepository } from "@/lib/supabase/state-repository";
 import { SyncController, type SyncView } from "@/lib/supabase/sync-controller";
+import { adoptPreviousAccountCache } from "@/lib/storage/account-cache";
 import type { Snapshot } from "@/domain/schemas/snapshot";
 import { localeFor, translate } from "@/data/translations";
 import { AppHeader } from "@/components/layout/app-header";
@@ -60,6 +61,11 @@ export function AppProvider({
     [],
   );
   useEffect(() => {
+    try {
+      adoptPreviousAccountCache(localStorage, user.id);
+    } catch {
+      // Storage may be unavailable; SyncController reports that state itself.
+    }
     const client = browserClient(),
       sync = new SyncController(
         user.id,
@@ -153,7 +159,8 @@ export function AppProvider({
     if (
       language === (view.snapshot.settings.language ?? "es") ||
       appliedAuthLanguage.current === applicationKey
-    ) return;
+    )
+      return;
     appliedAuthLanguage.current = applicationKey;
     controller.current.edit((draft) => {
       draft.settings.language = language;

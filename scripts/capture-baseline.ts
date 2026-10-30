@@ -1,6 +1,14 @@
 import { createHash } from "node:crypto";
 import { createServer } from "node:http";
-import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import {
+  cp,
+  mkdir,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { extname, join, resolve, sep } from "node:path";
 import { chromium } from "@playwright/test";
 import { z } from "zod";
@@ -93,9 +101,11 @@ try {
   await cp(join(published, "assets"), resolve("public/assets"), {
     recursive: true,
   });
-  await cp(
-    join(published, "hercules.webmanifest"),
-    resolve("public/hercules.webmanifest"),
+  // Fitty rebrand: drop the previous brand's logo and rename its asset.
+  await rm(resolve("public/assets/hercules-logo-v1.jpg"));
+  await rename(
+    resolve("public/assets/press-banca-barra-mrgymson.jpg"),
+    resolve("public/assets/press-banca-barra.jpg"),
   );
   await mkdir("src/data/legacy", { recursive: true });
   for (const [name, value] of Object.entries(capture)) {

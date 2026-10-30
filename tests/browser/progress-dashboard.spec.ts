@@ -13,7 +13,7 @@ test("unified periods, glute bars, exercise records and body measurements", asyn
   page,
 }, info) => {
   await page.evaluate(() => {
-    const key = "mrgymson-user-11111111-1111-4111-8111-111111111111";
+    const key = "fitty-user-11111111-1111-4111-8111-111111111111";
     const s = JSON.parse(localStorage.getItem(key)!);
     const today = new Date();
     s.sessions = [0, 1].map((i) => {
@@ -196,9 +196,7 @@ test("upload independent dated photos directly from comparison without creating 
   await expect(page.locator(".progress-photo-comparison img")).toHaveCount(2);
   const stored = await page.evaluate(() => {
     const s = JSON.parse(
-      localStorage.getItem(
-        "mrgymson-user-11111111-1111-4111-8111-111111111111",
-      )!,
+      localStorage.getItem("fitty-user-11111111-1111-4111-8111-111111111111")!,
     );
     return {
       sessions: s.sessions.length,

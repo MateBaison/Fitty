@@ -6,6 +6,7 @@ import { AppDialog } from "@/components/ui/app-dialog";
 import { Input } from "@/components/ui/input";
 import { useApp } from "@/state/app-provider";
 import { restartAccount } from "@/domain/account-reset";
+import { accountCacheKey } from "@/lib/storage/account-cache";
 
 // Temporary testing control; remove this component and its AccountPanel entry after testing.
 export function ResetAccount() {
@@ -50,7 +51,7 @@ export function ResetAccount() {
             try {
               if (!applied) {
                 if (!(await flush())) throw new Error("sync");
-                const key = `mrgymson-user-${user.id}:reset-backup:${Date.now()}`;
+                const key = `${accountCacheKey(user.id)}:reset-backup:${Date.now()}`;
                 const raw = JSON.stringify(snapshot);
                 localStorage.setItem(key, raw);
                 if (localStorage.getItem(key) !== raw)

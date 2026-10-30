@@ -5,6 +5,7 @@ import {
   readSnapshotJson,
 } from "../../src/domain/legacy/read-snapshot";
 import {
+  adoptPreviousAccountCache,
   backupRawCache,
   accountCacheKey,
   GUEST_CACHE_KEY,
@@ -212,6 +213,33 @@ describe("Phase 2 legacy-data safety", () => {
     backupRawCache(storage, accountCacheKey(userA), 1);
     expect(storage.getItem(backup)).toBe(original);
     expect(() => accountCacheKey("../another-user")).toThrow();
+  });
+  test("adopts caches saved under the previous brand key without overwriting Fitty data", () => {
+    const values = new Map<string, string>([
+      [`mrgymson-user-${userA}`, "old"],
+      [`mrgymson-user-${userA}:sync-meta-v1`, "meta"],
+      [`mrgymson-user-${userB}`, "other"],
+    ]);
+    const storage = {
+      get length() {
+        return values.size;
+      },
+      key: (index: number) => [...values.keys()][index] ?? null,
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => void values.set(key, value),
+      removeItem: (key: string) => void values.delete(key),
+    };
+    adoptPreviousAccountCache(storage, userA);
+    expect(storage.getItem(accountCacheKey(userA))).toBe("old");
+    expect(storage.getItem(`${accountCacheKey(userA)}:sync-meta-v1`)).toBe(
+      "meta",
+    );
+    expect(storage.getItem(`mrgymson-user-${userA}`)).toBeNull();
+    expect(storage.getItem(`mrgymson-user-${userB}`)).toBe("other");
+    values.set(`mrgymson-user-${userA}`, "stale");
+    adoptPreviousAccountCache(storage, userA);
+    expect(storage.getItem(accountCacheKey(userA))).toBe("old");
+    expect(storage.getItem(`mrgymson-user-${userA}`)).toBe("stale");
   });
   test("storage denial is distinct from an empty account; failed backups propagate", () => {
     const denied: StoragePort = {

@@ -43,9 +43,7 @@ test("manual first use retains personal details and creates editable empty days"
   await expect(page).toHaveURL(/\/home$/);
   const state = await page.evaluate(() =>
     JSON.parse(
-      localStorage.getItem(
-        "mrgymson-user-11111111-1111-4111-8111-111111111111",
-      )!,
+      localStorage.getItem("fitty-user-11111111-1111-4111-8111-111111111111")!,
     ),
   );
   const routine = state.routines.find(
@@ -114,9 +112,7 @@ test("failed onboarding sync can retry after reload without duplicating the rout
   await expect(retry).toBeEnabled();
   const before = await page.evaluate(() => {
     const state = JSON.parse(
-      localStorage.getItem(
-        "mrgymson-user-11111111-1111-4111-8111-111111111111",
-      )!,
+      localStorage.getItem("fitty-user-11111111-1111-4111-8111-111111111111")!,
     );
     return {
       ids: state.routines.map((r: { id: string }) => r.id),
@@ -130,9 +126,7 @@ test("failed onboarding sync can retry after reload without duplicating the rout
   await expect(page).toHaveURL(/\/home$/);
   const after = await page.evaluate(() => {
     const state = JSON.parse(
-      localStorage.getItem(
-        "mrgymson-user-11111111-1111-4111-8111-111111111111",
-      )!,
+      localStorage.getItem("fitty-user-11111111-1111-4111-8111-111111111111")!,
     );
     return {
       ids: state.routines.map((r: { id: string }) => r.id),
