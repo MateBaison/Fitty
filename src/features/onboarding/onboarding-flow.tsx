@@ -616,11 +616,6 @@ export function OnboardingFlow() {
             </div>
           )}
           <div className={`onboarding-actions ${previewRoutine ? "has-preview" : ""}`}>
-            {previewRoutine && (
-              <Button type="button" variant="secondary" disabled={busy || pending} onClick={showRoutinePreview}>
-                {t("Generar otra propuesta", "Generate another suggestion")}
-              </Button>
-            )}
             <Button
               type="button"
               variant="secondary"
@@ -637,6 +632,11 @@ export function OnboardingFlow() {
                 ? t("Atrás", "Back")
                 : t("Volver", "Back")}
             </Button>
+            {previewRoutine && (
+              <Button type="button" variant="secondary" disabled={busy || pending} onClick={showRoutinePreview}>
+                {t("Regenerar", "Regenerate")}
+              </Button>
+            )}
             <Button
               type="submit"
               disabled={

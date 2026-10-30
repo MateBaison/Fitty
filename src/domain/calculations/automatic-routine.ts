@@ -44,8 +44,9 @@ export function buildAutomaticRoutine(
       ["Piernas", "Glúteos", "Gemelos", "Abdominales"].includes(group),
     );
     const upper = selected.filter((group) => !lower.includes(group));
-    splits =
-      upper.length && lower.length
+    splits = request.variation % 2 === 1
+      ? [selected, selected]
+      : upper.length && lower.length
         ? [upper, lower]
         : [
             selected.filter((_, index) => index % 2 === 0),
@@ -60,6 +61,15 @@ export function buildAutomaticRoutine(
     splits = families
       .map((family) => family.filter((group) => selected.includes(group)))
       .filter((split) => split.length);
+    if (request.variation % 2 === 1 && selected.length > 1) {
+      const distributed = Array.from(
+        { length: Math.min(request.days, selected.length) },
+        () => [] as MuscleGroup[],
+      );
+      [...selected.slice(request.variation % selected.length), ...selected.slice(0, request.variation % selected.length)]
+        .forEach((group, index) => distributed[index % distributed.length]?.push(group));
+      splits = distributed.filter((split) => split.length);
+    }
     if (selected.includes("Abdominales")) {
       if (!splits.length) splits = [["Abdominales"]];
       else
@@ -129,7 +139,7 @@ export function buildAutomaticRoutine(
       "Ganar masa corporal",
       "Ganar masa muscular",
     ].includes(request.goal)
-      ? [5, 6, 7]
+      ? [5, 7, 7]
       : [
             "Baja grasa corporal",
             "Mejorar resistencia cardiovascular",
