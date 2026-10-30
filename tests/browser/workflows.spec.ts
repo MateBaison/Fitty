@@ -77,7 +77,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
   await page
     .getByRole("button", { name: "Iniciar descanso", exact: true })
     .click();
-  await page.getByRole("link", { name: "HERCULES — volver al inicio" }).click();
+  await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();
   await expect(page.locator(".active-workout")).toHaveCount(1);
   await page.getByRole("link", { name: "Continuar", exact: true }).click();
   await expect(

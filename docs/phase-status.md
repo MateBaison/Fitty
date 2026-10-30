@@ -14,7 +14,7 @@ October 6, 2026. Local implementation covers phases 0–5. Phase 6 is prepared f
 
 ## Final deliverable
 
-`/Users/mb/Desktop/HERCULES-Nextjs-migration` contains the current source, original assets, Bun lockfile, local runtimes and documentation. The live frontend/Supabase schema was not changed. No legacy HTML script executes inside the Next.js application.
+`/Users/mb/Desktop/Fitty` contains the current source, original assets, Bun lockfile, local runtimes and documentation. The live frontend/Supabase schema was not changed. No legacy HTML script executes inside the Next.js application.
 
 Strict types, 36 unit tests (7,457 assertions), 187 baseline checksums and the regular production build pass from this folder. The final combined 28-check browser gate passed at 390×844 and 1280×900, including custom goals, automatic routines and independent shared-routine imports. Read-only HTTP smoke checks on the regular production build returned 200 for the welcome page, a 200 streamed response for the library route and 401/private-no-store for the account summary. Next.js can embed an authentication redirect in an already-streamed 200 response; the transport status alone is not an auth-gate test. No real account was signed into or written by these checks.
 

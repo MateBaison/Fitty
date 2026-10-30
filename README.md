@@ -1,4 +1,4 @@
-# HERCULES — Next.js migration
+# Fitty (formerly HERCULES) — Next.js app
 
 The application journeys are implemented locally in Next.js, TypeScript, shadcn/ui, Zod and Bun. This is a full server-rendered Next.js application prepared for Vercel, not an HTML wrapper or static export. The existing hosted app and Supabase schema have not been changed.
 
@@ -12,7 +12,7 @@ The application journeys are implemented locally in Next.js, TypeScript, shadcn/
 - All 136 original exercises, eight groups, equipment/search filters, custom exercises and original image variants.
 - Profile/settings/export/import, nine language choices with the preserved translation/fallback catalog.
 - Stopwatch, timer, combat preparation/presets/audio, running/cycling GPS route display, four calculators and exercise/weekly/muscle-group progress.
-- Original HERCULES branding and downloadable/native-share workout posters.
+- Fitty branding and downloadable/native-share workout posters.
 
 Instagram/Snapchat fields are profile references, not official account linking or guaranteed story publication. GPS is foreground browser tracking, not a background-native tracker. No pending menstrual-cycle feature was added.
 
@@ -21,7 +21,7 @@ Instagram/Snapchat fields are profile references, not official account linking o
 Use Bun 1.4.2 and Node.js 20.9+ (checked here with Node 24.19.0). On this Mac, optional project-local runtimes are included:
 
 ```sh
-cd /Users/mb/Desktop/HERCULES-Nextjs-migration
+cd /Users/mb/Desktop/Fitty
 export PATH="$PWD/.tools:$PATH"
 bun install --frozen-lockfile
 bun run dev --hostname localhost --port 3000

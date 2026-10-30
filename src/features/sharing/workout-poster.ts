@@ -122,7 +122,7 @@ export async function shareWorkoutPoster(
   session: Session,
 ): Promise<void> {
   const blob = await workoutPoster(snapshot, session),
-    file = new File([blob], "hercules-entrenamiento.png", {
+    file = new File([blob], "fitty-entrenamiento.png", {
       type: "image/png",
     });
   if (navigator.share && navigator.canShare?.({ files: [file] })) {

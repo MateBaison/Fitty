@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "hercules-nextjs",
+      "name": "fitty",
       "dependencies": {
         "@base-ui/react": "^1.8.0",
         "@dnd-kit/core": "^6.3.1",

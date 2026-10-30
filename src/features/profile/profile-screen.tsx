@@ -121,7 +121,7 @@ export function ProfileScreen() {
                 ),
                 link = document.createElement("a");
               link.href = url;
-              link.download = "hercules-datos.json";
+              link.download = "fitty-datos.json";
               link.click();
               setTimeout(() => URL.revokeObjectURL(url), 30_000);
             }}

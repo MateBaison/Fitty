@@ -1,6 +1,6 @@
-# Working in HERCULES
+# Working in Fitty
 
-HERCULES is a fitness application migrated from a hosted HTML app to a server-rendered Next.js App Router application. It supports routines, workouts, exercise browsing, calendar history, progress, calculators, clocks and account management. Preserve compatibility with existing accounts and exercise history when changing behavior.
+Fitty (formerly HERCULES) is a fitness application migrated from a hosted HTML app to a server-rendered Next.js App Router application. It supports routines, workouts, exercise browsing, calendar history, progress, calculators, clocks and account management. Preserve compatibility with existing accounts and exercise history when changing behavior.
 
 ## Stack and commands
 
@@ -56,7 +56,7 @@ bun run test:build
 bun run test:browser
 ```
 
-Playwright uses a separate optimized `.next-test` build (`HERCULES_TEST_BUILD=1`), a loopback mock Supabase on port 54329 and the app on port 3010. It runs mobile and desktop viewports with one worker. Rebuild the test build after application changes. Use `bun x playwright install chromium` if needed, or set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to an existing Chromium executable. Reports and traces are ignored under `artifacts/` and `test-results/`.
+Playwright uses a separate optimized `.next-test` build (`FITTY_TEST_BUILD=1`), a loopback mock Supabase on port 54329 and the app on port 3010. It runs mobile and desktop viewports with one worker. Rebuild the test build after application changes. Use `bun x playwright install chromium` if needed, or set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to an existing Chromium executable. Reports and traces are ignored under `artifacts/` and `test-results/`.
 
 Use the mock backend for automated auth/database checks; keep test-only auth behavior out of application routes. Report checks actually run and any checks left unverified.
 
