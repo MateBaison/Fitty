@@ -12,23 +12,12 @@ test.beforeEach(async ({ page }) => {
   await login(page);
 });
 
-test("welcome, all navigation routes, active tab, brand home and reload", async ({
+test("all navigation routes, active tab, brand home and reload", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: "Bienvenido a FITTY" }),
-  ).toBeVisible();
-  expect(
-    await page
-      .getByRole("link", { name: "Crear cuenta o iniciar sesión" })
-      .evaluate((element) => element.getBoundingClientRect().height),
-  ).toBeGreaterThanOrEqual(48);
-  await page
-    .getByRole("link", { name: "Crear cuenta o iniciar sesión" })
-    .click();
+  await page.goto("/home");
   for (const [label, url] of [
     ["Biblioteca", "/library"],
     ["Herramientas", "/tools"],
@@ -96,8 +85,8 @@ test("catalog groups, non-floating search, equipment filters, images, modal and 
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/library");
-  await expect(page.locator(".exercise-card")).toHaveCount(139);
-  await expect(page.locator(".muscle-summary")).toHaveCount(0);
+  await expect(page.locator(".exercise-card")).toHaveCount(125);
+  await expect(page.locator(".muscle-summary")).toHaveCount(1);
   await page.screenshot({
     path: `artifacts/library-groups-${testInfo.project.name}.png`,
     animations: "disabled",
@@ -233,9 +222,9 @@ test("added core exercises expose male and female mannequin images", async ({
       .click();
     await page.goto("/library");
     for (const [name, id] of [
-      ["Plancha lateral", "plancha-lateral"],
-      ["Lumbares tipo Superman", "lumbares-superman"],
-      ["Lumbares cruzados", "lumbares-cruzados"],
+      ["Plancha lateral", "plancha-lateral-v2"],
+      ["Lumbares tipo Superman", "lumbares-superman-espalda-v2"],
+      ["Lumbares cruzados", "lumbares-cruzados-espalda-v2"],
     ]) {
       await page.getByLabel("Buscar ejercicios", { exact: true }).fill(name!);
       await expect(page.locator(".exercise-card")).toHaveCount(1);

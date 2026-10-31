@@ -1,6 +1,28 @@
 import { expect, test } from "@playwright/test";
 import { login } from "./login-helper";
-import { availableExercises } from "@fitty/core/data/exercises";
+import { readFileSync } from "node:fs";
+
+// Playwright's loader cannot import the catalog JSON, so count selectable exercises from the files.
+const data = (path: string) =>
+  new URL(`../../../../packages/core/src/data/${path}`, import.meta.url);
+const catalogIds = [
+  ...(JSON.parse(readFileSync(data("legacy/exercises.json"), "utf8")) as {
+    id: string;
+  }[]),
+  ...(JSON.parse(readFileSync(data("additional-exercises.json"), "utf8")) as {
+    id: string;
+  }[]),
+].map((exercise) => exercise.id);
+const retired = new Set(
+  (
+    /retiredExerciseIds = new Set\(\[([^\]]*)\]/.exec(
+      readFileSync(data("exercises.ts"), "utf8"),
+    )?.[1] ?? ""
+  )
+    .match(/"[^"]+"/g)
+    ?.map((id) => id.slice(1, -1)),
+);
+const availableExercises = catalogIds.filter((id) => !retired.has(id));
 
 test("glutes has its own cover and exercises while Full body includes every choice", async ({
   page,

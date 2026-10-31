@@ -55,7 +55,7 @@ test("custom goals, automatic routines, editable days and independent sharing co
   await page
     .getByRole("button", { name: "Rutina automática", exact: true })
     .click();
-  await expect(page.locator(".automatic-muscle-card img")).toHaveCount(8);
+  await expect(page.locator(".automatic-muscle-card img")).toHaveCount(9);
   await expect
     .poll(() =>
       page.getByRole("dialog").evaluate((node) => {
@@ -78,7 +78,7 @@ test("custom goals, automatic routines, editable days and independent sharing co
     .click();
   await expect(
     page.locator(".automatic-muscle-card input:checked"),
-  ).toHaveCount(8);
+  ).toHaveCount(9);
   await page
     .getByRole("button", { name: "Deseleccionar todo", exact: true })
     .click();

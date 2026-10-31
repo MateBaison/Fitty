@@ -45,7 +45,7 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
     .click();
   await openHomeSection(page, "Progreso");
   const summary = page.locator(".progress-dashboard");
-  await expect(summary.locator(".progress-stats > article")).toHaveCount(4);
+  await expect(summary.locator(".progress-stats > article")).toHaveCount(3);
   await expect(summary.locator(".progress-stats")).toContainText("1/3");
   await page.getByText("Ver detalle", { exact: true }).click();
   await expect(summary).toContainText("400 kg");

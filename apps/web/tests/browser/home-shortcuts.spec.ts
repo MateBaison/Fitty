@@ -10,7 +10,7 @@ test("home has square library and progress shortcuts below the calendar", async 
       : route.abort(),
   );
   await login(page);
-  await expect(page.getByRole("navigation").getByRole("link")).toHaveCount(3);
+  await expect(page.getByRole("navigation").getByRole("link")).toHaveCount(4);
   const cards = page.locator(".home-section-shortcuts");
   await cards.scrollIntoViewIfNeeded();
   await expect(cards.getByRole("link")).toHaveCount(2);

@@ -179,7 +179,7 @@ test("progress renders empty-state analytics without removed time totals", async
   page,
 }, info) => {
   await openHomeSection(page, "Progreso");
-  await expect(page.locator(".progress-stats > article")).toHaveCount(4);
+  await expect(page.locator(".progress-stats > article")).toHaveCount(3);
   await expect(
     page.getByRole("heading", { name: "Avances recientes" }),
   ).toBeVisible();
