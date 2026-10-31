@@ -37,3 +37,23 @@ export function textDirection(language: string): "rtl" | "ltr" {
 export function localeFor(language?: string): string {
   return languages.some((known) => known === language) ? language! : "es";
 }
+/** "By continuing you accept the Privacy policy." split around the policy name so it can be a link. */
+export function privacyNotice(language: string): {
+  before: string;
+  link: string;
+  after: string;
+} {
+  const sentence = translate(
+    language,
+    "Al continuar aceptás la Política de privacidad.",
+    "By continuing you accept the Privacy policy.",
+  );
+  const link = translate(language, "Política de privacidad", "Privacy policy");
+  const index = sentence.toLowerCase().indexOf(link.toLowerCase());
+  if (index < 0) return { before: sentence, link: "", after: "" };
+  return {
+    before: sentence.slice(0, index),
+    link: sentence.slice(index, index + link.length),
+    after: sentence.slice(index + link.length),
+  };
+}

@@ -5,10 +5,10 @@ import {
   KeyboardAvoidingView,
   Linking,
   Platform,
-  Pressable,
+  Text,
   View,
 } from "react-native";
-import { translate } from "@fitty/core/data/translations";
+import { privacyNotice, translate } from "@fitty/core/data/translations";
 import { z } from "zod";
 import { LanguageMenu } from "@/components/language-menu";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
@@ -24,6 +24,7 @@ export default function SignIn() {
   const [language, setLanguage] = useState(storedLanguage);
   const t = (spanish: string, english: string) =>
     translate(language, spanish, english);
+  const notice = privacyNotice(language);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [sentTo, setSentTo] = useState<string | null>(null);
@@ -176,21 +177,21 @@ export default function SignIn() {
               <Label style={{ color: colors.destructive }}>{error}</Label>
             ) : null}
           </Card>
-          <Pressable
-            accessibilityRole="link"
-            onPress={() =>
-              void Linking.openURL(
-                `https://fitty.uy/privacidad?lang=${language}`,
-              )
-            }
-          >
-            <Label muted style={{ textAlign: "center" }}>
-              {t(
-                "Al continuar aceptás la Política de privacidad.",
-                "By continuing you accept the Privacy policy.",
-              )}
-            </Label>
-          </Pressable>
+          <Label muted style={{ textAlign: "center" }}>
+            {notice.before}
+            <Text
+              accessibilityRole="link"
+              onPress={() =>
+                void Linking.openURL(
+                  `https://fitty.uy/privacidad?lang=${language}`,
+                )
+              }
+              style={{ color: colors.accent, textDecorationLine: "underline" }}
+            >
+              {notice.link}
+            </Text>
+            {notice.after}
+          </Label>
         </Screen>
       </KeyboardAvoidingView>
       <LanguageMenu
