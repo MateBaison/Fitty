@@ -124,10 +124,11 @@ export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
               )}
             </p>
           )}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex gap-3">
             <Button
               type="button"
               variant="secondary"
+              className="min-w-0 flex-1 whitespace-normal"
               disabled={busy}
               onClick={() => {
                 setUnlocked(false);
@@ -142,6 +143,7 @@ export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
             <Button
               type="submit"
               variant="destructive-solid"
+              className="min-w-0 flex-1 whitespace-normal"
               disabled={
                 busy ||
                 !acknowledged ||

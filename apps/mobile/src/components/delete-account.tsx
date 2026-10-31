@@ -117,17 +117,23 @@ export function DeleteAccount() {
           )}
         </Label>
       ) : null}
-      <Button variant="secondary" disabled={busy} onPress={close}>
-        {t("Cancelar", "Cancel")}
-      </Button>
-      <Button
-        variant="destructive"
-        disabled={!ready}
-        loading={busy}
-        onPress={() => void remove()}
-      >
-        {t("Eliminar definitivamente", "Permanently delete")}
-      </Button>
+      <View style={{ flexDirection: "row", gap: space(3) }}>
+        <View style={{ flex: 1 }}>
+          <Button variant="secondary" disabled={busy} onPress={close}>
+            {t("Cancelar", "Cancel")}
+          </Button>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            variant="destructive"
+            disabled={!ready}
+            loading={busy}
+            onPress={() => void remove()}
+          >
+            {t("Eliminar definitivamente", "Permanently delete")}
+          </Button>
+        </View>
+      </View>
     </Card>
   );
 }
