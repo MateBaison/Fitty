@@ -133,6 +133,7 @@ export function Button({
           style={[
             styles.buttonText,
             variant === "primary" && { color: colors.primaryForeground },
+            variant === "destructive" && { color: "#ffffff" },
           ]}
         >
           {children}

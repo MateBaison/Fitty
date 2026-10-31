@@ -21,7 +21,7 @@ export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
       <div className="settings-actions">
         <Button
           type="button"
-          variant="destructive"
+          variant="destructive-solid"
           size="sm"
           onClick={() => setUnlocked(true)}
           disabled={busy}
