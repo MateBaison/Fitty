@@ -1,6 +1,7 @@
 import * as Haptics from "expo-haptics";
-import { useRef, useState, type ReactNode } from "react";
+import { useContext, useRef, useState, type ReactNode } from "react";
 import { PanResponder, View } from "react-native";
+import { ScrollLockContext } from "@/components/ui";
 
 /**
  * Vertical list reordered by long-pressing a handle and dragging, like the web.
@@ -19,6 +20,7 @@ export function ReorderList<T>({
   renderItem: (item: T, index: number, startDrag: () => void) => ReactNode;
   gap?: number;
 }) {
+  const setScrollLocked = useContext(ScrollLockContext);
   const heights = useRef<number[]>([]);
   const dragging = useRef<number | null>(null);
   const latest = useRef({ count: items.length, onMove, gap });
@@ -46,6 +48,7 @@ export function ReorderList<T>({
   const finish = (dy: number) => {
     const from = dragging.current;
     dragging.current = null;
+    setScrollLocked(false);
     setDrag(null);
     if (from === null) return;
     const to = targetFor(from, dy);
@@ -92,6 +95,7 @@ export function ReorderList<T>({
           >
             {renderItem(item, index, () => {
               dragging.current = index;
+              setScrollLocked(true);
               setDrag({ index, dy: 0 });
               void Haptics.selectionAsync();
             })}

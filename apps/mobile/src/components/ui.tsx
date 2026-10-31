@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { createContext, useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -30,6 +30,11 @@ export function Glow() {
   );
 }
 
+/** Lets a child (like a drag-to-reorder list) pause the screen's scrolling while it handles a gesture. */
+export const ScrollLockContext = createContext<(locked: boolean) => void>(
+  () => undefined,
+);
+
 export function Screen({
   children,
   scroll = true,
@@ -41,6 +46,7 @@ export function Screen({
 }) {
   // Read from the context so screens under the app header (which owns the top inset) get no extra gap.
   const insets = useSafeAreaInsets();
+  const [locked, setLocked] = useState(false);
   return (
     <View
       style={[
@@ -58,8 +64,11 @@ export function Screen({
           style={glow ? { backgroundColor: "transparent" } : undefined}
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
+          scrollEnabled={!locked}
         >
-          {children}
+          <ScrollLockContext.Provider value={setLocked}>
+            {children}
+          </ScrollLockContext.Provider>
         </ScrollView>
       ) : (
         <View style={[styles.content, { flex: 1 }]}>{children}</View>
