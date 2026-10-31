@@ -108,7 +108,7 @@ export function Button({
 }: {
   children: ReactNode;
   onPress: () => void;
-  variant?: "primary" | "secondary" | "destructive" | "ghost";
+  variant?: "primary" | "secondary" | "destructive" | "success" | "ghost";
   disabled?: boolean;
   loading?: boolean;
   accessibilityLabel?: string;
@@ -133,7 +133,9 @@ export function Button({
           style={[
             styles.buttonText,
             variant === "primary" && { color: colors.primaryForeground },
-            variant === "destructive" && { color: "#ffffff" },
+            (variant === "destructive" || variant === "success") && {
+              color: "#ffffff",
+            },
           ]}
         >
           {children}
@@ -194,6 +196,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
   },
   destructive: { backgroundColor: colors.destructive },
+  success: { backgroundColor: "#16a34a" },
   ghost: { backgroundColor: "transparent" },
   buttonText: { color: colors.foreground, fontSize: 16, fontWeight: "800" },
   input: {

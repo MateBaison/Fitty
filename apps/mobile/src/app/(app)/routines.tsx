@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Modal, Pressable, Share, Text, View } from "react-native";
+import { SymbolView, type SymbolViewProps } from "expo-symbols";
+import { Alert, Modal, Pressable, Share, Switch, Text, View } from "react-native";
 import { buildAutomaticRoutine } from "@fitty/core/domain/calculations/automatic-routine";
 import {
   muscleGroups,
@@ -25,6 +26,14 @@ type Prompt =
   | { type: "day"; rid: string }
   | { type: "rename-day"; rid: string; did: string; name: string };
 
+const symbols: Record<string, SymbolViewProps["name"]> = {
+  "↑": { ios: "arrow.up", android: "arrow_upward" },
+  "↓": { ios: "arrow.down", android: "arrow_downward" },
+  "✎": { ios: "pencil", android: "edit" },
+  "✕": { ios: "trash.fill", android: "delete" },
+  share: { ios: "square.and.arrow.up", android: "share" },
+};
+
 function IconButton({
   label,
   symbol,
@@ -44,24 +53,25 @@ function IconButton({
       accessibilityLabel={label}
       accessibilityState={{ disabled }}
       disabled={disabled}
-      hitSlop={8}
+      hitSlop={6}
       onPress={onPress}
       style={{
-        minWidth: 36,
-        minHeight: 36,
+        width: 40,
+        height: 40,
+        borderRadius: 12,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: danger ? colors.destructive : colors.secondary,
+        borderColor: colors.border,
+        borderWidth: danger ? 0 : 1,
         opacity: disabled ? 0.3 : 1,
       }}
     >
-      <Text
-        style={{
-          color: danger ? colors.destructive : colors.accent,
-          fontSize: 18,
-        }}
-      >
-        {symbol}
-      </Text>
+      <SymbolView
+        name={symbols[symbol] ?? symbols["✎"]!}
+        tintColor={danger ? "#ffffff" : colors.accent}
+        size={18}
+      />
     </Pressable>
   );
 }
@@ -141,10 +151,33 @@ export default function Routines() {
     : undefined;
   return (
     <Screen>
-      <Button variant="ghost" onPress={() => router.back()}>
-        {`‹ ${t("Volver", "Back")}`}
-      </Button>
-      <Title>{t("Mis rutinas", "My routines")}</Title>
+      <View style={{ alignItems: "flex-start" }}>
+        <Pressable
+          accessibilityRole="button"
+          hitSlop={8}
+          onPress={() => router.back()}
+        >
+          <Text style={{ color: colors.accent, fontSize: 16, fontWeight: "700" }}>
+            {`‹ ${t("Volver", "Back")}`}
+          </Text>
+        </Pressable>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Title>{t("Mis rutinas", "My routines")}</Title>
+        {!creating ? (
+          <View style={{ minWidth: 112 }}>
+            <Button variant="secondary" onPress={() => setCreating(true)}>
+              {t("+ Nueva", "+ New")}
+            </Button>
+          </View>
+        ) : null}
+      </View>
       <Notice />
       {creating ? (
         <Card>
@@ -211,11 +244,7 @@ export default function Routines() {
             {t("Cancelar", "Cancel")}
           </Button>
         </Card>
-      ) : (
-        <Button onPress={() => setCreating(true)}>
-          {t("+ Nueva rutina", "+ New routine")}
-        </Button>
-      )}
+      ) : null}
       {snapshot.routines.map((routine) => {
         const active = snapshot.selected === routine.id;
         const expanded = open === routine.id;
@@ -231,46 +260,62 @@ export default function Routines() {
                 gap: space(2),
               }}
             >
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, gap: 4 }}>
                 <Text
                   style={{
                     color: colors.foreground,
-                    fontSize: 18,
-                    fontWeight: "700",
+                    fontSize: 20,
+                    fontWeight: "800",
                   }}
                 >
                   {routine.name}
                 </Text>
-                <Label muted>
-                  {routine.days.length} {t("días", "days")}
-                  {active ? ` · ${t("Activa", "Active")}` : ""}
-                </Label>
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+                >
+                  <Label muted>
+                    {routine.days.length} {t("días", "days")}
+                  </Label>
+                  {active ? (
+                    <Text
+                      style={{
+                        color: colors.success,
+                        fontSize: 12,
+                        fontWeight: "800",
+                        borderColor: colors.success,
+                        borderWidth: 1,
+                        borderRadius: 999,
+                        paddingHorizontal: 8,
+                        paddingVertical: 2,
+                      }}
+                    >
+                      {t("Activa", "Active")}
+                    </Text>
+                  ) : null}
+                </View>
               </View>
-              <Text style={{ color: colors.muted }}>
-                {expanded ? "▲" : "▼"}
-              </Text>
+              <SymbolView
+                name={
+                  expanded
+                    ? { ios: "chevron.up", android: "expand_less" }
+                    : { ios: "chevron.down", android: "expand_more" }
+                }
+                tintColor={colors.muted}
+                size={18}
+              />
             </Pressable>
             {expanded ? (
               <>
                 <View
                   style={{
                     flexDirection: "row",
-                    flexWrap: "wrap",
-                    gap: space(2),
+                    alignItems: "center",
+                    gap: space(3),
                   }}
                 >
-                  {!active ? (
-                    <Button
-                      variant="secondary"
-                      onPress={() =>
-                        change((draft) => void (draft.selected = routine.id))
-                      }
-                    >
-                      {t("Usar esta rutina", "Use this routine")}
-                    </Button>
-                  ) : null}
-                  <Button
-                    variant="secondary"
+                  <IconButton
+                    label={t("Renombrar", "Rename")}
+                    symbol="✎"
                     onPress={() =>
                       setPrompt({
                         type: "rename",
@@ -278,11 +323,10 @@ export default function Routines() {
                         name: routine.name,
                       })
                     }
-                  >
-                    {t("Renombrar", "Rename")}
-                  </Button>
-                  <Button
-                    variant="secondary"
+                  />
+                  <IconButton
+                    label={t("Compartir", "Share")}
+                    symbol="share"
                     onPress={() => {
                       try {
                         void Share.share({
@@ -296,11 +340,23 @@ export default function Routines() {
                         );
                       }
                     }}
-                  >
-                    {t("Compartir", "Share")}
-                  </Button>
-                  <Button
-                    variant="ghost"
+                  />
+                  <Switch
+                    accessibilityLabel={t("Usar esta rutina", "Use this routine")}
+                    value={active}
+                    trackColor={{ true: "#22c55e", false: colors.border }}
+                    onValueChange={(value) => {
+                      change(
+                        (draft) =>
+                          void (draft.selected = value ? routine.id : null),
+                      );
+                    }}
+                  />
+                  <View style={{ flex: 1 }} />
+                  <IconButton
+                    label={t("Eliminar", "Delete")}
+                    symbol="✕"
+                    danger
                     onPress={() =>
                       confirmDelete(
                         t("¿Eliminar la rutina?", "Delete the routine?"),
@@ -316,27 +372,32 @@ export default function Routines() {
                           }),
                       )
                     }
-                  >
-                    {t("Eliminar", "Delete")}
-                  </Button>
+                  />
                 </View>
                 {routine.days.map((day, dayIndex) => (
                   <View
                     key={day.id}
                     style={{
                       gap: space(2),
-                      borderTopColor: colors.border,
-                      borderTopWidth: 1,
-                      paddingTop: space(3),
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                      borderRadius: 18,
+                      backgroundColor: "#0e1117",
+                      padding: space(3),
                     }}
                   >
                     <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: space(1.5),
+                      }}
                     >
                       <Text
                         style={{
                           color: colors.foreground,
-                          fontWeight: "700",
+                          fontSize: 17,
+                          fontWeight: "800",
                           flex: 1,
                         }}
                       >
@@ -402,7 +463,15 @@ export default function Routines() {
                       return (
                         <View
                           key={`${id}-${index}`}
-                          style={{ flexDirection: "row", alignItems: "center" }}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: space(1.5),
+                            padding: space(2),
+                            borderRadius: 14,
+                            backgroundColor:
+                              index % 2 === 0 ? colors.secondary : "#13171f",
+                          }}
                         >
                           <Label style={{ flex: 1 }}>
                             {exercise
@@ -462,7 +531,7 @@ export default function Routines() {
                       );
                     })}
                     <Button
-                      variant="secondary"
+                      variant="success"
                       onPress={() =>
                         setPicker({ rid: routine.id, did: day.id })
                       }
@@ -485,7 +554,7 @@ export default function Routines() {
                   </View>
                 ))}
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   onPress={() => setPrompt({ type: "day", rid: routine.id })}
                 >
                   {t("+ Agregar día", "+ Add day")}
