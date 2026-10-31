@@ -73,13 +73,13 @@ function AccountGate() {
           <Tabs.Screen name="professionals" />
           <Tabs.Screen name="tools" />
           <Tabs.Screen name="profile" />
-          <Tabs.Screen name="library" options={{ href: null }} />
-          <Tabs.Screen name="progress" options={{ href: null }} />
-          <Tabs.Screen name="workout" options={{ href: null }} />
-          <Tabs.Screen name="routines" options={{ href: null }} />
-          <Tabs.Screen name="body" options={{ href: null }} />
-          <Tabs.Screen name="tracking" options={{ href: null }} />
-          <Tabs.Screen name="combat" options={{ href: null }} />
+          <Tabs.Screen name="library" />
+          <Tabs.Screen name="progress" />
+          <Tabs.Screen name="workout" />
+          <Tabs.Screen name="routines" />
+          <Tabs.Screen name="body" />
+          <Tabs.Screen name="tracking" />
+          <Tabs.Screen name="combat" />
         </Tabs>
       </SafeAreaInsetsContext.Provider>
     </View>
