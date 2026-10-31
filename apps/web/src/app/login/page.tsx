@@ -20,6 +20,11 @@ export default async function LoginPage() {
             el acceso. No se ha conectado ninguna cuenta.
           </p>
         )}
+        <p className="mt-6 text-sm">
+          <a href="/privacidad" className="text-primary underline">
+            Política de privacidad
+          </a>
+        </p>
       </main>
     </div>
   );

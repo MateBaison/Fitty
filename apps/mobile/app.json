@@ -11,6 +11,7 @@
     "ios": {
       "bundleIdentifier": "uy.fitty.app",
       "supportsTablet": true,
+      "usesAppleSignIn": true,
       "config": {
         "usesNonExemptEncryption": false
       }
@@ -27,6 +28,7 @@
     "plugins": [
       "expo-router",
       "expo-sqlite",
+      "expo-apple-authentication",
       [
         "expo-splash-screen",
         {

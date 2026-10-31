@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { useState } from "react";
-import { Share, Switch, View } from "react-native";
+import { Linking, Share, Switch, View } from "react-native";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
 import { missingProfileFields } from "@fitty/core/domain/profile-validation";
 import { localDateKey } from "@fitty/core/domain/workouts";
@@ -165,6 +165,12 @@ export default function Profile() {
           }
         />
       </Card>
+      <Button
+        variant="secondary"
+        onPress={() => void Linking.openURL("https://fitty.uy/privacidad")}
+      >
+        {t("Política de privacidad", "Privacy policy")}
+      </Button>
       <DeleteAccount />
       <Button
         variant="secondary"

@@ -275,6 +275,16 @@ export function ProfileScreen() {
             </label>
           </fieldset>
         </form>
+        <p className="settings-actions">
+          <a
+            href="/privacidad"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline"
+          >
+            {t("Política de privacidad", "Privacy policy")}
+          </a>
+        </p>
         <DeleteAccount
           saveAction={
             <Button type="submit" form={settingsFormId} size="sm">

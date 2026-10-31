@@ -1,12 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, View } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  View,
+} from "react-native";
 import { translate } from "@fitty/core/data/translations";
 import { z } from "zod";
 import { LanguageMenu } from "@/components/language-menu";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
 import { storedLanguage, storeLanguage } from "@/lib/language";
-import { signInWithProvider } from "@/lib/oauth";
+import { signInWithApple, signInWithProvider } from "@/lib/oauth";
 import { supabase } from "@/lib/supabase";
 import { colors } from "@/theme";
 
@@ -64,7 +70,12 @@ export default function SignIn() {
     },
   });
   const oauth = useMutation({ mutationFn: signInWithProvider });
-  const error = (oauth.error ?? (sentTo ? verify.error : send.error))?.message;
+  const appleSignIn = useMutation({ mutationFn: signInWithApple });
+  const error = (
+    oauth.error ??
+    appleSignIn.error ??
+    (sentTo ? verify.error : send.error)
+  )?.message;
   return (
     <View style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -146,15 +157,15 @@ export default function SignIn() {
                 </Button>
                 <Button
                   variant="secondary"
-                  disabled={oauth.isPending}
+                  disabled={oauth.isPending || appleSignIn.isPending}
                   onPress={() => oauth.mutate("google")}
                 >
                   {t("Continuar con Google", "Continue with Google")}
                 </Button>
                 <Button
                   variant="secondary"
-                  disabled={oauth.isPending}
-                  onPress={() => oauth.mutate("apple")}
+                  disabled={oauth.isPending || appleSignIn.isPending}
+                  onPress={() => appleSignIn.mutate()}
                 >
                   {t("Continuar con Apple", "Continue with Apple")}
                 </Button>
