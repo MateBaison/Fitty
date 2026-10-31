@@ -149,6 +149,7 @@ export default function Workout() {
   const [replacing, setReplacing] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
   const [finishing, setFinishing] = useState(false);
+  const [resizingComment, setResizingComment] = useState(false);
   const [supersetOpen, setSupersetOpen] = useState(false);
   const [members, setMembers] = useState<number[]>([]);
   const [showHelp, setShowHelp] = useState(false);
@@ -729,8 +730,13 @@ export default function Workout() {
  showsVerticalScrollIndicator={false}
                 style={{ maxHeight: 460 }}
                 keyboardShouldPersistTaps="handled"
+                scrollEnabled={!resizingComment}
               >
-                <SessionExtras value={extras} onChange={setExtras} />
+                <SessionExtras
+                  value={extras}
+                  onChange={setExtras}
+                  onResizing={setResizingComment}
+                />
               </ScrollView>
               <Button
                 onPress={() => {

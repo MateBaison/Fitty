@@ -2,6 +2,7 @@ import { Pressable, Text, View } from "react-native";
 import type { Extras } from "@fitty/core/domain/workouts";
 import { Field, Label } from "@/components/ui";
 import { PhotoStrip } from "@/components/photo-strip";
+import { ResizableInput } from "@/components/resizable-input";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -27,9 +28,11 @@ const ratings = [
 export function SessionExtras({
   value,
   onChange,
+  onResizing,
 }: {
   value: Extras;
   onChange: (value: Extras) => void;
+  onResizing?: (resizing: boolean) => void;
 }) {
   const { t } = useAccount();
   const unit = useSnapshot().settings.weight ?? "kg";
@@ -132,12 +135,11 @@ export function SessionExtras({
           })}
         </View>
       </View>
-      <Field
+      <ResizableInput
         label={t("Comentario del entrenamiento", "Workout comment")}
-        defaultValue={value.comment}
+        value={value.comment}
         onChangeText={(comment) => onChange({ ...value, comment })}
-        maxLength={2000}
-        multiline
+        onResizing={(resizing) => onResizing?.(resizing)}
       />
       <View style={{ flexDirection: "row", gap: space(3) }}>
         {weightField(

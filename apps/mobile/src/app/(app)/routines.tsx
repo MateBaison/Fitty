@@ -13,6 +13,7 @@ import { findExercise } from "@fitty/core/domain/workouts";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
 import { Chip, ChipGroup } from "@/components/chip";
+import { Dropdown } from "@/components/dropdown";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { ReorderList } from "@/components/reorder-list";
 import { Notice } from "@/components/notice";
@@ -190,12 +191,9 @@ export function RoutinesSection() {
               maxLength={80}
             />
           ) : null}
-          <Label muted>{t("Objetivo", "Goal")}</Label>
-          <ChipGroup
-            options={goals.map(([value, en]) => ({
-              value,
-              label: t(value, en),
-            }))}
+          <Dropdown
+            label={t("Objetivo", "Goal")}
+            options={goals.map(([value, en]) => ({ value, label: t(value, en) }))}
             value={goal}
             onChange={setGoal}
           />
@@ -210,9 +208,43 @@ export function RoutinesSection() {
                 value={days}
                 onChange={setDays}
               />
-              <Label muted>
-                {t("Músculos a entrenar", "Muscles to train")}
-              </Label>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: space(2),
+                }}
+              >
+                <Label muted>
+                  {t("Músculos a entrenar", "Muscles to train")}
+                </Label>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() =>
+                    setGroups(
+                      groups.length === muscleGroups.length
+                        ? []
+                        : [...muscleGroups],
+                    )
+                  }
+                  style={{
+                    minHeight: 40,
+                    paddingHorizontal: space(3),
+                    borderRadius: 12,
+                    justifyContent: "center",
+                    backgroundColor: colors.secondary,
+                    borderColor: colors.border,
+                    borderWidth: 1,
+                  }}
+                >
+                  <Text style={{ color: colors.foreground, fontWeight: "800" }}>
+                    {groups.length === muscleGroups.length
+                      ? t("Deseleccionar todo", "Deselect all")
+                      : t("Seleccionar todo", "Select all")}
+                  </Text>
+                </Pressable>
+              </View>
               <ChipGroup
                 multiple
                 options={muscleGroups.map((group) => ({
