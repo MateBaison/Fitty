@@ -1,23 +1,16 @@
-import { useMemo, useState } from "react";
-import {
-  FlatList,
-  Modal,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { normalizeSearch } from "@fitty/core/data/exercises";
-import { translate } from "@fitty/core/data/translations";
-import { muscleGroups } from "@fitty/core/domain/schemas/exercise";
-import { catalogFor } from "@fitty/core/domain/workouts";
-import { ChipGroup } from "@/components/chip";
-import { Button, Label, styles, Title } from "@/components/ui";
-import { useAccount, useSnapshot } from "@/state/account";
+import { useState } from "react";
+import { Modal, Pressable, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ExerciseBrowser } from "@/components/exercise-browser";
+import { Button, Glow, styles } from "@/components/ui";
+import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
-/** Full-screen multi-select exercise picker; favorites are listed first. */
+/**
+ * Full-screen exercise picker built on the same browser as the library: zone and
+ * favorites selector, photos, search and filter. Several exercises can be marked
+ * before continuing, or one is picked immediately with `single`.
+ */
 export function ExercisePicker({
   visible,
   onClose,
@@ -32,139 +25,89 @@ export function ExercisePicker({
   single?: boolean;
   title?: string;
 }) {
-  const snapshot = useSnapshot();
   const { t } = useAccount();
-  const language = snapshot.settings.language ?? "es";
-  const [query, setQuery] = useState("");
-  const [group, setGroup] = useState<string>("all");
+  const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState<string[]>([]);
-  const items = useMemo(() => {
-    const search = normalizeSearch(query);
-    return catalogFor(snapshot)
-      .filter(
-        (exercise) =>
-          (group === "all" || exercise.group === group) &&
-          (!search ||
-            normalizeSearch(
-              translate(language, exercise.name, exercise.name),
-            ).includes(search)),
-      )
-      .sort(
-        (a, b) =>
-          Number(snapshot.favorites.includes(b.id)) -
-          Number(snapshot.favorites.includes(a.id)),
-      );
-  }, [snapshot, query, group, language]);
   const close = () => {
     setSelected([]);
-    setQuery("");
     onClose();
   };
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={close}>
-      <SafeAreaView style={styles.screen}>
-        <FlatList
- showsVerticalScrollIndicator={false}
-          data={items}
-          keyExtractor={(item) => item.id}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={styles.content}
-          ListHeaderComponent={
-            <View style={{ gap: space(3) }}>
-              <Title>{title ?? t("Agregar ejercicios", "Add exercises")}</Title>
-              <TextInput
-                value={query}
-                onChangeText={setQuery}
-                placeholder={t("Buscar ejercicio", "Search exercise")}
-                placeholderTextColor={colors.muted}
-                accessibilityLabel={t("Buscar ejercicio", "Search exercise")}
-                style={styles.input}
-              />
-              <ChipGroup
-                options={[
-                  { value: "all", label: t("Todos", "All") },
-                  ...muscleGroups.map((name) => ({
-                    value: name as string,
-                    label: translate(language, name, name),
-                  })),
-                ]}
-                value={group}
-                onChange={setGroup}
-              />
-            </View>
-          }
-          renderItem={({ item }) => {
-            const checked = selected.includes(item.id);
-            return (
-              <Pressable
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked }}
-                onPress={() => {
-                  if (single) {
-                    onPick([item.id]);
-                    close();
-                    return;
-                  }
-                  setSelected((current) =>
-                    checked
-                      ? current.filter((id) => id !== item.id)
-                      : [...current, item.id],
-                  );
-                }}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: space(3),
-                  minHeight: 56,
-                  borderBottomColor: colors.border,
-                  borderBottomWidth: 1,
-                }}
-              >
-                <Text
-                  style={{
-                    color: checked ? colors.primary : colors.muted,
-                    fontSize: 22,
-                  }}
-                >
-                  {checked ? "☑" : "☐"}
-                </Text>
-                <View style={{ flex: 1 }}>
-                  <Label>
-                    {snapshot.favorites.includes(item.id) ? "★ " : ""}
-                    {translate(language, item.name, item.name)}
-                  </Label>
-                  <Label muted>
-                    {translate(language, item.group, item.group)} ·{" "}
-                    {translate(language, item.equipment, item.equipment)}
-                  </Label>
-                </View>
-              </Pressable>
+      <View
+        style={[
+          styles.screen,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
+        <Glow />
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: space(4),
+            paddingTop: space(3),
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("Cancelar", "Cancel")}
+            onPress={close}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 12,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.secondary,
+              borderColor: colors.border,
+              borderWidth: 1,
+            }}
+          >
+            <Text style={{ color: colors.accent, fontSize: 22, fontWeight: "700" }}>
+              ‹
+            </Text>
+          </Pressable>
+          <Text
+            accessibilityRole="header"
+            style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}
+          >
+            {title ?? t("Agregar ejercicios", "Add exercises")}
+          </Text>
+          <View style={{ width: 44 }} />
+        </View>
+        <ExerciseBrowser
+          selectedIds={selected}
+          onPress={(exercise) => {
+            if (single) {
+              onPick([exercise.id]);
+              close();
+              return;
+            }
+            setSelected((current) =>
+              current.includes(exercise.id)
+                ? current.filter((id) => id !== exercise.id)
+                : [...current, exercise.id],
             );
           }}
         />
-        <View
-          style={{ flexDirection: "row", gap: space(3), padding: space(4) }}
-        >
-          <View style={{ flex: 1 }}>
-            <Button variant="secondary" onPress={close}>
-              {t("Cancelar", "Cancel")}
+        {!single ? (
+          <View style={{ paddingHorizontal: space(4), paddingVertical: space(3) }}>
+            <Button
+              disabled={!selected.length}
+              onPress={() => {
+                onPick(selected);
+                close();
+              }}
+            >
+              {selected.length
+                ? `${t("Continuar", "Continue")} (${selected.length})`
+                : t("Elegí ejercicios", "Choose exercises")}
             </Button>
           </View>
-          {single ? null : (
-            <View style={{ flex: 1 }}>
-              <Button
-                disabled={!selected.length}
-                onPress={() => {
-                  onPick(selected);
-                  close();
-                }}
-              >
-                {`${t("Agregar", "Add")} (${selected.length})`}
-              </Button>
-            </View>
-          )}
-        </View>
-      </SafeAreaView>
+        ) : null}
+      </View>
     </Modal>
   );
 }
