@@ -3,6 +3,7 @@ import { LoginForm } from "@/features/auth/login-form";
 import { configured } from "@/lib/env";
 import { verifiedUser } from "@/lib/supabase/account-reader";
 import { redirect } from "next/navigation";
+import { PrivacyLink } from "@/features/auth/privacy-link";
 import { PublicLanguagePicker } from "@/features/auth/public-language-picker";
 import { PublicLanguageHeading } from "@/features/auth/public-language-heading";
 export default async function LoginPage() {
@@ -21,9 +22,7 @@ export default async function LoginPage() {
           </p>
         )}
         <p className="mt-6 text-sm">
-          <a href="/privacidad" className="text-primary underline">
-            Política de privacidad
-          </a>
+          <PrivacyLink />
         </p>
       </main>
     </div>

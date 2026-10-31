@@ -175,6 +175,16 @@ export default function SignIn() {
               <Label style={{ color: colors.destructive }}>{error}</Label>
             ) : null}
           </Card>
+          <Button
+            variant="ghost"
+            onPress={() =>
+              void Linking.openURL(
+                `https://fitty.uy/privacidad?lang=${language}`,
+              )
+            }
+          >
+            {t("Política de privacidad", "Privacy policy")}
+          </Button>
         </Screen>
       </KeyboardAvoidingView>
       <LanguageMenu

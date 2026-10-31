@@ -167,12 +167,6 @@ export default function Profile() {
         />
       </Card>
       <LinkedApps />
-      <Button
-        variant="secondary"
-        onPress={() => void Linking.openURL("https://fitty.uy/privacidad")}
-      >
-        {t("Política de privacidad", "Privacy policy")}
-      </Button>
       <DeleteAccount />
       <Button
         variant="secondary"
@@ -185,6 +179,16 @@ export default function Profile() {
         }
       >
         {t("Exportar mis datos", "Export my data")}
+      </Button>
+      <Button
+        variant="secondary"
+        onPress={() =>
+          void Linking.openURL(
+            `https://fitty.uy/privacidad?lang=${settings.language ?? "es"}`,
+          )
+        }
+      >
+        {t("Política de privacidad", "Privacy policy")}
       </Button>
       <SignOut />
     </Screen>
