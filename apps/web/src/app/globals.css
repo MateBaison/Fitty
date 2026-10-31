@@ -3154,6 +3154,7 @@ input[type="range"] {
 .onboarding-preview-day-count {
   flex: none;
   margin-left: auto;
+  white-space: nowrap;
   color: var(--muted-foreground);
   font-size: 0.8rem;
 }
@@ -3177,6 +3178,24 @@ input[type="range"] {
   margin: 10px 0 14px;
   padding: 0;
   list-style: none;
+}
+.onboarding-preview-exercises li {
+  padding: 8px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--secondary) 80%, white 8%);
+}
+.onboarding-preview-exercises li:nth-child(even) {
+  background: color-mix(in srgb, var(--secondary) 70%, black 30%);
+}
+.onboarding-preview-remove {
+  flex: none;
+  border: 1px solid #dc2626;
+  border-radius: 10px;
+  color: #f87171;
+}
+.onboarding-preview-remove:hover {
+  background: color-mix(in srgb, #dc2626 18%, transparent);
+  color: #fca5a5;
 }
 .onboarding-preview-exercises li,
 .onboarding-preview-add {
@@ -3222,8 +3241,16 @@ input[type="range"] {
 }
 .onboarding-add-exercise-button {
   width: 100%;
-  justify-content: flex-start;
-  border-style: dashed;
+  justify-content: center;
+  border: 0;
+  background: #16a34a;
+  color: #fff;
+  font-weight: 650;
+  text-align: center;
+}
+.onboarding-add-exercise-button:hover {
+  background: #15803d;
+  color: #fff;
 }
 .onboarding-choices {
   grid-template-columns: repeat(2, minmax(0, 1fr));

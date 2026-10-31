@@ -465,25 +465,27 @@ export function OnboardingFlow() {
                               <span className="onboarding-preview-day-name">{day.name}</span>
                               <span className="onboarding-preview-day-groups">{dayGroups.join(" · ")}</span>
                             </span>
-                            <button
-                              type="button"
-                              className="onboarding-preview-edit-name"
-                              aria-label={t("Editar nombre del día", "Edit day name")}
-                              disabled={busy || pending}
-                              onClick={(event) => {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                setEditingDayId(day.id);
-                              }}
-                            >
-                              <Pencil aria-hidden="true" />
-                            </button>
                           </>
                         )}
                       </span>
                       <span className="onboarding-preview-day-count">
                         {day.items.length} {t("ejercicios", "exercises")}
                       </span>
+                      {editingDayId !== day.id && (
+                        <button
+                          type="button"
+                          className="onboarding-preview-edit-name"
+                          aria-label={t("Editar nombre del día", "Edit day name")}
+                          disabled={busy || pending}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            setEditingDayId(day.id);
+                          }}
+                        >
+                          <Pencil aria-hidden="true" />
+                        </button>
+                      )}
                     </summary>
                     <ul className="onboarding-preview-exercises">
                       {day.items.map((id, index) => (
@@ -510,6 +512,7 @@ export function OnboardingFlow() {
                             type="button"
                             variant="ghost"
                             size="sm"
+                            className="onboarding-preview-remove"
                             disabled={busy || pending}
                             aria-label={
                               t("Quitar", "Remove") +
