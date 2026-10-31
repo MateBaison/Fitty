@@ -5,7 +5,7 @@ Fitty (formerly HERCULES) is a fitness application migrated from a hosted HTML a
 ## Stack and commands
 
 - Turborepo monorepo with pnpm 10 workspaces (`pnpm-workspace.yaml`, `turbo.json`, hoisted `node_modules` via `.npmrc` for Expo). Use `pnpm install --frozen-lockfile`; never add another lockfile.
-- `apps/web` (`@fitty/web`): Next.js 16.3.8, React 19.2.8, strict TypeScript with `noUncheckedIndexedAccess`, and the `@/*` alias for `apps/web/src/*`. Tailwind CSS 4, shadcn/ui with Base UI (`base-nova`), Lucide icons, Zod 4, Leaflet 1.9.4 with MapLibre/OpenFreeMap and Supabase SSR/browser clients.
+- `apps/web` (`@fitty/web`): Next.js 16.4.3, React 19.2.8, strict TypeScript with `noUncheckedIndexedAccess`, and the `@/*` alias for `apps/web/src/*`. Tailwind CSS 4, shadcn/ui with Base UI (`base-nova`), Lucide icons, Zod 4, Leaflet 1.9.4 with MapLibre/OpenFreeMap and Supabase SSR/browser clients.
 - `apps/mobile` (`@fitty/mobile`): Expo / React Native app. It reads and writes account data through the web app's `/api/v1` routes using TanStack Query and Zod, never directly against the database.
 - `packages/core` (`@fitty/core`): platform-independent TypeScript source shared by both apps, imported by path (`@fitty/core/domain/workouts`). No React, Next.js, Expo or browser APIs; inject storage/network through `StoragePort` and `StateRepository`.
 - Start the web app with `pnpm --filter @fitty/web dev --hostname localhost --port 3000`. Node.js 20.9+ is required. Optional `.tools/` runtimes are machine-specific and ignored.
