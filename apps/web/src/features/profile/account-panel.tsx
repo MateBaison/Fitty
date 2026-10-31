@@ -1,7 +1,7 @@
 "use client";
 import { useApp } from "@/state/app-provider";
 import { SignOutButton } from "@/features/auth/sign-out-button";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ResetAccount } from "./reset-account";
 export function AccountPanel() {
   const { status, message, retry, flush, t, snapshot } = useApp();
@@ -24,9 +24,18 @@ export function AccountPanel() {
           </Button>
         </section>
       )}
+      <ResetAccount />
       <div className="grid grid-cols-2 gap-3">
+        <a
+          href={`/privacidad?lang=${snapshot.settings.language ?? "es"}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-slot="button"
+          className={buttonVariants({ variant: "secondary" }) + " w-full"}
+        >
+          {t("Política de privacidad", "Privacy policy")}
+        </a>
         <SignOutButton flush={flush} language={snapshot.settings.language} />
-        <ResetAccount />
       </div>
     </>
   );

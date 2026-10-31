@@ -4,7 +4,7 @@ import { languages } from "@fitty/core/data/translations";
 import { useApp } from "@/state/app-provider";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { AppDialog } from "@/components/ui/app-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { DeleteAccount } from "./delete-account";
 import { LinkedApps } from "./linked-apps";
 import { PersonalForm } from "./personal-form";
@@ -148,14 +148,6 @@ export function ProfileScreen() {
           }}
         />
       </section>
-      <a
-        href={`/privacidad?lang=${snapshot.settings.language ?? "es"}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={buttonVariants({ variant: "secondary" }) + " w-full"}
-      >
-        {t("Política de privacidad", "Privacy policy")}
-      </a>
       <AccountPanel />
       <AppDialog
         open={settings}

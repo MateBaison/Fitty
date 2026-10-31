@@ -17,7 +17,7 @@ test("privacy policy opens in the language of the app", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("profile has a gray privacy button between data backup and sign out", async ({
+test("profile ends with reset account, then privacy policy next to a red sign out", async ({
   page,
   context,
 }) => {
@@ -36,8 +36,8 @@ test("profile has a gray privacy button between data backup and sign out", async
       );
     return [
       text("Copia de tus datos"),
-      text("Política de privacidad"),
       text("Reiniciar"),
+      text("Política de privacidad"),
     ];
   });
   expect(order[0]).toBeLessThan(order[1]!);

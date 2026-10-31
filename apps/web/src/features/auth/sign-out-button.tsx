@@ -23,7 +23,7 @@ export function SignOutButton({
   return (
     <>
       <Button
-        variant={iconOnly ? "destructive-solid" : "secondary"}
+        variant="destructive-solid"
         size={iconOnly ? "icon-xl" : "default"}
         className={iconOnly ? "header-exit" : "w-full"}
         aria-label={

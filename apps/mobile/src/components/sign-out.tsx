@@ -39,7 +39,7 @@ export function SignOut() {
   };
   return (
     <>
-      <Button variant="secondary" onPress={() => setOpen(true)}>
+      <Button variant="destructive" onPress={() => setOpen(true)}>
         {t("Cerrar sesión", "Sign out")}
       </Button>
       <Modal
