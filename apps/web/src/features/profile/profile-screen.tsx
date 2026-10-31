@@ -5,7 +5,6 @@ import { useApp } from "@/state/app-provider";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DeleteAccount } from "./delete-account";
 import { LinkedApps } from "./linked-apps";
 import { PersonalForm } from "./personal-form";
@@ -32,17 +31,10 @@ export function ProfileScreen() {
   const settingsFormId = useId();
   const [ask, confirmDialog] = useConfirm();
   const { snapshot, change, user, notify, t, holdRefresh } = useApp(),
-    [settings, setSettings] = useState(false),
-    [social, setSocial] = useState({
-      instagram: snapshot.profile.instagram ?? "",
-      snapchat: snapshot.profile.snapchat ?? "",
-    });
-  const dirtySocial =
-    social.instagram !== (snapshot.profile.instagram ?? "") ||
-    social.snapchat !== (snapshot.profile.snapchat ?? "");
+    [settings, setSettings] = useState(false);
   useEffect(
-    () => (dirtySocial || settings ? holdRefresh() : undefined),
-    [dirtySocial, settings, holdRefresh],
+    () => (settings ? holdRefresh() : undefined),
+    [settings, holdRefresh],
   );
   return (
     <>
@@ -72,42 +64,6 @@ export function ProfileScreen() {
         </summary>
         <div className="mt-4 space-y-4">
           <LinkedApps />
-          <h3 className="font-bold">
-            {t("Perfiles sociales", "Social profiles")}
-          </h3>
-          {(["instagram", "snapchat"] as const).map((network) => (
-            <label className="block" key={network}>
-              {network === "instagram" ? "Instagram" : "Snapchat"}
-              <Input
-                value={social[network]}
-                onChange={(event) =>
-                  setSocial({ ...social, [network]: event.target.value })
-                }
-                placeholder="@usuario o enlace"
-              />
-            </label>
-          ))}
-          <p className="text-sm text-muted-foreground">
-            {t(
-              "Estos enlaces muestran tus perfiles; no vinculan ni autorizan cuentas. Usá Compartir imagen para enviar un resumen visual al menú del teléfono.",
-              "These links display your profiles; they do not connect accounts. Use Share image for the phone's native share menu.",
-            )}
-          </p>
-          {dirtySocial && (
-            <Button
-              onClick={() => {
-                if (
-                  change((draft) => {
-                    draft.profile.instagram = social.instagram;
-                    draft.profile.snapchat = social.snapchat;
-                  })
-                )
-                  notify("Cambios guardados");
-              }}
-            >
-              {t("Guardar cambios de redes", "Save social links")}
-            </Button>
-          )}
         </div>
       </details>
       <section className="panel">
