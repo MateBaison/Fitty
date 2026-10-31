@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import { useState } from "react";
 import {
+  Alert,
   Linking,
   Modal,
   Pressable,
@@ -11,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { restartAccount } from "@fitty/core/domain/account-reset";
+import { readSnapshotJson } from "@fitty/core/domain/legacy/read-snapshot";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
 import { missingProfileFields } from "@fitty/core/domain/profile-validation";
 import { localDateKey } from "@fitty/core/domain/workouts";
@@ -204,6 +206,7 @@ export default function Profile() {
   const [draft, setDraft] = useState(() => profileDraft(snapshot.profile));
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [linkedOpen, setLinkedOpen] = useState(false);
+  const [choosingLanguage, setChoosingLanguage] = useState(false);
   const [prefs, setPrefs] = useState({
     weight: snapshot.settings.weight ?? "kg",
     height: snapshot.settings.height ?? "cm",
@@ -220,6 +223,86 @@ export default function Profile() {
     ...snapshot.profile,
     gender: draft.gender,
   });
+  const importBackup = async () => {
+    if (!session) return;
+    let picker: {
+      getDocumentAsync: (options: object) => Promise<{
+        canceled: boolean;
+        assets?: { uri: string; size?: number }[];
+      }>;
+    };
+    try {
+      // The picker is a native module: a build made before it was added cannot open files.
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      picker = require("expo-document-picker");
+    } catch {
+      notify(
+        t(
+          "Para importar hace falta actualizar la app con el último build.",
+          "Importing needs the latest app build.",
+        ),
+      );
+      return;
+    }
+    try {
+      const result = await picker.getDocumentAsync({
+        type: ["application/json", "text/plain", "*/*"],
+        copyToCacheDirectory: true,
+      });
+      const asset = result.canceled ? undefined : result.assets?.[0];
+      if (!asset) return;
+      if ((asset.size ?? 0) > 25 * 1024 * 1024)
+        return notify(t("La copia supera 25 MB.", "The backup is over 25 MB."));
+      const read = readSnapshotJson(await (await fetch(asset.uri)).text());
+      if (!read.ok)
+        return notify(
+          t(
+            "La copia no es válida. No se reemplazó ningún dato.",
+            "The backup is not valid. No data was replaced.",
+          ),
+        );
+      Alert.alert(
+        t("¿Reemplazar los datos?", "Replace the data?"),
+        t(
+          "Se reemplazarán los datos de esta cuenta con la copia. Se conservará una recuperación local de los datos actuales.",
+          "This account's data will be replaced with the backup. A local recovery copy of the current data will be kept.",
+        ),
+        [
+          { text: t("Cancelar", "Cancel"), style: "cancel" },
+          {
+            text: t("Reemplazar", "Replace"),
+            style: "destructive",
+            onPress: () => {
+              try {
+                localStorage.setItem(
+                  `${accountCacheKey(session.user.id)}:import-backup:${Date.now()}`,
+                  JSON.stringify(snapshot),
+                );
+              } catch {
+                return notify(
+                  t(
+                    "No hay espacio para conservar la recuperación. No importamos datos.",
+                    "Not enough space to keep the recovery copy. Nothing was imported.",
+                  ),
+                );
+              }
+              if (
+                change((draft) => {
+                  Object.keys(draft).forEach((key) => {
+                    delete draft[key];
+                  });
+                  Object.assign(draft, read.snapshot);
+                })
+              )
+                notify(t("Copia importada; sincronizando…", "Backup imported; syncing…"));
+            },
+          },
+        ],
+      );
+    } catch {
+      notify(t("No se pudo leer el archivo.", "Could not read the file."));
+    }
+  };
   const saveSettings = () => {
     const { weight, height, distance, language } = prefs;
     if (
@@ -250,43 +333,45 @@ export default function Profile() {
   };
   return (
     <Screen>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Label muted>{t("Tus datos y preferencias", "Your details and preferences")}</Label>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t("Configuración", "Settings")}
-          onPress={() => {
-            setPrefs({
-              weight: settings.weight ?? "kg",
-              height: settings.height ?? "cm",
-              distance: settings.distance ?? "km",
-              language: settings.language ?? "es",
-            });
-            setSettingsOpen(true);
-          }}
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: 14,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: colors.secondary,
-            borderColor: colors.border,
-            borderWidth: 1,
-          }}
-        >
-          <Text style={{ color: colors.foreground, fontSize: 22 }}>⚙</Text>
-        </Pressable>
-      </View>
       <Notice />
       <Card>
-        <Text style={sectionTitle}>{t("Datos personales", "Personal details")}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={sectionTitle}>
+            {t("Datos personales", "Personal details")}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("Configuración", "Settings")}
+            onPress={() => {
+              setPrefs({
+                weight: settings.weight ?? "kg",
+                height: settings.height ?? "cm",
+                distance: settings.distance ?? "km",
+                language: settings.language ?? "es",
+              });
+              setChoosingLanguage(false);
+              setSettingsOpen(true);
+            }}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 14,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.secondary,
+              borderColor: colors.border,
+              borderWidth: 1,
+            }}
+          >
+            <Text style={{ color: colors.foreground, fontSize: 22 }}>⚙</Text>
+          </Pressable>
+        </View>
         <View style={{ alignItems: "center", gap: space(3) }}>
           {safePhoto(snapshot.profile.photo) ? (
             <Image
@@ -334,7 +419,11 @@ export default function Profile() {
             ) : null}
           </View>
         </View>
-        <ProfileFields value={draft} onChange={setDraft} />
+        <ProfileFields
+          value={draft}
+          onChange={setDraft}
+          email={session?.user.email ?? undefined}
+        />
         {menstrualAllowed ? (
           <>
             <View
@@ -429,6 +518,9 @@ export default function Profile() {
         >
           {t("Exportar copia", "Export backup")}
         </Button>
+        <Button variant="secondary" onPress={() => void importBackup()}>
+          {t("Importar copia", "Import backup")}
+        </Button>
       </Card>
       {view.status !== "synced" ? (
         <Card>
@@ -457,7 +549,6 @@ export default function Profile() {
           <SignOut />
         </View>
       </View>
-      <Label muted>{session?.user.email}</Label>
       <Modal
         visible={settingsOpen}
         transparent
@@ -479,48 +570,107 @@ export default function Profile() {
                 contentContainerStyle={{ gap: space(3) }}
                 keyboardShouldPersistTaps="handled"
               >
-                <Text style={{ ...sectionTitle, textAlign: "center" }}>
-                  {t("Configuración", "Settings")}
-                </Text>
-                {(
-                  [
-                    ["weight", t("Peso", "Weight"), [["kg", "kg"], ["lb", "lb"]]],
-                    ["height", t("Altura", "Height"), [["cm", "cm"], ["ft", "ft"]]],
-                    ["distance", t("Distancia", "Distance"), [["km", "km"], ["mi", "mi"]]],
-                  ] as const
-                ).map(([key, label, options]) => (
-                  <View key={key} style={{ gap: space(2) }}>
-                    <Label muted>{label}</Label>
-                    <View style={{ flexDirection: "row", gap: space(2) }}>
-                      {options.map(([value, text]) => (
-                        <Pill
-                          key={value}
-                          label={text}
-                          active={prefs[key] === value}
-                          onPress={() => setPrefs({ ...prefs, [key]: value })}
-                        />
+                {choosingLanguage ? (
+                  <>
+                    <Text style={{ ...sectionTitle, textAlign: "center" }}>
+                      {t("Idioma", "Language")}
+                    </Text>
+                    {languageOptions.map((option) => (
+                      <Pressable
+                        key={option.value}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: prefs.language === option.value }}
+                        onPress={() => {
+                          setPrefs({ ...prefs, language: option.value });
+                          setChoosingLanguage(false);
+                        }}
+                        style={{
+                          minHeight: 52,
+                          paddingHorizontal: space(4),
+                          borderRadius: 14,
+                          justifyContent: "center",
+                          backgroundColor:
+                            prefs.language === option.value ? "#173a52" : colors.secondary,
+                          borderColor:
+                            prefs.language === option.value ? colors.primary : colors.border,
+                          borderWidth: 1,
+                        }}
+                      >
+                        <Text style={{ color: colors.foreground, fontSize: 17, fontWeight: "800" }}>
+                          {option.label}
+                        </Text>
+                      </Pressable>
+                    ))}
+                    <Button variant="secondary" onPress={() => setChoosingLanguage(false)}>
+                      {t("Volver", "Back")}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Text style={{ ...sectionTitle, textAlign: "center" }}>
+                      {t("Configuración", "Settings")}
+                    </Text>
+                    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}>
+                      {(
+                        [
+                          ["weight", t("Peso", "Weight"), "kg", "lb"],
+                          ["height", t("Altura", "Height"), "cm", "ft"],
+                          ["distance", t("Distancia", "Distance"), "km", "mi"],
+                        ] as const
+                      ).map(([key, label, first, second]) => (
+                        <View key={key} style={{ width: "47%", gap: space(2), alignItems: "center" }}>
+                          <Text style={{ color: colors.muted, fontWeight: "800" }}>{label}</Text>
+                          <View style={{ flexDirection: "row", alignItems: "center", gap: space(2), minHeight: 52 }}>
+                            <Text style={{ color: prefs[key] === first ? colors.foreground : colors.muted, fontWeight: "800" }}>
+                              {first}
+                            </Text>
+                            <Switch
+                              accessibilityLabel={label}
+                              value={prefs[key] === second}
+                              trackColor={{ true: colors.primary, false: colors.primary }}
+                              onValueChange={(on) =>
+                                setPrefs({ ...prefs, [key]: on ? second : first })
+                              }
+                            />
+                            <Text style={{ color: prefs[key] === second ? colors.foreground : colors.muted, fontWeight: "800" }}>
+                              {second}
+                            </Text>
+                          </View>
+                        </View>
                       ))}
+                      <View style={{ width: "47%", gap: space(2), alignItems: "center" }}>
+                        <Text style={{ color: colors.muted, fontWeight: "800" }}>
+                          {t("Idioma", "Language")}
+                        </Text>
+                        <Pressable
+                          accessibilityRole="button"
+                          onPress={() => setChoosingLanguage(true)}
+                          style={{
+                            minHeight: 52,
+                            alignSelf: "stretch",
+                            borderRadius: 14,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: colors.secondary,
+                            borderColor: colors.border,
+                            borderWidth: 1,
+                          }}
+                        >
+                          <Text style={{ color: colors.foreground, fontWeight: "800" }}>
+                            {languageOptions.find((option) => option.value === prefs.language)?.label ?? prefs.language} ▾
+                          </Text>
+                        </Pressable>
+                      </View>
                     </View>
-                  </View>
-                ))}
-                <Label muted>{t("Idioma", "Language")}</Label>
-                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
-                  {languageOptions.map((option) => (
-                    <Pill
-                      key={option.value}
-                      label={option.label}
-                      active={prefs.language === option.value}
-                      onPress={() => setPrefs({ ...prefs, language: option.value })}
-                    />
-                  ))}
-                </View>
-                <DeleteAccount />
-                <Button onPress={saveSettings}>
-                  {t("Guardar configuración", "Save settings")}
-                </Button>
-                <Button variant="ghost" onPress={() => setSettingsOpen(false)}>
-                  {t("Cerrar", "Close")}
-                </Button>
+                    <DeleteAccount />
+                    <Button onPress={saveSettings}>
+                      {t("Guardar configuración", "Save settings")}
+                    </Button>
+                    <Button variant="secondary" onPress={() => setSettingsOpen(false)}>
+                      {t("Cerrar", "Close")}
+                    </Button>
+                  </>
+                )}
               </ScrollView>
             </Card>
           </Pressable>

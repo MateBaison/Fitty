@@ -1,10 +1,17 @@
 import { View } from "react-native";
+import { localDateKey } from "@fitty/core/domain/workouts";
 import { ChipGroup } from "@/components/chip";
+import {
+  CountryField,
+  DateField,
+  MeasureField,
+} from "@/components/pickers";
 import { Field, Label } from "@/components/ui";
 import { useAccount } from "@/state/account";
 import { space } from "@/theme";
 
 export const genders = [
+  ["undisclosed", "Prefiero no decirlo", "Prefer not to say"],
   ["hombre", "Hombre", "Male"],
   ["mujer", "Mujer", "Female"],
   ["no_binario", "No binario", "Non-binary"],
@@ -46,9 +53,12 @@ export function profileValues(draft: ProfileDraft) {
 export function ProfileFields({
   value,
   onChange,
+  email,
 }: {
   value: ProfileDraft;
   onChange: (value: ProfileDraft) => void;
+  /** Account e-mail, shown read-only like the web. */
+  email?: string;
 }) {
   const { t } = useAccount();
   const set = (field: keyof ProfileDraft) => (next: string) =>
@@ -62,35 +72,40 @@ export function ProfileFields({
         maxLength={80}
         autoComplete="name"
       />
-      <Field
-        label={t("Fecha de nacimiento (AAAA-MM-DD)", "Birth date (YYYY-MM-DD)")}
+      {email ? (
+        <Field
+          label={t("Email de contacto", "Contact email")}
+          value={email}
+          editable={false}
+          autoComplete="email"
+        />
+      ) : null}
+      <DateField
+        label={t("Fecha de nacimiento", "Birth date")}
         value={value.birth}
-        onChangeText={set("birth")}
-        placeholder="1995-04-21"
-        keyboardType="numbers-and-punctuation"
-        maxLength={10}
+        onChange={set("birth")}
+        max={localDateKey(new Date())}
       />
-      <Field
+      <CountryField
         label={t("País", "Country")}
         value={value.country}
-        onChangeText={set("country")}
-        autoComplete="country"
+        onChange={set("country")}
       />
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
-          <Field
-            label={`${t("Altura", "Height")} (cm)`}
+          <MeasureField
+            kind="height"
+            label={t("Altura", "Height")}
             value={value.height}
-            onChangeText={set("height")}
-            keyboardType="decimal-pad"
+            onChange={set("height")}
           />
         </View>
         <View style={{ flex: 1 }}>
-          <Field
-            label={`${t("Peso", "Weight")} (kg)`}
+          <MeasureField
+            kind="weight"
+            label={t("Peso", "Weight")}
             value={value.weight}
-            onChangeText={set("weight")}
-            keyboardType="decimal-pad"
+            onChange={set("weight")}
           />
         </View>
       </View>
