@@ -1012,9 +1012,17 @@ label input[type="checkbox"] {
   min-width: 0;
 }
 .personal-form input[type="date"] {
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.personal-form input[type="date"]::-webkit-date-and-time-value {
+  min-width: 0;
+  text-align: left;
 }
 @media (max-width: 480px) {
   .personal-form .form-grid {
