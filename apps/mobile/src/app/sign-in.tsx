@@ -99,14 +99,14 @@ export default function SignIn() {
             accessibilityLabel="Fitty"
             accessibilityIgnoresInvertColors
           />
-          <Title>{t("Iniciar sesión", "Sign in")}</Title>
-          <Label muted>
-            {t(
-              "Tu entrenamiento, tus rutinas y tu progreso.",
-              "Your training, your routines and your progress.",
-            )}
-          </Label>
           <Card>
+            <Title>{t("Iniciar sesión", "Sign in")}</Title>
+            <Label muted>
+              {t(
+                "Tu entrenamiento, tus rutinas y tu progreso.",
+                "Your training, your routines and your progress.",
+              )}
+            </Label>
             {sentTo ? (
               <>
                 <Label>
