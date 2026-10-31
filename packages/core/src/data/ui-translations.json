@@ -671,7 +671,8 @@
     "Perfiles sociales": "Profils sociaux",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Impossible de lier ce compte. Il est peut-être déjà lié à un autre utilisateur de Fitty.",
     "No podés desvincular tu único método de inicio de sesión.": "Tu ne peux pas délier ton unique méthode de connexion.",
-    "No pudimos completar la acción. Reintentá más tarde.": "Impossible de terminer l'action. Réessaie plus tard."
+    "No pudimos completar la acción. Reintentá más tarde.": "Impossible de terminer l'action. Réessaie plus tard.",
+    "Siempre podés entrar con un código enviado a este correo.": "Tu peux toujours te connecter avec un code envoyé à cette adresse e-mail."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1345,7 +1346,8 @@
     "Perfiles sociales": "社交主页",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "无法关联此账户。它可能已关联到另一个 Fitty 用户。",
     "No podés desvincular tu único método de inicio de sesión.": "无法取消你唯一的登录方式。",
-    "No pudimos completar la acción. Reintentá más tarde.": "无法完成操作,请稍后重试。"
+    "No pudimos completar la acción. Reintentá más tarde.": "无法完成操作,请稍后重试。",
+    "Siempre podés entrar con un código enviado a este correo.": "你始终可以使用发送到此邮箱的验证码登录。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2019,7 +2021,8 @@
     "Perfiles sociales": "सोशल प्रोफ़ाइल",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "हम इस खाते को नहीं जोड़ सके। यह पहले से किसी अन्य Fitty उपयोगकर्ता से जुड़ा हो सकता है।",
     "No podés desvincular tu único método de inicio de sesión.": "आप अपना एकमात्र साइन-इन तरीका अलग नहीं कर सकते।",
-    "No pudimos completar la acción. Reintentá más tarde.": "हम यह कार्य पूरा नहीं कर सके। बाद में फिर कोशिश करें।"
+    "No pudimos completar la acción. Reintentá más tarde.": "हम यह कार्य पूरा नहीं कर सके। बाद में फिर कोशिश करें।",
+    "Siempre podés entrar con un código enviado a este correo.": "आप हमेशा इस ईमेल पर भेजे गए कोड से साइन इन कर सकते हैं।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2693,7 +2696,8 @@
     "Perfiles sociales": "الملفات الاجتماعية",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "تعذر ربط هذا الحساب. قد يكون مرتبطًا بالفعل بمستخدم آخر في Fitty.",
     "No podés desvincular tu único método de inicio de sesión.": "لا يمكنك إلغاء ربط طريقة تسجيل الدخول الوحيدة لديك.",
-    "No pudimos completar la acción. Reintentá más tarde.": "تعذر إكمال الإجراء. حاول مرة أخرى لاحقًا."
+    "No pudimos completar la acción. Reintentá más tarde.": "تعذر إكمال الإجراء. حاول مرة أخرى لاحقًا.",
+    "Siempre podés entrar con un código enviado a este correo.": "يمكنك دائمًا تسجيل الدخول برمز يُرسل إلى هذا البريد."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -3366,7 +3370,8 @@
     "Perfiles sociales": "Soziale Profile",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Dieses Konto konnte nicht verknüpft werden. Es gehört möglicherweise schon einem anderen Fitty-Nutzer.",
     "No podés desvincular tu único método de inicio de sesión.": "Du kannst deine einzige Anmeldemethode nicht entfernen.",
-    "No pudimos completar la acción. Reintentá más tarde.": "Die Aktion konnte nicht abgeschlossen werden. Versuche es später erneut."
+    "No pudimos completar la acción. Reintentá más tarde.": "Die Aktion konnte nicht abgeschlossen werden. Versuche es später erneut.",
+    "Siempre podés entrar con un código enviado a este correo.": "Du kannst dich jederzeit mit einem an diese E-Mail gesendeten Code anmelden."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -4039,7 +4044,8 @@
     "Perfiles sociales": "Profili social",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Impossibile collegare questo account. Potrebbe essere già collegato a un altro utente Fitty.",
     "No podés desvincular tu único método de inicio de sesión.": "Non puoi scollegare il tuo unico metodo di accesso.",
-    "No pudimos completar la acción. Reintentá más tarde.": "Impossibile completare l'azione. Riprova più tardi."
+    "No pudimos completar la acción. Reintentá más tarde.": "Impossibile completare l'azione. Riprova più tardi.",
+    "Siempre podés entrar con un código enviado a este correo.": "Puoi sempre accedere con un codice inviato a questa e-mail."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4712,7 +4718,8 @@
     "Perfiles sociales": "Perfis sociais",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Não foi possível vincular esta conta. Ela pode já estar vinculada a outro usuário do Fitty.",
     "No podés desvincular tu único método de inicio de sesión.": "Você não pode desvincular seu único método de login.",
-    "No pudimos completar la acción. Reintentá más tarde.": "Não foi possível concluir a ação. Tente novamente mais tarde."
+    "No pudimos completar la acción. Reintentá más tarde.": "Não foi possível concluir a ação. Tente novamente mais tarde.",
+    "Siempre podés entrar con un código enviado a este correo.": "Você sempre pode entrar com um código enviado para este e-mail."
   },
   "en": {
     "Sexo": "Sex",
@@ -5054,6 +5061,7 @@
     "Perfiles sociales": "Social profiles",
     "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "We could not link this account. It may already belong to another Fitty user.",
     "No podés desvincular tu único método de inicio de sesión.": "You cannot unlink your only sign-in method.",
-    "No pudimos completar la acción. Reintentá más tarde.": "We could not complete the action. Try again later."
+    "No pudimos completar la acción. Reintentá más tarde.": "We could not complete the action. Try again later.",
+    "Siempre podés entrar con un código enviado a este correo.": "You can always sign in with a code sent to this email."
   }
 }

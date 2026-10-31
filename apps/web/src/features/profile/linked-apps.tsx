@@ -12,7 +12,7 @@ const providers = [
 
 /** Sign-in methods linked to this account; any linked method opens the same data. */
 export function LinkedApps() {
-  const { t, notify } = useApp();
+  const { t, notify, user } = useApp();
   const [linked, setLinked] = useState<string[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -73,10 +73,16 @@ export function LinkedApps() {
         )}
       </p>
       <ul className="space-y-2">
-        <li className="flex items-center justify-between gap-3">
-          <span>{t("Correo", "Email")}</span>
+        <li className="flex flex-col gap-1">
+          <span className="flex items-center justify-between gap-3">
+            <span>{t("Correo", "Email")}</span>
+            <span className="text-sm text-muted-foreground">{user.email}</span>
+          </span>
           <span className="text-sm text-muted-foreground">
-            {linked?.includes("email") ? t("Vinculada", "Linked") : "—"}
+            {t(
+              "Siempre podés entrar con un código enviado a este correo.",
+              "You can always sign in with a code sent to this email.",
+            )}
           </span>
         </li>
         {providers.map(([id, name]) => {

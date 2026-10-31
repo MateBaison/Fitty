@@ -4,6 +4,7 @@ import { Button, Card, Label } from "@/components/ui";
 import { linkProvider } from "@/lib/oauth";
 import { supabase } from "@/lib/supabase";
 import { useAccount } from "@/state/account";
+import { useSession } from "@/state/session";
 import { space } from "@/theme";
 
 const providers = [
@@ -14,6 +15,7 @@ const providers = [
 /** Sign-in methods linked to this account; any linked method opens the same data. */
 export function LinkedApps() {
   const { t } = useAccount();
+  const { session } = useSession();
   const queryClient = useQueryClient();
   const identities = useQuery({
     queryKey: ["identities"],
@@ -55,6 +57,24 @@ export function LinkedApps() {
             "Link your accounts to sign in however you like. Your data stays the same whichever method you use.",
           )}
         </Label>
+        <View style={{ gap: space(1) }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: space(3),
+            }}
+          >
+            <Label>{t("Correo", "Email")}</Label>
+            <Label muted>{session?.user.email}</Label>
+          </View>
+          <Label muted>
+            {t(
+              "Siempre podés entrar con un código enviado a este correo.",
+              "You can always sign in with a code sent to this email.",
+            )}
+          </Label>
+        </View>
         {providers.map(([id, name]) => (
           <View
             key={id}
