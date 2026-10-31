@@ -1,3 +1,4 @@
+import { SymbolView } from "expo-symbols";
 import { useMemo, useState } from "react";
 import { Modal, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { translate } from "@fitty/core/data/translations";
@@ -80,6 +81,129 @@ const heading = {
   fontWeight: "800" as const,
 };
 
+/** Two editable date ranges (YYYY-MM-DD), compared side by side like the web. */
+function Comparison({
+  range,
+  period,
+}: {
+  range: { start: Date; end: Date };
+  period: ProgressPeriod;
+}) {
+  const snapshot = useSnapshot();
+  const { t } = useAccount();
+  const locale = snapshot.settings.language ?? "es";
+  const unit = snapshot.settings.weight ?? "kg";
+  const factor = unit === "lb" ? 2.20462 : 1;
+  const base = period === "all" ? "month" : period;
+  const initial = period === "all" ? progressRange("month", new Date()) : range;
+  const [dates, setDates] = useState(() => ({
+    a: comparisonDates(
+      progressRange(base, shiftProgressDate(initial.start, base, -1), true),
+    ),
+    b: comparisonDates(initial),
+  }));
+  const set = (key: "a" | "b", edge: "start" | "end", value: string) =>
+    setDates((current) => ({
+      ...current,
+      [key]: { ...current[key], [edge]: value },
+    }));
+  const totals = compareProgress(snapshot, dates.a, dates.b);
+  const number = (value: number) =>
+    value.toLocaleString(locale, { maximumFractionDigits: 1 });
+  type Totals = NonNullable<typeof totals>[0];
+  const rows: [string, (x: Totals) => string][] = [
+    [t("Entrenamientos", "Workouts"), (x) => number(x.sessions)],
+    [t("Días entrenados", "Training days"), (x) => number(x.days)],
+    [
+      t("Tiempo registrado", "Recorded time"),
+      (x) => (x.sessions > 0 && x.unknown === x.sessions ? "—" : `${number(x.minutes)} min`),
+    ],
+    [t("Series", "Sets"), (x) => number(x.sets)],
+    [t("Volumen", "Volume"), (x) => `${number(x.volumeKg * factor)} ${unit}`],
+  ];
+  return (
+    <Card>
+      <Text style={heading}>{t("Comparar períodos", "Compare periods")}</Text>
+      <Label muted>
+        {t(
+          "Elegí dos rangos de fechas (AAAA-MM-DD). Las cifras muestran lo registrado en cada uno; más cantidad no siempre significa mejor progreso.",
+          "Choose two date ranges (YYYY-MM-DD). Figures show what was logged in each; a higher amount does not always mean better progress.",
+        )}
+      </Label>
+      {(["a", "b"] as const).map((key) => (
+        <View key={key} style={{ gap: space(2) }}>
+          <Text style={{ color: colors.foreground, fontWeight: "800" }}>
+            {key === "a" ? t("Período A", "Period A") : t("Período B", "Period B")}
+          </Text>
+          <View style={{ flexDirection: "row", gap: space(3) }}>
+            {(["start", "end"] as const).map((edge) => (
+              <View key={edge} style={{ flex: 1 }}>
+                <Field
+                  label={edge === "start" ? t("Desde", "From") : t("Hasta", "To")}
+                  value={dates[key][edge]}
+                  onChangeText={(value) => set(key, edge, value)}
+                  placeholder="AAAA-MM-DD"
+                  keyboardType="numbers-and-punctuation"
+                  maxLength={10}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+      ))}
+      {totals ? (
+        <>
+          <View style={{ flexDirection: "row", paddingHorizontal: space(2) }}>
+            <Text style={{ flex: 1.4, color: colors.muted, fontSize: 12 }}>
+              {t("Métrica", "Metric")}
+            </Text>
+            <Text style={{ flex: 1, color: colors.muted, fontSize: 12, textAlign: "right" }}>
+              {t("Período A", "Period A")}
+            </Text>
+            <Text style={{ flex: 1, color: colors.muted, fontSize: 12, textAlign: "right" }}>
+              {t("Período B", "Period B")}
+            </Text>
+          </View>
+          {rows.map(([label, get], index) => (
+            <View
+              key={label}
+              style={{
+                flexDirection: "row",
+                padding: space(3),
+                borderRadius: 14,
+                backgroundColor: index % 2 ? "#13171f" : colors.secondary,
+              }}
+            >
+              <Text style={{ flex: 1.4, color: colors.foreground, fontWeight: "700" }}>
+                {label}
+              </Text>
+              <Text style={{ flex: 1, color: colors.foreground, textAlign: "right" }}>
+                {get(totals[0])}
+              </Text>
+              <Text style={{ flex: 1, color: colors.foreground, textAlign: "right" }}>
+                {get(totals[1])}
+              </Text>
+            </View>
+          ))}
+          <Label muted>
+            {t(
+              "Volumen = peso × repeticiones de las series registradas. No equivale a fuerza y depende de los ejercicios elegidos.",
+              "Volume = weight × repetitions of logged sets. It is not strength and depends on the exercises chosen.",
+            )}
+          </Label>
+        </>
+      ) : (
+        <Label>
+          {t(
+            "Elegí fechas válidas: el inicio debe ser anterior o igual al final.",
+            "Choose valid dates: the start must be on or before the end.",
+          )}
+        </Label>
+      )}
+    </Card>
+  );
+}
+
 export default function Progress() {
   const snapshot = useSnapshot();
   const { t } = useAccount();
@@ -161,16 +285,6 @@ export default function Progress() {
       },
     ];
   });
-  const compared = useMemo(() => {
-    const base = period === "all" ? "month" : period;
-    const first = progressRange(base, shiftProgressDate(range.start, base, -1), true);
-    return compareProgress(
-      snapshot,
-      comparisonDates(first),
-      comparisonDates(period === "all" ? progressRange("month", new Date()) : range),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [snapshot, period, anchor]);
   const number = (value: number) =>
     value.toLocaleString(locale, { maximumFractionDigits: 1 });
   const stat = (label: string, value: string) => (
@@ -197,34 +311,40 @@ export default function Progress() {
     <Screen>
       <View
         style={{
-          borderRadius: 24,
-          padding: space(5),
-          gap: space(1),
-          borderColor: "#2b6a8f",
-          borderWidth: 1,
-          backgroundColor: "#10283a",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: space(3),
+          paddingTop: space(2),
         }}
       >
-        <Text
-          style={{
-            color: colors.primary,
-            fontSize: 12,
-            fontWeight: "800",
-            letterSpacing: 1.2,
-            textTransform: "uppercase",
-          }}
-        >
-          {t("Tu recorrido", "Your journey")}
-        </Text>
-        <Text style={{ color: colors.foreground, fontSize: 24, fontWeight: "800" }}>
-          {t("Cada entrenamiento cuenta", "Every workout counts")}
-        </Text>
-        <Label muted>
-          {t(
-            "Mirá lo que hiciste y cómo venís avanzando.",
-            "See what you did and how you are progressing.",
-          )}
-        </Label>
+        <View style={{ flex: 1, gap: space(1) }}>
+          <Text
+            style={{
+              color: colors.primary,
+              fontSize: 12,
+              fontWeight: "800",
+              letterSpacing: 1.6,
+              textTransform: "uppercase",
+            }}
+          >
+            {t("Tu recorrido", "Your journey")}
+          </Text>
+          <Text style={{ color: colors.foreground, fontSize: 26, fontWeight: "800" }}>
+            {t("Cada entrenamiento cuenta", "Every workout counts")}
+          </Text>
+          <Label muted>
+            {t(
+              "Mirá lo que hiciste y cómo venís avanzando.",
+              "See what you did and how you are progressing.",
+            )}
+          </Label>
+        </View>
+        <SymbolView
+          name={{ ios: "waveform.path.ecg", android: "monitor_heart" }}
+          tintColor={colors.primary}
+          size={40}
+        />
       </View>
       <View
         style={{
@@ -406,53 +526,11 @@ export default function Progress() {
               : t("Comparar períodos", "Compare periods")}
           </Button>
           {comparing ? (
-            <Card>
-              <Text style={heading}>{t("Comparar períodos", "Compare periods")}</Text>
-              <Label muted>
-                {t(
-                  "Período A es el anterior y B el actual. Más cantidad no siempre significa mejor progreso.",
-                  "Period A is the previous one and B the current one. A higher amount does not always mean better progress.",
-                )}
-              </Label>
-              {compared ? (
-                <>
-                  <View style={{ flexDirection: "row", paddingHorizontal: space(2) }}>
-                    <Text style={{ flex: 1.4, color: colors.muted, fontSize: 12 }}>{t("Métrica", "Metric")}</Text>
-                    <Text style={{ flex: 1, color: colors.muted, fontSize: 12, textAlign: "right" }}>A</Text>
-                    <Text style={{ flex: 1, color: colors.muted, fontSize: 12, textAlign: "right" }}>B</Text>
-                  </View>
-                  {(
-                    [
-                      [t("Entrenamientos", "Workouts"), (x: NonNullable<typeof compared>[0]) => number(x.sessions)],
-                      [t("Días entrenados", "Training days"), (x: NonNullable<typeof compared>[0]) => number(x.days)],
-                      [
-                        t("Tiempo registrado", "Recorded time"),
-                        (x: NonNullable<typeof compared>[0]) =>
-                          x.sessions > 0 && x.unknown === x.sessions ? "—" : `${number(x.minutes)} min`,
-                      ],
-                      [t("Series", "Sets"), (x: NonNullable<typeof compared>[0]) => number(x.sets)],
-                      [t("Volumen", "Volume"), (x: NonNullable<typeof compared>[0]) => `${number(x.volumeKg * factor)} ${unit}`],
-                    ] as const
-                  ).map(([label, get], index) => (
-                    <View
-                      key={label}
-                      style={{
-                        flexDirection: "row",
-                        padding: space(3),
-                        borderRadius: 14,
-                        backgroundColor: index % 2 ? "#13171f" : colors.secondary,
-                      }}
-                    >
-                      <Text style={{ flex: 1.4, color: colors.foreground, fontWeight: "700" }}>{label}</Text>
-                      <Text style={{ flex: 1, color: colors.foreground, textAlign: "right" }}>{get(compared[0])}</Text>
-                      <Text style={{ flex: 1, color: colors.foreground, textAlign: "right" }}>{get(compared[1])}</Text>
-                    </View>
-                  ))}
-                </>
-              ) : (
-                <Label>{t("Elegí un período válido.", "Choose a valid period.")}</Label>
-              )}
-            </Card>
+            <Comparison
+              key={`${period}-${localDateKey(range.start)}`}
+              range={range}
+              period={period}
+            />
           ) : null}
           <Pressable
             accessibilityRole="button"

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import {
-  findExercise,
   localDateKey,
   sessionsOnDay,
   startWorkout,
@@ -16,7 +15,6 @@ import { ReadinessCheck } from "@/components/readiness";
 import { Button, Card, Label, Screen } from "@/components/ui";
 import { RoutinesSection } from "@/app/(app)/routines";
 import { useAccount, useSnapshot } from "@/state/account";
-import { translate } from "@fitty/core/data/translations";
 import { colors, space } from "@/theme";
 
 function Tile({
@@ -99,11 +97,14 @@ export default function Home() {
         >
           <View style={{ flex: 1, gap: 4 }}>
             <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}
               style={{
                 color: colors.primary,
                 fontSize: 11,
                 fontWeight: "800",
-                letterSpacing: 1.2,
+                letterSpacing: 1,
                 textTransform: "uppercase",
               }}
             >
@@ -114,18 +115,7 @@ export default function Home() {
             >
               {activeDay?.name ?? t("Entrenamiento", "Workout")}
             </Text>
-            <Label muted>
-              {activeRoutine?.name} ·{" "}
-              {(() => {
-                const current = findExercise(
-                  snapshot,
-                  snapshot.workout.entries[snapshot.workout.index]?.id ?? "",
-                );
-                return current
-                  ? translate(locale, current.name, current.name)
-                  : "";
-              })()}
-            </Label>
+            <Label muted>{activeRoutine?.name}</Label>
           </View>
           <View style={{ minWidth: 112 }}>
             <Button onPress={() => router.navigate("/workout")}>
