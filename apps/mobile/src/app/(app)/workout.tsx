@@ -1,8 +1,10 @@
 import * as Haptics from "expo-haptics";
+import { Image } from "expo-image";
 import { useKeepAwake } from "expo-keep-awake";
 import { Redirect, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Modal, Pressable, Switch, Text, View } from "react-native";
+import { exerciseImage } from "@fitty/core/data/exercises";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { translate } from "@fitty/core/data/translations";
 import { replaceWorkoutExercise } from "@fitty/core/domain/exercise-replacement";
@@ -26,6 +28,7 @@ import { NumberInput } from "@/components/number-input";
 import { PhotoStrip } from "@/components/photo-strip";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, radius, space } from "@/theme";
 
@@ -186,20 +189,40 @@ export default function Workout() {
         );
         return (
           <Card key={`${entry.id}-${index}`}>
-            <Text
-              style={{
-                color: colors.foreground,
-                fontSize: 18,
-                fontWeight: "700",
-              }}
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
             >
-              {exercise
-                ? translate(language, exercise.name, exercise.name)
-                : entry.id}
-            </Text>
-            {entry.superset ? (
-              <Label muted>{t("Superserie", "Superset")}</Label>
-            ) : null}
+              {exercise ? (
+                <Image
+                  source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                  style={{
+                    width: 72,
+                    height: 72,
+                    borderRadius: 14,
+                    backgroundColor: "#0d1016",
+                  }}
+                  contentFit="cover"
+                  cachePolicy="disk"
+                  accessibilityIgnoresInvertColors
+                />
+              ) : null}
+              <View style={{ flex: 1, gap: 2 }}>
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 18,
+                    fontWeight: "800",
+                  }}
+                >
+                  {exercise
+                    ? translate(language, exercise.name, exercise.name)
+                    : entry.id}
+                </Text>
+                {entry.superset ? (
+                  <Label muted>{t("Superserie", "Superset")}</Label>
+                ) : null}
+              </View>
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -230,8 +253,18 @@ export default function Workout() {
                 accessibilityRole="button"
                 onPress={() => setRestEnd(Date.now() + restSeconds * 1000)}
                 hitSlop={8}
+                style={{
+                  backgroundColor: colors.secondary,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                  borderRadius: 12,
+                  paddingHorizontal: space(3),
+                  paddingVertical: space(2),
+                }}
               >
-                <Text style={{ color: colors.accent }}>⏱ {restSeconds}s</Text>
+                <Text style={{ color: colors.accent, fontWeight: "700" }}>
+                  ⏱ {restSeconds}s
+                </Text>
               </Pressable>
             </View>
             <View style={{ flexDirection: "row", gap: space(2) }}>
@@ -259,6 +292,10 @@ export default function Workout() {
                     flexDirection: "row",
                     gap: space(2),
                     alignItems: "center",
+                    padding: space(2),
+                    borderRadius: 14,
+                    backgroundColor:
+                      number % 2 === 0 ? colors.secondary : "#13171f",
                   }}
                 >
                   <Pressable
@@ -333,7 +370,7 @@ export default function Workout() {
             <View style={{ flexDirection: "row", gap: space(2) }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  variant="secondary"
+                  variant="success"
                   onPress={() =>
                     editEntry(
                       index,
@@ -346,7 +383,7 @@ export default function Workout() {
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   disabled={entry.sets.length <= 1}
                   onPress={() =>
                     editEntry(index, (draft) => void draft.sets.pop())
@@ -366,13 +403,13 @@ export default function Workout() {
                   editEntry(index, (draft) => void (draft.note = note));
               }}
             />
-            <Button variant="ghost" onPress={() => setReplacing(index)}>
+            <Button variant="secondary" onPress={() => setReplacing(index)}>
               {t("Reemplazar ejercicio", "Replace exercise")}
             </Button>
           </Card>
         );
       })}
-      <Button variant="secondary" onPress={() => setAdding(true)}>
+      <Button variant="success" onPress={() => setAdding(true)}>
         {t("+ Agregar ejercicio", "+ Add exercise")}
       </Button>
       <Field
@@ -386,7 +423,7 @@ export default function Workout() {
       <Button onPress={finish}>
         {t("Guardar entrenamiento", "Save workout")}
       </Button>
-      <Button variant="ghost" onPress={cancel}>
+      <Button variant="destructive" onPress={cancel}>
         {t("Cancelar entrenamiento", "Cancel workout")}
       </Button>
       <Modal
