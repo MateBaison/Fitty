@@ -51,6 +51,8 @@ export async function googleLogin() {
     options: {
       redirectTo: new URL("/auth/callback", origin).href,
       skipBrowserRedirect: true,
+      // Always let the person choose the Google account instead of reusing the last one.
+      queryParams: { prompt: "select_account" },
     },
   });
   if (error || !data.url) throw new Error("No pudimos iniciar Google.");
