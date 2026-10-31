@@ -1,5 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
+import { SymbolView } from "expo-symbols";
 import { useKeepAwake } from "expo-keep-awake";
 import { Redirect, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -98,11 +99,13 @@ export default function Workout() {
   );
   const [replacing, setReplacing] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
+  const [finishing, setFinishing] = useState(false);
   const workout = snapshot.workout;
   if (!workout) return <Redirect href="/" />;
   const language = snapshot.settings.language ?? "es";
   const unit = snapshot.settings.weight ?? "kg";
   const types = localizedSetTypes(language);
+  const settings = snapshot.settings;
   const restSeconds = Math.max(
     5,
     Math.min(3600, Number(snapshot.settings.restSeconds) || 60),
@@ -159,16 +162,128 @@ export default function Workout() {
   const selected = typeFor
     ? workout.entries[typeFor.entry]?.sets[typeFor.set]
     : undefined;
+  const open = (index: number) =>
+    workout.openExercises?.includes(index) ?? index === 0;
+  const restEnabled = settings.restEnabled === true;
   return (
     <Screen>
-      <View style={{ gap: 4 }}>
-        <Title>{day?.name ?? t("Entrenamiento", "Workout")}</Title>
-        <SyncStatus />
+      <View
+        style={{
+          borderRadius: 24,
+          borderColor: "#2b6a8f",
+          borderWidth: 1,
+          backgroundColor: "#10283a",
+          padding: space(5),
+          gap: space(2),
+        }}
+      >
+        <Text
+          style={{
+            color: colors.primary,
+            fontSize: 12,
+            fontWeight: "800",
+            letterSpacing: 1.2,
+            textTransform: "uppercase",
+          }}
+        >
+          {day?.name ?? t("Entrenamiento", "Workout")} · {workout.index + 1}/
+          {workout.entries.length}
+        </Text>
+        <Text style={{ color: colors.foreground, fontSize: 26, fontWeight: "800" }}>
+          {t("Tu entrenamiento", "Your workout")}
+        </Text>
       </View>
       <Notice />
-      {restEnd > Date.now() ? (
-        <RestBanner end={restEnd} onStop={() => setRestEnd(0)} />
-      ) : null}
+      <View style={{ flexDirection: "row", gap: space(3) }}>
+        <View style={{ flex: 1 }}>
+          <Button variant="secondary" onPress={() => setAdding(true)}>
+            {t("Agregar ejercicios", "Add exercises")}
+          </Button>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            variant="secondary"
+            onPress={() =>
+              change((draft) => {
+                if (!draft.workout) return;
+                const all =
+                  draft.workout.openExercises?.length ===
+                  draft.workout.entries.length;
+                draft.workout.openExercises = all
+                  ? []
+                  : draft.workout.entries.map((_, index) => index);
+              })
+            }
+          >
+            {workout.openExercises?.length === workout.entries.length
+              ? t("Cerrar todos", "Collapse all")
+              : t("Desplegar todos", "Expand all")}
+          </Button>
+        </View>
+      </View>
+      <Card>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: space(3),
+          }}
+        >
+          <Label>{t("Descanso", "Rest")}</Label>
+          <Switch
+            accessibilityLabel={t("Descanso entre series", "Rest between sets")}
+            value={restEnabled}
+            trackColor={{ true: "#22c55e", false: colors.border }}
+            onValueChange={(checked) => {
+              change((draft) => void (draft.settings.restEnabled = checked));
+              if (!checked) setRestEnd(0);
+            }}
+          />
+          <View style={{ width: 84 }}>
+            <NumberInput
+              value={restSeconds}
+              accessibilityLabel={t("Segundos", "Seconds")}
+              onCommit={(value) =>
+                change(
+                  (draft) =>
+                    void (draft.settings.restSeconds = Math.max(
+                      5,
+                      Math.min(3600, value ?? 60),
+                    )),
+                )
+              }
+            />
+          </View>
+          <Label>{t("segundos", "seconds")}</Label>
+          {restEnabled ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("Iniciar descanso", "Start rest")}
+              onPress={() => setRestEnd(Date.now() + restSeconds * 1000)}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: colors.secondary,
+                borderColor: colors.border,
+                borderWidth: 1,
+              }}
+            >
+              <SymbolView
+                name={{ ios: "timer", android: "timer" }}
+                tintColor={colors.accent}
+                size={20}
+              />
+            </Pressable>
+          ) : null}
+        </View>
+        {restEnd > Date.now() ? (
+          <RestBanner end={restEnd} onStop={() => setRestEnd(0)} />
+        ) : null}
+      </Card>
       {workout.entries.map((entry, index) => {
         const exercise = findExercise(snapshot, entry.id);
         const metric = metricFor(snapshot, entry.id, entry);
@@ -187,17 +302,34 @@ export default function Workout() {
           undefined,
           metric,
         );
+        const expanded = open(index);
         return (
           <Card key={`${entry.id}-${index}`}>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ expanded }}
+              onPress={() =>
+                change((draft) => {
+                  const current = draft.workout;
+                  if (!current) return;
+                  const list = current.openExercises ?? [0];
+                  current.openExercises = expanded
+                    ? list.filter((number) => number !== index)
+                    : [...new Set([...list, index])];
+                })
+              }
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: space(3),
+              }}
             >
               {exercise ? (
                 <Image
                   source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
                   style={{
-                    width: 72,
-                    height: 72,
+                    width: 64,
+                    height: 64,
                     borderRadius: 14,
                     backgroundColor: "#0d1016",
                   }}
@@ -210,7 +342,7 @@ export default function Workout() {
                 <Text
                   style={{
                     color: colors.foreground,
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: "800",
                   }}
                 >
@@ -218,214 +350,316 @@ export default function Workout() {
                     ? translate(language, exercise.name, exercise.name)
                     : entry.id}
                 </Text>
-                {entry.superset ? (
-                  <Label muted>{t("Superserie", "Superset")}</Label>
-                ) : null}
+                <Label muted>
+                  {entry.superset ? `${t("Superserie", "Superset")} · ` : ""}
+                  {entry.sets.length} {t("series", "sets")}
+                </Label>
               </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: space(2),
-              }}
-            >
-              <Label muted>{t("Rep", "Reps")}</Label>
-              <Switch
-                accessibilityLabel={t("Registrar por tiempo", "Track by time")}
-                value={metric === "seconds"}
-                trackColor={{ true: colors.primary, false: colors.secondary }}
-                onValueChange={(checked) => {
-                  const next = checked ? "seconds" : "reps";
-                  change((draft) => {
-                    const target = draft.workout?.entries[index];
-                    if (target) switchEntryMetric(target, metric, next);
-                    draft.settings.exerciseMetrics = {
-                      ...draft.settings.exerciseMetrics,
-                      [entry.id]: next,
-                    };
-                  });
-                }}
+              <SymbolView
+                name={
+                  expanded
+                    ? { ios: "chevron.up", android: "expand_less" }
+                    : { ios: "chevron.down", android: "expand_more" }
+                }
+                tintColor={colors.muted}
+                size={16}
               />
-              <Label muted>{t("Tiempo", "Time")}</Label>
-              <View style={{ flex: 1 }} />
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => setRestEnd(Date.now() + restSeconds * 1000)}
-                hitSlop={8}
-                style={{
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                  borderRadius: 12,
-                  paddingHorizontal: space(3),
-                  paddingVertical: space(2),
-                }}
-              >
-                <Text style={{ color: colors.accent, fontWeight: "700" }}>
-                  ⏱ {restSeconds}s
-                </Text>
-              </Pressable>
-            </View>
-            <View style={{ flexDirection: "row", gap: space(2) }}>
-              <Label muted style={{ width: 40 }}>
-                #
-              </Label>
-              <Label muted style={{ flex: 1.2 }}>
-                {t("Anterior", "Previous")}
-              </Label>
-              <Label muted style={{ flex: 1, textAlign: "center" }}>
-                {unit}
-              </Label>
-              <Label muted style={{ flex: 1, textAlign: "center" }}>
-                {metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")}
-              </Label>
-            </View>
-            {entry.sets.map((set, number) => {
-              const old = previous[number];
-              const type = types.find((item) => item.id === set.type);
-              const record = records[number]?.length;
-              return (
+            </Pressable>
+            {expanded ? (
+              <>
                 <View
-                  key={number}
                   style={{
                     flexDirection: "row",
-                    gap: space(2),
                     alignItems: "center",
-                    padding: space(2),
-                    borderRadius: 14,
-                    backgroundColor:
-                      number % 2 === 0 ? colors.secondary : "#13171f",
+                    gap: space(3),
                   }}
                 >
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={`${t("Tipo de serie", "Set type")} ${number + 1}: ${type?.name ?? types[1]!.name}`}
-                    onPress={() => setTypeFor({ entry: index, set: number })}
-                    style={{ width: 40, alignItems: "center" }}
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      variant="secondary"
+                      onPress={() => setReplacing(index)}
+                    >
+                      {t("Reemplazar ejercicio", "Replace exercise")}
+                    </Button>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: space(2),
+                      borderRadius: 16,
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                      paddingHorizontal: space(3),
+                      minHeight: 52,
+                    }}
                   >
-                    <Text
+                    <Label muted>{t("Rep", "Reps")}</Label>
+                    <Switch
+                      accessibilityLabel={t(
+                        "Registrar por tiempo",
+                        "Track by time",
+                      )}
+                      value={metric === "seconds"}
+                      trackColor={{ true: colors.primary, false: colors.border }}
+                      onValueChange={(checked) => {
+                        const next = checked ? "seconds" : "reps";
+                        change((draft) => {
+                          const target = draft.workout?.entries[index];
+                          if (target) switchEntryMetric(target, metric, next);
+                          draft.settings.exerciseMetrics = {
+                            ...draft.settings.exerciseMetrics,
+                            [entry.id]: next,
+                          };
+                        });
+                      }}
+                    />
+                    <Label muted>{t("Temp", "Time")}</Label>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row", gap: space(2) }}>
+                  <Label muted style={{ width: 44, textAlign: "center" }}>
+                    {t("Serie", "Set")}
+                  </Label>
+                  <Label muted style={{ flex: 1.3, textAlign: "center" }}>
+                    {t("Anterior", "Previous")}
+                  </Label>
+                  <Label muted style={{ flex: 1, textAlign: "center" }}>
+                    {unit}
+                  </Label>
+                  <Label muted style={{ flex: 1, textAlign: "center" }}>
+                    {metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")}
+                  </Label>
+                  <Label muted style={{ width: 44, textAlign: "center" }}>
+                    {t("Tipo", "Type")}
+                  </Label>
+                </View>
+                {entry.sets.map((set, number) => {
+                  const old = previous[number];
+                  const type =
+                    types.find((item) => item.id === (set.type ?? "normal")) ??
+                    types[0];
+                  const record = records[number]?.length;
+                  return (
+                    <View
+                      key={number}
                       style={{
-                        color: record ? colors.warning : colors.accent,
-                        fontWeight: "800",
+                        flexDirection: "row",
+                        gap: space(2),
+                        alignItems: "center",
                       }}
                     >
-                      {record
-                        ? "🏆"
-                        : set.type && set.type !== "normal"
-                          ? type?.letter
-                          : setNumber(entry.sets, number)}
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={`${t("Usar datos anteriores", "Use previous values")} ${number + 1}`}
-                    disabled={!old}
-                    style={{ flex: 1.2 }}
-                    onPress={() =>
-                      old &&
-                      editEntry(index, (draft) => {
-                        const current = draft.sets[number];
-                        if (!current) return;
-                        current.kg = old.kg;
-                        current.type = old.type ?? "normal";
-                        current[metric] = old.value;
-                        current.entered = true;
-                      })
-                    }
-                  >
-                    <Label muted>
-                      {old ? `${old.kg} × ${old.value}` : "—"}
-                    </Label>
-                  </Pressable>
-                  <NumberInput
-                    decimal
-                    value={set.kg}
-                    accessibilityLabel={`${t("Peso", "Weight")} ${number + 1}`}
-                    onCommit={(value) =>
-                      editEntry(index, (draft) => {
-                        const current = draft.sets[number];
-                        if (!current) return;
-                        current.kg = value;
-                        current.entered =
-                          value !== null || current[metric] != null;
-                      })
-                    }
-                  />
-                  <NumberInput
-                    value={set[metric]}
-                    accessibilityLabel={`${metric === "seconds" ? t("Segundos", "Seconds") : t("Repeticiones", "Repetitions")} ${number + 1}`}
-                    onCommit={(value) =>
-                      editEntry(index, (draft) => {
-                        const current = draft.sets[number];
-                        if (!current) return;
-                        current[metric] = value;
-                        current.entered = value !== null || current.kg != null;
-                      })
-                    }
-                  />
+                      <Text
+                        style={{
+                          width: 44,
+                          textAlign: "center",
+                          color: record ? colors.warning : colors.foreground,
+                          fontSize: 17,
+                          fontWeight: "800",
+                        }}
+                      >
+                        {record ? "🏆" : setNumber(entry.sets, number)}
+                      </Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={`${t("Usar datos anteriores", "Use previous values")} ${number + 1}`}
+                        disabled={!old}
+                        style={{
+                          flex: 1.3,
+                          minHeight: 52,
+                          borderRadius: 14,
+                          borderColor: colors.border,
+                          borderWidth: 1,
+                          backgroundColor: colors.secondary,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onPress={() =>
+                          old &&
+                          editEntry(index, (draft) => {
+                            const current = draft.sets[number];
+                            if (!current) return;
+                            current.kg = old.kg;
+                            current.type = old.type ?? "normal";
+                            current[metric] = old.value;
+                            current.entered = true;
+                          })
+                        }
+                      >
+                        {old ? (
+                          <>
+                            <Text
+                              style={{
+                                color: colors.foreground,
+                                fontWeight: "800",
+                              }}
+                            >
+                              {old.kg} {unit}
+                            </Text>
+                            <Text style={{ color: colors.muted, fontSize: 11 }}>
+                              × {old.value}{" "}
+                              {metric === "seconds"
+                                ? t("seg", "sec")
+                                : t("reps", "reps")}
+                            </Text>
+                          </>
+                        ) : (
+                          <Text style={{ color: colors.muted }}>—</Text>
+                        )}
+                      </Pressable>
+                      <NumberInput
+                        decimal
+                        value={set.kg}
+                        accessibilityLabel={`${t("Peso", "Weight")} ${number + 1}`}
+                        onCommit={(value) =>
+                          editEntry(index, (draft) => {
+                            const current = draft.sets[number];
+                            if (!current) return;
+                            current.kg = value;
+                            current.entered =
+                              value !== null || current[metric] != null;
+                          })
+                        }
+                      />
+                      <NumberInput
+                        value={set[metric]}
+                        accessibilityLabel={`${metric === "seconds" ? t("Segundos", "Seconds") : t("Repeticiones", "Repetitions")} ${number + 1}`}
+                        onCommit={(value) =>
+                          editEntry(index, (draft) => {
+                            const current = draft.sets[number];
+                            if (!current) return;
+                            current[metric] = value;
+                            current.entered =
+                              value !== null || current.kg != null;
+                          })
+                        }
+                      />
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={`${t("Tipo de serie", "Set type")} ${number + 1}: ${type?.name ?? ""}`}
+                        onPress={() => setTypeFor({ entry: index, set: number })}
+                        style={{
+                          width: 44,
+                          minHeight: 52,
+                          borderRadius: 14,
+                          borderColor: colors.border,
+                          borderWidth: 1,
+                          backgroundColor: colors.secondary,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: colors.success,
+                            fontSize: 17,
+                            fontWeight: "800",
+                          }}
+                        >
+                          {type?.letter ?? "N"}
+                        </Text>
+                      </Pressable>
+                    </View>
+                  );
+                })}
+                <View style={{ flexDirection: "row", gap: space(3) }}>
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      variant="secondary"
+                      disabled={entry.sets.length <= 1}
+                      onPress={() =>
+                        editEntry(index, (draft) => void draft.sets.pop())
+                      }
+                    >
+                      {t("− Eliminar última serie", "− Remove last set")}
+                    </Button>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      variant="secondary"
+                      onPress={() =>
+                        editEntry(
+                          index,
+                          (draft) => void draft.sets.push(blankSet(metric)),
+                        )
+                      }
+                    >
+                      {t("+ Agregar serie", "+ Add set")}
+                    </Button>
+                  </View>
                 </View>
-              );
-            })}
-            <View style={{ flexDirection: "row", gap: space(2) }}>
-              <View style={{ flex: 1 }}>
-                <Button
-                  variant="success"
-                  onPress={() =>
-                    editEntry(
-                      index,
-                      (draft) => void draft.sets.push(blankSet(metric)),
-                    )
-                  }
-                >
-                  {t("+ Serie", "+ Set")}
-                </Button>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Button
-                  variant="secondary"
-                  disabled={entry.sets.length <= 1}
-                  onPress={() =>
-                    editEntry(index, (draft) => void draft.sets.pop())
-                  }
-                >
-                  {t("− Serie", "− Set")}
-                </Button>
-              </View>
-            </View>
-            <Field
-              label={t("Nota", "Note")}
-              defaultValue={entry.note ?? ""}
-              maxLength={500}
-              onEndEditing={(event) => {
-                const note = event.nativeEvent.text.trim();
-                if (note !== (entry.note ?? ""))
-                  editEntry(index, (draft) => void (draft.note = note));
-              }}
-            />
-            <Button variant="secondary" onPress={() => setReplacing(index)}>
-              {t("Reemplazar ejercicio", "Replace exercise")}
-            </Button>
+                <Field
+                  label={t("Nota de este ejercicio", "Note for this exercise")}
+                  defaultValue={entry.note ?? ""}
+                  maxLength={500}
+                  multiline
+                  onEndEditing={(event) => {
+                    const note = event.nativeEvent.text.trim();
+                    if (note !== (entry.note ?? ""))
+                      editEntry(index, (draft) => void (draft.note = note));
+                  }}
+                />
+              </>
+            ) : null}
           </Card>
         );
       })}
-      <Button variant="success" onPress={() => setAdding(true)}>
-        {t("+ Agregar ejercicio", "+ Add exercise")}
-      </Button>
-      <Field
-        label={t("Comentario (opcional)", "Comment (optional)")}
-        value={comment}
-        onChangeText={setComment}
-        maxLength={2000}
-        multiline
-      />
-      <PhotoStrip photos={photos} onChange={setPhotos} />
-      <Button onPress={finish}>
-        {t("Guardar entrenamiento", "Save workout")}
+      <Button onPress={() => setFinishing(true)}>
+        {t("Finalizar entrenamiento", "Finish workout")}
       </Button>
       <Button variant="destructive" onPress={cancel}>
         {t("Cancelar entrenamiento", "Cancel workout")}
       </Button>
+      <Modal
+        visible={finishing}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setFinishing(false)}
+      >
+        <Pressable
+          onPress={() => setFinishing(false)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable onPress={() => undefined}>
+            <Card>
+              <Text
+                accessibilityRole="header"
+                style={{
+                  color: colors.foreground,
+                  fontSize: 20,
+                  fontWeight: "800",
+                }}
+              >
+                {t("Finalizar entrenamiento", "Finish workout")}
+              </Text>
+              <Field
+                label={t("Comentario (opcional)", "Comment (optional)")}
+                value={comment}
+                onChangeText={setComment}
+                maxLength={2000}
+                multiline
+              />
+              <PhotoStrip photos={photos} onChange={setPhotos} />
+              <Button
+                onPress={() => {
+                  setFinishing(false);
+                  finish();
+                }}
+              >
+                {t("Guardar entrenamiento", "Save workout")}
+              </Button>
+              <Button variant="ghost" onPress={() => setFinishing(false)}>
+                {t("Seguir entrenando", "Keep training")}
+              </Button>
+            </Card>
+          </Pressable>
+        </Pressable>
+      </Modal>
       <Modal
         visible={typeFor !== null}
         transparent

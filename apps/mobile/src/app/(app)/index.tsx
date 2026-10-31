@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import {
+  findExercise,
   localDateKey,
   sessionsOnDay,
   startWorkout,
@@ -15,6 +16,7 @@ import { ReadinessCheck } from "@/components/readiness";
 import { Button, Card, Label, Screen } from "@/components/ui";
 import { RoutinesSection } from "@/app/(app)/routines";
 import { useAccount, useSnapshot } from "@/state/account";
+import { translate } from "@fitty/core/data/translations";
 import { colors, space } from "@/theme";
 
 function Tile({
@@ -67,24 +69,75 @@ export default function Home() {
     if (change((draft) => startWorkout(draft, rid, did)))
       router.push("/workout");
   };
-  const routine =
-    snapshot.routines.find((item) => item.id === snapshot.selected) ??
-    snapshot.routines[0];
+  const routine = snapshot.routines.find(
+    (item) => item.id === snapshot.selected,
+  );
+  const activeRoutine = snapshot.routines.find(
+    (item) => item.id === snapshot.workout?.rid,
+  );
+  const activeDay = activeRoutine?.days.find(
+    (item) => item.id === snapshot.workout?.did,
+  );
   const sessions = day ? sessionsOnDay(snapshot.sessions, day) : [];
   return (
     <Screen>
       <Notice />
-      <Button
-        onPress={() => {
-          console.log("TAP start", Boolean(snapshot.workout));
-          if (snapshot.workout) router.navigate("/workout");
-          else setPicking(true);
-        }}
-      >
-        {snapshot.workout
-          ? t("Continuar entrenamiento", "Continue workout")
-          : t("Iniciar entrenamiento", "Start workout")}
-      </Button>
+      {snapshot.workout ? (
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: space(3),
+            borderRadius: 24,
+            borderColor: "#2b6a8f",
+            borderLeftWidth: 4,
+            borderLeftColor: colors.primary,
+            borderWidth: 1,
+            backgroundColor: "#10283a",
+            padding: space(4),
+          }}
+        >
+          <View style={{ flex: 1, gap: 4 }}>
+            <Text
+              style={{
+                color: colors.primary,
+                fontSize: 11,
+                fontWeight: "800",
+                letterSpacing: 1.2,
+                textTransform: "uppercase",
+              }}
+            >
+              ● {t("Entrenamiento en curso", "Workout in progress")}
+            </Text>
+            <Text
+              style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}
+            >
+              {activeDay?.name ?? t("Entrenamiento", "Workout")}
+            </Text>
+            <Label muted>
+              {activeRoutine?.name} ·{" "}
+              {(() => {
+                const current = findExercise(
+                  snapshot,
+                  snapshot.workout.entries[snapshot.workout.index]?.id ?? "",
+                );
+                return current
+                  ? translate(locale, current.name, current.name)
+                  : "";
+              })()}
+            </Label>
+          </View>
+          <View style={{ minWidth: 112 }}>
+            <Button onPress={() => router.navigate("/workout")}>
+              {t("Continuar", "Continue")}
+            </Button>
+          </View>
+        </View>
+      ) : (
+        <Button onPress={() => setPicking(true)}>
+          {t("Iniciar entrenamiento", "Start workout")}
+        </Button>
+      )}
       <RoutinesSection />
       <Card>
         <Calendar selected={day ?? localDateKey(new Date())} onSelect={setDay} />
@@ -93,18 +146,12 @@ export default function Home() {
         <Tile
           label={t("Biblioteca", "Library")}
           icon={{ ios: "books.vertical", android: "library_books" }}
-          onPress={() => {
-            console.log("TAP library");
-            router.navigate("/library");
-          }}
+          onPress={() => router.navigate("/library")}
         />
         <Tile
           label={t("Progreso", "Progress")}
           icon={{ ios: "chart.line.uptrend.xyaxis", android: "show_chart" }}
-          onPress={() => {
-            console.log("TAP progress");
-            router.navigate("/progress");
-          }}
+          onPress={() => router.navigate("/progress")}
         />
       </View>
       <Modal
@@ -132,7 +179,7 @@ export default function Home() {
                   fontWeight: "800",
                 }}
               >
-                {t("¿Qué día entrenás?", "Which day are you training?")}
+                {t("Elegir día para entrenar", "Choose training day")}
               </Text>
               {routine ? (
                 routine.days.map((item) => (
@@ -147,12 +194,15 @@ export default function Home() {
                         : start(routine.id, item.id)
                     }
                   >
-                    {`${item.name} (${item.items.length})`}
+                    {`${routine.name} · ${item.name}`}
                   </Button>
                 ))
               ) : (
                 <Label muted>
-                  {t("Todavía no tenés rutinas.", "You don't have routines yet.")}
+                  {t(
+                    "Activá una rutina para elegir un día de entrenamiento.",
+                    "Activate a routine to choose a training day.",
+                  )}
                 </Label>
               )}
               <Button variant="ghost" onPress={() => setPicking(false)}>
