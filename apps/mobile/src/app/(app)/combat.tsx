@@ -38,7 +38,7 @@ function signal(kind: CombatSignal) {
   else Vibration.vibrate([0, 300, 150, 300, 150, 600]);
 }
 
-export default function Combat() {
+export function CombatPanel() {
   const snapshot = useSnapshot();
   const { change, t } = useAccount();
   const router = useRouter();
@@ -70,11 +70,7 @@ export default function Combat() {
           ? t("Descanso", "Rest")
           : t("Terminado", "Finished");
   return (
-    <Screen>
-      <Button variant="ghost" onPress={() => router.back()}>
-        {`‹ ${t("Volver", "Back")}`}
-      </Button>
-      <Title>{t("Reloj de combate", "Combat clock")}</Title>
+    <>
       <Card>
         {state.running ? <KeepAwake /> : null}
         <Label muted style={{ textAlign: "center" }}>
@@ -169,6 +165,19 @@ export default function Combat() {
           onChange={(prep) => !state.running && configure({ ...config, prep })}
         />
       </Card>
+    </>
+  );
+}
+
+export default function Combat() {
+  const router = useRouter();
+  const { t } = useAccount();
+  return (
+    <Screen>
+      <Button variant="ghost" onPress={() => router.back()}>
+        {`‹ ${t("Volver", "Back")}`}
+      </Button>
+      <CombatPanel />
     </Screen>
   );
 }

@@ -56,7 +56,7 @@ function RouteShape({ points }: { points: Point[] }) {
  * Foreground GPS route recording. Unfinished routes stay in memory only;
  * a finished route is saved through the normal account change/sync path.
  */
-export default function Tracking() {
+export function TrackingPanel() {
   const snapshot = useSnapshot();
   const { change, notify, t } = useAccount();
   const router = useRouter();
@@ -173,11 +173,7 @@ export default function Tracking() {
     .slice(0, 20);
   const elapsed = track ? Math.floor((now - track.started) / 1000) : 0;
   return (
-    <Screen>
-      <Button variant="ghost" onPress={() => router.back()}>
-        {`‹ ${t("Volver", "Back")}`}
-      </Button>
-      <Title>{t("Recorrido GPS", "GPS route")}</Title>
+    <>
       <Notice />
       <Card>
         {track ? <KeepAwake /> : null}
@@ -259,6 +255,19 @@ export default function Tracking() {
           <RouteShape points={session.points} />
         </Card>
       ))}
+    </>
+  );
+}
+
+export default function Tracking() {
+  const router = useRouter();
+  const { t } = useAccount();
+  return (
+    <Screen>
+      <Button variant="ghost" onPress={() => router.back()}>
+        {`‹ ${t("Volver", "Back")}`}
+      </Button>
+      <TrackingPanel />
     </Screen>
   );
 }
