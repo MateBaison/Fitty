@@ -27,7 +27,14 @@ async function completeOAuth(
 ) {
   // fitty://auth-callback in builds; exp://…/--/auth-callback in Expo Go.
   const redirectTo = Linking.createURL("auth-callback");
-  const options = { redirectTo, skipBrowserRedirect: true };
+  // Google reuses the last signed-in account of the system browser unless it is told to ask.
+  const options = {
+    redirectTo,
+    skipBrowserRedirect: true,
+    ...(provider === "google" && {
+      queryParams: { prompt: "select_account" },
+    }),
+  };
   const { data, error } =
     purpose === "link"
       ? await supabase.auth.linkIdentity({ provider, options })
