@@ -21,7 +21,7 @@ export default async function LoginPage() {
             el acceso. No se ha conectado ninguna cuenta.
           </p>
         )}
-        <p className="mt-6 text-sm">
+        <p className="mt-6 text-center text-sm">
           <PrivacyLink />
         </p>
       </main>
