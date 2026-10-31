@@ -22,13 +22,18 @@ export function Chip({
       style={{
         minHeight: 40,
         paddingHorizontal: space(3.5),
-        borderRadius: 999,
+        borderRadius: 14,
         justifyContent: "center",
         backgroundColor: active ? colors.primary : colors.secondary,
+        borderColor: active ? colors.primary : colors.border,
+        borderWidth: 1,
       }}
     >
       <Text
-        style={{ color: active ? colors.primaryForeground : colors.foreground }}
+        style={{
+          color: active ? colors.primaryForeground : colors.foreground,
+          fontWeight: "700",
+        }}
       >
         {label}
       </Text>

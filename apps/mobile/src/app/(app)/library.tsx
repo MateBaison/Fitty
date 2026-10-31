@@ -22,10 +22,10 @@ import { catalogFor } from "@fitty/core/domain/workouts";
 import { Chip } from "@/components/chip";
 import { CustomExerciseForm } from "@/components/custom-exercise-form";
 import { Notice } from "@/components/notice";
-import { Button, Label, styles, Title } from "@/components/ui";
+import { Button, Glow, Label, styles, Title } from "@/components/ui";
 import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
-import { colors, radius, space } from "@/theme";
+import { colors, space } from "@/theme";
 
 export default function Library() {
   const snapshot = useSnapshot();
@@ -51,6 +51,7 @@ export default function Library() {
   }, [snapshot, query, group, equipment, language]);
   return (
     <SafeAreaView style={styles.screen} edges={["top", "left", "right"]}>
+      <Glow />
       <FlatList
         data={exercises}
         keyExtractor={(exercise) => exercise.id}
@@ -60,7 +61,7 @@ export default function Library() {
           <View style={{ gap: space(3) }}>
             <Title>{t("Ejercicios", "Exercises")}</Title>
             <Notice />
-            <Button variant="secondary" onPress={() => setCreating(true)}>
+            <Button variant="success" onPress={() => setCreating(true)}>
               {t("+ Crear ejercicio", "+ Create exercise")}
             </Button>
             <TextInput
@@ -115,7 +116,9 @@ export default function Library() {
               onPress={() => setOpen(expanded ? null : item.id)}
               style={{
                 backgroundColor: colors.card,
-                borderRadius: radius,
+                borderColor: colors.border,
+                borderWidth: 1,
+                borderRadius: 24,
                 overflow: "hidden",
                 marginBottom: space(3),
               }}
@@ -143,7 +146,7 @@ export default function Library() {
                     style={{
                       color: colors.foreground,
                       fontSize: 17,
-                      fontWeight: "700",
+                      fontWeight: "800",
                       flex: 1,
                     }}
                   >
@@ -156,7 +159,17 @@ export default function Library() {
                         ? t("Quitar de favoritos", "Remove from favorites")
                         : t("Agregar a favoritos", "Add to favorites")
                     }
-                    hitSlop={12}
+                    hitSlop={8}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 12,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: colors.secondary,
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                    }}
                     onPress={() =>
                       change((draft) => {
                         draft.favorites = favorite

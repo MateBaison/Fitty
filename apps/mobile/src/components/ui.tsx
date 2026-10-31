@@ -15,7 +15,7 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 import { colors, radius, space } from "@/theme";
 
 /** Blue light fading from the top-right corner, like the web body background. */
-function Glow() {
+export function Glow() {
   return (
     <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
       <Defs>
