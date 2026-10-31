@@ -20,7 +20,11 @@ export function apiError(error: string, code: ApiErrorCode, status: number) {
  */
 export async function bearerAccount(
   request: Request,
-): Promise<{ client: SupabaseClient; userId: string } | null> {
+): Promise<{
+  client: SupabaseClient;
+  userId: string;
+  email: string | undefined;
+} | null> {
   const match = /^Bearer ([A-Za-z0-9._-]{20,4096})$/.exec(
     request.headers.get("authorization") ?? "",
   );
@@ -32,5 +36,9 @@ export async function bearerAccount(
   });
   const { data, error } = await client.auth.getUser(match[1]);
   if (error || !data.user) return null;
-  return { client, userId: z.uuid().parse(data.user.id) };
+  return {
+    client,
+    userId: z.uuid().parse(data.user.id),
+    email: data.user.email ?? undefined,
+  };
 }

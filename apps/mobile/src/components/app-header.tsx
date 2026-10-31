@@ -1,8 +1,9 @@
 import { usePathname } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useEffect, useState } from "react";
-import { Image, Linking, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SupportForm } from "@/components/support-form";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -14,6 +15,7 @@ export function AppHeader() {
   const { t } = useAccount();
   const locale = snapshot.settings.language ?? "es";
   const [now, setNow] = useState(() => new Date());
+  const [support, setSupport] = useState(false);
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 30_000);
     return () => clearInterval(timer);
@@ -100,7 +102,7 @@ export function AppHeader() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t("Soporte", "Support")}
-          onPress={() => void Linking.openURL("mailto:soporte@fitty.uy")}
+          onPress={() => setSupport(true)}
           style={{
             width: 44,
             height: 44,
@@ -119,6 +121,7 @@ export function AppHeader() {
           />
         </Pressable>
       </View>
+      <SupportForm visible={support} onClose={() => setSupport(false)} />
     </View>
   );
 }
