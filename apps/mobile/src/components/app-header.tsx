@@ -52,7 +52,7 @@ export function AppHeader() {
           justifyContent: "space-between",
         }}
       >
-        <View style={{ gap: 2 }}>
+        <View style={{ gap: 2, alignItems: "center" }}>
           <Image
             source={require("@/assets/images/fitty-wordmark.png")}
             style={{ width: 62, height: 30 }}

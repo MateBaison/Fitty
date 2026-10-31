@@ -79,6 +79,7 @@ export default function Library() {
   const [group, setGroup] = useState<Group>("Todos");
   const [equipment, setEquipment] = useState<EquipmentFilter>("Todos");
   const [filtering, setFiltering] = useState(false);
+  const [zoning, setZoning] = useState(false);
   const [selected, setSelected] = useState<CatalogExercise | null>(null);
   const [adding, setAdding] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
@@ -132,18 +133,28 @@ export default function Library() {
               accessibilityLabel={t("Buscar ejercicios", "Search exercises")}
               style={styles.input}
             />
-            <View
-              style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setZoning(true)}
+              style={{
+                minHeight: 52,
+                borderRadius: 16,
+                paddingHorizontal: space(4),
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                backgroundColor: colors.secondary,
+                borderColor: colors.border,
+                borderWidth: 1,
+              }}
             >
-              {(["Favoritos", "Todos", ...muscleGroups] as const).map((name) => (
-                <ChipButton
-                  key={name}
-                  label={groupName(name)}
-                  active={group === name}
-                  onPress={() => setGroup(name)}
-                />
-              ))}
-            </View>
+              <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 16 }}>
+                {t("Seleccionar zona", "Select area")}
+              </Text>
+              <Text style={{ color: colors.accent, fontWeight: "800" }}>
+                {groupName(group)} ▾
+              </Text>
+            </Pressable>
             {group !== "Favoritos" ? (
               <Card style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
@@ -319,6 +330,106 @@ export default function Library() {
           </Pressable>
         )}
       />
+      <Modal
+        visible={zoning}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setZoning(false)}
+      >
+        <Pressable
+          onPress={() => setZoning(false)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable onPress={() => undefined} style={{ maxHeight: "88%" }}>
+            <Card>
+              <Text
+                accessibilityRole="header"
+                style={{
+                  color: colors.foreground,
+                  fontSize: 20,
+                  fontWeight: "800",
+                  textAlign: "center",
+                }}
+              >
+                {t("Seleccionar zona", "Select area")}
+              </Text>
+              <ScrollView contentContainerStyle={{ gap: space(2) }}>
+                {(["Favoritos", "Todos", ...muscleGroups] as const).map(
+                  (name) => {
+                    const active = group === name;
+                    return (
+                      <Pressable
+                        key={name}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: active }}
+                        onPress={() => {
+                          setGroup(name);
+                          setZoning(false);
+                        }}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: space(3),
+                          padding: space(2),
+                          borderRadius: 16,
+                          backgroundColor: active ? "#173a52" : colors.secondary,
+                          borderColor: active ? colors.primary : colors.border,
+                          borderWidth: 1,
+                        }}
+                      >
+                        {name === "Favoritos" ? (
+                          <View
+                            style={{
+                              width: 56,
+                              height: 70,
+                              borderRadius: 10,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "#0d1016",
+                            }}
+                          >
+                            <Text style={{ color: colors.warning, fontSize: 28 }}>
+                              ★
+                            </Text>
+                          </View>
+                        ) : (
+                          <Image
+                            source={`${env.apiUrl}/assets/${name === "Todos" ? fullBodyImage : muscleImages[name]}`}
+                            style={{
+                              width: 56,
+                              height: 70,
+                              borderRadius: 10,
+                              backgroundColor: "#0d1016",
+                            }}
+                            contentFit="cover"
+                            cachePolicy="disk"
+                            accessibilityIgnoresInvertColors
+                          />
+                        )}
+                        <Text
+                          style={{
+                            flex: 1,
+                            color: colors.foreground,
+                            fontSize: 16,
+                            fontWeight: "800",
+                          }}
+                        >
+                          {groupName(name).replace("★ ", "")}
+                        </Text>
+                      </Pressable>
+                    );
+                  },
+                )}
+              </ScrollView>
+            </Card>
+          </Pressable>
+        </Pressable>
+      </Modal>
       <Modal
         visible={selected !== null}
         transparent

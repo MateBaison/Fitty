@@ -30,16 +30,18 @@ import {
   setNumber,
   switchEntryMetric,
   type Entry,
+  type Extras,
 } from "@fitty/core/domain/workouts";
 import { Chip } from "@/components/chip";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
-import { PhotoStrip } from "@/components/photo-strip";
+import { SessionExtras } from "@/components/session-extras";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
 import { env } from "@/lib/env";
 import { makeId } from "@/lib/id";
+import { playRestDone } from "@/lib/sound";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, radius, space } from "@/theme";
 
@@ -97,6 +99,7 @@ function RestBanner({ end, onStop }: { end: number; onStop: () => void }) {
     if (left === 0 && !done.current) {
       done.current = true;
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      playRestDone();
       onStop();
     }
   }, [left, onStop]);
@@ -138,8 +141,7 @@ export default function Workout() {
   const snapshot = useSnapshot();
   const { change, t, notify } = useAccount();
   const router = useRouter();
-  const [comment, setComment] = useState("");
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [extras, setExtras] = useState<Extras>(emptyExtras);
   const [restEnd, setRestEnd] = useState(0);
   const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(
     null,
@@ -180,7 +182,7 @@ export default function Workout() {
             day: day?.name ?? t("Entrenamiento", "Workout"),
           },
           new Date().toISOString(),
-          { ...emptyExtras, comment: comment.trim(), photos },
+          { ...extras, comment: extras.comment.trim() },
         );
         record.duration = Math.max(
           0,
@@ -406,11 +408,10 @@ export default function Workout() {
                 >
                   <View style={{ flex: 1 }}>
                     <Button
-                      fit
                       variant="secondary"
                       onPress={() => setReplacing(index)}
                     >
-                      {t("Reemplazar ejercicio", "Replace exercise")}
+                      {t("Reemplazar\nejercicio", "Replace\nexercise")}
                     </Button>
                   </View>
                   <View
@@ -459,7 +460,7 @@ export default function Workout() {
                   </View>
                 </View>
                 <View style={{ flexDirection: "row", gap: space(2) }}>
-                  <Label muted style={{ width: 44, textAlign: "center" }}>
+                  <Label muted style={{ width: 72, textAlign: "center" }}>
                     {t("Serie", "Set")}
                   </Label>
                   <Label muted style={{ flex: 1.3, textAlign: "center" }}>
@@ -490,7 +491,15 @@ export default function Workout() {
                         alignItems: "center",
                       }}
                     >
-                      <View style={{ width: 44, alignItems: "center", gap: 4 }}>
+                      <View
+                        style={{
+                          width: 72,
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 6,
+                        }}
+                      >
                         <Text
                           style={{
                             color: record ? colors.warning : colors.foreground,
@@ -716,14 +725,12 @@ export default function Workout() {
               >
                 {t("Finalizar entrenamiento", "Finish workout")}
               </Text>
-              <Field
-                label={t("Comentario (opcional)", "Comment (optional)")}
-                value={comment}
-                onChangeText={setComment}
-                maxLength={2000}
-                multiline
-              />
-              <PhotoStrip photos={photos} onChange={setPhotos} />
+              <ScrollView
+                style={{ maxHeight: 460 }}
+                keyboardShouldPersistTaps="handled"
+              >
+                <SessionExtras value={extras} onChange={setExtras} />
+              </ScrollView>
               <Button
                 onPress={() => {
                   setFinishing(false);
@@ -764,9 +771,37 @@ export default function Workout() {
                     justifyContent: "space-between",
                   }}
                 >
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t("Volver", "Back")}
+                    onPress={() => setTypeFor(null)}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 18,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: colors.secondary,
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: colors.accent,
+                        fontSize: 22,
+                        fontWeight: "800",
+                        lineHeight: 26,
+                      }}
+                    >
+                      ‹
+                    </Text>
+                  </Pressable>
                   <Text
                     accessibilityRole="header"
                     style={{
+                      flex: 1,
+                      textAlign: "center",
                       color: colors.foreground,
                       fontSize: 20,
                       fontWeight: "800",
