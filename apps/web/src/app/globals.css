@@ -3188,14 +3188,24 @@ input[type="range"] {
   background: color-mix(in srgb, var(--secondary) 70%, black 30%);
 }
 .onboarding-preview-remove {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
   flex: none;
-  border: 1px solid #dc2626;
-  border-radius: 10px;
-  color: #f87171;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #dc2626;
+  color: #fff;
 }
 .onboarding-preview-remove:hover {
-  background: color-mix(in srgb, #dc2626 18%, transparent);
-  color: #fca5a5;
+  background: #b91c1c;
+  color: #fff;
+}
+.onboarding-preview-remove svg {
+  width: 18px;
+  height: 18px;
 }
 .onboarding-preview-exercises li,
 .onboarding-preview-add {
@@ -3207,6 +3217,12 @@ input[type="range"] {
 .onboarding-preview-exercises li > span {
   min-width: 0;
   font-size: 0.9rem;
+}
+.onboarding-preview-exercise-card > span {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  line-height: 1.25;
 }
 .onboarding-preview-exercise-card {
   display: flex;

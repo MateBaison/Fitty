@@ -12,7 +12,7 @@ import {
 } from "@fitty/core/domain/training-setup";
 import { PersonalForm } from "@/features/profile/personal-form";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
@@ -542,7 +542,7 @@ export function OnboardingFlow() {
                               )
                             }
                           >
-                            {t("Quitar", "Remove")}
+                            <Trash2 aria-hidden="true" />
                           </Button>
                         </li>
                       ))}
