@@ -3,7 +3,6 @@ import { SymbolView } from "expo-symbols";
 import { useEffect, useState } from "react";
 import { Image, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { SignOut } from "@/components/sign-out";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -42,16 +41,11 @@ export function AppHeader() {
         backgroundColor: colors.background,
         borderBottomColor: colors.border,
         borderBottomWidth: 1,
-        gap: 2,
+        flexDirection: "row",
+        alignItems: "center",
       }}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={{ flex: 1, alignItems: "flex-start" }}>
         <View style={{ gap: 2, alignItems: "center" }}>
           <Image
             source={require("@/assets/images/fitty-wordmark.png")}
@@ -70,54 +64,61 @@ export function AppHeader() {
             GYM TRACKER
           </Text>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          <View style={{ alignItems: "flex-end" }}>
-            <Text style={{ color: colors.muted, fontSize: 12 }}>
-              {now.toLocaleDateString(locale, { day: "numeric", month: "short" })}
-            </Text>
-            <Text style={{ color: colors.muted, fontSize: 12 }}>
-              {now.toLocaleTimeString(locale, {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </Text>
-          </View>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("Soporte", "Support")}
-            onPress={() => void Linking.openURL("mailto:soporte@fitty.uy")}
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: colors.secondary,
-              borderColor: colors.border,
-              borderWidth: 1,
-            }}
-          >
-            <SymbolView
-              name={{ ios: "headphones", android: "support_agent" }}
-              tintColor={colors.foreground}
-              size={20}
-            />
-          </Pressable>
-          <SignOut compact />
-        </View>
       </View>
       <Text
         accessibilityRole="header"
+        numberOfLines={1}
         style={{
           color: colors.foreground,
-          fontSize: 15,
+          fontSize: 16,
           fontWeight: "800",
           textAlign: "center",
-          marginTop: 4,
         }}
       >
         {title}
       </Text>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: 10,
+        }}
+      >
+        <View style={{ alignItems: "flex-end" }}>
+          <Text style={{ color: colors.muted, fontSize: 12 }}>
+            {now.toLocaleDateString(locale, { day: "numeric", month: "short" })}
+          </Text>
+          <Text style={{ color: colors.muted, fontSize: 12 }}>
+            {now.toLocaleTimeString(locale, {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Text>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("Soporte", "Support")}
+          onPress={() => void Linking.openURL("mailto:soporte@fitty.uy")}
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: colors.secondary,
+            borderColor: colors.border,
+            borderWidth: 1,
+          }}
+        >
+          <SymbolView
+            name={{ ios: "headphones", android: "support_agent" }}
+            tintColor={colors.foreground}
+            size={20}
+          />
+        </Pressable>
+      </View>
     </View>
   );
 }
