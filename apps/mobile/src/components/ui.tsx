@@ -57,9 +57,18 @@ export function Screen({
   );
 }
 
-export function Title({ children }: { children: ReactNode }) {
+export function Title({
+  children,
+  center,
+}: {
+  children: ReactNode;
+  center?: boolean;
+}) {
   return (
-    <Text accessibilityRole="header" style={styles.title}>
+    <Text
+      accessibilityRole="header"
+      style={[styles.title, center && { textAlign: "center" }]}
+    >
       {children}
     </Text>
   );

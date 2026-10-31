@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Linking,
   Platform,
+  Pressable,
   View,
 } from "react-native";
 import { translate } from "@fitty/core/data/translations";
@@ -100,8 +101,8 @@ export default function SignIn() {
             accessibilityIgnoresInvertColors
           />
           <Card>
-            <Title>{t("Iniciar sesión", "Sign in")}</Title>
-            <Label muted>
+            <Title center>{t("Iniciar sesión", "Sign in")}</Title>
+            <Label muted style={{ textAlign: "center" }}>
               {t(
                 "Tu entrenamiento, tus rutinas y tu progreso.",
                 "Your training, your routines and your progress.",
@@ -175,16 +176,21 @@ export default function SignIn() {
               <Label style={{ color: colors.destructive }}>{error}</Label>
             ) : null}
           </Card>
-          <Button
-            variant="ghost"
+          <Pressable
+            accessibilityRole="link"
             onPress={() =>
               void Linking.openURL(
                 `https://fitty.uy/privacidad?lang=${language}`,
               )
             }
           >
-            {t("Política de privacidad", "Privacy policy")}
-          </Button>
+            <Label muted style={{ textAlign: "center" }}>
+              {t(
+                "Al continuar aceptás la Política de privacidad.",
+                "By continuing you accept the Privacy policy.",
+              )}
+            </Label>
+          </Pressable>
         </Screen>
       </KeyboardAvoidingView>
       <LanguageMenu
