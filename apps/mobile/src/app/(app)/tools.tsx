@@ -34,16 +34,29 @@ function KeepAwake() {
 }
 const num = (value: string) => Number(value.replace(",", "."));
 
-function Stopwatch() {
-  const { t } = useAccount();
-  const [start, setStart] = useState<number | null>(null);
-  const [saved, setSaved] = useState(0);
-  const now = useNow(start !== null);
-  const elapsed = saved + (start === null ? 0 : now - start);
+function SectionTitle({ children }: { children: string }) {
   return (
-    <Card>
-      {start !== null ? <KeepAwake /> : null}
-      <Label muted>{t("Cronómetro", "Stopwatch")}</Label>
+    <Text
+      accessibilityRole="header"
+      style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}
+    >
+      {children}
+    </Text>
+  );
+}
+
+/** Large digits in an inset panel, shared by the stopwatch and the timer. */
+function Digits({ value }: { value: string }) {
+  return (
+    <View
+      style={{
+        backgroundColor: "#0e1117",
+        borderColor: colors.border,
+        borderWidth: 1,
+        borderRadius: 18,
+        paddingVertical: space(4),
+      }}
+    >
       <Text
         accessibilityRole="timer"
         style={{
@@ -54,11 +67,27 @@ function Stopwatch() {
           fontVariant: ["tabular-nums"],
         }}
       >
-        {clock(elapsed)}
+        {value}
       </Text>
+    </View>
+  );
+}
+
+function Stopwatch() {
+  const { t } = useAccount();
+  const [start, setStart] = useState<number | null>(null);
+  const [saved, setSaved] = useState(0);
+  const now = useNow(start !== null);
+  const elapsed = saved + (start === null ? 0 : now - start);
+  return (
+    <Card>
+      {start !== null ? <KeepAwake /> : null}
+      <SectionTitle>{t("Cronómetro", "Stopwatch")}</SectionTitle>
+      <Digits value={clock(elapsed)} />
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
           <Button
+            variant={start === null ? "success" : "primary"}
             onPress={() => {
               if (start === null) setStart(Date.now());
               else {
@@ -106,19 +135,8 @@ function Timer() {
   return (
     <Card>
       {end !== null ? <KeepAwake /> : null}
-      <Label muted>{t("Temporizador", "Timer")}</Label>
-      <Text
-        accessibilityRole="timer"
-        style={{
-          color: colors.foreground,
-          fontSize: 56,
-          fontWeight: "800",
-          textAlign: "center",
-          fontVariant: ["tabular-nums"],
-        }}
-      >
-        {clock(left)}
-      </Text>
+      <SectionTitle>{t("Temporizador", "Timer")}</SectionTitle>
+      <Digits value={clock(left)} />
       <ChipGroup
         options={[30, 60, 90, 120, 180].map((value) => ({
           value,
@@ -131,6 +149,7 @@ function Timer() {
         }}
       />
       <Button
+        variant={end === null ? "success" : "destructive"}
         onPress={() => {
           notified.current = false;
           setEnd(end === null ? Date.now() + seconds * 1000 : null);
@@ -155,7 +174,7 @@ function OneRepMax() {
   }
   return (
     <Card>
-      <Label muted>{t("1RM estimado", "Estimated 1RM")}</Label>
+      <SectionTitle>{t("1RM estimado", "Estimated 1RM")}</SectionTitle>
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
           <Field
@@ -224,7 +243,7 @@ function Calories() {
   }
   return (
     <Card>
-      <Label muted>{t("Calorías y macros", "Calories and macros")}</Label>
+      <SectionTitle>{t("Calorías y macros", "Calories and macros")}</SectionTitle>
       <ChipGroup
         options={[
           { value: "male", label: t("Fórmula masculina", "Male formula") },
