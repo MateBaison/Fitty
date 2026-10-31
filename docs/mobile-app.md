@@ -30,3 +30,17 @@ Before App Store submission, consider native Sign in with Apple (`expo-apple-aut
 
 - Account snapshots travel through a Vercel Function, which rejects request bodies above 4.5 MB; very photo-heavy accounts get a clear "too large" error on mobile until photos move to storage.
 - GPS routes record only while the app is in the foreground.
+
+## Test and store builds (EAS)
+
+`apps/mobile/eas.json` defines three profiles; the public Supabase/API values are baked in (no secrets). Run from `apps/mobile` after `eas login` with the Expo account that owns the project:
+
+```sh
+pnpm dlx eas-cli@latest init                                   # once: links the project and writes the project id into app.json
+pnpm dlx eas-cli@latest build --profile preview --platform ios      # installable on registered iPhones / TestFlight
+pnpm dlx eas-cli@latest build --profile preview --platform android  # APK for testers
+pnpm dlx eas-cli@latest build --profile production --platform all   # store builds
+pnpm dlx eas-cli@latest submit --profile production --platform ios  # upload to App Store Connect / TestFlight
+```
+
+Native Sign in with Apple only works in these real builds (bundle ID `uy.fitty.app` must be in Supabase's Apple "Client IDs"); Expo Go falls back to the browser flow. Google Play requires 12 testers for 14 consecutive days before production access on new personal accounts.
