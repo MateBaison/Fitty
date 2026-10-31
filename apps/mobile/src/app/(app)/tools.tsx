@@ -310,7 +310,7 @@ function Calculators() {
       : section === "macros"
         ? t("Calculadora de macros", "Macro calculator")
         : section === "maximum"
-          ? t("Una repetición máxima", "One-rep max")
+          ? t("1RM", "1RM")
           : t("Estimación de objetivo de peso", "Weight goal estimate");
   const bodyFields = (
     <>
@@ -351,7 +351,7 @@ function Calculators() {
         options={[
           ["calories", t("Calorías", "Calories")],
           ["macros", "Macros"],
-          ["maximum", t("Una repetición máxima", "One-rep max")],
+          ["maximum", t("1RM", "1RM")],
           ["goal", t("Objetivo de peso", "Weight goal")],
         ]}
         value={section}

@@ -567,6 +567,7 @@ export default function Profile() {
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card>
               <ScrollView
+ showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ gap: space(3) }}
                 keyboardShouldPersistTaps="handled"
               >

@@ -64,6 +64,7 @@ export function ExercisePicker({
     <Modal visible={visible} animationType="slide" onRequestClose={close}>
       <SafeAreaView style={styles.screen}>
         <FlatList
+ showsVerticalScrollIndicator={false}
           data={items}
           keyExtractor={(item) => item.id}
           keyboardShouldPersistTaps="handled"

@@ -61,6 +61,7 @@ export function Screen({
       {glow ? <Glow /> : null}
       {scroll ? (
         <ScrollView
+ showsVerticalScrollIndicator={false}
           style={glow ? { backgroundColor: "transparent" } : undefined}
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"

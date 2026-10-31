@@ -726,6 +726,7 @@ export default function Workout() {
                 {t("Finalizar entrenamiento", "Finish workout")}
               </Text>
               <ScrollView
+ showsVerticalScrollIndicator={false}
                 style={{ maxHeight: 460 }}
                 keyboardShouldPersistTaps="handled"
               >
@@ -763,7 +764,8 @@ export default function Workout() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card>
-              <ScrollView contentContainerStyle={{ gap: space(3) }}>
+              <ScrollView
+ showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
                 <View
                   style={{
                     flexDirection: "row",
@@ -940,7 +942,8 @@ export default function Workout() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card>
-              <ScrollView contentContainerStyle={{ gap: space(3) }}>
+              <ScrollView
+ showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
                 <Text
                   accessibilityRole="header"
                   style={{
@@ -1022,7 +1025,8 @@ export default function Workout() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
-              <ScrollView contentContainerStyle={{ gap: space(3) }}>
+              <ScrollView
+ showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
                 {imageFor ? (
                   <Image
                     source={`${env.apiUrl}${exerciseImage(imageFor, snapshot.profile.gender)}`}

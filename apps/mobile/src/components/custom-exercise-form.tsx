@@ -77,6 +77,7 @@ export function CustomExerciseForm({
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <ScrollView
+ showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.content}
             keyboardShouldPersistTaps="handled"
           >

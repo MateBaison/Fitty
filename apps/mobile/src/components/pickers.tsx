@@ -157,6 +157,7 @@ export function DateField({
         </View>
         {choosingYear ? (
           <FlatList
+ showsVerticalScrollIndicator={false}
             data={years}
             numColumns={4}
             style={{ maxHeight: 320 }}
@@ -307,6 +308,7 @@ export function CountryField({
           style={styles.input}
         />
         <FlatList
+ showsVerticalScrollIndicator={false}
           data={list}
           style={{ maxHeight: 380 }}
           keyboardShouldPersistTaps="handled"

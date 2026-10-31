@@ -738,7 +738,8 @@ export default function Progress() {
               <Text style={{ ...heading, textAlign: "center" }}>
                 {t("Elegí un ejercicio", "Choose an exercise")}
               </Text>
-              <ScrollView contentContainerStyle={{ gap: space(2) }}>
+              <ScrollView
+ showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }}>
                 {recorded.map((exercise) => (
                   <Button
                     key={exercise.id}

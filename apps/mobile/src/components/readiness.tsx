@@ -47,7 +47,8 @@ export function ReadinessCheck({
         }}
       >
         <Pressable onPress={() => undefined}>
-          <ScrollView contentContainerStyle={{ padding: space(4) }}>
+          <ScrollView
+ showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: space(4) }}>
             <Card>
               <Title>
                 {t("¿Cómo te sentís hoy?", "How do you feel today?")}

@@ -246,6 +246,7 @@ export function SupportForm({
         <Pressable onPress={() => undefined} style={{ maxHeight: "92%" }}>
           <Card>
             <ScrollView
+ showsVerticalScrollIndicator={false}
               contentContainerStyle={{ gap: space(3) }}
               keyboardShouldPersistTaps="handled"
               scrollEnabled={!resizing}

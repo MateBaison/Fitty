@@ -112,6 +112,7 @@ export default function Library() {
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Glow />
       <FlatList
+ showsVerticalScrollIndicator={false}
         data={exercises}
         numColumns={2}
         columnWrapperStyle={{ gap: space(3) }}
@@ -121,7 +122,6 @@ export default function Library() {
         ListHeaderComponent={
           <View style={{ gap: space(3) }}>
             <Notice />
-            <Label muted>{t("Buscar ejercicios", "Search exercises")}</Label>
             <TextInput
               value={query}
               onChangeText={setQuery}
@@ -135,28 +135,33 @@ export default function Library() {
             />
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={t("Seleccionar zona", "Select area")}
               onPress={() => setZoning(true)}
               style={{
-                minHeight: 52,
-                borderRadius: 16,
-                paddingHorizontal: space(4),
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: colors.secondary,
+                gap: space(3),
+                padding: space(4),
+                borderRadius: 24,
                 borderColor: colors.border,
                 borderWidth: 1,
+                backgroundColor: colors.card,
               }}
             >
-              <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 16 }}>
-                {t("Seleccionar zona", "Select area")}
-              </Text>
-              <Text style={{ color: colors.accent, fontWeight: "800" }}>
-                {groupName(group)} ▾
-              </Text>
-            </Pressable>
-            {group !== "Favoritos" ? (
-              <Card style={{ flexDirection: "row", alignItems: "center" }}>
+              {group === "Favoritos" ? (
+                <View
+                  style={{
+                    width: 104,
+                    height: 128,
+                    borderRadius: 14,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#0d1016",
+                  }}
+                >
+                  <Text style={{ color: colors.warning, fontSize: 44 }}>★</Text>
+                </View>
+              ) : (
                 <Image
                   source={`${env.apiUrl}/assets/${group === "Todos" ? fullBodyImage : muscleImages[group]}`}
                   style={{
@@ -168,45 +173,47 @@ export default function Library() {
                   contentFit="cover"
                   cachePolicy="disk"
                   accessibilityIgnoresInvertColors
-                  accessibilityLabel={groupName(group)}
                 />
-                <View style={{ flex: 1, gap: 4 }}>
-                  <Text
-                    style={{
-                      color: colors.primary,
-                      fontSize: 11,
-                      fontWeight: "800",
-                      letterSpacing: 1.2,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {group === "Todos"
-                      ? t("Cuerpo completo", "Whole body")
-                      : t("Zona principal", "Primary area")}
-                  </Text>
-                  <Text
-                    style={{
-                      color: colors.foreground,
-                      fontSize: 22,
-                      fontWeight: "800",
-                    }}
-                  >
-                    {groupName(group)}
-                  </Text>
-                  <Label muted>
-                    {group === "Todos"
+              )}
+              <View style={{ flex: 1, gap: 4 }}>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: 11,
+                    fontWeight: "800",
+                    letterSpacing: 1.2,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t("Seleccionar zona", "Select area")} ▾
+                </Text>
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 22,
+                    fontWeight: "800",
+                  }}
+                >
+                  {groupName(group).replace("★ ", "")}
+                </Text>
+                <Label muted>
+                  {group === "Todos"
+                    ? t(
+                        "Todos los ejercicios de la biblioteca.",
+                        "All exercises in the library.",
+                      )
+                    : group === "Favoritos"
                       ? t(
-                          "Todos los ejercicios de la biblioteca.",
-                          "All exercises in the library.",
+                          "Los ejercicios que guardaste como favoritos.",
+                          "The exercises you saved as favorites.",
                         )
                       : t(
                           "El naranja señala el grupo elegido.",
                           "Orange marks the selected muscle group.",
                         )}
-                  </Label>
-                </View>
-              </Card>
-            ) : null}
+                </Label>
+              </View>
+            </Pressable>
             <View
               style={{
                 flexDirection: "row",
@@ -358,7 +365,8 @@ export default function Library() {
               >
                 {t("Seleccionar zona", "Select area")}
               </Text>
-              <ScrollView contentContainerStyle={{ gap: space(2) }}>
+              <ScrollView
+ showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }}>
                 {(["Favoritos", "Todos", ...muscleGroups] as const).map(
                   (name) => {
                     const active = group === name;
@@ -447,7 +455,8 @@ export default function Library() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
-              <ScrollView contentContainerStyle={{ gap: space(3) }}>
+              <ScrollView
+ showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
                 {selected ? (
                   <Image
                     source={`${env.apiUrl}${exerciseImage(selected, snapshot.profile.gender)}`}
