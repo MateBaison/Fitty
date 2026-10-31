@@ -1,8 +1,16 @@
 import * as ImagePicker from "expo-image-picker";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import { useRef, useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
-import { Button, Card, Field, Label } from "@/components/ui";
+import {
+  Modal,
+  PanResponder,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Button, Card, Field, Label, styles } from "@/components/ui";
 import { env } from "@/lib/env";
 import { makeId } from "@/lib/id";
 import { supabase } from "@/lib/supabase";
@@ -21,6 +29,77 @@ const categories = [
 const MAX_BYTES = 3 * 1024 * 1024;
 type Attachment = { uri: string; name: string; size: number };
 
+/** Multi-line box that can be made taller or shorter by dragging its bottom-right corner. */
+function ResizableInput({
+  label,
+  value,
+  onChangeText,
+  onResizing,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (value: string) => void;
+  onResizing: (resizing: boolean) => void;
+}) {
+  const [height, setHeight] = useState(168);
+  const start = useRef(168);
+  const latest = useRef(onResizing);
+  latest.current = onResizing;
+  const pan = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderGrant: () => {
+        start.current = heightRef.current;
+        latest.current(true);
+      },
+      onPanResponderMove: (_, gesture) => {
+        const next = Math.min(520, Math.max(110, start.current + gesture.dy));
+        heightRef.current = next;
+        setHeight(next);
+      },
+      onPanResponderRelease: () => latest.current(false),
+      onPanResponderTerminate: () => latest.current(false),
+    }),
+  ).current;
+  const heightRef = useRef(168);
+  return (
+    <View style={{ gap: space(1.5) }}>
+      <Label muted>{label}</Label>
+      <View>
+        <TextInput
+          value={value}
+          onChangeText={onChangeText}
+          multiline
+          maxLength={5000}
+          accessibilityLabel={label}
+          placeholderTextColor={colors.muted}
+          textAlignVertical="top"
+          style={[styles.input, { height, paddingTop: space(3) }]}
+        />
+        <View
+          {...pan.panHandlers}
+          accessibilityRole="adjustable"
+          accessibilityLabel="Redimensionar"
+          style={{
+            position: "absolute",
+            right: 2,
+            bottom: 2,
+            width: 36,
+            height: 36,
+            alignItems: "flex-end",
+            justifyContent: "flex-end",
+            padding: 6,
+          }}
+        >
+          <Text style={{ color: colors.muted, fontSize: 18, lineHeight: 18 }}>◢</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
 /** Same inquiry form as the web; it goes to soporte@fitty.uy through the Fitty API. */
 export function SupportForm({
   visible,
@@ -38,6 +117,8 @@ export function SupportForm({
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [sent, setSent] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const [resizing, setResizing] = useState(false);
   // One id per draft so retrying a request that may have arrived is not sent twice.
   const requestId = useRef<string | undefined>(undefined);
   const inFlight = useRef(false);
@@ -167,6 +248,7 @@ export function SupportForm({
             <ScrollView
               contentContainerStyle={{ gap: space(3) }}
               keyboardShouldPersistTaps="handled"
+              scrollEnabled={!resizing}
             >
               <Text
                 accessibilityRole="header"
@@ -191,46 +273,84 @@ export function SupportForm({
                     )}
                   </Label>
                   <Label muted>{t("Tipo de consulta", "Inquiry type")}</Label>
-                  <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
-                    {categories.map(([id, es, en]) => (
-                      <Pressable
-                        key={id}
-                        accessibilityRole="button"
-                        accessibilityState={{ selected: category === id }}
-                        onPress={() => edit(setCategory)(id)}
-                        style={{
-                          minHeight: 44,
-                          paddingHorizontal: space(4),
-                          borderRadius: 999,
-                          justifyContent: "center",
-                          backgroundColor: category === id ? colors.primary : colors.secondary,
-                          borderColor: category === id ? colors.primary : colors.border,
-                          borderWidth: 1,
-                        }}
-                      >
-                        <Text
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: menu }}
+                    onPress={() => setMenu((open) => !open)}
+                    style={[
+                      styles.input,
+                      {
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: category ? colors.foreground : colors.muted,
+                        fontSize: 16,
+                      }}
+                    >
+                      {category
+                        ? t(
+                            categories.find(([id]) => id === category)![1],
+                            categories.find(([id]) => id === category)![2],
+                          )
+                        : t("Seleccioná una opción", "Select an option")}
+                    </Text>
+                    <Text style={{ color: colors.accent }}>{menu ? "▴" : "▾"}</Text>
+                  </Pressable>
+                  {menu ? (
+                    <View
+                      style={{
+                        borderRadius: 14,
+                        borderColor: colors.border,
+                        borderWidth: 1,
+                        backgroundColor: colors.secondary,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {categories.map(([id, es, en]) => (
+                        <Pressable
+                          key={id}
+                          accessibilityRole="button"
+                          accessibilityState={{ selected: category === id }}
+                          onPress={() => {
+                            edit(setCategory)(id);
+                            setMenu(false);
+                          }}
                           style={{
-                            fontWeight: "800",
-                            color: category === id ? colors.primaryForeground : colors.foreground,
+                            minHeight: 48,
+                            paddingHorizontal: space(4),
+                            justifyContent: "center",
+                            backgroundColor: category === id ? "#173a52" : "transparent",
                           }}
                         >
-                          {t(es, en)}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
+                          <Text
+                            style={{
+                              color: colors.foreground,
+                              fontSize: 16,
+                              fontWeight: category === id ? "800" : "500",
+                            }}
+                          >
+                            {t(es, en)}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </View>
+                  ) : null}
                   <Field
                     label={t("Título", "Subject")}
                     value={subject}
                     onChangeText={edit(setSubject)}
                     maxLength={150}
                   />
-                  <Field
+                  <ResizableInput
                     label={t("Mensaje", "Message")}
                     value={message}
                     onChangeText={edit(setMessage)}
-                    maxLength={5000}
-                    multiline
+                    onResizing={setResizing}
                   />
                   <Label muted>
                     {t("Archivos adjuntos (opcional)", "Attachments (optional)")}
