@@ -23,6 +23,7 @@ import {
   type Session,
 } from "@fitty/core/domain/workouts";
 import { ManualSession } from "@/components/manual-session";
+import { SessionEditor } from "@/components/session-editor";
 import { WorkoutPoster } from "@/components/workout-poster";
 import { Button, Card, Label } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -119,6 +120,7 @@ export function DaySheet({
   const [detailId, setDetailId] = useState<string | null>(null);
   const [logging, setLogging] = useState(false);
   const [poster, setPoster] = useState<Session | null>(null);
+  const [editing, setEditing] = useState<Session | null>(null);
   const posterRef = useRef<Svg>(null);
   const sessions = day ? sessionsOnDay(snapshot.sessions, day) : [];
   const detail = snapshot.sessions.find((session) => session.id === detailId) ?? null;
@@ -179,7 +181,7 @@ export function DaySheet({
   };
   return (
     <>
-      <Overlay visible={day !== null && !detail && !logging && !poster} onClose={closeAll}>
+      <Overlay visible={day !== null && !detail && !logging && !poster && !editing} onClose={closeAll}>
         <Text
           accessibilityRole="header"
           style={{ color: colors.foreground, fontSize: 20, fontWeight: "800", textTransform: "capitalize" }}
@@ -251,7 +253,7 @@ export function DaySheet({
           {t("Cerrar", "Close")}
         </Button>
       </Overlay>
-      <Overlay visible={detail !== null && !poster} onClose={() => setDetailId(null)}>
+      <Overlay visible={detail !== null && !poster && !editing} onClose={() => setDetailId(null)}>
         {detail ? (
           <>
             <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
@@ -273,6 +275,11 @@ export function DaySheet({
                 <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "700" }}>‹</Text>
               </Pressable>
               <View style={{ flex: 1 }} />
+              <IconButton
+                label={t("Editar", "Edit")}
+                icon={{ ios: "pencil", android: "edit" }}
+                onPress={() => setEditing(detail)}
+              />
               <IconButton
                 label={t("Copiar", "Copy")}
                 icon={{ ios: "doc.on.doc", android: "content_copy" }}
@@ -385,6 +392,7 @@ export function DaySheet({
           </>
         ) : null}
       </Overlay>
+      <SessionEditor session={editing} onClose={() => setEditing(null)} />
       <ManualSession
         date={day ?? localDateKey(new Date())}
         visible={logging}

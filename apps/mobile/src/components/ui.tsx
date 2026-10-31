@@ -208,6 +208,8 @@ export const styles = StyleSheet.create({
     borderRadius: 24,
     padding: space(4.5),
     gap: space(3),
+    // Lets a Card inside a height-limited dialog shrink so its ScrollView can scroll.
+    flexShrink: 1,
   },
   button: {
     minHeight: 52,

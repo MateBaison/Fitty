@@ -464,30 +464,23 @@ export function RoutinesSection() {
                               ({day.items.length})
                             </Text>
                           </Text>
+                          {dayOpen ? (
+                            <IconButton
+                              label={t("Renombrar día", "Rename day")}
+                              symbol="✎"
+                              onPress={() =>
+                                setPrompt({
+                                  type: "rename-day",
+                                  rid: routine.id,
+                                  did: day.id,
+                                  name: day.name,
+                                })
+                              }
+                            />
+                          ) : null}
                         </Pressable>
                         {dayOpen ? (
                           <>
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: space(1.5),
-                              }}
-                            >
-                              <View style={{ flex: 1 }} />
-                              <IconButton
-                                label={t("Renombrar día", "Rename day")}
-                                symbol="✎"
-                                onPress={() =>
-                                  setPrompt({
-                                    type: "rename-day",
-                                    rid: routine.id,
-                                    did: day.id,
-                                    name: day.name,
-                                  })
-                                }
-                              />
-                            </View>
                             <ReorderList
                               items={day.items}
                               keyOf={(id, index) => `${id}-${index}`}
