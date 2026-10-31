@@ -16,6 +16,16 @@ export async function GET(request: Request) {
         { headers: { "Cache-Control": "private, no-store" } },
       );
   }
+  // Linking another sign-in method can fail (for example, it already belongs to another account).
+  if (url.searchParams.get("error_code") === "identity_already_exists") {
+    const client = await serverClient();
+    const { data } = await client.auth.getUser();
+    if (data.user)
+      return NextResponse.redirect(
+        new URL("/profile?linkError=exists", origin),
+        { headers: { "Cache-Control": "private, no-store" } },
+      );
+  }
   return NextResponse.redirect(new URL("/login?error=callback", origin), {
     headers: { "Cache-Control": "private, no-store" },
   });

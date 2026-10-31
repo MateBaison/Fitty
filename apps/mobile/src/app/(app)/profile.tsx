@@ -13,6 +13,7 @@ import {
   profileValues,
 } from "@/components/profile-fields";
 import { DeleteAccount } from "@/components/delete-account";
+import { LinkedApps } from "@/components/linked-apps";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { pickPhoto, safePhoto } from "@/lib/photos";
@@ -165,6 +166,7 @@ export default function Profile() {
           }
         />
       </Card>
+      <LinkedApps />
       <Button
         variant="secondary"
         onPress={() => void Linking.openURL("https://fitty.uy/privacidad")}

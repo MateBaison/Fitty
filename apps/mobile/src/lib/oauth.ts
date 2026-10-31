@@ -13,12 +13,25 @@ WebBrowser.maybeCompleteAuthSession();
  * Returns false when the person cancels.
  */
 export async function signInWithProvider(provider: "google" | "apple") {
+  return completeOAuth(provider, "signIn");
+}
+
+/** Adds Google or Apple as another way to sign in to the current account. */
+export async function linkProvider(provider: "google" | "apple") {
+  return completeOAuth(provider, "link");
+}
+
+async function completeOAuth(
+  provider: "google" | "apple",
+  purpose: "signIn" | "link",
+) {
   // fitty://auth-callback in builds; exp://…/--/auth-callback in Expo Go.
   const redirectTo = Linking.createURL("auth-callback");
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider,
-    options: { redirectTo, skipBrowserRedirect: true },
-  });
+  const options = { redirectTo, skipBrowserRedirect: true };
+  const { data, error } =
+    purpose === "link"
+      ? await supabase.auth.linkIdentity({ provider, options })
+      : await supabase.auth.signInWithOAuth({ provider, options });
   if (error || !data.url) throw new Error("No pudimos iniciar sesión.");
   const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
   if (result.type !== "success") return false;

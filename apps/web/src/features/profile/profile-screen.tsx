@@ -7,6 +7,7 @@ import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DeleteAccount } from "./delete-account";
+import { LinkedApps } from "./linked-apps";
 import { PersonalForm } from "./personal-form";
 import { AccountPanel } from "./account-panel";
 import { readSnapshotJson } from "@fitty/core/domain/legacy/read-snapshot";
@@ -67,9 +68,13 @@ export function ProfileScreen() {
       </section>
       <details className="panel">
         <summary className="font-bold">
-          {t("Redes sociales", "Social networks")}
+          {t("Apps vinculadas", "Linked apps")}
         </summary>
         <div className="mt-4 space-y-4">
+          <LinkedApps />
+          <h3 className="font-bold">
+            {t("Perfiles sociales", "Social profiles")}
+          </h3>
           {(["instagram", "snapchat"] as const).map((network) => (
             <label className="block" key={network}>
               {network === "instagram" ? "Instagram" : "Snapchat"}

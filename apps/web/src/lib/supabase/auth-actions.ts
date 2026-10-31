@@ -69,6 +69,34 @@ export async function appleLogin() {
   if (error || !data.url) throw new Error("No pudimos iniciar Apple.");
   redirect(data.url);
 }
+export async function linkProvider(
+  provider: "google" | "apple",
+): Promise<{ error?: string }> {
+  const origin = await assertOrigin();
+  const client = await serverClient();
+  const { data, error } = await client.auth.linkIdentity({
+    provider,
+    options: {
+      redirectTo: new URL("/auth/callback?next=/profile", origin).href,
+      skipBrowserRedirect: true,
+    },
+  });
+  if (error || !data.url) return { error: "link" };
+  redirect(data.url);
+}
+export async function unlinkProvider(
+  provider: "google" | "apple",
+): Promise<{ error?: string }> {
+  await assertOrigin();
+  const client = await serverClient();
+  const { data } = await client.auth.getUserIdentities();
+  const identities = data?.identities ?? [];
+  const target = identities.find((identity) => identity.provider === provider);
+  // Never leave an account without a way to sign in.
+  if (!target || identities.length < 2) return { error: "last" };
+  const { error } = await client.auth.unlinkIdentity(target);
+  return error ? { error: "unlink" } : {};
+}
 export async function signOut() {
   await assertOrigin();
   const client = await serverClient();

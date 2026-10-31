@@ -661,7 +661,17 @@
     "Vista previa editable": "Aperçu modifiable",
     "por ejercicio": "par exercice",
     "reps": "reps",
-    "seleccionados": "sélectionnés"
+    "seleccionados": "sélectionnés",
+    "Apps vinculadas": "Applications liées",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "Lie tes comptes pour te connecter comme tu veux. Tes données restent les mêmes quelle que soit la méthode.",
+    "Vincular": "Lier",
+    "Desvincular": "Délier",
+    "Vinculada": "Liée",
+    "Correo": "E-mail",
+    "Perfiles sociales": "Profils sociaux",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Impossible de lier ce compte. Il est peut-être déjà lié à un autre utilisateur de Fitty.",
+    "No podés desvincular tu único método de inicio de sesión.": "Tu ne peux pas délier ton unique méthode de connexion.",
+    "No pudimos completar la acción. Reintentá más tarde.": "Impossible de terminer l'action. Réessaie plus tard."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1325,7 +1335,17 @@
     "Vista previa editable": "可编辑预览",
     "por ejercicio": "每个动作",
     "reps": "次",
-    "seleccionados": "已选择"
+    "seleccionados": "已选择",
+    "Apps vinculadas": "已关联应用",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "关联你的账户,即可用喜欢的方式登录。无论哪种方式,你的数据都是同一份。",
+    "Vincular": "关联",
+    "Desvincular": "取消关联",
+    "Vinculada": "已关联",
+    "Correo": "邮箱",
+    "Perfiles sociales": "社交主页",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "无法关联此账户。它可能已关联到另一个 Fitty 用户。",
+    "No podés desvincular tu único método de inicio de sesión.": "无法取消你唯一的登录方式。",
+    "No pudimos completar la acción. Reintentá más tarde.": "无法完成操作,请稍后重试。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -1989,7 +2009,17 @@
     "Vista previa editable": "संपादन योग्य पूर्वावलोकन",
     "por ejercicio": "प्रति व्यायाम",
     "reps": "दोहराव",
-    "seleccionados": "चयनित"
+    "seleccionados": "चयनित",
+    "Apps vinculadas": "जुड़े हुए ऐप्स",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "अपने खाते जोड़ें और जैसे चाहें साइन इन करें। किसी भी तरीके से आपका डेटा वही रहता है।",
+    "Vincular": "जोड़ें",
+    "Desvincular": "अलग करें",
+    "Vinculada": "जुड़ा हुआ",
+    "Correo": "ईमेल",
+    "Perfiles sociales": "सोशल प्रोफ़ाइल",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "हम इस खाते को नहीं जोड़ सके। यह पहले से किसी अन्य Fitty उपयोगकर्ता से जुड़ा हो सकता है।",
+    "No podés desvincular tu único método de inicio de sesión.": "आप अपना एकमात्र साइन-इन तरीका अलग नहीं कर सकते।",
+    "No pudimos completar la acción. Reintentá más tarde.": "हम यह कार्य पूरा नहीं कर सके। बाद में फिर कोशिश करें।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2653,7 +2683,17 @@
     "Vista previa editable": "معاينة قابلة للتعديل",
     "por ejercicio": "لكل تمرين",
     "reps": "تكرارات",
-    "seleccionados": "محددة"
+    "seleccionados": "محددة",
+    "Apps vinculadas": "التطبيقات المرتبطة",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "اربط حساباتك لتسجّل الدخول بالطريقة التي تفضلها. تبقى بياناتك نفسها مهما كانت الطريقة.",
+    "Vincular": "ربط",
+    "Desvincular": "إلغاء الربط",
+    "Vinculada": "مرتبط",
+    "Correo": "البريد",
+    "Perfiles sociales": "الملفات الاجتماعية",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "تعذر ربط هذا الحساب. قد يكون مرتبطًا بالفعل بمستخدم آخر في Fitty.",
+    "No podés desvincular tu único método de inicio de sesión.": "لا يمكنك إلغاء ربط طريقة تسجيل الدخول الوحيدة لديك.",
+    "No pudimos completar la acción. Reintentá más tarde.": "تعذر إكمال الإجراء. حاول مرة أخرى لاحقًا."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -3316,7 +3356,17 @@
     "Vista previa editable": "Bearbeitbare Vorschau",
     "por ejercicio": "pro Übung",
     "reps": "Wdh.",
-    "seleccionados": "ausgewählt"
+    "seleccionados": "ausgewählt",
+    "Apps vinculadas": "Verknüpfte Apps",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "Verknüpfe deine Konten und melde dich, wie du möchtest. Deine Daten bleiben bei jeder Methode dieselben.",
+    "Vincular": "Verknüpfen",
+    "Desvincular": "Verknüpfung aufheben",
+    "Vinculada": "Verknüpft",
+    "Correo": "E-Mail",
+    "Perfiles sociales": "Soziale Profile",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Dieses Konto konnte nicht verknüpft werden. Es gehört möglicherweise schon einem anderen Fitty-Nutzer.",
+    "No podés desvincular tu único método de inicio de sesión.": "Du kannst deine einzige Anmeldemethode nicht entfernen.",
+    "No pudimos completar la acción. Reintentá más tarde.": "Die Aktion konnte nicht abgeschlossen werden. Versuche es später erneut."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -3979,7 +4029,17 @@
     "Vista previa editable": "Anteprima modificabile",
     "por ejercicio": "per esercizio",
     "reps": "rip.",
-    "seleccionados": "selezionati"
+    "seleccionados": "selezionati",
+    "Apps vinculadas": "App collegate",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "Collega i tuoi account per accedere come preferisci. I tuoi dati restano gli stessi con qualsiasi metodo.",
+    "Vincular": "Collega",
+    "Desvincular": "Scollega",
+    "Vinculada": "Collegato",
+    "Correo": "E-mail",
+    "Perfiles sociales": "Profili social",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Impossibile collegare questo account. Potrebbe essere già collegato a un altro utente Fitty.",
+    "No podés desvincular tu único método de inicio de sesión.": "Non puoi scollegare il tuo unico metodo di accesso.",
+    "No pudimos completar la acción. Reintentá más tarde.": "Impossibile completare l'azione. Riprova più tardi."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4642,7 +4702,17 @@
     "Vista previa editable": "Prévia editável",
     "por ejercicio": "por exercício",
     "reps": "reps",
-    "seleccionados": "selecionados"
+    "seleccionados": "selecionados",
+    "Apps vinculadas": "Apps vinculados",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "Vincule suas contas para entrar como preferir. Seus dados são os mesmos em qualquer método.",
+    "Vincular": "Vincular",
+    "Desvincular": "Desvincular",
+    "Vinculada": "Vinculado",
+    "Correo": "E-mail",
+    "Perfiles sociales": "Perfis sociais",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "Não foi possível vincular esta conta. Ela pode já estar vinculada a outro usuário do Fitty.",
+    "No podés desvincular tu único método de inicio de sesión.": "Você não pode desvincular seu único método de login.",
+    "No pudimos completar la acción. Reintentá más tarde.": "Não foi possível concluir a ação. Tente novamente mais tarde."
   },
   "en": {
     "Sexo": "Sex",
@@ -4974,6 +5044,16 @@
     "Ingresá el código de 6 a 8 dígitos.": "Enter the 6 to 8 digit code.",
     "El código no es válido o venció.": "The code is invalid or has expired.",
     "Te enviamos un código a": "We sent a code to",
-    "Política de privacidad": "Privacy policy"
+    "Política de privacidad": "Privacy policy",
+    "Apps vinculadas": "Linked apps",
+    "Vinculá tus cuentas para iniciar sesión como prefieras. Tus datos son los mismos sin importar el método.": "Link your accounts to sign in however you like. Your data stays the same whichever method you use.",
+    "Vincular": "Link",
+    "Desvincular": "Unlink",
+    "Vinculada": "Linked",
+    "Correo": "Email",
+    "Perfiles sociales": "Social profiles",
+    "No pudimos vincular esta cuenta. Puede que ya esté vinculada a otro usuario de Fitty.": "We could not link this account. It may already belong to another Fitty user.",
+    "No podés desvincular tu único método de inicio de sesión.": "You cannot unlink your only sign-in method.",
+    "No pudimos completar la acción. Reintentá más tarde.": "We could not complete the action. Try again later."
   }
 }
