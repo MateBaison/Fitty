@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Switch, View } from "react-native";
+import { Alert, Switch, Text, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { lifetimeSummary, weeklySummary } from "@fitty/core/domain/progress";
 import {
@@ -17,6 +17,11 @@ import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
 const KG_TO_LB = 2.20462;
+const bigNumber = {
+  color: colors.foreground,
+  fontSize: 32,
+  fontWeight: "800" as const,
+};
 
 export default function Progress() {
   const snapshot = useSnapshot();
@@ -41,17 +46,15 @@ export default function Progress() {
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <Card style={{ flex: 1 }}>
           <Label muted>{t("Esta semana", "This week")}</Label>
-          <Label>
-            {week.sessions} {t("entrenamientos", "workouts")}
-          </Label>
+          <Text style={bigNumber}>{week.sessions}</Text>
+          <Label muted>{t("entrenamientos", "workouts")}</Label>
           <Label>{week.minutes} min</Label>
           <Label>{volume(week.volumeKg)}</Label>
         </Card>
         <Card style={{ flex: 1 }}>
           <Label muted>{t("Desde el comienzo", "All time")}</Label>
-          <Label>
-            {total.sessions} {t("entrenamientos", "workouts")}
-          </Label>
+          <Text style={bigNumber}>{total.sessions}</Text>
+          <Label muted>{t("entrenamientos", "workouts")}</Label>
           <Label>
             {total.trainedDays} {t("días", "days")}
           </Label>
@@ -64,13 +67,20 @@ export default function Progress() {
       <Card>
         <Calendar selected={day} onSelect={setDay} />
       </Card>
-      <Label muted>
+      <Text
+        style={{
+          color: colors.foreground,
+          fontSize: 18,
+          fontWeight: "800",
+          textTransform: "capitalize",
+        }}
+      >
         {new Date(`${day}T12:00:00`).toLocaleDateString(locale, {
           weekday: "long",
           day: "numeric",
           month: "long",
         })}
-      </Label>
+      </Text>
       {menstrualCalendarEnabled(snapshot.profile) ? (
         <View
           style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
@@ -104,16 +114,18 @@ export default function Progress() {
         </View>
       ) : null}
       {day <= localDateKey(new Date()) ? (
-        <Button variant="secondary" onPress={() => setLogging(true)}>
+        <Button variant="success" onPress={() => setLogging(true)}>
           {t("+ Registrar entrenamiento", "+ Log workout")}
         </Button>
       ) : null}
       {sessions.length ? (
         sessions.map((session) => (
           <Card key={session.id}>
-            <Label>
+            <Text
+              style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}
+            >
               {session.day} · {session.routine}
-            </Label>
+            </Text>
             <Label muted>
               {session.duration != null ? `${session.duration} min · ` : ""}
               {session.sets ?? 0} {t("series", "sets")} ·{" "}
@@ -152,7 +164,7 @@ export default function Progress() {
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  variant="ghost"
+                  variant="destructive"
                   onPress={() =>
                     Alert.alert(
                       t("¿Eliminar entrenamiento?", "Delete workout?"),

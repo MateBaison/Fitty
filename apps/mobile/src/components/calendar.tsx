@@ -5,6 +5,19 @@ import { color, localDateKey } from "@fitty/core/domain/workouts";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
+const navStyle = {
+  color: colors.accent,
+  fontSize: 24,
+  fontWeight: "700" as const,
+  width: 40,
+  height: 40,
+  lineHeight: 38,
+  textAlign: "center" as const,
+  borderRadius: 12,
+  overflow: "hidden" as const,
+  backgroundColor: colors.secondary,
+};
+
 /** Month grid; trained days show the session color like the web calendar. */
 export function Calendar({
   selected,
@@ -55,22 +68,15 @@ export function Calendar({
           onPress={() => shift(-1)}
           hitSlop={12}
         >
-          <Text
-            style={{
-              color: colors.accent,
-              fontSize: 22,
-              paddingHorizontal: space(3),
-            }}
-          >
-            ‹
-          </Text>
+          <Text style={navStyle}>‹</Text>
         </Pressable>
         <Text
           style={{
             flex: 1,
             textAlign: "center",
             color: colors.foreground,
-            fontWeight: "700",
+            fontSize: 17,
+            fontWeight: "800",
             textTransform: "capitalize",
           }}
         >
@@ -82,16 +88,27 @@ export function Calendar({
           onPress={() => shift(1)}
           hitSlop={12}
         >
+          <Text style={navStyle}>›</Text>
+        </Pressable>
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        {Array.from({ length: 7 }, (_, index) => (
           <Text
+            key={index}
             style={{
-              color: colors.accent,
-              fontSize: 22,
-              paddingHorizontal: space(3),
+              width: `${100 / 7}%`,
+              textAlign: "center",
+              color: colors.muted,
+              fontSize: 12,
+              fontWeight: "700",
+              textTransform: "uppercase",
             }}
           >
-            ›
+            {new Date(2024, 0, 1 + index).toLocaleDateString(locale, {
+              weekday: "narrow",
+            })}
           </Text>
-        </Pressable>
+        ))}
       </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
         {cells.map((date, index) => {
@@ -127,10 +144,15 @@ export function Calendar({
                     : bleeding
                       ? "#f472b6"
                       : colors.border,
-                  backgroundColor: trained ? `${trained}33` : "transparent",
+                  backgroundColor: trained ? `${trained}44` : "transparent",
                 }}
               >
-                <Text style={{ color: colors.foreground }}>
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontWeight: active || trained ? "800" : "500",
+                  }}
+                >
                   {date.getDate()}
                 </Text>
                 {trained ? (
