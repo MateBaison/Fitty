@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { useState } from "react";
-import { Linking, Share, Switch, View } from "react-native";
+import { Linking, Share, Switch, Text, View } from "react-native";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
 import { missingProfileFields } from "@fitty/core/domain/profile-validation";
 import { localDateKey } from "@fitty/core/domain/workouts";
@@ -22,6 +22,12 @@ import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
 import { colors, space } from "@/theme";
 
+const sectionTitle = {
+  color: colors.foreground,
+  fontSize: 20,
+  fontWeight: "800" as const,
+};
+
 export default function Profile() {
   const snapshot = useSnapshot();
   const { change, notify, t } = useAccount();
@@ -40,14 +46,29 @@ export default function Profile() {
   return (
     <Screen>
       <Title>{snapshot.profile.name?.trim() || t("Perfil", "Profile")}</Title>
-      <Card>
+      <Card style={{ alignItems: "center" }}>
         {safePhoto(snapshot.profile.photo) ? (
           <Image
             source={snapshot.profile.photo}
             style={{ width: 96, height: 96, borderRadius: 48 }}
             accessibilityLabel={t("Foto de perfil", "Profile photo")}
           />
-        ) : null}
+        ) : (
+          <View
+            style={{
+              width: 96,
+              height: 96,
+              borderRadius: 48,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#2f7ba6",
+            }}
+          >
+            <Text style={{ color: "#fff", fontSize: 38, fontWeight: "800" }}>
+              {(snapshot.profile.name?.trim()[0] ?? "F").toUpperCase()}
+            </Text>
+          </View>
+        )}
         <View style={{ flexDirection: "row", gap: space(2) }}>
           <Button
             variant="secondary"
@@ -64,7 +85,7 @@ export default function Profile() {
           </Button>
           {snapshot.profile.photo ? (
             <Button
-              variant="ghost"
+              variant="destructive"
               onPress={() => change((next) => void delete next.profile.photo)}
             >
               {t("Quitar foto", "Remove photo")}
@@ -76,7 +97,7 @@ export default function Profile() {
       </Card>
       <Notice />
       <Card>
-        <Label muted>{t("Tus datos", "Your details")}</Label>
+        <Text style={sectionTitle}>{t("Tus datos", "Your details")}</Text>
         <ProfileFields value={draft} onChange={setDraft} />
         <Button
           disabled={!changed || missing.length > 0}
@@ -114,7 +135,7 @@ export default function Profile() {
                 "Menstrual calendar",
               )}
               value={snapshot.profile.menstrualCalendar?.enabled === true}
-              trackColor={{ true: colors.primary, false: colors.secondary }}
+              trackColor={{ true: "#22c55e", false: colors.border }}
               onValueChange={(enabled) =>
                 void change((next) => {
                   next.profile.menstrualCalendar = {
@@ -133,7 +154,7 @@ export default function Profile() {
           </Label>
         </Card>
       ) : null}
-      <Label>{t("Configuración", "Settings")}</Label>
+      <Text style={sectionTitle}>{t("Configuración", "Settings")}</Text>
       <Card>
         <Label muted>{t("Idioma", "Language")}</Label>
         <ChipGroup
