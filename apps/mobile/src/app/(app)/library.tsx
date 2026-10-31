@@ -22,7 +22,7 @@ import { catalogFor } from "@fitty/core/domain/workouts";
 import { Chip } from "@/components/chip";
 import { CustomExerciseForm } from "@/components/custom-exercise-form";
 import { Notice } from "@/components/notice";
-import { Button, Glow, Label, styles, Title } from "@/components/ui";
+import { Button, Glow, Label, styles } from "@/components/ui";
 import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -59,7 +59,6 @@ export default function Library() {
         keyboardShouldPersistTaps="handled"
         ListHeaderComponent={
           <View style={{ gap: space(3) }}>
-            <Title>{t("Ejercicios", "Exercises")}</Title>
             <Notice />
             <Button variant="success" onPress={() => setCreating(true)}>
               {t("+ Crear ejercicio", "+ Create exercise")}

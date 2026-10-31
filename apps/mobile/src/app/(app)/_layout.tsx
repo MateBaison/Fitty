@@ -1,6 +1,8 @@
 import { Tabs } from "expo-router";
-import { SymbolView, type SymbolViewProps } from "expo-symbols";
-import { View, type ColorValue } from "react-native";
+import { View } from "react-native";
+import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
+import { AppHeader } from "@/components/app-header";
+import { BottomNav } from "@/components/bottom-nav";
 import { Onboarding } from "@/components/onboarding";
 import { Button, Card, Label, Loading, Screen, Title } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
@@ -8,14 +10,9 @@ import { AccountProvider, useAccount } from "@/state/account";
 import { useSession } from "@/state/session";
 import { colors } from "@/theme";
 
-function icon(name: SymbolViewProps["name"]) {
-  return ({ color }: { color: ColorValue }) => (
-    <SymbolView name={name} tintColor={color} size={24} />
-  );
-}
-
 function AccountGate() {
   const { view, resolve, retry, t } = useAccount();
+  const insets = useSafeAreaInsets();
   if (view.status === "conflict")
     return (
       <Screen>
@@ -62,74 +59,29 @@ function AccountGate() {
   )
     return <Onboarding />;
   return (
-    <View style={{ flex: 1 }}>
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.muted,
-          tabBarActiveBackgroundColor: "#173a52",
-          tabBarItemStyle: {
-            borderRadius: 16,
-            marginHorizontal: 4,
-            marginVertical: 6,
-          },
-          tabBarLabelStyle: { fontWeight: "700" },
-          tabBarStyle: {
-            backgroundColor: colors.card,
-            borderTopColor: colors.border,
-            paddingHorizontal: 4,
-          },
-          sceneStyle: { backgroundColor: colors.background },
-        }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: t("Inicio", "Home"),
-            tabBarIcon: icon({ ios: "house.fill", android: "home" }),
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <AppHeader />
+      <SafeAreaInsetsContext.Provider value={{ ...insets, top: 0 }}>
+        <Tabs
+          tabBar={() => <BottomNav />}
+          screenOptions={{
+            headerShown: false,
+            sceneStyle: { backgroundColor: colors.background },
           }}
-        />
-        <Tabs.Screen
-          name="library"
-          options={{
-            title: t("Ejercicios", "Exercises"),
-            tabBarIcon: icon({
-              ios: "dumbbell.fill",
-              android: "fitness_center",
-            }),
-          }}
-        />
-        <Tabs.Screen
-          name="progress"
-          options={{
-            title: t("Progreso", "Progress"),
-            tabBarIcon: icon({ ios: "chart.bar.fill", android: "bar_chart" }),
-          }}
-        />
-        <Tabs.Screen
-          name="tools"
-          options={{
-            title: t("Herramientas", "Tools"),
-            tabBarIcon: icon({ ios: "stopwatch.fill", android: "timer" }),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: t("Perfil", "Profile"),
-            tabBarIcon: icon({
-              ios: "person.crop.circle.fill",
-              android: "account_circle",
-            }),
-          }}
-        />
-        <Tabs.Screen name="workout" options={{ href: null }} />
-        <Tabs.Screen name="routines" options={{ href: null }} />
-        <Tabs.Screen name="body" options={{ href: null }} />
-        <Tabs.Screen name="tracking" options={{ href: null }} />
-        <Tabs.Screen name="combat" options={{ href: null }} />
-      </Tabs>
+        >
+          <Tabs.Screen name="index" />
+          <Tabs.Screen name="professionals" />
+          <Tabs.Screen name="tools" />
+          <Tabs.Screen name="profile" />
+          <Tabs.Screen name="library" options={{ href: null }} />
+          <Tabs.Screen name="progress" options={{ href: null }} />
+          <Tabs.Screen name="workout" options={{ href: null }} />
+          <Tabs.Screen name="routines" options={{ href: null }} />
+          <Tabs.Screen name="body" options={{ href: null }} />
+          <Tabs.Screen name="tracking" options={{ href: null }} />
+          <Tabs.Screen name="combat" options={{ href: null }} />
+        </Tabs>
+      </SafeAreaInsetsContext.Provider>
     </View>
   );
 }

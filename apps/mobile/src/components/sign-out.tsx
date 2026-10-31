@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SymbolView } from "expo-symbols";
 import { Modal, Pressable, Text, View } from "react-native";
 import { Button, Card, Label } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
@@ -6,7 +7,7 @@ import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
 /** Asks before signing out and, like the web, warns when changes are not confirmed in the cloud. */
-export function SignOut() {
+export function SignOut({ compact = false }: { compact?: boolean }) {
   const { flush, t } = useAccount();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
@@ -39,9 +40,34 @@ export function SignOut() {
   };
   return (
     <>
-      <Button variant="destructive" onPress={() => setOpen(true)}>
-        {t("Cerrar sesión", "Sign out")}
-      </Button>
+      {compact ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("Cerrar sesión", "Sign out")}
+          onPress={() => setOpen(true)}
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: colors.destructive,
+          }}
+        >
+          <SymbolView
+            name={{
+              ios: "rectangle.portrait.and.arrow.right",
+              android: "logout",
+            }}
+            tintColor="#ffffff"
+            size={20}
+          />
+        </Pressable>
+      ) : (
+        <Button variant="destructive" onPress={() => setOpen(true)}>
+          {t("Cerrar sesión", "Sign out")}
+        </Button>
+      )}
       <Modal
         visible={open}
         transparent

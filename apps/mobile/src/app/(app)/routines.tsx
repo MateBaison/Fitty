@@ -76,10 +76,9 @@ function IconButton({
   );
 }
 
-export default function Routines() {
+export function RoutinesSection() {
   const snapshot = useSnapshot();
   const { change, notify, t } = useAccount();
-  const router = useRouter();
   const language = snapshot.settings.language ?? "es";
   const [creating, setCreating] = useState(false);
   const [mode, setMode] = useState<"custom" | "auto">("custom");
@@ -96,6 +95,7 @@ export default function Routines() {
     null,
   );
   const [open, setOpen] = useState<string | null>(snapshot.selected);
+  const [openDays, setOpenDays] = useState<string[]>([]);
 
   const editDay = (
     rid: string,
@@ -150,18 +150,7 @@ export default function Routines() {
         ?.days.find((item) => item.id === superset.did)
     : undefined;
   return (
-    <Screen>
-      <View style={{ alignItems: "flex-start" }}>
-        <Pressable
-          accessibilityRole="button"
-          hitSlop={8}
-          onPress={() => router.back()}
-        >
-          <Text style={{ color: colors.accent, fontSize: 16, fontWeight: "700" }}>
-            {`‹ ${t("Volver", "Back")}`}
-          </Text>
-        </Pressable>
-      </View>
+    <>
       <View
         style={{
           flexDirection: "row",
@@ -374,7 +363,9 @@ export default function Routines() {
                     }
                   />
                 </View>
-                {routine.days.map((day, dayIndex) => (
+                {routine.days.map((day, dayIndex) => {
+                  const dayOpen = openDays.includes(day.id);
+                  return (
                   <View
                     key={day.id}
                     style={{
@@ -382,10 +373,44 @@ export default function Routines() {
                       borderColor: colors.border,
                       borderWidth: 1,
                       borderRadius: 18,
-                      backgroundColor: "#0e1117",
+                      backgroundColor: "#0b0e14",
                       padding: space(3),
                     }}
                   >
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityState={{ expanded: dayOpen }}
+                      onPress={() =>
+                        setOpenDays((current) =>
+                          dayOpen
+                            ? current.filter((id) => id !== day.id)
+                            : [...current, day.id],
+                        )
+                      }
+                      style={{
+                        minHeight: 40,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: space(2),
+                      }}
+                    >
+                      <Text style={{ color: colors.muted, fontSize: 11 }}>
+                        {dayOpen ? "▼" : "▶"}
+                      </Text>
+                      <Text
+                        style={{
+                          color: colors.foreground,
+                          fontSize: 17,
+                          fontWeight: "800",
+                        }}
+                      >
+                        {day.name}{" "}
+                        <Text style={{ fontSize: 14 }}>({day.items.length})</Text>
+                      </Text>
+                    </Pressable>
+                    {dayOpen ? (
+                    <>
                     <View
                       style={{
                         flexDirection: "row",
@@ -393,16 +418,7 @@ export default function Routines() {
                         gap: space(1.5),
                       }}
                     >
-                      <Text
-                        style={{
-                          color: colors.foreground,
-                          fontSize: 17,
-                          fontWeight: "800",
-                          flex: 1,
-                        }}
-                      >
-                        {day.name}
-                      </Text>
+                      <View style={{ flex: 1 }} />
                       <IconButton
                         label={t("Subir día", "Move day up")}
                         symbol="↑"
@@ -551,8 +567,11 @@ export default function Routines() {
                           : t("Crear superserie", "Create superset")}
                       </Button>
                     ) : null}
+                    </>
+                    ) : null}
                   </View>
-                ))}
+                  );
+                })}
                 <Button
                   variant="secondary"
                   onPress={() => setPrompt({ type: "day", rid: routine.id })}
@@ -695,6 +714,27 @@ export default function Routines() {
           editDay(picker.rid, picker.did, (day) => void day.items.push(...ids))
         }
       />
+    </>
+  );
+}
+
+export default function Routines() {
+  const router = useRouter();
+  const { t } = useAccount();
+  return (
+    <Screen>
+      <View style={{ alignItems: "flex-start" }}>
+        <Pressable
+          accessibilityRole="button"
+          hitSlop={8}
+          onPress={() => router.back()}
+        >
+          <Text style={{ color: colors.accent, fontSize: 16, fontWeight: "700" }}>
+            {`‹ ${t("Volver", "Back")}`}
+          </Text>
+        </Pressable>
+      </View>
+      <RoutinesSection />
     </Screen>
   );
 }

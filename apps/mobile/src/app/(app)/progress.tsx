@@ -12,7 +12,7 @@ import { translate } from "@fitty/core/data/translations";
 import { Calendar } from "@/components/calendar";
 import { ManualSession } from "@/components/manual-session";
 import { TextPrompt } from "@/components/prompt";
-import { Button, Card, Label, Screen, Title } from "@/components/ui";
+import { Button, Card, Label, Screen } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -42,7 +42,6 @@ export default function Progress() {
   )?.comment;
   return (
     <Screen>
-      <Title>{t("Progreso", "Progress")}</Title>
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <Card style={{ flex: 1 }}>
           <Label muted>{t("Esta semana", "This week")}</Label>

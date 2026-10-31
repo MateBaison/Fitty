@@ -10,7 +10,7 @@ import {
   oneRepMax,
 } from "@fitty/core/domain/calculations/calculators";
 import { ChipGroup } from "@/components/chip";
-import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import { Button, Card, Field, Label, Screen } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -327,7 +327,6 @@ export default function Tools() {
   const router = useRouter();
   return (
     <Screen>
-      <Title>{t("Herramientas", "Tools")}</Title>
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
           <Button variant="secondary" onPress={() => router.push("/tracking")}>
