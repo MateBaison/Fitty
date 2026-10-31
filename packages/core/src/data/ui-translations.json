@@ -673,7 +673,8 @@
     "No podés desvincular tu único método de inicio de sesión.": "Tu ne peux pas délier ton unique méthode de connexion.",
     "No pudimos completar la acción. Reintentá más tarde.": "Impossible de terminer l'action. Réessaie plus tard.",
     "Siempre podés entrar con un código enviado a este correo.": "Tu peux toujours te connecter avec un code envoyé à cette adresse e-mail.",
-    "Al continuar aceptás la Política de privacidad.": "En continuant, tu acceptes la politique de confidentialité."
+    "Al continuar aceptás la Política de privacidad.": "En continuant, tu acceptes la politique de confidentialité.",
+    "Día": "Jour"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1349,7 +1350,8 @@
     "No podés desvincular tu único método de inicio de sesión.": "无法取消你唯一的登录方式。",
     "No pudimos completar la acción. Reintentá más tarde.": "无法完成操作,请稍后重试。",
     "Siempre podés entrar con un código enviado a este correo.": "你始终可以使用发送到此邮箱的验证码登录。",
-    "Al continuar aceptás la Política de privacidad.": "继续即表示你接受隐私政策。"
+    "Al continuar aceptás la Política de privacidad.": "继续即表示你接受隐私政策。",
+    "Día": "训练日"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2025,7 +2027,8 @@
     "No podés desvincular tu único método de inicio de sesión.": "आप अपना एकमात्र साइन-इन तरीका अलग नहीं कर सकते।",
     "No pudimos completar la acción. Reintentá más tarde.": "हम यह कार्य पूरा नहीं कर सके। बाद में फिर कोशिश करें।",
     "Siempre podés entrar con un código enviado a este correo.": "आप हमेशा इस ईमेल पर भेजे गए कोड से साइन इन कर सकते हैं।",
-    "Al continuar aceptás la Política de privacidad.": "जारी रखकर आप गोपनीयता नीति स्वीकार करते हैं।"
+    "Al continuar aceptás la Política de privacidad.": "जारी रखकर आप गोपनीयता नीति स्वीकार करते हैं।",
+    "Día": "दिन"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2701,7 +2704,8 @@
     "No podés desvincular tu único método de inicio de sesión.": "لا يمكنك إلغاء ربط طريقة تسجيل الدخول الوحيدة لديك.",
     "No pudimos completar la acción. Reintentá más tarde.": "تعذر إكمال الإجراء. حاول مرة أخرى لاحقًا.",
     "Siempre podés entrar con un código enviado a este correo.": "يمكنك دائمًا تسجيل الدخول برمز يُرسل إلى هذا البريد.",
-    "Al continuar aceptás la Política de privacidad.": "بالمتابعة فإنك توافق على سياسة الخصوصية."
+    "Al continuar aceptás la Política de privacidad.": "بالمتابعة فإنك توافق على سياسة الخصوصية.",
+    "Día": "اليوم"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -3376,7 +3380,8 @@
     "No podés desvincular tu único método de inicio de sesión.": "Du kannst deine einzige Anmeldemethode nicht entfernen.",
     "No pudimos completar la acción. Reintentá más tarde.": "Die Aktion konnte nicht abgeschlossen werden. Versuche es später erneut.",
     "Siempre podés entrar con un código enviado a este correo.": "Du kannst dich jederzeit mit einem an diese E-Mail gesendeten Code anmelden.",
-    "Al continuar aceptás la Política de privacidad.": "Mit dem Fortfahren akzeptierst du die Datenschutzerklärung."
+    "Al continuar aceptás la Política de privacidad.": "Mit dem Fortfahren akzeptierst du die Datenschutzerklärung.",
+    "Día": "Tag"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -4051,7 +4056,8 @@
     "No podés desvincular tu único método de inicio de sesión.": "Non puoi scollegare il tuo unico metodo di accesso.",
     "No pudimos completar la acción. Reintentá más tarde.": "Impossibile completare l'azione. Riprova più tardi.",
     "Siempre podés entrar con un código enviado a este correo.": "Puoi sempre accedere con un codice inviato a questa e-mail.",
-    "Al continuar aceptás la Política de privacidad.": "Continuando accetti l'informativa sulla privacy."
+    "Al continuar aceptás la Política de privacidad.": "Continuando accetti l'informativa sulla privacy.",
+    "Día": "Giorno"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4726,7 +4732,8 @@
     "No podés desvincular tu único método de inicio de sesión.": "Você não pode desvincular seu único método de login.",
     "No pudimos completar la acción. Reintentá más tarde.": "Não foi possível concluir a ação. Tente novamente mais tarde.",
     "Siempre podés entrar con un código enviado a este correo.": "Você sempre pode entrar com um código enviado para este e-mail.",
-    "Al continuar aceptás la Política de privacidad.": "Ao continuar, você aceita a Política de privacidade."
+    "Al continuar aceptás la Política de privacidad.": "Ao continuar, você aceita a Política de privacidade.",
+    "Día": "Dia"
   },
   "en": {
     "Sexo": "Sex",

@@ -10,7 +10,6 @@ import {
   recommendedTrainingDays,
   type TrainingExperience,
 } from "@fitty/core/domain/training-setup";
-import { recommendedRepRange, recommendedSetCount } from "@fitty/core/domain/workouts";
 import { PersonalForm } from "@/features/profile/personal-form";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
@@ -45,8 +44,8 @@ export function OnboardingFlow() {
     step === "profile"
       ? t("Tus datos", "Your details")
       : t("Tu entrenamiento", "Your training");
-  const makeRoutineProposal = (nextVariation: number) =>
-    createGuidedRoutine(
+  const makeRoutineProposal = (nextVariation: number) => {
+    const routine = createGuidedRoutine(
       {
         mode: "auto",
         experience,
@@ -60,6 +59,15 @@ export function OnboardingFlow() {
         language: snapshot.settings.language ?? "es",
       },
     );
+    // The muscle groups of each day are already listed under its name.
+    return {
+      ...routine,
+      days: routine.days.map((day, index) => ({
+        ...day,
+        name: `${t("Día", "Day")} ${index + 1}`,
+      })),
+    };
+  };
   const showRoutinePreview = () => {
     setPreviewRoutine(makeRoutineProposal(variation));
     setVariation((current) => current + 1);
@@ -402,34 +410,6 @@ export function OnboardingFlow() {
                     "Remove or add exercises, go back to change your details, or generate another suggestion.",
                   )}
                 </p>
-              </div>
-              <p className="onboarding-preview-overview">
-                <strong>{previewRoutine.days.length} {t("días", "days")}</strong>
-                <span aria-hidden="true">·</span>
-                <span>
-                  {t("Grupos incluidos", "Muscle groups")}: {groups.join(", ")}
-                </span>
-              </p>
-              <div className="onboarding-preview-summary">
-                <div>
-                  <span>{t("Frecuencia", "Frequency")}</span>
-                  <strong>
-                    {previewRoutine.days.length} {t("días", "days")}
-                  </strong>
-                </div>
-                <div>
-                  <span>{t("Series de trabajo", "Working sets")}</span>
-                  <strong>
-                    {recommendedSetCount(experience, goal)}{" "}
-                    {t("por ejercicio", "per exercise")}
-                  </strong>
-                </div>
-                <div>
-                  <span>{t("Repeticiones guía", "Suggested reps")}</span>
-                  <strong>
-                    {recommendedRepRange(goal)} {t("reps", "reps")}
-                  </strong>
-                </div>
               </div>
               {goal === "Mejorar resistencia cardiovascular" && (
                 <p className="onboarding-suggestion" role="status">
