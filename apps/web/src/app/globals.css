@@ -3180,7 +3180,8 @@ input[type="range"] {
   list-style: none;
 }
 .onboarding-preview-exercises li {
-  padding: 8px;
+  align-items: center;
+  padding: 10px;
   border-radius: 14px;
   background: color-mix(in srgb, var(--secondary) 80%, white 8%);
 }
@@ -3189,9 +3190,13 @@ input[type="range"] {
 }
 .onboarding-preview-remove {
   display: inline-grid;
-  width: 40px;
-  height: 40px;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   flex: none;
+  align-self: center;
   place-items: center;
   padding: 0;
   border: 0;
@@ -3220,7 +3225,7 @@ input[type="range"] {
 }
 .onboarding-preview-exercise-card > span {
   display: flex;
-  min-height: 76px;
+  align-self: center;
   align-items: center;
   line-height: 1.25;
 }
@@ -3239,8 +3244,10 @@ input[type="range"] {
   object-fit: cover;
 }
 .onboarding-preview-image-button {
-  display: block;
+  display: flex;
   flex: none;
+  align-self: center;
+  line-height: 0;
   padding: 0;
   border: 0;
   border-radius: 12px;
