@@ -38,7 +38,7 @@ import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
 import { SessionExtras } from "@/components/session-extras";
 import { SyncStatus } from "@/components/sync-status";
-import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import { Button, Card, Field, Label, Screen, Title, DialogScroll } from "@/components/ui";
 import { env } from "@/lib/env";
 import { makeId } from "@/lib/id";
 import { playRestDone } from "@/lib/sound";
@@ -726,8 +726,7 @@ export default function Workout() {
               >
                 {t("Finalizar entrenamiento", "Finish workout")}
               </Text>
-              <ScrollView
- showsVerticalScrollIndicator={false}
+              <DialogScroll
                 style={{ maxHeight: 460 }}
                 keyboardShouldPersistTaps="handled"
                 scrollEnabled={!resizingComment}
@@ -737,7 +736,7 @@ export default function Workout() {
                   onChange={setExtras}
                   onResizing={setResizingComment}
                 />
-              </ScrollView>
+              </DialogScroll>
               <Button
                 onPress={() => {
                   setFinishing(false);
@@ -770,8 +769,7 @@ export default function Workout() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card>
-              <ScrollView
- showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
+              <DialogScroll contentContainerStyle={{ gap: space(3) }}>
                 <View
                   style={{
                     flexDirection: "row",
@@ -926,7 +924,7 @@ export default function Workout() {
                     {t("+ Agregar descenso", "+ Add drop")}
                   </Button>
                 ) : null}
-              </ScrollView>
+              </DialogScroll>
             </Card>
           </Pressable>
         </Pressable>
@@ -948,8 +946,7 @@ export default function Workout() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card>
-              <ScrollView
- showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
+              <DialogScroll contentContainerStyle={{ gap: space(3) }}>
                 <Text
                   accessibilityRole="header"
                   style={{
@@ -1009,7 +1006,7 @@ export default function Workout() {
                 >
                   {t("Quitar superseries", "Remove supersets")}
                 </Button>
-              </ScrollView>
+              </DialogScroll>
             </Card>
           </Pressable>
         </Pressable>
@@ -1031,8 +1028,7 @@ export default function Workout() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
-              <ScrollView
- showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
+              <DialogScroll contentContainerStyle={{ gap: space(3) }}>
                 {imageFor ? (
                   <Image
                     source={`${env.apiUrl}${exerciseImage(imageFor, snapshot.profile.gender)}`}
@@ -1082,7 +1078,7 @@ export default function Workout() {
                     {t("Cerrar", "Close")}
                   </Button>
                 </View>
-              </ScrollView>
+              </DialogScroll>
             </Card>
           </Pressable>
         </Pressable>

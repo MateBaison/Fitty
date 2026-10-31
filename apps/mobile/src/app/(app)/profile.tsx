@@ -27,7 +27,7 @@ import {
 import { DeleteAccount } from "@/components/delete-account";
 import { LinkedApps } from "@/components/linked-apps";
 import { SignOut } from "@/components/sign-out";
-import { Button, Card, Field, Label, Screen } from "@/components/ui";
+import { Button, Card, Field, Label, Screen, DialogScroll } from "@/components/ui";
 import { pickPhoto, safePhoto } from "@/lib/photos";
 import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
@@ -566,8 +566,7 @@ export default function Profile() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card>
-              <ScrollView
- showsVerticalScrollIndicator={false}
+              <DialogScroll
                 contentContainerStyle={{ gap: space(3) }}
                 keyboardShouldPersistTaps="handled"
               >
@@ -672,7 +671,7 @@ export default function Profile() {
                     </Button>
                   </>
                 )}
-              </ScrollView>
+              </DialogScroll>
             </Card>
           </Pressable>
         </Pressable>

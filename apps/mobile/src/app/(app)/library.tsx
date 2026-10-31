@@ -8,7 +8,7 @@ import { type CatalogExercise } from "@fitty/core/domain/workouts";
 import { CustomExerciseForm } from "@/components/custom-exercise-form";
 import { ExerciseBrowser } from "@/components/exercise-browser";
 import { Notice } from "@/components/notice";
-import { Button, Card, Glow, Label, styles } from "@/components/ui";
+import { Button, Card, Glow, Label, styles, DialogScroll } from "@/components/ui";
 import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -47,8 +47,7 @@ export default function Library() {
         >
           <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
-              <ScrollView
- showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(3) }}>
+              <DialogScroll contentContainerStyle={{ gap: space(3) }}>
                 {selected ? (
                   <Image
                     source={`${env.apiUrl}${exerciseImage(selected, snapshot.profile.gender)}`}
@@ -141,7 +140,7 @@ export default function Library() {
                     {t("Cerrar", "Close")}
                   </Button>
                 </View>
-              </ScrollView>
+              </DialogScroll>
             </Card>
           </Pressable>
         </Pressable>

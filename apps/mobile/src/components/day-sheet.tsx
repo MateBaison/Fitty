@@ -25,7 +25,7 @@ import {
 import { ManualSession } from "@/components/manual-session";
 import { SessionEditor } from "@/components/session-editor";
 import { WorkoutPoster } from "@/components/workout-poster";
-import { Button, Card, Label } from "@/components/ui";
+import { Button, Card, Label, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -194,7 +194,7 @@ export function DaySheet({
               })
             : ""}
         </Text>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }}>
+        <DialogScroll contentContainerStyle={{ gap: space(2) }}>
           {sessions.length ? (
             sessions.map((session) => (
               <Pressable
@@ -226,7 +226,7 @@ export function DaySheet({
               {t("No hay entrenamientos guardados este día.", "No workouts saved for this day.")}
             </Label>
           )}
-        </ScrollView>
+        </DialogScroll>
         {copied.length ? (
           <Button variant="secondary" onPress={paste}>
             {t("Pegar entrenamientos copiados", "Paste copied workouts")}
@@ -322,7 +322,7 @@ export function DaySheet({
                 }
               />
             </View>
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }}>
+            <DialogScroll contentContainerStyle={{ gap: space(2) }}>
               <Text style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}>
                 {detail.day}
               </Text>
@@ -370,7 +370,7 @@ export function DaySheet({
                   {Math.round(detail.bodyWeightEndKg * factor * 10) / 10} {unit}
                 </Label>
               ) : null}
-            </ScrollView>
+            </DialogScroll>
           </>
         ) : null}
       </Overlay>

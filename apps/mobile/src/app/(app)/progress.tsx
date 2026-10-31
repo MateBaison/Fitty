@@ -23,7 +23,7 @@ import {
 import { catalogFor, localDateKey } from "@fitty/core/domain/workouts";
 import { BodyPanel } from "@/app/(app)/body";
 import { ProgressChart, type ChartPoint } from "@/components/progress-chart";
-import { Button, Card, Field, Label, Screen } from "@/components/ui";
+import { Button, Card, Field, Label, Screen, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -738,8 +738,7 @@ export default function Progress() {
               <Text style={{ ...heading, textAlign: "center" }}>
                 {t("Elegí un ejercicio", "Choose an exercise")}
               </Text>
-              <ScrollView
- showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }}>
+              <DialogScroll contentContainerStyle={{ gap: space(2) }}>
                 {recorded.map((exercise) => (
                   <Button
                     key={exercise.id}
@@ -755,7 +754,7 @@ export default function Progress() {
                 {!recorded.length ? (
                   <Label muted>{t("Sin ejercicios registrados", "No exercises recorded")}</Label>
                 ) : null}
-              </ScrollView>
+              </DialogScroll>
             </Card>
           </Pressable>
         </Pressable>

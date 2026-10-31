@@ -24,7 +24,7 @@ import {
   type MuscleGroup,
 } from "@fitty/core/domain/schemas/exercise";
 import { catalogFor, type CatalogExercise } from "@fitty/core/domain/workouts";
-import { Card, Label, styles } from "@/components/ui";
+import { Card, Label, styles, DialogScroll } from "@/components/ui";
 import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -390,8 +390,7 @@ export function ExerciseBrowser({
               >
                 {t("Seleccionar zona", "Select area")}
               </Text>
-              <ScrollView
- showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: space(2) }}>
+              <DialogScroll contentContainerStyle={{ gap: space(2) }}>
                 {(["Favoritos", "Todos", ...muscleGroups] as const).map(
                   (name) => {
                     const active = group === name;
@@ -458,7 +457,7 @@ export function ExerciseBrowser({
                     );
                   },
                 )}
-              </ScrollView>
+              </DialogScroll>
             </Card>
           </Pressable>
         </Pressable>

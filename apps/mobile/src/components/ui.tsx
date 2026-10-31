@@ -1,5 +1,7 @@
 import { createContext, useState, type ReactNode } from "react";
 import {
+  useWindowDimensions,
+  type ScrollViewProps,
   ActivityIndicator,
   Pressable,
   ScrollView,
@@ -75,6 +77,19 @@ export function Screen({
         <View style={[styles.content, { flex: 1 }]}>{children}</View>
       )}
     </View>
+  );
+}
+
+/** Scrollable body of a dialog: limited to a share of the screen so long content scrolls. */
+export function DialogScroll({ style, ...props }: ScrollViewProps) {
+  const { height } = useWindowDimensions();
+  return (
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+      style={[{ maxHeight: height * 0.66 }, style]}
+      {...props}
+    />
   );
 }
 

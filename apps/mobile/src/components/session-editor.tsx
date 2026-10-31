@@ -13,7 +13,7 @@ import {
 } from "@fitty/core/domain/workouts";
 import { NumberInput } from "@/components/number-input";
 import { SessionExtras } from "@/components/session-extras";
-import { Button, Card, Field, Label } from "@/components/ui";
+import { Button, Card, Field, Label, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -143,9 +143,7 @@ export function SessionEditor({
             >
               {t("Editar entrenamiento", "Edit workout")}
             </Text>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="handled"
+            <DialogScroll
               scrollEnabled={!resizing}
               contentContainerStyle={{ gap: space(3) }}
             >
@@ -277,7 +275,7 @@ export function SessionEditor({
                   />
                 </>
               ) : null}
-            </ScrollView>
+            </DialogScroll>
             <Button onPress={save}>{t("Guardar cambios", "Save changes")}</Button>
             <Button variant="secondary" onPress={close}>
               {t("Cancelar", "Cancel")}

@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { ResizableInput } from "@/components/resizable-input";
-import { Button, Card, Field, Label, styles } from "@/components/ui";
+import { Button, Card, Field, Label, styles, DialogScroll } from "@/components/ui";
 import { env } from "@/lib/env";
 import { makeId } from "@/lib/id";
 import { supabase } from "@/lib/supabase";
@@ -173,8 +173,7 @@ export function SupportForm({
       >
         <Pressable onPress={() => undefined} style={{ maxHeight: "92%" }}>
           <Card>
-            <ScrollView
- showsVerticalScrollIndicator={false}
+            <DialogScroll
               contentContainerStyle={{ gap: space(3) }}
               keyboardShouldPersistTaps="handled"
               scrollEnabled={!resizing}
@@ -347,7 +346,7 @@ export function SupportForm({
                   </Button>
                 </>
               )}
-            </ScrollView>
+            </DialogScroll>
           </Card>
         </Pressable>
       </Pressable>
