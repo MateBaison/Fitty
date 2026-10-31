@@ -2,7 +2,7 @@ import * as Haptics from "expo-haptics";
 import { useKeepAwake } from "expo-keep-awake";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Text, Vibration } from "react-native";
+import { Text, Vibration, View } from "react-native";
 import {
   CombatMachine,
   combatPresets,
@@ -11,10 +11,10 @@ import {
   type CombatConfig,
   type CombatSignal,
 } from "@fitty/core/domain/combat";
-import { ChipGroup } from "@/components/chip";
+import { NumberInput } from "@/components/number-input";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
-import { colors } from "@/theme";
+import { colors, space } from "@/theme";
 
 const modes = [
   ["boxeo", "Boxeo", "Boxing"],
@@ -65,107 +65,89 @@ export function CombatPanel() {
     state.phase === "prep"
       ? t("Preparación", "Get ready")
       : state.phase === "work"
-        ? t("Round", "Round")
+        ? t("Trabajo", "Work")
         : state.phase === "rest"
           ? t("Descanso", "Rest")
           : t("Terminado", "Finished");
+  const field = (
+    key: "rounds" | "work" | "rest" | "prep",
+    label: string,
+    min: number,
+    max: number,
+  ) => (
+    <View style={{ width: "47%", gap: 6 }}>
+      <Label muted>{label}</Label>
+      <NumberInput
+        value={config[key]}
+        accessibilityLabel={label}
+        onCommit={(value) => {
+          if (state.running) return;
+          configure({
+            ...config,
+            [key]: Math.min(max, Math.max(min, value ?? min)),
+          });
+        }}
+      />
+    </View>
+  );
   return (
-    <>
-      <Card>
-        {state.running ? <KeepAwake /> : null}
-        <Label muted style={{ textAlign: "center" }}>
-          {phase} · {state.round}/{config.rounds}
-        </Label>
-        <Text
-          accessibilityRole="timer"
-          style={{
-            color:
-              state.phase === "rest"
-                ? colors.success
-                : state.phase === "work"
-                  ? colors.warning
-                  : colors.foreground,
-            fontSize: 72,
-            fontWeight: "800",
-            textAlign: "center",
-            fontVariant: ["tabular-nums"],
-          }}
-        >
-          {timeFormat(
-            state.running ? state.remaining : state.remaining || config.work,
-          )}
-        </Text>
-        <Button
-          onPress={() => {
-            machine.current.toggle(Date.now()).forEach(signal);
-            setState({ ...machine.current.state });
-          }}
-        >
-          {state.running ? t("Pausar", "Pause") : t("Iniciar", "Start")}
-        </Button>
-        <Button
-          variant="secondary"
-          onPress={() => {
-            machine.current.reset(config);
-            setState({ ...machine.current.state });
-          }}
-        >
-          {t("Reiniciar", "Reset")}
-        </Button>
-      </Card>
-      <Card>
-        <Label muted>{t("Modo", "Mode")}</Label>
-        <ChipGroup
-          options={modes.map(([value, es, en]) => ({
-            value,
-            label: t(es, en),
-          }))}
-          value={config.mode}
-          onChange={(mode) =>
-            !state.running &&
-            configure({ ...config, mode, ...combatPresets[mode] })
-          }
-        />
-        <Label muted>{t("Rounds", "Rounds")}</Label>
-        <ChipGroup
-          options={[3, 5, 8, 10, 12].map((value) => ({
-            value,
-            label: String(value),
-          }))}
-          value={config.rounds}
-          onChange={(rounds) =>
-            !state.running && configure({ ...config, rounds })
-          }
-        />
-        <Label muted>{t("Trabajo", "Work")}</Label>
-        <ChipGroup
-          options={[20, 40, 60, 120, 180].map((value) => ({
-            value,
-            label: timeFormat(value),
-          }))}
-          value={config.work}
-          onChange={(work) => !state.running && configure({ ...config, work })}
-        />
-        <Label muted>{t("Descanso", "Rest")}</Label>
-        <ChipGroup
-          options={[0, 10, 20, 30, 60].map((value) => ({
-            value,
-            label: timeFormat(value),
-          }))}
-          value={config.rest}
-          onChange={(rest) => !state.running && configure({ ...config, rest })}
-        />
-        <Label muted>{t("Preparación", "Get ready")}</Label>
-        <ChipGroup
-          options={[0, 5, 10, 15].map((value) => ({
-            value,
-            label: `${value}s`,
-          }))}
-          value={config.prep}
-          onChange={(prep) => !state.running && configure({ ...config, prep })}
-        />
-      </Card>
-    </>
+    <Card>
+      {state.running ? <KeepAwake /> : null}
+      <Text
+        style={{
+          color: "#fdba74",
+          textAlign: "center",
+          fontSize: 16,
+          fontWeight: "700",
+        }}
+      >
+        {phase} · {t("Ronda", "Round")} {state.round}/{config.rounds}
+      </Text>
+      <Text
+        accessibilityRole="timer"
+        style={{
+          color: colors.foreground,
+          fontSize: 76,
+          fontWeight: "800",
+          textAlign: "center",
+          fontVariant: ["tabular-nums"],
+          paddingVertical: space(3),
+        }}
+      >
+        {timeFormat(
+          state.running ? state.remaining : state.remaining || config.work,
+        )}
+      </Text>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3), justifyContent: "space-between" }}>
+        {field("rounds", t("Rondas", "Rounds"), 1, 100)}
+        {field("work", t("Trabajo (seg)", "Work (sec)"), 1, 3600)}
+        {field("rest", t("Descanso (seg)", "Rest (sec)"), 0, 3600)}
+        {field("prep", t("Preparación (seg)", "Preparation (sec)"), 0, 600)}
+      </View>
+      <View style={{ flexDirection: "row", gap: space(3) }}>
+        <View style={{ flex: 1 }}>
+          <Button
+            onPress={() => {
+              machine.current.toggle(Date.now()).forEach(signal);
+              setState({ ...machine.current.state });
+            }}
+          >
+            {state.running ? t("Pausar", "Pause") : t("Iniciar", "Start")}
+          </Button>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            variant="secondary"
+            onPress={() => {
+              machine.current.reset(config);
+              setState({ ...machine.current.state });
+            }}
+          >
+            {t("Reiniciar", "Reset")}
+          </Button>
+        </View>
+      </View>
+    </Card>
   );
 }
 

@@ -5,11 +5,11 @@ import { Modal, Pressable, Text, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import {
   localDateKey,
-  sessionsOnDay,
   startWorkout,
+  type Session,
 } from "@fitty/core/domain/workouts";
 import { Calendar } from "@/components/calendar";
-import { ManualSession } from "@/components/manual-session";
+import { DaySheet } from "@/components/day-sheet";
 import { Notice } from "@/components/notice";
 import { ReadinessCheck } from "@/components/readiness";
 import { Button, Card, Label, Screen } from "@/components/ui";
@@ -60,7 +60,7 @@ export default function Home() {
     null,
   );
   const [day, setDay] = useState<string | null>(null);
-  const [logging, setLogging] = useState(false);
+  const [copied, setCopied] = useState<Session[]>([]);
   const start = (rid: string, did: string) => {
     setPending(null);
     setPicking(false);
@@ -76,7 +76,6 @@ export default function Home() {
   const activeDay = activeRoutine?.days.find(
     (item) => item.id === snapshot.workout?.did,
   );
-  const sessions = day ? sessionsOnDay(snapshot.sessions, day) : [];
   return (
     <Screen>
       <Notice />
@@ -129,6 +128,32 @@ export default function Home() {
         </Button>
       )}
       <RoutinesSection />
+      {copied.length ? (
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: space(3),
+            padding: space(3),
+            borderRadius: 16,
+            borderColor: "#2b6a8f",
+            borderWidth: 1,
+            backgroundColor: "#10283a",
+          }}
+        >
+          <Label style={{ flex: 1 }}>
+            {t(
+              "Entrenamiento copiado. Tocá un día del calendario y pegalo.",
+              "Workout copied. Tap a calendar day and paste it.",
+            )}
+          </Label>
+          <Pressable accessibilityRole="button" onPress={() => setCopied([])}>
+            <Text style={{ color: colors.accent, fontWeight: "800" }}>
+              {t("Cancelar", "Cancel")}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
       <Card>
         <Calendar selected={day ?? localDateKey(new Date())} onSelect={setDay} />
       </Card>
@@ -202,98 +227,11 @@ export default function Home() {
           </Pressable>
         </Pressable>
       </Modal>
-      <Modal
-        visible={day !== null && !logging}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setDay(null)}
-      >
-        <Pressable
-          onPress={() => setDay(null)}
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            padding: space(4),
-            backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
-            <Card>
-              <Text
-                accessibilityRole="header"
-                style={{
-                  color: colors.foreground,
-                  fontSize: 20,
-                  fontWeight: "800",
-                  textTransform: "capitalize",
-                }}
-              >
-                {day
-                  ? new Date(`${day}T12:00:00`).toLocaleDateString(locale, {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "long",
-                    })
-                  : ""}
-              </Text>
-              {sessions.length ? (
-                sessions.map((session) => (
-                  <View
-                    key={session.id}
-                    style={{
-                      borderRadius: 14,
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                      backgroundColor: colors.secondary,
-                      padding: space(3),
-                      gap: 2,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.foreground,
-                        fontWeight: "800",
-                        fontSize: 16,
-                      }}
-                    >
-                      {session.day}
-                    </Text>
-                    <Label muted>{session.routine}</Label>
-                    <Label muted>
-                      {session.duration != null
-                        ? `${session.duration} min · `
-                        : ""}
-                      {Math.round(session.volumeKg ?? session.volume ?? 0)} kg
-                    </Label>
-                  </View>
-                ))
-              ) : (
-                <Label muted>
-                  {t("Sin entrenamientos este día.", "No workouts this day.")}
-                </Label>
-              )}
-              {day && day <= localDateKey(new Date()) ? (
-                <Button onPress={() => setLogging(true)}>
-                  {t(
-                    "Agregar entrenamiento a este día",
-                    "Add a workout to this day",
-                  )}
-                </Button>
-              ) : null}
-              <Button variant="secondary" onPress={() => setDay(null)}>
-                {t("Cerrar", "Close")}
-              </Button>
-            </Card>
-          </Pressable>
-        </Pressable>
-      </Modal>
-      <ManualSession
-        date={day ?? localDateKey(new Date())}
-        visible={logging}
-        onClose={() => {
-          setLogging(false);
-          setDay(null);
-        }}
+      <DaySheet
+        day={day}
+        onClose={() => setDay(null)}
+        copied={copied}
+        onCopied={setCopied}
       />
       <ReadinessCheck
         visible={pending !== null}
