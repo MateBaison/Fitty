@@ -23,7 +23,7 @@ const fields = [
 type FieldKey = (typeof fields)[number][0];
 const KG_TO_LB = 2.20462;
 
-export default function Body() {
+export function BodyPanel() {
   const snapshot = useSnapshot();
   const { change, notify, t } = useAccount();
   const router = useRouter();
@@ -65,10 +65,7 @@ export default function Body() {
     }
   };
   return (
-    <Screen>
-      <Button variant="ghost" onPress={() => router.back()}>
-        {`‹ ${t("Volver", "Back")}`}
-      </Button>
+    <>
       <Title>{t("Medidas corporales", "Body measurements")}</Title>
       <Notice />
       <Card>
@@ -156,6 +153,19 @@ export default function Body() {
           </Button>
         </Card>
       ))}
+    </>
+  );
+}
+
+export default function Body() {
+  const router = useRouter();
+  const { t } = useAccount();
+  return (
+    <Screen>
+      <Button variant="ghost" onPress={() => router.back()}>
+        {`‹ ${t("Volver", "Back")}`}
+      </Button>
+      <BodyPanel />
     </Screen>
   );
 }
