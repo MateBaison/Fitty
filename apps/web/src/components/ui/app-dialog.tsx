@@ -17,6 +17,7 @@ export function AppDialog({
   children,
   overlayClassName,
   disablePointerDismissal = false,
+  centered = false,
 }: {
   open: boolean;
   onClose: () => void;
@@ -27,6 +28,7 @@ export function AppDialog({
   children: React.ReactNode;
   overlayClassName?: string;
   disablePointerDismissal?: boolean;
+  centered?: boolean;
 }) {
   return (
     <Dialog
@@ -43,12 +45,14 @@ export function AppDialog({
           compactHeader && "compact-dialog",
         )}
       >
-        <DialogHeader>
+        <DialogHeader className={centered ? "text-center" : undefined}>
           <div
             className={
-              compactHeader
-                ? "compact-dialog-header flex items-center justify-between gap-2 pr-7"
-                : "flex items-center gap-2 pr-8"
+              centered
+                ? "flex items-center justify-center gap-2"
+                : compactHeader
+                  ? "compact-dialog-header flex items-center justify-between gap-2 pr-7"
+                  : "flex items-center gap-2 pr-8"
             }
           >
             <DialogTitle className="text-xl font-bold">{title}</DialogTitle>

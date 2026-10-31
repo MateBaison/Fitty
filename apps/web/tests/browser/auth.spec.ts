@@ -37,7 +37,8 @@ test("server gates require auth; OTP rejects invalid codes, restores cookies and
   ).toBeVisible();
   await page.getByRole("button", { name: "Salir de la cuenta" }).click();
   await page
-    .getByRole("button", { name: "Confirmar cierre de sesión", exact: true })
+    .getByRole("dialog")
+    .getByRole("button", { name: "Cerrar sesión", exact: true })
     .click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto("/profile");
@@ -154,7 +155,8 @@ test("account switches isolate caches and restore each account's own cloud data"
     .getByRole("button", { name: "Salir de la cuenta", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirmar cierre de sesión", exact: true })
+    .getByRole("dialog")
+    .getByRole("button", { name: "Cerrar sesión", exact: true })
     .click();
   await login(page, "second@example.invalid");
   await page.goto("/profile");
@@ -169,7 +171,8 @@ test("account switches isolate caches and restore each account's own cloud data"
     .getByRole("button", { name: "Salir de la cuenta", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirmar cierre de sesión", exact: true })
+    .getByRole("dialog")
+    .getByRole("button", { name: "Cerrar sesión", exact: true })
     .click();
   await login(page);
   await page.goto("/profile");
@@ -223,7 +226,8 @@ test("onboarding has a cancellable sign-out door before saving a profile", async
     .getByRole("button", { name: "Salir de la cuenta", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirmar cierre de sesión", exact: true })
+    .getByRole("dialog")
+    .getByRole("button", { name: "Cerrar sesión", exact: true })
     .click();
   await expect(page).toHaveURL(/\/login$/);
   expect((await page.request.get("/api/account/summary")).status()).toBe(401);
@@ -253,7 +257,8 @@ test("header sign-out preserves unsynced edits and requires a second confirmatio
     .getByRole("button", { name: "Salir de la cuenta", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirmar cierre de sesión", exact: true })
+    .getByRole("dialog")
+    .getByRole("button", { name: "Cerrar sesión", exact: true })
     .click();
   await expect(
     page.getByRole("button", { name: "Salir igualmente", exact: true }),

@@ -47,6 +47,7 @@ export function SignOutButton({
         onClose={() => {
           if (!busy) setOpen(false);
         }}
+        centered
         title={t("¿Cerrar sesión?", "Sign out?")}
         description={
           pending
@@ -60,8 +61,12 @@ export function SignOutButton({
               )
         }
       >
-        {error && <p role="alert">{error}</p>}
-        <div className="flex flex-wrap justify-end gap-3">
+        {error && (
+          <p role="alert" className="text-center">
+            {error}
+          </p>
+        )}
+        <div className="flex flex-wrap justify-center gap-3">
           <Button
             variant="secondary"
             disabled={busy}
@@ -98,7 +103,7 @@ export function SignOutButton({
                 ? t("Saliendo…", "Leaving…")
                 : pending
                   ? t("Salir igualmente", "Leave anyway")
-                  : t("Confirmar cierre de sesión", "Confirm sign out")}
+                  : t("Cerrar sesión", "Sign out")}
             </Button>
           </form>
         </div>
