@@ -57,11 +57,20 @@ test("clocks persist through navigation, combat works and GPS preparation record
       value: {
         watchPosition: (success: (value: unknown) => void) => {
           active = true;
-          success({ coords: { latitude: 52, longitude: 13, speed: 0 } });
+          success({
+            coords: { latitude: 52, longitude: 13, speed: 0, accuracy: 5 },
+            timestamp: Date.now(),
+          });
           window.addEventListener("test-position", () => {
             if (active)
               success({
-                coords: { latitude: 52.001, longitude: 13, speed: 0 },
+                coords: {
+                  latitude: 52.001,
+                  longitude: 13,
+                  speed: 0,
+                  accuracy: 5,
+                },
+                timestamp: Date.now(),
               });
           });
           return 1;
@@ -78,13 +87,21 @@ test("clocks persist through navigation, combat works and GPS preparation record
   await expect(
     page.getByRole("button", { name: "Finalizar", exact: true }),
   ).toBeVisible();
-  await page.evaluate(() => window.dispatchEvent(new Event("test-position")));
+  // Positions are ignored during the preparation countdown, so keep sending until the route has a line.
   await expect(
     page.locator(".route-map .leaflet-overlay-pane path").first(),
   ).toBeAttached();
-  await expect(
-    page.locator(".route-map .leaflet-overlay-pane path").first(),
-  ).toHaveAttribute("d", /M.*L/);
+  await expect
+    .poll(async () => {
+      await page.evaluate(() =>
+        window.dispatchEvent(new Event("test-position")),
+      );
+      return page
+        .locator(".route-map .leaflet-overlay-pane path")
+        .first()
+        .getAttribute("d");
+    })
+    .toMatch(/M.*L/);
   await expect(page.locator(".route-map")).toContainText("OpenStreetMap");
   await page.getByRole("button", { name: "Finalizar", exact: true }).click();
   await expect(
@@ -189,6 +206,9 @@ test("progress renders empty-state analytics without removed time totals", async
   await expect(
     page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
+  await page
+    .getByText("Ver detalle del entrenamiento", { exact: true })
+    .click();
   await expect(
     page.getByRole("img", { name: /Series por zona muscular/ }),
   ).toBeVisible();

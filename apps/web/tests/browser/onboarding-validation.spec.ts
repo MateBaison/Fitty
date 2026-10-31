@@ -38,22 +38,17 @@ test("onboarding shows missing fields and allows a complete profile without a ph
     page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
   ).toBeVisible();
   const custom = page.getByRole("button", {
-    name: "Tengo una rutina: quiero armarla",
-    exact: true,
+    name: /^Armar mi rutina después/,
   });
   await expect(custom).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("combobox")).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: "Crear rutina y entrar", exact: true }),
-  ).toHaveCount(0);
   await page
-    .getByRole("button", {
-      name: "Necesito una rutina automática",
-      exact: true,
-    })
+    .getByRole("button", { name: /^Crear una rutina sugerida/ })
     .click();
   await expect(page.getByRole("combobox")).toHaveCount(0);
-  await page.getByRole("button", { name: "Continuar", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Configurar rutina", exact: true })
+    .click();
   await expect(
     page.getByRole("combobox", { name: /^Experiencia previa/ }),
   ).toBeVisible();
@@ -62,19 +57,21 @@ test("onboarding shows missing fields and allows a complete profile without a ph
   await all.click();
   await expect(page.getByRole("checkbox", { checked: true })).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "Crear rutina y entrar", exact: true }),
+    page.getByRole("button", { name: "Ver vista previa", exact: true }),
   ).toBeDisabled();
   await all.click();
   await expect(page.getByRole("checkbox", { checked: false })).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "Crear rutina y entrar", exact: true }),
+    page.getByRole("button", { name: "Ver vista previa", exact: true }),
   ).toBeEnabled();
   await page.getByRole("button", { name: "Volver", exact: true }).click();
   await custom.click();
   await expect(
     page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Continuar", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Entrar a Fitty", exact: true })
+    .click();
   await expect(page).toHaveURL(/\/home$/);
   await page.reload();
   await expect(page).toHaveURL(/\/home$/);

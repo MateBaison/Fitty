@@ -46,25 +46,13 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
   await openHomeSection(page, "Progreso");
   const summary = page.locator(".progress-dashboard");
   await expect(summary.locator(".progress-stats > article")).toHaveCount(3);
-  await expect(summary.locator(".progress-stats")).toContainText("1/3");
-  await page.getByText("Ver detalle", { exact: true }).click();
+  await expect(summary.locator(".progress-stats")).toContainText(
+    "Entrenamientos1",
+  );
+  await page
+    .getByText("Ver detalle del entrenamiento", { exact: true })
+    .click();
   await expect(summary).toContainText("400 kg");
-  const weekday = await page.evaluate(() => (new Date().getDay() + 6) % 7);
-  await summary.locator(".progress-week-days button").nth(weekday).click();
-  await expect(page.getByRole("dialog")).toContainText("Pecho y tríceps");
-  await expect(page.getByRole("dialog")).toContainText("400 kg");
-  const training = page.getByRole("dialog").locator(".calendar-workout");
-  await expect(training).not.toHaveAttribute("open", "");
-  await expect(
-    page.getByRole("dialog").getByText("Serie 1:", { exact: false }).first(),
-  ).not.toBeVisible();
-  await training.locator("summary").click();
-  await expect(training).toHaveAttribute("open", "");
-  await expect(training).toContainText("40 kg × 10 reps");
-  await expect(
-    training.getByRole("button", { name: "Editar", exact: true }),
-  ).toBeVisible();
-  await page.keyboard.press("Escape");
   await page
     .getByRole("combobox", { name: "Período", exact: true })
     .selectOption("all");

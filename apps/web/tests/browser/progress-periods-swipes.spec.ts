@@ -121,7 +121,7 @@ test("horizontal gestures navigate inner tabs then main menus and ignore control
 }) => {
   await page.goto("/progress");
   await expect(page.getByTestId("launch-splash")).toHaveCount(0);
-  const intro = page.locator(".progress-intro h2");
+  const intro = page.locator(".progress-dashboard");
   await expect(page.locator(".progress-advances")).toHaveCount(1);
   await swipe(intro, 250, 100);
   await expect(page.locator(".progress-advances")).toHaveCount(0);
@@ -153,7 +153,7 @@ test("horizontal gestures navigate inner tabs then main menus and ignore control
   await expect(page).toHaveURL(/\/home$/);
   await swipe(page.locator("#main-content"), 250, 100);
   await expect(page).toHaveURL(/\/tools$/);
-  await swipe(page.locator(".page-description"), 8, 160);
+  await swipe(page.locator("#main-content"), 8, 160);
   await expect(page).toHaveURL(/\/home$/);
   await page.goto("/tools");
   await swipe(

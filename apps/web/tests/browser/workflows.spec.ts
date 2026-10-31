@@ -765,7 +765,7 @@ test("exercise replacement preserves logged sets and filters same-zone equipment
   await expect(
     dialog.getByText("Propuesta inicial: 2 series", { exact: true }),
   ).toBeVisible();
-  await expect(dialog.getByText(/12 repeticiones/).first()).toBeVisible();
+  await expect(dialog.getByText(/7 repeticiones/).first()).toBeVisible();
   await page.screenshot({
     path: `artifacts/replacement-${info.project.name}.png`,
   });
@@ -777,7 +777,7 @@ test("exercise replacement preserves logged sets and filters same-zone equipment
   );
   await expect(
     page.getByLabel("Repeticiones 2 serie 1", { exact: true }),
-  ).toHaveValue("12");
+  ).toHaveValue("7");
   await expect(
     page.locator('[data-workout-entry="0"] [data-set-row]'),
   ).toHaveCount(1);
@@ -787,7 +787,7 @@ test("exercise replacement preserves logged sets and filters same-zone equipment
   await page.reload();
   await expect(
     page.getByLabel("Repeticiones 2 serie 1", { exact: true }),
-  ).toHaveValue("12");
+  ).toHaveValue("7");
 });
 
 test("weekly summary can select earlier weeks and return to the current week", async ({

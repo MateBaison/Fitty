@@ -8,27 +8,24 @@ test.beforeEach(async ({ page }) => {
       : route.abort(),
   );
 });
-test("manual first use retains personal details and creates editable empty days", async ({
+test("manual first use retains personal details and starts without a routine", async ({
   page,
 }) => {
   await login(page);
   await page.getByLabel("Nombre", { exact: true }).fill("Manual user");
   await page
+    .getByLabel("Fecha de nacimiento", { exact: true })
+    .fill("1990-05-20");
+  await page
+    .getByRole("combobox", { name: /^Género/ })
+    .selectOption("undisclosed");
+  await page
     .getByRole("combobox", { name: "País", exact: true })
     .selectOption({ label: "Uruguay" });
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
-  await page
-    .getByRole("radio", { name: "Tengo una rutina: quiero armarla" })
-    .check();
-  await page
-    .getByRole("combobox", { name: "Experiencia previa", exact: true })
-    .selectOption("experienced");
   await expect(
-    page.getByRole("combobox", {
-      name: "Días de entrenamiento por semana",
-      exact: true,
-    }),
-  ).toHaveValue("4");
+    page.getByRole("button", { name: /^Armar mi rutina después/ }),
+  ).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Volver", exact: true }).click();
   await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue(
     "Manual user",
@@ -38,7 +35,7 @@ test("manual first use retains personal details and creates editable empty days"
   ).toHaveValue("Uruguay");
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
   await page
-    .getByRole("button", { name: "Crear rutina y entrar", exact: true })
+    .getByRole("button", { name: "Entrar a Fitty", exact: true })
     .click();
   await expect(page).toHaveURL(/\/home$/);
   const state = await page.evaluate(() =>
@@ -46,13 +43,8 @@ test("manual first use retains personal details and creates editable empty days"
       localStorage.getItem("fitty-user-11111111-1111-4111-8111-111111111111")!,
     ),
   );
-  const routine = state.routines.find(
-    (r: { id: string }) => r.id === state.selected,
-  );
-  expect(routine.days).toHaveLength(4);
-  expect(
-    routine.days.every((d: { items: string[] }) => d.items.length === 0),
-  ).toBe(true);
+  expect(state.profile.name).toBe("Manual user");
+  expect(state.profile.onboardingComplete).toBe(true);
   await page.goto("/onboarding");
   await expect(page).toHaveURL(/\/home$/);
 });
@@ -101,9 +93,18 @@ test("failed onboarding sync can retry after reload without duplicating the rout
     return route.continue();
   });
   await page.getByLabel("Nombre", { exact: true }).fill("Retry user");
+  await page
+    .getByRole("combobox", { name: "País", exact: true })
+    .selectOption({ label: "Uruguay" });
+  await page
+    .getByLabel("Fecha de nacimiento", { exact: true })
+    .fill("1990-05-20");
+  await page
+    .getByRole("combobox", { name: /^Género/ })
+    .selectOption("undisclosed");
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
   await page
-    .getByRole("button", { name: "Crear rutina y entrar", exact: true })
+    .getByRole("button", { name: "Entrar a Fitty", exact: true })
     .click();
   const retry = page.getByRole("button", {
     name: "Reintentar sincronización",
@@ -120,7 +121,9 @@ test("failed onboarding sync can retry after reload without duplicating the rout
     };
   });
   await page.reload();
-  await expect(page.getByText("Paso 2 de 2 · Tu entrenamiento")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
+  ).toBeVisible();
   failWrites = false;
   await retry.click();
   await expect(page).toHaveURL(/\/home$/);

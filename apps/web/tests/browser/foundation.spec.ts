@@ -44,6 +44,12 @@ test("all navigation routes, active tab, brand home and reload", async ({
       const actions = header
         .querySelector(".header-actions")!
         .getBoundingClientRect();
+      // Small screens put the section title on its own row below the brand and actions.
+      const stacked = title.top >= brand.bottom - 1;
+      if (stacked)
+        return (
+          title.left >= 0 && title.right <= document.documentElement.clientWidth
+        );
       return (
         brand.right <= title.left &&
         title.right <= actions.left &&

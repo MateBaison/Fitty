@@ -51,10 +51,24 @@ test("new accounts complete onboarding before protected app access", async ({
   await expect(page).toHaveURL(/\/onboarding$/);
   await page.getByLabel("Nombre", { exact: true }).fill("New profile");
   await page
+    .getByLabel("Fecha de nacimiento", { exact: true })
+    .fill("1990-05-20");
+  await page
+    .getByRole("combobox", { name: /^Género/ })
+    .selectOption("undisclosed");
+  await page
     .getByRole("combobox", { name: "País", exact: true })
     .selectOption({ label: "Uruguay" });
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
-  await expect(page.getByText("Paso 2 de 2 · Tu entrenamiento")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: /^Crear una rutina sugerida/ })
+    .click();
+  await page
+    .getByRole("button", { name: "Configurar rutina", exact: true })
+    .click();
   await page
     .getByRole("combobox", { name: "Experiencia previa", exact: true })
     .selectOption("regular");
@@ -65,8 +79,9 @@ test("new accounts complete onboarding before protected app access", async ({
     }),
   ).toHaveValue("3");
   await page
-    .getByRole("button", { name: "Crear rutina y entrar", exact: true })
+    .getByRole("button", { name: "Ver vista previa", exact: true })
     .click();
+  await page.getByRole("button", { name: "Continuar", exact: true }).click();
   await expect(page).toHaveURL(/\/home$/);
   const audit: unknown = await (
     await page.request.get("http://127.0.0.1:54329/__audit")
@@ -173,7 +188,7 @@ test("account switches isolate caches and restore each account's own cloud data"
   ).toBe("Second");
 });
 
-test("email entry can return home and discard the pending code", async ({
+test("email entry can go back and discard the pending code", async ({
   page,
 }) => {
   await page.goto("/login");
@@ -183,11 +198,10 @@ test("email entry can return home and discard the pending code", async ({
     .click();
   await expect(page.getByLabel("Código del correo")).toBeVisible();
   await page
-    .getByRole("link", { name: "Volver al inicio", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/$/);
-  await page
-    .getByRole("link", { name: "Crear cuenta o iniciar sesión" })
+    .getByRole("button", {
+      name: "Cambiar correo o pedir otro código",
+      exact: true,
+    })
     .click();
   await expect(page.getByLabel("Correo electrónico")).toBeEditable();
   await expect(page.getByLabel("Código del correo")).toHaveCount(0);

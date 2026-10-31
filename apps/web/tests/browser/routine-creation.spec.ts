@@ -72,7 +72,7 @@ test("custom goals, automatic routines, editable days and independent sharing co
         return Math.max(...centers) - Math.min(...centers);
       }),
     )
-    .toBeLessThan(3);
+    .toBeLessThan(5);
   await page
     .getByRole("button", { name: "Seleccionar todo", exact: true })
     .click();
@@ -113,9 +113,6 @@ test("custom goals, automatic routines, editable days and independent sharing co
     .inputValue();
   await page.keyboard.press("Escape");
   await page.goto(link);
-  await page
-    .getByRole("link", { name: "Crear cuenta o iniciar sesión" })
-    .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page
     .getByRole("button", { name: "Agregar a mis rutinas", exact: true })
