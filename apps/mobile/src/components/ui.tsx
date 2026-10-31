@@ -125,6 +125,7 @@ export function Button({
   disabled,
   loading,
   accessibilityLabel,
+  fit,
 }: {
   children: ReactNode;
   onPress: () => void;
@@ -132,6 +133,8 @@ export function Button({
   disabled?: boolean;
   loading?: boolean;
   accessibilityLabel?: string;
+  /** Shrinks the label to stay on one line. */
+  fit?: boolean;
 }) {
   return (
     <Pressable
@@ -150,6 +153,9 @@ export function Button({
         <ActivityIndicator color={colors.primaryForeground} />
       ) : (
         <Text
+          numberOfLines={fit ? 1 : undefined}
+          adjustsFontSizeToFit={fit}
+          minimumFontScale={0.7}
           style={[
             styles.buttonText,
             variant === "primary" && { color: colors.primaryForeground },
@@ -218,7 +224,12 @@ export const styles = StyleSheet.create({
   destructive: { backgroundColor: colors.destructive },
   success: { backgroundColor: "#16a34a" },
   ghost: { backgroundColor: "transparent" },
-  buttonText: { color: colors.foreground, fontSize: 16, fontWeight: "800" },
+  buttonText: {
+    color: colors.foreground,
+    fontSize: 16,
+    fontWeight: "800",
+    textAlign: "center",
+  },
   input: {
     minHeight: 48,
     borderRadius: 14,

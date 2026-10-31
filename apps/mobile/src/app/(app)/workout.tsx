@@ -4,7 +4,15 @@ import { SymbolView } from "expo-symbols";
 import { useKeepAwake } from "expo-keep-awake";
 import { Redirect, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Modal, Pressable, Switch, Text, View } from "react-native";
+import {
+  Alert,
+  Modal,
+  Pressable,
+  ScrollView,
+  Switch,
+  Text,
+  View,
+} from "react-native";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { translate } from "@fitty/core/data/translations";
@@ -23,6 +31,7 @@ import {
   switchEntryMetric,
   type Entry,
 } from "@fitty/core/domain/workouts";
+import { Chip } from "@/components/chip";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
@@ -30,10 +39,48 @@ import { PhotoStrip } from "@/components/photo-strip";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
 import { env } from "@/lib/env";
+import { makeId } from "@/lib/id";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, radius, space } from "@/theme";
 
 const pad = (value: number) => String(value).padStart(2, "0");
+const typeColor: Record<string, string> = {
+  warmup: "#facc15",
+  normal: "#4ade80",
+  failure: "#fb7185",
+  drop: "#38bdf8",
+  pyramid: "#c084fc",
+};
+
+function typeHelp(id: string, t: (es: string, en: string) => string) {
+  switch (id) {
+    case "warmup":
+      return t(
+        "Usá una carga liviana para preparar el movimiento y practicar la técnica antes de las series de trabajo, sin agotarte.",
+        "Use a light load to prepare the movement and practice technique before working sets, without tiring yourself out.",
+      );
+    case "failure":
+      return t(
+        "Llegás al límite de repeticiones que podés completar con buena técnica. Registrá solo las repeticiones completas y no fuerces una repetición insegura; usá asistencia o protecciones si corresponde.",
+        "Reach the limit of repetitions you can complete with good form. Log completed repetitions only; do not force an unsafe repetition. Use a spotter or safety equipment when appropriate.",
+      );
+    case "drop":
+      return t(
+        "Empezá con una carga que permita unas 8–12 repeticiones con buena técnica, no con tu peso máximo. Al llegar al fallo técnico, reducí un 20–25% del peso que estás usando y continuá con poco descanso. Podés hacer 1–3 bajadas. Registrá cada tramo por separado.",
+        "Start with a load you can lift for about 8–12 controlled repetitions, not your maximum weight. At technical failure, reduce the current load by 20–25% and continue with little rest. Use 1–3 drops. Log each segment separately.",
+      );
+    case "pyramid":
+      return t(
+        "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado.",
+        "Increase the weight in each segment, then decrease it. For example: 20 → 25 → 30 → 25 → 20 kg. Log weight and repetitions for each segment separately.",
+      );
+    default:
+      return t(
+        "Realizá las repeticiones previstas con una carga adecuada y buena técnica. Descansá antes de la siguiente serie.",
+        "Perform your planned repetitions with an appropriate load and good technique. Rest before the next set.",
+      );
+  }
+}
 
 /** Rest countdown shared by every exercise in the workout. */
 function RestBanner({ end, onStop }: { end: number; onStop: () => void }) {
@@ -100,6 +147,10 @@ export default function Workout() {
   const [replacing, setReplacing] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
   const [finishing, setFinishing] = useState(false);
+  const [supersetOpen, setSupersetOpen] = useState(false);
+  const [members, setMembers] = useState<number[]>([]);
+  const [showHelp, setShowHelp] = useState(false);
+  const [imageFor, setImageFor] = useState<ReturnType<typeof findExercise> | null>(null);
   const workout = snapshot.workout;
   if (!workout) return <Redirect href="/" />;
   const language = snapshot.settings.language ?? "es";
@@ -190,7 +241,7 @@ export default function Workout() {
           {workout.entries.length}
         </Text>
         <Text style={{ color: colors.foreground, fontSize: 26, fontWeight: "800" }}>
-          {t("Tu entrenamiento", "Your workout")}
+          {routine?.name ?? t("Tu entrenamiento", "Your workout")}
         </Text>
       </View>
       <Notice />
@@ -203,21 +254,12 @@ export default function Workout() {
         <View style={{ flex: 1 }}>
           <Button
             variant="secondary"
-            onPress={() =>
-              change((draft) => {
-                if (!draft.workout) return;
-                const all =
-                  draft.workout.openExercises?.length ===
-                  draft.workout.entries.length;
-                draft.workout.openExercises = all
-                  ? []
-                  : draft.workout.entries.map((_, index) => index);
-              })
-            }
+            onPress={() => {
+              setMembers([]);
+              setSupersetOpen(true);
+            }}
           >
-            {workout.openExercises?.length === workout.entries.length
-              ? t("Cerrar todos", "Collapse all")
-              : t("Desplegar todos", "Expand all")}
+            {t("Superseries", "Supersets")}
           </Button>
         </View>
       </View>
@@ -231,15 +273,20 @@ export default function Workout() {
           }}
         >
           <Label>{t("Descanso", "Rest")}</Label>
-          <Switch
-            accessibilityLabel={t("Descanso entre series", "Rest between sets")}
-            value={restEnabled}
-            trackColor={{ true: "#22c55e", false: colors.border }}
-            onValueChange={(checked) => {
-              change((draft) => void (draft.settings.restEnabled = checked));
-              if (!checked) setRestEnd(0);
-            }}
-          />
+          <View style={{ height: 52, justifyContent: "center" }}>
+            <Switch
+              accessibilityLabel={t(
+                "Descanso entre series",
+                "Rest between sets",
+              )}
+              value={restEnabled}
+              trackColor={{ true: "#22c55e", false: colors.border }}
+              onValueChange={(checked) => {
+                change((draft) => void (draft.settings.restEnabled = checked));
+                if (!checked) setRestEnd(0);
+              }}
+            />
+          </View>
           <View style={{ width: 84 }}>
             <NumberInput
               value={restSeconds}
@@ -256,29 +303,6 @@ export default function Workout() {
             />
           </View>
           <Label>{t("segundos", "seconds")}</Label>
-          {restEnabled ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={t("Iniciar descanso", "Start rest")}
-              onPress={() => setRestEnd(Date.now() + restSeconds * 1000)}
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: 22,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: colors.secondary,
-                borderColor: colors.border,
-                borderWidth: 1,
-              }}
-            >
-              <SymbolView
-                name={{ ios: "timer", android: "timer" }}
-                tintColor={colors.accent}
-                size={20}
-              />
-            </Pressable>
-          ) : null}
         </View>
         {restEnd > Date.now() ? (
           <RestBanner end={restEnd} onStop={() => setRestEnd(0)} />
@@ -325,18 +349,24 @@ export default function Workout() {
               }}
             >
               {exercise ? (
-                <Image
-                  source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: 14,
-                    backgroundColor: "#0d1016",
-                  }}
-                  contentFit="cover"
-                  cachePolicy="disk"
-                  accessibilityIgnoresInvertColors
-                />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`${t("Ampliar", "Enlarge")} ${exercise.name}`}
+                  onPress={() => setImageFor(exercise)}
+                >
+                  <Image
+                    source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                    style={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: 14,
+                      backgroundColor: "#0d1016",
+                    }}
+                    contentFit="cover"
+                    cachePolicy="disk"
+                    accessibilityIgnoresInvertColors
+                  />
+                </Pressable>
               ) : null}
               <View style={{ flex: 1, gap: 2 }}>
                 <Text
@@ -376,6 +406,7 @@ export default function Workout() {
                 >
                   <View style={{ flex: 1 }}>
                     <Button
+                      fit
                       variant="secondary"
                       onPress={() => setReplacing(index)}
                     >
@@ -386,35 +417,45 @@ export default function Workout() {
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
+                      justifyContent: "center",
                       gap: space(2),
                       borderRadius: 16,
                       borderColor: colors.border,
                       borderWidth: 1,
-                      paddingHorizontal: space(3),
-                      minHeight: 52,
+                      paddingHorizontal: space(2.5),
+                      height: 52,
                     }}
                   >
-                    <Label muted>{t("Rep", "Reps")}</Label>
-                    <Switch
-                      accessibilityLabel={t(
-                        "Registrar por tiempo",
-                        "Track by time",
-                      )}
-                      value={metric === "seconds"}
-                      trackColor={{ true: colors.primary, false: colors.border }}
-                      onValueChange={(checked) => {
-                        const next = checked ? "seconds" : "reps";
-                        change((draft) => {
-                          const target = draft.workout?.entries[index];
-                          if (target) switchEntryMetric(target, metric, next);
-                          draft.settings.exerciseMetrics = {
-                            ...draft.settings.exerciseMetrics,
-                            [entry.id]: next,
-                          };
-                        });
-                      }}
-                    />
-                    <Label muted>{t("Temp", "Time")}</Label>
+                    <Text style={{ color: colors.muted, fontSize: 13 }}>
+                      {t("Rep", "Reps")}
+                    </Text>
+                    <View style={{ height: 52, justifyContent: "center" }}>
+                      <Switch
+                        accessibilityLabel={t(
+                          "Registrar por tiempo",
+                          "Track by time",
+                        )}
+                        value={metric === "seconds"}
+                        trackColor={{
+                          true: colors.primary,
+                          false: colors.border,
+                        }}
+                        onValueChange={(checked) => {
+                          const next = checked ? "seconds" : "reps";
+                          change((draft) => {
+                            const target = draft.workout?.entries[index];
+                            if (target) switchEntryMetric(target, metric, next);
+                            draft.settings.exerciseMetrics = {
+                              ...draft.settings.exerciseMetrics,
+                              [entry.id]: next,
+                            };
+                          });
+                        }}
+                      />
+                    </View>
+                    <Text style={{ color: colors.muted, fontSize: 13 }}>
+                      {t("Temp", "Time")}
+                    </Text>
                   </View>
                 </View>
                 <View style={{ flexDirection: "row", gap: space(2) }}>
@@ -449,17 +490,55 @@ export default function Workout() {
                         alignItems: "center",
                       }}
                     >
-                      <Text
-                        style={{
-                          width: 44,
-                          textAlign: "center",
-                          color: record ? colors.warning : colors.foreground,
-                          fontSize: 17,
-                          fontWeight: "800",
-                        }}
-                      >
-                        {record ? "🏆" : setNumber(entry.sets, number)}
-                      </Text>
+                      <View style={{ width: 44, alignItems: "center", gap: 4 }}>
+                        <Text
+                          style={{
+                            color: record ? colors.warning : colors.foreground,
+                            fontSize: 17,
+                            fontWeight: "800",
+                          }}
+                        >
+                          {record ? "🏆" : setNumber(entry.sets, number)}
+                        </Text>
+                        {restEnabled &&
+                        (!set.dropGroup ||
+                          entry.sets[number + 1]?.dropGroup !==
+                            set.dropGroup) ? (
+                          <Pressable
+                            accessibilityRole="button"
+                            accessibilityLabel={`${t("Iniciar descanso", "Start rest")} ${number + 1}`}
+                            onPress={() => {
+                              editEntry(index, (draft) => {
+                                const current = draft.sets[number];
+                                if (current) current.restUsed = true;
+                              });
+                              setRestEnd(Date.now() + restSeconds * 1000);
+                            }}
+                            hitSlop={6}
+                            style={{
+                              width: 30,
+                              height: 26,
+                              borderRadius: 8,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor:
+                                set.restUsed === true
+                                  ? "#4ade801c"
+                                  : colors.secondary,
+                            }}
+                          >
+                            <SymbolView
+                              name={{ ios: "timer", android: "timer" }}
+                              tintColor={
+                                set.restUsed === true
+                                  ? colors.success
+                                  : colors.muted
+                              }
+                              size={15}
+                            />
+                          </Pressable>
+                        ) : null}
+                      </View>
                       <Pressable
                         accessibilityRole="button"
                         accessibilityLabel={`${t("Usar datos anteriores", "Use previous values")} ${number + 1}`}
@@ -551,7 +630,7 @@ export default function Workout() {
                       >
                         <Text
                           style={{
-                            color: colors.success,
+                            color: typeColor[type?.id ?? "normal"],
                             fontSize: 17,
                             fontWeight: "800",
                           }}
@@ -571,7 +650,7 @@ export default function Workout() {
                         editEntry(index, (draft) => void draft.sets.pop())
                       }
                     >
-                      {t("− Eliminar última serie", "− Remove last set")}
+                      {t("− Serie", "− Set")}
                     </Button>
                   </View>
                   <View style={{ flex: 1 }}>
@@ -584,7 +663,7 @@ export default function Workout() {
                         )
                       }
                     >
-                      {t("+ Agregar serie", "+ Add set")}
+                      {t("+ Serie", "+ Set")}
                     </Button>
                   </View>
                 </View>
@@ -670,56 +749,297 @@ export default function Workout() {
           onPress={() => setTypeFor(null)}
           style={{
             flex: 1,
-            justifyContent: "flex-end",
+            justifyContent: "center",
+            padding: space(4),
             backgroundColor: "#000a",
           }}
         >
-          <Card style={{ margin: space(4) }}>
-            <Title>{t("Tipo de serie", "Set type")}</Title>
-            {types.map((type) => (
-              <Button
-                key={type.id}
-                variant={
-                  (selected?.type ?? "normal") === type.id
-                    ? "primary"
-                    : "secondary"
-                }
-                onPress={() => {
-                  if (!typeFor) return;
-                  editEntry(typeFor.entry, (draft) => {
-                    const current = draft.sets[typeFor.set];
-                    if (!current) return;
-                    current.type = type.id;
-                    if (!["drop", "pyramid"].includes(type.id))
-                      delete current.dropGroup;
-                  });
-                  setTypeFor(null);
-                }}
-              >
-                {`${type.letter} · ${type.name}`}
-              </Button>
-            ))}
-            {selected && ["drop", "pyramid"].includes(selected.type ?? "") ? (
-              <Button
-                variant="ghost"
-                onPress={() => {
-                  if (!typeFor) return;
-                  const entry = workout.entries[typeFor.entry];
-                  if (!entry) return;
-                  editEntry(typeFor.entry, (draft) =>
-                    addDropSegment(
-                      draft,
-                      typeFor.set,
-                      metricFor(snapshot, entry.id, entry),
-                    ),
+          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
+            <Card>
+              <ScrollView contentContainerStyle={{ gap: space(3) }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    accessibilityRole="header"
+                    style={{
+                      color: colors.foreground,
+                      fontSize: 20,
+                      fontWeight: "800",
+                    }}
+                  >
+                    {t("Tipo de serie", "Set type")}
+                  </Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t(
+                      "Ayuda sobre tipos de serie",
+                      "Help with set types",
+                    )}
+                    accessibilityState={{ expanded: showHelp }}
+                    onPress={() => setShowHelp((current) => !current)}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 18,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: showHelp ? colors.primary : colors.secondary,
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: showHelp
+                          ? colors.primaryForeground
+                          : colors.accent,
+                        fontSize: 18,
+                        fontWeight: "800",
+                      }}
+                    >
+                      ?
+                    </Text>
+                  </Pressable>
+                </View>
+                {types.map((type) => (
+                  <View key={type.id} style={{ gap: space(2) }}>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityState={{
+                        selected: (selected?.type ?? "normal") === type.id,
+                      }}
+                      onPress={() => {
+                        if (!typeFor) return;
+                        editEntry(typeFor.entry, (draft) => {
+                          const current = draft.sets[typeFor.set];
+                          if (!current) return;
+                          current.type = type.id;
+                          if (!["drop", "pyramid"].includes(type.id))
+                            delete current.dropGroup;
+                        });
+                        setTypeFor(null);
+                      }}
+                      style={{
+                        minHeight: 52,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: space(3),
+                        borderRadius: 16,
+                        borderWidth: 1,
+                        borderColor:
+                          (selected?.type ?? "normal") === type.id
+                            ? typeColor[type.id]
+                            : colors.border,
+                        backgroundColor: colors.secondary,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: typeColor[type.id],
+                          fontSize: 18,
+                          fontWeight: "800",
+                        }}
+                      >
+                        {type.letter}
+                      </Text>
+                      <Text
+                        style={{
+                          color: colors.foreground,
+                          fontSize: 16,
+                          fontWeight: "800",
+                        }}
+                      >
+                        {type.name}
+                      </Text>
+                    </Pressable>
+                    {showHelp ? (
+                      <Label muted>{typeHelp(type.id, t)}</Label>
+                    ) : null}
+                  </View>
+                ))}
+                {selected && ["drop", "pyramid"].includes(selected.type ?? "") ? (
+                  <Button
+                    variant="secondary"
+                    onPress={() => {
+                      if (!typeFor) return;
+                      const entry = workout.entries[typeFor.entry];
+                      if (!entry) return;
+                      editEntry(typeFor.entry, (draft) =>
+                        addDropSegment(
+                          draft,
+                          typeFor.set,
+                          metricFor(snapshot, entry.id, entry),
+                        ),
+                      );
+                      setTypeFor(null);
+                    }}
+                  >
+                    {t("+ Agregar descenso", "+ Add drop")}
+                  </Button>
+                ) : null}
+              </ScrollView>
+            </Card>
+          </Pressable>
+        </Pressable>
+      </Modal>
+      <Modal
+        visible={supersetOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSupersetOpen(false)}
+      >
+        <Pressable
+          onPress={() => setSupersetOpen(false)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
+            <Card>
+              <ScrollView contentContainerStyle={{ gap: space(3) }}>
+                <Text
+                  accessibilityRole="header"
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 20,
+                    fontWeight: "800",
+                  }}
+                >
+                  {t("Superseries", "Supersets")}
+                </Text>
+                {workout.entries.map((entry, index) => {
+                  const exercise = findExercise(snapshot, entry.id);
+                  return (
+                    <Chip
+                      key={index}
+                      role="checkbox"
+                      active={members.includes(index)}
+                      label={
+                        exercise
+                          ? translate(language, exercise.name, exercise.name)
+                          : entry.id
+                      }
+                      onPress={() =>
+                        setMembers((current) =>
+                          current.includes(index)
+                            ? current.filter((item) => item !== index)
+                            : [...current, index],
+                        )
+                      }
+                    />
                   );
-                  setTypeFor(null);
-                }}
-              >
-                {t("+ Agregar descenso", "+ Add drop")}
-              </Button>
-            ) : null}
-          </Card>
+                })}
+                <Button
+                  disabled={members.length < 2}
+                  onPress={() => {
+                    change((draft) => {
+                      const key = makeId();
+                      draft.workout?.entries.forEach((entry, index) => {
+                        if (members.includes(index)) entry.superset = key;
+                      });
+                    });
+                    setSupersetOpen(false);
+                  }}
+                >
+                  {t("Crear superserie", "Create superset")}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onPress={() => {
+                    change((draft) => {
+                      draft.workout?.entries.forEach((entry) => {
+                        delete entry.superset;
+                      });
+                    });
+                    setSupersetOpen(false);
+                  }}
+                >
+                  {t("Quitar superseries", "Remove supersets")}
+                </Button>
+              </ScrollView>
+            </Card>
+          </Pressable>
+        </Pressable>
+      </Modal>
+      <Modal
+        visible={imageFor !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setImageFor(null)}
+      >
+        <Pressable
+          onPress={() => setImageFor(null)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
+            <Card style={{ padding: 0, overflow: "hidden" }}>
+              <ScrollView contentContainerStyle={{ gap: space(3) }}>
+                {imageFor ? (
+                  <Image
+                    source={`${env.apiUrl}${exerciseImage(imageFor, snapshot.profile.gender)}`}
+                    style={{
+                      width: "100%",
+                      aspectRatio: 3 / 2,
+                      backgroundColor: "#0d1016",
+                    }}
+                    contentFit="contain"
+                    cachePolicy="disk"
+                    accessibilityIgnoresInvertColors
+                  />
+                ) : null}
+                <View style={{ padding: space(4), gap: space(3) }}>
+                  <Text
+                    style={{
+                      color: colors.foreground,
+                      fontSize: 20,
+                      fontWeight: "800",
+                    }}
+                  >
+                    {imageFor
+                      ? translate(language, imageFor.name, imageFor.name)
+                      : ""}
+                  </Text>
+                  {imageFor ? (
+                    <Label muted>
+                      {translate(language, imageFor.group, imageFor.group)} ·{" "}
+                      {translate(language, imageFor.equipment, imageFor.equipment)}
+                    </Label>
+                  ) : null}
+                  <Text
+                    style={{
+                      color: colors.foreground,
+                      fontSize: 17,
+                      fontWeight: "800",
+                    }}
+                  >
+                    {t("Técnica", "Technique")}
+                  </Text>
+                  {imageFor?.steps.map((step, index) => (
+                    <Label key={index} muted>
+                      {index + 1}. {translate(language, step, step)}
+                    </Label>
+                  ))}
+                  <Button variant="secondary" onPress={() => setImageFor(null)}>
+                    {t("Cerrar", "Close")}
+                  </Button>
+                </View>
+              </ScrollView>
+            </Card>
+          </Pressable>
         </Pressable>
       </Modal>
       <ExercisePicker
