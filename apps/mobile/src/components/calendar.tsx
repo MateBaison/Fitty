@@ -33,10 +33,12 @@ export function Calendar({
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
-  const byDay = new Map<string, string>();
+  const byDay = new Map<string, string[]>();
   for (const session of snapshot.sessions)
-    if (Number.isFinite(Date.parse(session.date)))
-      byDay.set(localDateKey(session.date), color(session.color));
+    if (Number.isFinite(Date.parse(session.date))) {
+      const key = localDateKey(session.date);
+      byDay.set(key, [...(byDay.get(key) ?? []), color(session.color)]);
+    }
   const offset = (month.getDay() + 6) % 7;
   const length = new Date(
     month.getFullYear(),
@@ -120,7 +122,8 @@ export function Calendar({
               />
             );
           const key = localDateKey(date);
-          const trained = byDay.get(key);
+          const colorsOfDay = byDay.get(key);
+          const trained = colorsOfDay?.[0];
           const active = key === selected;
           const bleeding = menstrual.has(key);
           return (
@@ -144,9 +147,25 @@ export function Calendar({
                     : bleeding
                       ? "#f472b6"
                       : colors.border,
-                  backgroundColor: trained ? `${trained}44` : "transparent",
+                  overflow: "hidden",
                 }}
               >
+                {colorsOfDay ? (
+                  <View
+                    pointerEvents="none"
+                    style={{
+                      position: "absolute", top: 0, bottom: 0, left: 0, right: 0,
+                      flexDirection: "row",
+                    }}
+                  >
+                    {colorsOfDay.slice(0, 4).map((value, order) => (
+                      <View
+                        key={order}
+                        style={{ flex: 1, backgroundColor: `${value}44` }}
+                      />
+                    ))}
+                  </View>
+                ) : null}
                 <Text
                   style={{
                     color: colors.foreground,
@@ -155,15 +174,20 @@ export function Calendar({
                 >
                   {date.getDate()}
                 </Text>
-                {trained ? (
-                  <View
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: 3,
-                      backgroundColor: trained,
-                    }}
-                  />
+                {colorsOfDay ? (
+                  <View style={{ flexDirection: "row", gap: 2 }}>
+                    {colorsOfDay.slice(0, 4).map((value, order) => (
+                      <View
+                        key={order}
+                        style={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: 3,
+                          backgroundColor: value,
+                        }}
+                      />
+                    ))}
+                  </View>
                 ) : null}
               </View>
             </Pressable>

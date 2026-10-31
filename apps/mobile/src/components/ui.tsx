@@ -10,7 +10,7 @@ import {
   type TextInputProps,
   type ViewStyle,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 import { colors, radius, space } from "@/theme";
 
@@ -39,8 +39,19 @@ export function Screen({
   scroll?: boolean;
   glow?: boolean;
 }) {
+  // Read from the context so screens under the app header (which owns the top inset) get no extra gap.
+  const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView style={styles.screen} edges={["top", "left", "right"]}>
+    <View
+      style={[
+        styles.screen,
+        {
+          paddingTop: insets.top,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}
+    >
       {glow ? <Glow /> : null}
       {scroll ? (
         <ScrollView
@@ -53,7 +64,7 @@ export function Screen({
       ) : (
         <View style={[styles.content, { flex: 1 }]}>{children}</View>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 

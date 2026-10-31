@@ -75,9 +75,11 @@ export default function Home() {
     <Screen>
       <Notice />
       <Button
-        onPress={() =>
-          snapshot.workout ? router.push("/workout") : setPicking(true)
-        }
+        onPress={() => {
+          console.log("TAP start", Boolean(snapshot.workout));
+          if (snapshot.workout) router.navigate("/workout");
+          else setPicking(true);
+        }}
       >
         {snapshot.workout
           ? t("Continuar entrenamiento", "Continue workout")
@@ -91,12 +93,18 @@ export default function Home() {
         <Tile
           label={t("Biblioteca", "Library")}
           icon={{ ios: "books.vertical", android: "library_books" }}
-          onPress={() => router.push("/library")}
+          onPress={() => {
+            console.log("TAP library");
+            router.navigate("/library");
+          }}
         />
         <Tile
           label={t("Progreso", "Progress")}
           icon={{ ios: "chart.line.uptrend.xyaxis", android: "show_chart" }}
-          onPress={() => router.push("/progress")}
+          onPress={() => {
+            console.log("TAP progress");
+            router.navigate("/progress");
+          }}
         />
       </View>
       <Modal

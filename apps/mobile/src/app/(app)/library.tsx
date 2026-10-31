@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   equipmentFilters,
   exerciseImage,
@@ -30,6 +30,7 @@ import { colors, space } from "@/theme";
 export default function Library() {
   const snapshot = useSnapshot();
   const { t, change } = useAccount();
+  const insets = useSafeAreaInsets();
   const language = snapshot.settings.language ?? "es";
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
@@ -50,7 +51,7 @@ export default function Library() {
     );
   }, [snapshot, query, group, equipment, language]);
   return (
-    <SafeAreaView style={styles.screen} edges={["top", "left", "right"]}>
+    <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Glow />
       <FlatList
         data={exercises}
@@ -202,6 +203,6 @@ export default function Library() {
         visible={creating}
         onClose={() => setCreating(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }

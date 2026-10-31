@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { Alert, Modal, Pressable, Share, Switch, Text, View } from "react-native";
 import { buildAutomaticRoutine } from "@fitty/core/domain/calculations/automatic-routine";
@@ -9,9 +10,11 @@ import {
 } from "@fitty/core/domain/schemas/exercise";
 import { encodeRoutine } from "@fitty/core/domain/sharing";
 import { findExercise } from "@fitty/core/domain/workouts";
+import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
 import { Chip, ChipGroup } from "@/components/chip";
 import { ExercisePicker } from "@/components/exercise-picker";
+import { ReorderList } from "@/components/reorder-list";
 import { Notice } from "@/components/notice";
 import { goals } from "@/components/onboarding";
 import { TextPrompt } from "@/components/prompt";
@@ -96,6 +99,7 @@ export function RoutinesSection() {
   );
   const [open, setOpen] = useState<string | null>(snapshot.selected);
   const [openDays, setOpenDays] = useState<string[]>([]);
+  const [removingDay, setRemovingDay] = useState<{ rid: string } | null>(null);
 
   const editDay = (
     rid: string,
@@ -363,221 +367,246 @@ export function RoutinesSection() {
                     }
                   />
                 </View>
-                {routine.days.map((day, dayIndex) => {
-                  const dayOpen = openDays.includes(day.id);
-                  return (
-                  <View
-                    key={day.id}
-                    style={{
-                      gap: space(2),
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                      borderRadius: 18,
-                      backgroundColor: "#0b0e14",
-                      padding: space(3),
-                    }}
-                  >
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityState={{ expanded: dayOpen }}
-                      onPress={() =>
-                        setOpenDays((current) =>
-                          dayOpen
-                            ? current.filter((id) => id !== day.id)
-                            : [...current, day.id],
-                        )
-                      }
-                      style={{
-                        minHeight: 40,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: space(2),
-                      }}
-                    >
-                      <Text style={{ color: colors.muted, fontSize: 11 }}>
-                        {dayOpen ? "▼" : "▶"}
-                      </Text>
-                      <Text
+                <ReorderList
+                  items={routine.days}
+                  keyOf={(day) => day.id}
+                  onMove={(from, to) =>
+                    change((draft) => {
+                      const list = draft.routines.find(
+                        (item) => item.id === routine.id,
+                      )?.days;
+                      if (!list) return;
+                      const [moved] = list.splice(from, 1);
+                      if (moved) list.splice(to, 0, moved);
+                    })
+                  }
+                  renderItem={(day, _dayIndex, startDayDrag) => {
+                    const dayOpen = openDays.includes(day.id);
+                    return (
+                      <View
                         style={{
-                          color: colors.foreground,
-                          fontSize: 17,
-                          fontWeight: "800",
+                          gap: space(2),
+                          borderColor: colors.border,
+                          borderWidth: 1,
+                          borderRadius: 18,
+                          backgroundColor: "#0b0e14",
+                          padding: space(3),
                         }}
                       >
-                        {day.name}{" "}
-                        <Text style={{ fontSize: 14 }}>({day.items.length})</Text>
-                      </Text>
-                    </Pressable>
-                    {dayOpen ? (
-                    <>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: space(1.5),
-                      }}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <IconButton
-                        label={t("Subir día", "Move day up")}
-                        symbol="↑"
-                        disabled={dayIndex === 0}
-                        onPress={() =>
-                          change((draft) => {
-                            const list = draft.routines.find(
-                              (item) => item.id === routine.id,
-                            )?.days;
-                            if (list)
-                              [list[dayIndex - 1], list[dayIndex]] = [
-                                list[dayIndex]!,
-                                list[dayIndex - 1]!,
-                              ];
-                          })
-                        }
-                      />
-                      <IconButton
-                        label={t("Renombrar día", "Rename day")}
-                        symbol="✎"
-                        onPress={() =>
-                          setPrompt({
-                            type: "rename-day",
-                            rid: routine.id,
-                            did: day.id,
-                            name: day.name,
-                          })
-                        }
-                      />
-                      <IconButton
-                        label={t("Eliminar día", "Delete day")}
-                        symbol="✕"
-                        danger
-                        onPress={() =>
-                          confirmDelete(
-                            t("¿Eliminar el día?", "Delete the day?"),
-                            () =>
-                              change((draft) => {
-                                const target = draft.routines.find(
-                                  (item) => item.id === routine.id,
-                                );
-                                if (target)
-                                  target.days = target.days.filter(
-                                    (item) => item.id !== day.id,
-                                  );
-                                if (
-                                  draft.workout?.rid === routine.id &&
-                                  draft.workout.did === day.id
-                                )
-                                  draft.workout = null;
-                              }),
-                          )
-                        }
-                      />
-                    </View>
-                    {day.items.map((id, index) => {
-                      const exercise = findExercise(snapshot, id);
-                      return (
-                        <View
-                          key={`${id}-${index}`}
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityHint={t(
+                            "Mantené apretado para mover el día",
+                            "Press and hold to move the day",
+                          )}
+                          accessibilityState={{ expanded: dayOpen }}
+                          delayLongPress={350}
+                          onLongPress={startDayDrag}
+                          onPress={() =>
+                            setOpenDays((current) =>
+                              dayOpen
+                                ? current.filter((id) => id !== day.id)
+                                : [...current, day.id],
+                            )
+                          }
                           style={{
+                            minHeight: 40,
                             flexDirection: "row",
                             alignItems: "center",
-                            gap: space(1.5),
-                            padding: space(2),
-                            borderRadius: 14,
-                            backgroundColor:
-                              index % 2 === 0 ? colors.secondary : "#13171f",
+                            justifyContent: "center",
+                            gap: space(2),
                           }}
                         >
-                          <Label style={{ flex: 1 }}>
-                            {exercise
-                              ? translate(
-                                  language,
-                                  exercise.name,
-                                  exercise.name,
-                                )
-                              : id}
-                          </Label>
-                          <IconButton
-                            label={t("Subir", "Move up")}
-                            symbol="↑"
-                            disabled={index === 0}
-                            onPress={() =>
-                              editDay(routine.id, day.id, (target) => {
-                                [target.items[index - 1], target.items[index]] =
-                                  [
-                                    target.items[index]!,
-                                    target.items[index - 1]!,
-                                  ];
-                              })
-                            }
-                          />
-                          <IconButton
-                            label={t("Bajar", "Move down")}
-                            symbol="↓"
-                            disabled={index === day.items.length - 1}
-                            onPress={() =>
-                              editDay(routine.id, day.id, (target) => {
-                                [target.items[index + 1], target.items[index]] =
-                                  [
-                                    target.items[index]!,
-                                    target.items[index + 1]!,
-                                  ];
-                              })
-                            }
-                          />
-                          <IconButton
-                            label={t("Quitar ejercicio", "Remove exercise")}
-                            symbol="✕"
-                            danger
-                            onPress={() =>
-                              editDay(routine.id, day.id, (target) => {
-                                target.items.splice(index, 1);
-                                target.supersets = target.supersets
-                                  ?.map((group) =>
-                                    group.filter((item) =>
-                                      target.items.includes(item),
-                                    ),
-                                  )
-                                  .filter((group) => group.length > 1);
-                              })
-                            }
-                          />
-                        </View>
-                      );
-                    })}
+                          <Text style={{ color: colors.muted, fontSize: 11 }}>
+                            {dayOpen ? "▼" : "▶"}
+                          </Text>
+                          <Text
+                            style={{
+                              color: colors.foreground,
+                              fontSize: 17,
+                              fontWeight: "800",
+                            }}
+                          >
+                            {day.name}{" "}
+                            <Text style={{ fontSize: 14 }}>
+                              ({day.items.length})
+                            </Text>
+                          </Text>
+                        </Pressable>
+                        {dayOpen ? (
+                          <>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: space(1.5),
+                              }}
+                            >
+                              <View style={{ flex: 1 }} />
+                              <IconButton
+                                label={t("Renombrar día", "Rename day")}
+                                symbol="✎"
+                                onPress={() =>
+                                  setPrompt({
+                                    type: "rename-day",
+                                    rid: routine.id,
+                                    did: day.id,
+                                    name: day.name,
+                                  })
+                                }
+                              />
+                            </View>
+                            <ReorderList
+                              items={day.items}
+                              keyOf={(id, index) => `${id}-${index}`}
+                              gap={6}
+                              onMove={(from, to) =>
+                                editDay(routine.id, day.id, (target) => {
+                                  const [moved] = target.items.splice(from, 1);
+                                  if (moved !== undefined)
+                                    target.items.splice(to, 0, moved);
+                                })
+                              }
+                              renderItem={(id, index, startItemDrag) => {
+                                const exercise = findExercise(snapshot, id);
+                                return (
+                                  <View
+                                    style={{
+                                      flexDirection: "row",
+                                      alignItems: "center",
+                                      gap: space(2),
+                                      padding: space(2),
+                                      borderRadius: 14,
+                                      backgroundColor:
+                                        index % 2 === 0
+                                          ? colors.secondary
+                                          : "#13171f",
+                                    }}
+                                  >
+                                    <Pressable
+                                      accessibilityRole="button"
+                                      accessibilityHint={t(
+                                        "Mantené apretado para mover el ejercicio",
+                                        "Press and hold to move the exercise",
+                                      )}
+                                      delayLongPress={300}
+                                      onLongPress={startItemDrag}
+                                      style={{
+                                        flex: 1,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: space(2),
+                                      }}
+                                    >
+                                      {exercise ? (
+                                        <Image
+                                          source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                                          style={{
+                                            width: 56,
+                                            height: 56,
+                                            borderRadius: 12,
+                                            backgroundColor: "#0d1016",
+                                          }}
+                                          contentFit="cover"
+                                          cachePolicy="disk"
+                                          accessibilityIgnoresInvertColors
+                                        />
+                                      ) : null}
+                                      <Text
+                                        style={{
+                                          flex: 1,
+                                          color: colors.foreground,
+                                          fontSize: 15,
+                                          fontWeight: "600",
+                                        }}
+                                      >
+                                        {exercise
+                                          ? translate(
+                                              language,
+                                              exercise.name,
+                                              exercise.name,
+                                            )
+                                          : id}
+                                      </Text>
+                                    </Pressable>
+                                    <IconButton
+                                      label={t(
+                                        "Quitar ejercicio",
+                                        "Remove exercise",
+                                      )}
+                                      symbol="✕"
+                                      danger
+                                      onPress={() =>
+                                        editDay(
+                                          routine.id,
+                                          day.id,
+                                          (target) => {
+                                            target.items.splice(index, 1);
+                                            target.supersets = target.supersets
+                                              ?.map((group) =>
+                                                group.filter((item) =>
+                                                  target.items.includes(item),
+                                                ),
+                                              )
+                                              .filter(
+                                                (group) => group.length > 1,
+                                              );
+                                          },
+                                        )
+                                      }
+                                    />
+                                  </View>
+                                );
+                              }}
+                            />
+                            <Button
+                              variant="success"
+                              onPress={() =>
+                                setPicker({ rid: routine.id, did: day.id })
+                              }
+                            >
+                              {t("+ Agregar ejercicios", "+ Add exercises")}
+                            </Button>
+                            {day.items.length > 1 ? (
+                              <Button
+                                variant="ghost"
+                                onPress={() => {
+                                  setMembers([]);
+                                  setSuperset({ rid: routine.id, did: day.id });
+                                }}
+                              >
+                                {day.supersets?.length
+                                  ? `${t("Superseries", "Supersets")} (${day.supersets.length})`
+                                  : t("Crear superserie", "Create superset")}
+                              </Button>
+                            ) : null}
+                          </>
+                        ) : null}
+                      </View>
+                    );
+                  }}
+                />
+                <View style={{ flexDirection: "row", gap: space(3) }}>
+                  <View style={{ flex: 1 }}>
                     <Button
-                      variant="success"
+                      variant="destructive"
+                      disabled={!routine.days.length}
+                      onPress={() => setRemovingDay({ rid: routine.id })}
+                    >
+                      {t("Quitar día", "Remove day")}
+                    </Button>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      variant="secondary"
                       onPress={() =>
-                        setPicker({ rid: routine.id, did: day.id })
+                        setPrompt({ type: "day", rid: routine.id })
                       }
                     >
-                      {t("+ Agregar ejercicios", "+ Add exercises")}
+                      {t("Agregar día", "Add day")}
                     </Button>
-                    {day.items.length > 1 ? (
-                      <Button
-                        variant="ghost"
-                        onPress={() => {
-                          setMembers([]);
-                          setSuperset({ rid: routine.id, did: day.id });
-                        }}
-                      >
-                        {day.supersets?.length
-                          ? `${t("Superseries", "Supersets")} (${day.supersets.length})`
-                          : t("Crear superserie", "Create superset")}
-                      </Button>
-                    ) : null}
-                    </>
-                    ) : null}
                   </View>
-                  );
-                })}
-                <Button
-                  variant="secondary"
-                  onPress={() => setPrompt({ type: "day", rid: routine.id })}
-                >
-                  {t("+ Agregar día", "+ Add day")}
-                </Button>
+                </View>
               </>
             ) : null}
           </Card>
@@ -620,6 +649,73 @@ export function RoutinesSection() {
             setPrompt(null);
         }}
       />
+      <Modal
+        visible={removingDay !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setRemovingDay(null)}
+      >
+        <Pressable
+          onPress={() => setRemovingDay(null)}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable onPress={() => undefined}>
+            <Card>
+              <Text
+                accessibilityRole="header"
+                style={{
+                  color: colors.foreground,
+                  fontSize: 20,
+                  fontWeight: "800",
+                }}
+              >
+                {t("Quitar día", "Remove day")}
+              </Text>
+              {snapshot.routines
+                .find((item) => item.id === removingDay?.rid)
+                ?.days.map((day) => (
+                  <Button
+                    key={day.id}
+                    variant="secondary"
+                    onPress={() => {
+                      const rid = removingDay?.rid;
+                      setRemovingDay(null);
+                      if (!rid) return;
+                      confirmDelete(
+                        t("¿Quitar este día?", "Remove this day?"),
+                        () =>
+                          change((draft) => {
+                            const routine = draft.routines.find(
+                              (item) => item.id === rid,
+                            );
+                            if (routine)
+                              routine.days = routine.days.filter(
+                                (item) => item.id !== day.id,
+                              );
+                            if (
+                              draft.workout?.rid === rid &&
+                              draft.workout.did === day.id
+                            )
+                              draft.workout = null;
+                          }),
+                      );
+                    }}
+                  >
+                    {day.name}
+                  </Button>
+                ))}
+              <Button variant="ghost" onPress={() => setRemovingDay(null)}>
+                {t("Cancelar", "Cancel")}
+              </Button>
+            </Card>
+          </Pressable>
+        </Pressable>
+      </Modal>
       <Modal
         visible={superset !== null}
         transparent
