@@ -14,17 +14,17 @@ import {
 } from "@/components/profile-fields";
 import { DeleteAccount } from "@/components/delete-account";
 import { LinkedApps } from "@/components/linked-apps";
+import { SignOut } from "@/components/sign-out";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { pickPhoto, safePhoto } from "@/lib/photos";
-import { supabase } from "@/lib/supabase";
 import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
 import { colors, space } from "@/theme";
 
 export default function Profile() {
   const snapshot = useSnapshot();
-  const { change, flush, notify, t } = useAccount();
+  const { change, notify, t } = useAccount();
   const { session } = useSession();
   const [draft, setDraft] = useState(() => profileDraft(snapshot.profile));
   const values = profileValues(draft);
@@ -186,15 +186,7 @@ export default function Profile() {
       >
         {t("Exportar mis datos", "Export my data")}
       </Button>
-      <Button
-        variant="secondary"
-        onPress={async () => {
-          await flush();
-          await supabase.auth.signOut();
-        }}
-      >
-        {t("Cerrar sesión", "Sign out")}
-      </Button>
+      <SignOut />
     </Screen>
   );
 }
