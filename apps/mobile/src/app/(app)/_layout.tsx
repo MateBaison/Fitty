@@ -68,9 +68,17 @@ function AccountGate() {
           headerShown: false,
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: colors.muted,
+          tabBarActiveBackgroundColor: "#173a52",
+          tabBarItemStyle: {
+            borderRadius: 16,
+            marginHorizontal: 4,
+            marginVertical: 6,
+          },
+          tabBarLabelStyle: { fontWeight: "700" },
           tabBarStyle: {
             backgroundColor: colors.card,
             borderTopColor: colors.border,
+            paddingHorizontal: 4,
           },
           sceneStyle: { backgroundColor: colors.background },
         }}

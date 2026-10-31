@@ -33,7 +33,7 @@ function Glow() {
 export function Screen({
   children,
   scroll = true,
-  glow = false,
+  glow = true,
 }: {
   children: ReactNode;
   scroll?: boolean;
@@ -175,23 +175,27 @@ export const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.card,
     borderColor: colors.border,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: radius,
-    padding: space(4),
+    borderWidth: 1,
+    borderRadius: 24,
+    padding: space(4.5),
     gap: space(3),
   },
   button: {
-    minHeight: 48,
-    borderRadius: 999,
+    minHeight: 52,
+    borderRadius: 16,
     paddingHorizontal: space(5),
     alignItems: "center",
     justifyContent: "center",
   },
   primary: { backgroundColor: colors.primary },
-  secondary: { backgroundColor: colors.secondary },
+  secondary: {
+    backgroundColor: colors.secondary,
+    borderColor: colors.border,
+    borderWidth: 1,
+  },
   destructive: { backgroundColor: colors.destructive },
   ghost: { backgroundColor: "transparent" },
-  buttonText: { color: colors.foreground, fontSize: 16, fontWeight: "700" },
+  buttonText: { color: colors.foreground, fontSize: 16, fontWeight: "800" },
   input: {
     minHeight: 48,
     borderRadius: 14,
