@@ -49,7 +49,6 @@ export function LinkedApps() {
   const failure = link.error ?? unlink.error;
   return (
     <>
-      <Label>{t("Apps vinculadas", "Linked apps")}</Label>
       <Card>
         <Label muted>
           {t(
