@@ -1,0 +1,28 @@
+name: Prune Vercel deployments
+
+# After every successful production deployment, keep only the newest three.
+on:
+  deployment_status:
+  workflow_dispatch:
+
+concurrency:
+  group: prune-vercel
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Delete old deployments
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: node scripts/prune-vercel-deployments.mjs --apply
