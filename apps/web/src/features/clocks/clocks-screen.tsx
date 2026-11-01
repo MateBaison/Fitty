@@ -34,6 +34,7 @@ function ClockControls({
           <Button
             variant="secondary"
             size="icon"
+            className="clock-stop"
             aria-label={t("Detener", "Stop")}
             onClick={onStop}
           >

@@ -3765,3 +3765,10 @@ input[type="range"] {
   width: 30px;
   height: 30px;
 }
+.clock-controls button svg {
+  color: #fff;
+}
+.clock-controls .clock-stop {
+  background: #dc2626;
+  border-color: #dc2626;
+}

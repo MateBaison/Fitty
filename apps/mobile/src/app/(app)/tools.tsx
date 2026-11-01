@@ -205,14 +205,24 @@ function ClockButton({
         borderRadius: size / 2,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: main ? colors.primary : colors.secondary,
-        borderColor: main ? colors.primary : colors.border,
+        backgroundColor:
+          icon === "stop"
+            ? colors.destructive
+            : main
+              ? colors.primary
+              : colors.secondary,
+        borderColor:
+          icon === "stop"
+            ? colors.destructive
+            : main
+              ? colors.primary
+              : colors.border,
         borderWidth: 1,
       }}
     >
       <SymbolView
         name={names[icon]}
-        tintColor={main ? colors.primaryForeground : colors.foreground}
+        tintColor="#ffffff"
         size={main ? 30 : 22}
       />
     </Pressable>
