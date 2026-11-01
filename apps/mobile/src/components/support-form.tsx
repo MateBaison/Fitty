@@ -1,3 +1,4 @@
+import { File as FsFile } from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import { useRef, useState } from "react";
@@ -117,12 +118,9 @@ export function SupportForm({
       form.append("category", category);
       form.append("subject", subject);
       form.append("message", message);
+      // The runtime's fetch only accepts real Blob/File parts, not {uri, name, type} objects.
       for (const file of files)
-        form.append("files", {
-          uri: file.uri,
-          name: file.name,
-          type: "image/jpeg",
-        } as unknown as Blob);
+        form.append("files", new FsFile(file.uri) as unknown as Blob, file.name);
       const response = await fetch(`${env.apiUrl}/api/v1/support`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
