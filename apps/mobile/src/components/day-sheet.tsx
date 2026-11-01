@@ -22,6 +22,7 @@ import {
   setNumber,
   type Session,
 } from "@fitty/core/domain/workouts";
+import { shareToInstagramStory } from "@/lib/instagram";
 import { ManualSession } from "@/components/manual-session";
 import { SessionEditor } from "@/components/session-editor";
 import { WorkoutPoster } from "@/components/workout-poster";
@@ -141,17 +142,32 @@ export function DaySheet({
     setPoster(null);
     onClose();
   };
+  const posterBase64 = () =>
+    new Promise<string>((accept, reject) => {
+      const svg = posterRef.current;
+      if (!svg) return reject(new Error("poster"));
+      svg.toDataURL((data: string) => accept(data));
+    });
   const share = async () => {
-    const svg = posterRef.current;
-    if (!svg) return;
     try {
-      const base64 = await new Promise<string>((accept) =>
-        svg.toDataURL((data: string) => accept(data)),
-      );
+      const base64 = await posterBase64();
       const file = new File(Paths.cache, `fitty-entrenamiento-${Date.now()}.png`);
       file.create({ overwrite: true });
       file.write(Uint8Array.from(atob(base64), (char) => char.charCodeAt(0)));
       await Share.share({ url: file.uri });
+    } catch {
+      notify(t("No se pudo compartir la imagen.", "Could not share the image."));
+    }
+  };
+  const shareStory = async () => {
+    try {
+      if (await shareToInstagramStory(await posterBase64())) return;
+      notify(
+        t(
+          "No pudimos abrir Instagram. Usá Compartir para elegir otra opción.",
+          "We could not open Instagram. Use Share to choose another option.",
+        ),
+      );
     } catch {
       notify(t("No se pudo compartir la imagen.", "Could not share the image."));
     }
@@ -388,7 +404,12 @@ export function DaySheet({
             <View style={{ alignItems: "center" }}>
               <WorkoutPoster ref={posterRef} snapshot={snapshot} session={poster} width={230} />
             </View>
-            <Button onPress={() => void share()}>{t("Compartir", "Share")}</Button>
+            <Button onPress={() => void shareStory()}>
+              {t("Compartir en Historias de Instagram", "Share to Instagram Stories")}
+            </Button>
+            <Button variant="secondary" onPress={() => void share()}>
+              {t("Compartir en otra app", "Share to another app")}
+            </Button>
             <Button variant="secondary" onPress={() => setPoster(null)}>
               {t("Volver", "Back")}
             </Button>
