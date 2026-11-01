@@ -150,7 +150,17 @@ export function SupportForm({
                   "Volvé a iniciar sesión para enviar la consulta.",
                   "Sign in again to send your inquiry.",
                 )
-              : retry,
+              : response.status === 502 || response.status === 503
+                ? t(
+                    "El servicio de correo no respondió. Tu borrador se conserva: reintentá en unos minutos.",
+                    "The mail service did not respond. Your draft is kept: try again in a few minutes.",
+                  )
+                : response.status === 400 || response.status === 413
+                  ? t(
+                      "Revisá el mensaje y los archivos adjuntos.",
+                      "Check the message and attachments.",
+                    )
+                  : retry,
         );
     } catch {
       setFeedback(retry);

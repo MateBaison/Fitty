@@ -107,10 +107,13 @@ function GridPills<T extends string>({
   options,
   value,
   onChange,
+  accent = colors.primary,
 }: {
   options: readonly (readonly [T, string])[];
   value: T;
   onChange: (value: T) => void;
+  /** Fill color of the selected option. */
+  accent?: string;
 }) {
   return (
     <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
@@ -129,8 +132,8 @@ function GridPills<T extends string>({
               alignItems: "center",
               justifyContent: "center",
               paddingHorizontal: space(2),
-              backgroundColor: active ? colors.primary : colors.secondary,
-              borderColor: active ? colors.primary : colors.border,
+              backgroundColor: active ? accent : colors.secondary,
+              borderColor: active ? accent : colors.border,
               borderWidth: 1,
             }}
           >
@@ -138,7 +141,7 @@ function GridPills<T extends string>({
               numberOfLines={1}
               adjustsFontSizeToFit
               style={{
-                color: active ? colors.primaryForeground : colors.foreground,
+                color: active ? "#1f1a06" : colors.foreground,
                 fontWeight: "800",
                 fontSize: 15,
                 textAlign: "center",
@@ -592,6 +595,7 @@ export default function Tools() {
   return (
     <Screen>
       <GridPills
+        accent="#f8c830"
         options={[
           ["clock", t("Reloj", "Clock")],
           ["calculators", t("Calculadoras", "Calculators")],

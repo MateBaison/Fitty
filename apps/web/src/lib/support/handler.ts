@@ -65,7 +65,10 @@ export async function handleSupportPost(
   }
   if (!user || !z.email().safeParse(user.email).success)
     return reply("unauthorized", 401);
-  if (!dependencies.configured()) return reply("unavailable", 503);
+  if (!dependencies.configured()) {
+    console.error("[support] RESEND_API_KEY is missing or malformed");
+    return reply("unavailable", 503);
+  }
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.startsWith("multipart/form-data;") || !request.body)
     return reply("invalid", 400);
@@ -146,7 +149,11 @@ export async function handleSupportPost(
       { ok: true, reference: data.requestId, id: result.id },
       { headers },
     );
-  } catch {
+  } catch (error) {
+    console.error(
+      "[support] send failed:",
+      error instanceof Error ? error.message : "unknown",
+    );
     return reply("send", 502);
   }
 }

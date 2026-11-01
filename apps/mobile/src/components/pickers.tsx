@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
+  PanResponder,
   Pressable,
   Text,
   TextInput,
@@ -352,6 +353,10 @@ function Ruler({
   labelEvery,
   length,
   vertical = false,
+  min,
+  max,
+  step,
+  onChange,
 }: {
   value: number;
   /** Value distance between two marks. */
@@ -360,15 +365,43 @@ function Ruler({
   labelEvery: number;
   length: number;
   vertical?: boolean;
+  min: number;
+  max: number;
+  step: number;
+  onChange: (value: number) => void;
 }) {
   const gap = 10;
+  // Dragging the tape moves the marks with the finger, like a real tape measure.
+  const latest = useRef({ value, min, max, step, tick, vertical, onChange });
+  latest.current = { value, min, max, step, tick, vertical, onChange };
+  const origin = useRef(value);
+  const pan = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderGrant: () => {
+        origin.current = latest.current.value;
+      },
+      onPanResponderMove: (_, gesture) => {
+        const c = latest.current;
+        const moved = c.vertical ? gesture.dy : -gesture.dx;
+        const raw = origin.current + (moved / gap) * c.tick;
+        const snapped = Math.round(raw / c.step) * c.step;
+        c.onChange(
+          Math.round(Math.min(c.max, Math.max(c.min, snapped)) * 1000) / 1000,
+        );
+      },
+    }),
+  ).current;
   const half = Math.ceil(length / 2 / gap) + 1;
   const base = Math.round(value / tick);
   const marks = Array.from({ length: half * 2 + 1 }, (_, index) => base - half + index);
   const thickness = 56;
   return (
     <View
-      pointerEvents="none"
+      {...pan.panHandlers}
+      accessibilityRole="adjustable"
       style={
         vertical
           ? { width: thickness, height: length, overflow: "hidden" }
@@ -381,18 +414,19 @@ function Ruler({
         const position = (vertical ? length / 2 - offset : length / 2 + offset) - 1;
         const label = Math.round(mark * tick * 100) / 100;
         return vertical ? (
-          <View key={mark} style={{ position: "absolute", top: position - 8, left: 0, flexDirection: "row", alignItems: "center", gap: 4, height: 16 }}>
+          <View key={mark} pointerEvents="none" style={{ position: "absolute", top: position - 8, left: 0, flexDirection: "row", alignItems: "center", gap: 4, height: 16 }}>
             <View style={{ width: major ? 22 : 12, height: 2, backgroundColor: major ? colors.foreground : colors.muted }} />
             {major ? <Text style={{ color: colors.muted, fontSize: 11 }}>{label}</Text> : null}
           </View>
         ) : (
-          <View key={mark} style={{ position: "absolute", left: position - 12, top: 0, width: 24, alignItems: "center" }}>
+          <View key={mark} pointerEvents="none" style={{ position: "absolute", left: position - 12, top: 0, width: 24, alignItems: "center" }}>
             <View style={{ width: 2, height: major ? 22 : 12, backgroundColor: major ? colors.foreground : colors.muted }} />
             {major ? <Text style={{ color: colors.muted, fontSize: 11 }}>{label}</Text> : null}
           </View>
         );
       })}
       <View
+        pointerEvents="none"
         style={
           vertical
             ? { position: "absolute", top: length / 2 - 1, left: 0, width: 34, height: 3, backgroundColor: colors.primary }
@@ -464,6 +498,17 @@ export function MeasureField({
         </Text>
         {kind === "height" ? (
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space(2) }}>
+            <Ruler
+              vertical
+              value={clamped}
+              tick={range.tick}
+              labelEvery={range.labelEvery}
+              length={268}
+              min={range.min}
+              max={range.max}
+              step={range.step}
+              onChange={(next) => onChange(text(next))}
+            />
             <Slider
               vertical
               length={240}
@@ -473,11 +518,19 @@ export function MeasureField({
               step={range.step}
               onChange={(next) => onChange(text(next))}
             />
-            <Ruler vertical value={clamped} tick={range.tick} labelEvery={range.labelEvery} length={268} />
           </View>
         ) : (
           <View style={{ alignItems: "center", gap: space(1) }}>
-            <Ruler value={clamped} tick={range.tick} labelEvery={range.labelEvery} length={278} />
+            <Ruler
+              value={clamped}
+              tick={range.tick}
+              labelEvery={range.labelEvery}
+              length={278}
+              min={range.min}
+              max={range.max}
+              step={range.step}
+              onChange={(next) => onChange(text(next))}
+            />
             <Slider
               length={250}
               value={clamped}

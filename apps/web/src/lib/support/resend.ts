@@ -20,7 +20,11 @@ export async function sendSupportEmail(email: SupportEmail, idempotency: string)
     signal: AbortSignal.timeout(15000),
     cache: "no-store",
   });
-  if (!response.ok) throw new Error("Support mail unavailable");
+  if (!response.ok) {
+    // Resend explains the refusal (for example an unverified domain); never log the key.
+    const detail = await response.text().catch(() => "");
+    throw new Error(`Resend ${response.status}: ${detail.slice(0, 300)}`);
+  }
   return z
     .object({ id: z.string().min(1).max(100) })
     .parse(await response.json());
