@@ -12,6 +12,14 @@ import {
   View,
 } from "react-native";
 import type Svg from "react-native-svg";
+import {
+  Defs,
+  LinearGradient,
+  Stop,
+  Svg as Drawing,
+  Circle,
+  Rect,
+} from "react-native-svg";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { translate } from "@fitty/core/data/translations";
 import {
@@ -29,6 +37,55 @@ import { WorkoutPoster } from "@/components/workout-poster";
 import { Button, Card, Label, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
+
+/** Instagram glyph drawn as vectors, since system symbols have no brand logos. */
+function InstagramGlyph({ size = 30 }: { size?: number }) {
+  return (
+    <Drawing width={size} height={size} viewBox="0 0 24 24">
+      <Defs>
+        <LinearGradient id="ig" x1="0" y1="1" x2="1" y2="0">
+          <Stop offset="0" stopColor="#feda75" />
+          <Stop offset="0.35" stopColor="#fa7e1e" />
+          <Stop offset="0.65" stopColor="#d62976" />
+          <Stop offset="1" stopColor="#962fbf" />
+        </LinearGradient>
+      </Defs>
+      <Rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="url(#ig)" strokeWidth="2" fill="none" />
+      <Circle cx="12" cy="12" r="4.2" stroke="url(#ig)" strokeWidth="2" fill="none" />
+      <Circle cx="17.4" cy="6.6" r="1.2" fill="url(#ig)" />
+    </Drawing>
+  );
+}
+
+function SquareButton({
+  label,
+  onPress,
+  children,
+}: {
+  label: string;
+  onPress: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={{
+        width: 64,
+        height: 64,
+        borderRadius: 16,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.secondary,
+        borderColor: colors.border,
+        borderWidth: 1,
+      }}
+    >
+      {children}
+    </Pressable>
+  );
+}
 
 const typeColor: Record<string, string> = {
   warmup: "#facc15",
@@ -404,15 +461,39 @@ export function DaySheet({
             <View style={{ alignItems: "center" }}>
               <WorkoutPoster ref={posterRef} snapshot={snapshot} session={poster} width={230} />
             </View>
-            <Button onPress={() => void shareStory()}>
-              {t("Compartir en Historias de Instagram", "Share to Instagram Stories")}
-            </Button>
-            <Button variant="secondary" onPress={() => void share()}>
-              {t("Compartir en otra app", "Share to another app")}
-            </Button>
-            <Button variant="secondary" onPress={() => setPoster(null)}>
-              {t("Volver", "Back")}
-            </Button>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <SquareButton label={t("Volver", "Back")} onPress={() => setPoster(null)}>
+                <SymbolView
+                  name={{ ios: "chevron.left", android: "arrow_back" }}
+                  tintColor={colors.foreground}
+                  size={24}
+                />
+              </SquareButton>
+              <View style={{ flexDirection: "row", gap: space(3) }}>
+                <SquareButton
+                  label={t("Compartir en Historias de Instagram", "Share to Instagram Stories")}
+                  onPress={() => void shareStory()}
+                >
+                  <InstagramGlyph />
+                </SquareButton>
+                <SquareButton
+                  label={t("Compartir en otra app", "Share to another app")}
+                  onPress={() => void share()}
+                >
+                  <SymbolView
+                    name={{ ios: "square.and.arrow.up", android: "share" }}
+                    tintColor={colors.foreground}
+                    size={26}
+                  />
+                </SquareButton>
+              </View>
+            </View>
           </>
         ) : null}
       </Overlay>
