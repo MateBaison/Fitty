@@ -130,7 +130,7 @@ export default function SignIn() {
                   {t("Entrar", "Enter")}
                 </Button>
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   onPress={() => {
                     setSentTo(null);
                     setCode("");

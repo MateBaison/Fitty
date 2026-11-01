@@ -265,7 +265,7 @@ export function DaySheet({
         ) : null}
         {day && day <= localDateKey(new Date()) ? (
           <Button onPress={() => setLogging(true)}>
-            {t("Agregar entrenamiento a este día", "Add a workout to this day")}
+            {t("Agregar entrenamiento", "Add workout")}
           </Button>
         ) : null}
         <Button variant="secondary" onPress={closeAll}>

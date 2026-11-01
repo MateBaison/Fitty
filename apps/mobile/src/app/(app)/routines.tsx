@@ -9,7 +9,7 @@ import {
   type MuscleGroup,
 } from "@fitty/core/domain/schemas/exercise";
 import { encodeRoutine } from "@fitty/core/domain/sharing";
-import { findExercise } from "@fitty/core/domain/workouts";
+import { findExercise, type CatalogExercise } from "@fitty/core/domain/workouts";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
 import { Chip, ChipGroup } from "@/components/chip";
@@ -85,6 +85,7 @@ export function RoutinesSection() {
   const { change, notify, t } = useAccount();
   const language = snapshot.settings.language ?? "es";
   const [creating, setCreating] = useState(false);
+  const [viewing, setViewing] = useState<CatalogExercise | null>(null);
   const [mode, setMode] = useState<"custom" | "auto">("custom");
   const [name, setName] = useState("");
   const [goal, setGoal] = useState<string>("Fuerza e hipertrofia");
@@ -156,6 +157,35 @@ export function RoutinesSection() {
     : undefined;
   return (
     <>
+      <Modal
+        visible={Boolean(viewing)}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setViewing(null)}
+      >
+        <View style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000c" }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("Cerrar", "Close")}
+            onPress={() => setViewing(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          {viewing ? (
+            <Card>
+              <Image
+                source={`${env.apiUrl}${exerciseImage(viewing, snapshot.profile.gender)}`}
+                style={{ width: "100%", aspectRatio: 3 / 2, borderRadius: 14, backgroundColor: "#0d1016" }}
+                contentFit="contain"
+                cachePolicy="disk"
+                accessibilityIgnoresInvertColors
+              />
+              <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800", textAlign: "center" }}>
+                {translate(language, viewing.name, viewing.name)}
+              </Text>
+            </Card>
+          ) : null}
+        </View>
+      </Modal>
       <View
         style={{
           flexDirection: "row",
@@ -265,7 +295,7 @@ export function RoutinesSection() {
           <Button disabled={mode === "auto" && !groups.length} onPress={create}>
             {t("Crear rutina", "Create routine")}
           </Button>
-          <Button variant="ghost" onPress={() => setCreating(false)}>
+          <Button variant="secondary" onPress={() => setCreating(false)}>
             {t("Cancelar", "Cancel")}
           </Button>
         </Card>
@@ -323,15 +353,17 @@ export function RoutinesSection() {
                   />
                 ) : null}
               </View>
-              <SymbolView
-                name={
-                  expanded
-                    ? { ios: "chevron.up", android: "expand_less" }
-                    : { ios: "chevron.down", android: "expand_more" }
-                }
-                tintColor={colors.muted}
-                size={18}
-              />
+              <View style={{ width: 40, alignItems: "center" }}>
+                <SymbolView
+                  name={
+                    expanded
+                      ? { ios: "chevron.up", android: "expand_less" }
+                      : { ios: "chevron.down", android: "expand_more" }
+                  }
+                  tintColor={colors.muted}
+                  size={18}
+                />
+              </View>
             </Pressable>
             {expanded ? (
               <>
@@ -370,6 +402,7 @@ export function RoutinesSection() {
                       }
                     }}
                   />
+                  <View style={{ height: 40, justifyContent: "center" }}>
                   <Switch
                     accessibilityLabel={t("Usar esta rutina", "Use this routine")}
                     value={active}
@@ -381,6 +414,7 @@ export function RoutinesSection() {
                       );
                     }}
                   />
+                  </View>
                   <View style={{ flex: 1 }} />
                   <IconButton
                     label={t("Eliminar", "Delete")}
@@ -529,18 +563,24 @@ export function RoutinesSection() {
                                       }}
                                     >
                                       {exercise ? (
-                                        <Image
-                                          source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
-                                          style={{
-                                            width: 56,
-                                            height: 56,
-                                            borderRadius: 12,
-                                            backgroundColor: "#0d1016",
-                                          }}
-                                          contentFit="cover"
-                                          cachePolicy="disk"
-                                          accessibilityIgnoresInvertColors
-                                        />
+                                        <Pressable
+                                          accessibilityRole="imagebutton"
+                                          accessibilityLabel={t("Ver imagen", "View image")}
+                                          onPress={() => setViewing(exercise)}
+                                        >
+                                          <Image
+                                            source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                                            style={{
+                                              width: 56,
+                                              height: 56,
+                                              borderRadius: 12,
+                                              backgroundColor: "#0d1016",
+                                            }}
+                                            contentFit="cover"
+                                            cachePolicy="disk"
+                                            accessibilityIgnoresInvertColors
+                                          />
+                                        </Pressable>
                                       ) : null}
                                       <Text
                                         style={{
@@ -599,7 +639,7 @@ export function RoutinesSection() {
                             </Button>
                             {day.items.length > 1 ? (
                               <Button
-                                variant="ghost"
+                                variant="secondary"
                                 onPress={() => {
                                   setMembers([]);
                                   setSuperset({ rid: routine.id, did: day.id });
@@ -742,7 +782,7 @@ export function RoutinesSection() {
                     {day.name}
                   </Button>
                 ))}
-              <Button variant="ghost" onPress={() => setRemovingDay(null)}>
+              <Button variant="secondary" onPress={() => setRemovingDay(null)}>
                 {t("Cancelar", "Cancel")}
               </Button>
             </Card>
@@ -817,7 +857,7 @@ export function RoutinesSection() {
               </Button>
               {supersetDay?.supersets?.length ? (
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   onPress={() => {
                     if (superset)
                       editDay(

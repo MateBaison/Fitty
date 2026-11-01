@@ -223,7 +223,7 @@ export default function Home() {
                   )}
                 </Label>
               )}
-              <Button variant="ghost" onPress={() => setPicking(false)}>
+              <Button variant="secondary" onPress={() => setPicking(false)}>
                 {t("Cancelar", "Cancel")}
               </Button>
             </Card>

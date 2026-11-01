@@ -1,4 +1,4 @@
-import { usePathname } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -48,7 +48,13 @@ export function AppHeader() {
       }}
     >
       <View style={{ flex: 1, alignItems: "flex-start" }}>
-        <View style={{ gap: 2, alignItems: "center" }}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("Ir al inicio", "Go home")}
+          onPress={() => router.navigate("/")}
+          hitSlop={8}
+          style={{ gap: 2, alignItems: "center" }}
+        >
           <Image
             source={require("@/assets/images/fitty-wordmark.png")}
             style={{ width: 62, height: 30 }}
@@ -65,7 +71,7 @@ export function AppHeader() {
           >
             GYM TRACKER
           </Text>
-        </View>
+        </Pressable>
       </View>
       <Text
         accessibilityRole="header"

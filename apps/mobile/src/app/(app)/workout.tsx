@@ -711,7 +711,7 @@ export default function Workout() {
               >
                 {t("Guardar entrenamiento", "Save workout")}
               </Button>
-              <Button variant="ghost" onPress={() => setFinishing(false)}>
+              <Button variant="secondary" onPress={() => setFinishing(false)}>
                 {t("Seguir entrenando", "Keep training")}
               </Button>
             </Card>

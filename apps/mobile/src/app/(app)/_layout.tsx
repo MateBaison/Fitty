@@ -45,7 +45,7 @@ function AccountGate() {
         <Card>
           <Label>{view.message}</Label>
           <Button onPress={retry}>{t("Reintentar", "Retry")}</Button>
-          <Button variant="ghost" onPress={() => void supabase.auth.signOut()}>
+          <Button variant="secondary" onPress={() => void supabase.auth.signOut()}>
             {t("Cerrar sesión", "Sign out")}
           </Button>
         </Card>

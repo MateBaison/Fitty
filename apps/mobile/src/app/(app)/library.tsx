@@ -210,7 +210,7 @@ export default function Library() {
                   )}
                 </Label>
               ) : null}
-              <Button variant="ghost" onPress={() => setAdding(null)}>
+              <Button variant="secondary" onPress={() => setAdding(null)}>
                 {t("Cancelar", "Cancel")}
               </Button>
             </Card>

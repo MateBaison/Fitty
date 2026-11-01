@@ -264,7 +264,7 @@ export default function Tracking() {
   const { t } = useAccount();
   return (
     <Screen>
-      <Button variant="ghost" onPress={() => router.back()}>
+      <Button variant="secondary" onPress={() => router.back()}>
         {`‹ ${t("Volver", "Back")}`}
       </Button>
       <TrackingPanel />

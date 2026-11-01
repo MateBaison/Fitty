@@ -156,7 +156,7 @@ export default function Combat() {
   const { t } = useAccount();
   return (
     <Screen>
-      <Button variant="ghost" onPress={() => router.back()}>
+      <Button variant="secondary" onPress={() => router.back()}>
         {`‹ ${t("Volver", "Back")}`}
       </Button>
       <CombatPanel />

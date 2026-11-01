@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { initialWindowMetrics } from "react-native-safe-area-context";
 import { ExerciseBrowser } from "@/components/exercise-browser";
 import { Button, Glow, styles } from "@/components/ui";
 import { useAccount } from "@/state/account";
@@ -26,7 +26,8 @@ export function ExercisePicker({
   title?: string;
 }) {
   const { t } = useAccount();
-  const insets = useSafeAreaInsets();
+  // The app layout zeroes the top inset for its header; a modal needs the real one.
+  const insets = initialWindowMetrics?.insets ?? { top: 54, bottom: 0 };
   const [selected, setSelected] = useState<string[]>([]);
   const close = () => {
     setSelected([]);
@@ -41,43 +42,28 @@ export function ExercisePicker({
         ]}
       >
         <Glow />
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingHorizontal: space(4),
-            paddingTop: space(3),
-          }}
-        >
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("Cancelar", "Cancel")}
-            onPress={close}
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: colors.secondary,
-              borderColor: colors.border,
-              borderWidth: 1,
-            }}
-          >
-            <Text style={{ color: colors.accent, fontSize: 22, fontWeight: "700" }}>
-              ‹
-            </Text>
-          </Pressable>
-          <Text
-            accessibilityRole="header"
-            style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}
-          >
-            {title ?? t("Agregar ejercicios", "Add exercises")}
-          </Text>
-          <View style={{ width: 44 }} />
-        </View>
         <ExerciseBrowser
+          leading={
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("Volver", "Back")}
+              onPress={close}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 12,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: colors.secondary,
+                borderColor: colors.border,
+                borderWidth: 1,
+              }}
+            >
+              <Text style={{ color: colors.accent, fontSize: 22, fontWeight: "700" }}>
+                ‹
+              </Text>
+            </Pressable>
+          }
           selectedIds={selected}
           onPress={(exercise) => {
             if (single) {

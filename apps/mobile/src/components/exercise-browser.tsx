@@ -75,7 +75,9 @@ export function ExerciseBrowser({
   onPress,
   selectedIds,
   onCreate,
+  leading,
 }: {
+  leading?: React.ReactNode;
   onPress: (exercise: CatalogExercise) => void;
   selectedIds?: readonly string[];
   onCreate?: () => void;
@@ -124,6 +126,8 @@ export function ExerciseBrowser({
         keyboardShouldPersistTaps="handled"
         ListHeaderComponent={
           <View style={{ gap: space(3) }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
+            {leading}
             <TextInput
               value={query}
               onChangeText={setQuery}
@@ -133,8 +137,9 @@ export function ExerciseBrowser({
               )}
               placeholderTextColor={colors.muted}
               accessibilityLabel={t("Buscar ejercicios", "Search exercises")}
-              style={styles.input}
+              style={[styles.input, { flex: 1, minHeight: 44, paddingVertical: space(2) }]}
             />
+            </View>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={t("Seleccionar zona", "Select area")}
@@ -189,31 +194,26 @@ export function ExerciseBrowser({
                 >
                   {t("Seleccionar zona", "Select area")} ▾
                 </Text>
-                <Text
+                <View
                   style={{
-                    color: colors.foreground,
-                    fontSize: 22,
-                    fontWeight: "800",
+                    paddingVertical: space(3),
+                    paddingHorizontal: space(3),
+                    borderRadius: 14,
+                    backgroundColor: colors.secondary,
+                    borderColor: colors.border,
+                    borderWidth: 1,
                   }}
                 >
-                  {groupName(group).replace("★ ", "")}
-                </Text>
-                <Label muted>
-                  {group === "Todos"
-                    ? t(
-                        "Todos los ejercicios de la biblioteca.",
-                        "All exercises in the library.",
-                      )
-                    : group === "Favoritos"
-                      ? t(
-                          "Los ejercicios que guardaste como favoritos.",
-                          "The exercises you saved as favorites.",
-                        )
-                      : t(
-                          "El naranja señala el grupo elegido.",
-                          "Orange marks the selected muscle group.",
-                        )}
-                </Label>
+                  <Text
+                    style={{
+                      color: colors.foreground,
+                      fontSize: 20,
+                      fontWeight: "800",
+                    }}
+                  >
+                    {groupName(group).replace("★ ", "")}
+                  </Text>
+                </View>
               </View>
             </Pressable>
             <View

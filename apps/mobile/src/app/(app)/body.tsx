@@ -128,7 +128,7 @@ export function BodyPanel() {
             />
           ) : null}
           <Button
-            variant="ghost"
+            variant="secondary"
             onPress={() =>
               Alert.alert(
                 t("¿Eliminar registro?", "Delete entry?"),
@@ -162,7 +162,7 @@ export default function Body() {
   const { t } = useAccount();
   return (
     <Screen>
-      <Button variant="ghost" onPress={() => router.back()}>
+      <Button variant="secondary" onPress={() => router.back()}>
         {`‹ ${t("Volver", "Back")}`}
       </Button>
       <BodyPanel />
