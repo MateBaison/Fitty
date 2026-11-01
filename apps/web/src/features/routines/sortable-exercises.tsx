@@ -19,9 +19,11 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useState } from "react";
 import { GripVertical } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { findExercise } from "@fitty/core/domain/workouts";
+import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { Button } from "@/components/ui/button";
 function SortableItem({
@@ -35,7 +37,8 @@ function SortableItem({
 }) {
   const { snapshot } = useApp(),
     exercise = findExercise(snapshot, exerciseId),
-    sort = useSortable({ id });
+    sort = useSortable({ id }),
+    [enlarged, setEnlarged] = useState(false);
   return (
     <div
       ref={sort.setNodeRef}
@@ -58,9 +61,14 @@ function SortableItem({
         <GripVertical />
       </button>
       {exercise && (
-        <div className="picker-thumb">
+        <button
+          type="button"
+          className="picker-thumb"
+          aria-label={`Ampliar ${exercise.name}`}
+          onClick={() => setEnlarged(true)}
+        >
           <ExerciseVisual exercise={exercise} />
-        </div>
+        </button>
       )}
       <span className="min-w-0 flex-1">{short(exercise?.name ?? exerciseId)}</span>
       <Button
@@ -70,6 +78,10 @@ function SortableItem({
       >
         −
       </Button>
+      <ExerciseDetails
+        exercise={enlarged ? (exercise ?? null) : null}
+        onClose={() => setEnlarged(false)}
+      />
     </div>
   );
 }
