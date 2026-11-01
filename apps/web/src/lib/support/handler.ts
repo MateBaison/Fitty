@@ -19,8 +19,11 @@ export type SupportEmail = {
   attachments: { filename: string; content: string }[];
 };
 const headers = { "Cache-Control": "private, no-store" };
-const reply = (code: string, status: number, extra?: Record<string, string>) =>
-  Response.json({ error: code }, { status, headers: { ...headers, ...extra } });
+const reply = (code: string, status: number, extra?: Record<string, string>) => {
+  // Only the reason is logged, never message text, attachments or addresses.
+  if (status >= 400) console.error(`[support] rejected ${status} ${code}`);
+  return Response.json({ error: code }, { status, headers: { ...headers, ...extra } });
+};
 /** Best-effort burst guard per running instance; provider quotas remain the global ceiling. */
 export class SupportBurstGuard {
   private entries = new Map<
