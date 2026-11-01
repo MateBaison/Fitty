@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { chooseZone } from "./zones";
 import { login, openHomeSection } from "./login-helper";
 
 test.beforeEach(async ({ page }) => {
@@ -107,10 +108,7 @@ test("catalog groups, non-floating search, equipment filters, images, modal and 
     "Piernas",
     "Gemelos",
   ]) {
-    await page
-      .getByRole("group", { name: "Zonas musculares" })
-      .getByRole("button", { name: group, exact: true })
-      .click();
+    await chooseZone(page, group);
     await expect(page.locator(".muscle-summary img")).toBeVisible();
     expect(await page.locator(".exercise-card").count()).toBeGreaterThan(0);
     await page.locator(".exercise-card img").evaluateAll(async (images) => {
@@ -122,37 +120,15 @@ test("catalog groups, non-floating search, equipment filters, images, modal and 
       }
     });
   }
-  expect(
-    await page
-      .locator(".muscle-chips")
-      .evaluate((el) => el.scrollWidth <= el.clientWidth),
-  ).toBe(true);
-  const chips = await page.locator(".muscle-chips button").all();
-  for (const chip of chips) {
-    const box = await chip.boundingBox();
-    expect(box).not.toBeNull();
-    expect(box!.x).toBeGreaterThanOrEqual(0);
-    expect(box!.x + box!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
-  }
-  await page
-    .getByRole("group", { name: "Zonas musculares" })
-    .getByRole("button", { name: "Pectorales", exact: true })
-    .click();
-  await page.locator("summary").click();
+  await chooseZone(page, "Pectorales");
+  await page.getByRole("button", { name: "Filtrar por equipo" }).click();
   await page
     .getByRole("group", { name: "Equipo", exact: true })
     .getByRole("button", { name: "Mancuernas", exact: true })
     .click();
-  await expect(page.locator("details")).not.toHaveAttribute("open");
-  expect(
-    await page.locator(".exercise-results summary").evaluate((summary) => {
-      const range = document.createRange();
-      range.selectNodeContents(summary);
-      return new Set(
-        Array.from(range.getClientRects(), (rect) => Math.round(rect.top)),
-      ).size;
-    }),
-  ).toBe(1);
+  await expect(
+    page.getByRole("group", { name: "Equipo", exact: true }),
+  ).toHaveCount(0);
   await page.screenshot({
     path: `artifacts/library-filter-${testInfo.project.name}.png`,
     animations: "disabled",

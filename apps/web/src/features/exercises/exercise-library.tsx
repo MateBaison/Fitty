@@ -1,7 +1,7 @@
 "use client";
 
 import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useApp } from "@/state/app-provider";
 import { catalogFor, type CatalogExercise } from "@fitty/core/domain/workouts";
 import { muscleGroups, type MuscleGroup } from "@fitty/core/domain/schemas/exercise";
@@ -29,7 +29,18 @@ export function ExerciseLibrary() {
     [selected, setSelected] = useState<CatalogExercise | null>(null),
     [custom, setCustom] = useState(false),
     [addId, setAddId] = useState<string | null>(null);
-  const filterMenu = useRef<HTMLDetailsElement>(null);
+  const [zoning, setZoning] = useState(false),
+    [filtering, setFiltering] = useState(false);
+  const zoneName = (value: MuscleGroup | "Todos" | "Favoritos") =>
+    value === "Todos"
+      ? t("Todo", "All")
+      : value === "Favoritos"
+        ? `★ ${t("Favoritos", "Favorites")}`
+        : t(value, value);
+  const zoneImage = (value: MuscleGroup | "Todos" | "Favoritos") =>
+    value === "Favoritos"
+      ? null
+      : `/assets/${value === "Todos" ? fullBodyImage : muscleImages[value]}`;
   const filtered = useMemo(
     () =>
       catalogFor(snapshot).filter(
@@ -62,82 +73,90 @@ export function ExerciseLibrary() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder={t("Buscar ejercicio", "Search exercise")}
         />
-        <div
-          className="muscle-chips"
-          role="group"
-          aria-label={t("Zonas musculares", "Muscle groups")}
+      </div>
+      <section className="muscle-summary">
+        <button
+          type="button"
+          className="muscle-summary-image"
+          aria-label={t("Seleccionar zona", "Select area")}
+          onClick={() => setZoning(true)}
         >
-          {(["Favoritos", "Todos", ...muscleGroups] as const).map((muscle) => (
+          {zoneImage(group) ? (
+            <img src={zoneImage(group)!} alt={zoneName(group).replace("★ ", "")} />
+          ) : (
+            <span aria-hidden="true">★</span>
+          )}
+        </button>
+        <div className="zone-controls">
+          <span className="eyebrow">{t("Seleccionar zona", "Select area")} ▾</span>
+          <button
+            type="button"
+            className="zone-pick"
+            aria-label={`${t("Seleccionar zona", "Select area")}: ${zoneName(group)}`}
+            onClick={() => setZoning(true)}
+          >
+            {zoneName(group).replace("★ ", "")}
+          </button>
+          <span className="eyebrow">{t("Filtrar", "Filter")} ▾</span>
+          <button
+            type="button"
+            className="zone-pick"
+            aria-expanded={filtering}
+            aria-label={t("Filtrar por equipo", "Filter by equipment")}
+            onClick={() => setFiltering((current) => !current)}
+          >
+            {equipment === "Todos" ? t("Todo", "All") : equipment}
+          </button>
+        </div>
+      </section>
+      {filtering && (
+        <div
+          className="equipment-menu"
+          role="group"
+          aria-label={t("Equipo", "Equipment")}
+        >
+          {equipmentFilters.map((filter) => (
             <button
               type="button"
-              key={muscle}
-              aria-pressed={group === muscle}
-              onClick={() => setGroup(muscle)}
+              key={filter}
+              aria-pressed={equipment === filter}
+              onClick={() => {
+                setEquipment(filter);
+                setFiltering(false);
+              }}
             >
-              {muscle === "Favoritos" ? "★ " : ""}
-              {t(
-                muscle === "Todos" ? "Todo" : muscle,
-                muscle === "Todos"
-                  ? "All"
-                  : muscle === "Favoritos"
-                    ? "Favorites"
-                    : muscle,
-              )}
+              {filter}
             </button>
           ))}
         </div>
-      </div>
-      {group !== "Favoritos" && (
-        <section className="muscle-summary">
-          <img
-            src={`/assets/${group === "Todos" ? fullBodyImage : muscleImages[group]}`}
-            alt={
-              group === "Todos"
-                ? t(
-                    "Todo: todos los grupos musculares resaltados",
-                    "All: all muscle groups highlighted",
-                  )
-                : t(
-                    `${group}: zona muscular resaltada`,
-                    `${group}: highlighted muscle group`,
-                  )
-            }
-          />
-          <div>
-            <span className="eyebrow">
-              {t("Seleccionar zona", "Select area")}
-            </span>
-            <h2 className="text-xl font-bold">
-              {group === "Todos" ? t("Todo", "All") : t(group, group)}
-            </h2>
-          </div>
-        </section>
       )}
+      <AppDialog
+        open={zoning}
+        onClose={() => setZoning(false)}
+        title={t("Seleccionar zona", "Select area")}
+      >
+        <div className="zone-list" role="group" aria-label={t("Zonas musculares", "Muscle groups")}>
+          {(["Favoritos", "Todos", ...muscleGroups] as const).map((name) => (
+            <button
+              type="button"
+              key={name}
+              aria-pressed={group === name}
+              onClick={() => {
+                setGroup(name);
+                setZoning(false);
+              }}
+            >
+              {zoneImage(name) ? (
+                <img src={zoneImage(name)!} alt="" />
+              ) : (
+                <span aria-hidden="true">★</span>
+              )}
+              <strong>{zoneName(name).replace("★ ", "")}</strong>
+            </button>
+          ))}
+        </div>
+      </AppDialog>
       <div className="exercise-results">
-        <details ref={filterMenu}>
-          <summary>
-            {equipment !== "Todos" ? equipment : t("Filtrar", "Filter")}
-          </summary>
-          <div
-            className="equipment-menu"
-            role="group"
-            aria-label={t("Equipo", "Equipment")}
-          >
-            {equipmentFilters.map((filter) => (
-              <button
-                type="button"
-                key={filter}
-                aria-pressed={equipment === filter}
-                onClick={() => {
-                  setEquipment(filter);
-                  if (filterMenu.current) filterMenu.current.open = false;
-                }}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-        </details>
         <p role="status" className="text-sm text-muted-foreground">
           {filtered.length} {t("ejercicios", "exercises")}
         </p>

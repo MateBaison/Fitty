@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { chooseZone } from "./zones";
 import { login, openHomeSection } from "./login-helper";
 import { readFile } from "node:fs/promises";
 test.beforeEach(async ({ page }) => {
@@ -310,10 +311,7 @@ test("favorites, multiple exercise selection, touch-ready picker and routine reo
     page.getByRole("button", { name: "Favorito", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await page.keyboard.press("Escape");
-  await page
-    .getByRole("group", { name: "Zonas musculares" })
-    .getByRole("button", { name: /Favoritos/ })
-    .click();
+  await chooseZone(page, "Favoritos");
   await expect(page.locator(".exercise-card")).toHaveCount(1);
   await page
     .getByRole("navigation")

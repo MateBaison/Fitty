@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { chooseZone } from "./zones";
 import { login } from "./login-helper";
 
 test.beforeEach(async ({ page }) => {
@@ -22,16 +23,10 @@ test("lateral hip raises appear under abs instead of legs", async ({
     name: "Ver Elevaciones de cadera acostado lateralmente",
     exact: true,
   });
-  await page
-    .getByRole("group", { name: "Zonas musculares", exact: true })
-    .getByRole("button", { name: "Abdominales", exact: true })
-    .click();
+  await chooseZone(page, "Abdominales");
   await expect(exercise).toBeVisible();
   await expect(exercise).toContainText("Abdominales");
-  await page
-    .getByRole("group", { name: "Zonas musculares", exact: true })
-    .getByRole("button", { name: "Piernas", exact: true })
-    .click();
+  await chooseZone(page, "Piernas");
   await expect(exercise).toHaveCount(0);
 });
 

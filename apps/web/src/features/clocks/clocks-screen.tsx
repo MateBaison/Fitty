@@ -1,7 +1,6 @@
 "use client";
 import { useSwipeNavigation } from "@/lib/browser/use-swipe-navigation";
-import { useState } from "react";
-import { AppDialog } from "@/components/ui/app-dialog";
+import { useRef, useState } from "react";
 import { useClock } from "./clock-provider";
 import { useApp } from "@/state/app-provider";
 import { timeFormat } from "@fitty/core/domain/combat";
@@ -13,6 +12,8 @@ import { NumericInput } from "@/components/ui/numeric-input";
 export function ClocksScreen() {
   const [editingTimer, setEditingTimer] = useState(false);
   const [chosen, setChosen] = useState(60);
+  const presets = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null);
   const [duration, setDuration] = useState({
     hours: "0",
     minutes: "0",
@@ -107,95 +108,116 @@ export function ClocksScreen() {
             role="timer"
             aria-label={t("Timer", "Timer")}
           >
-            <button
-              type="button"
-              className="timer-duration-button"
-              aria-label={t("Editar tiempo del timer", "Edit timer duration")}
-              onClick={() => {
-                const seconds = Math.ceil(clock.timer.remaining);
-                setDuration({
-                  hours: String(Math.floor(seconds / 3600)),
-                  minutes: String(Math.floor(seconds / 60) % 60),
-                  seconds: String(seconds % 60),
-                });
-                setEditingTimer(true);
-              }}
-            >
-              {timeFormat(clock.timer.remaining)}
-            </button>
-          </div>
-          <AppDialog
-            open={editingTimer}
-            onClose={() => setEditingTimer(false)}
-            title={t("Tiempo del timer", "Timer duration")}
-            description={t(
-              "Elegí la duración. Al guardar, el timer queda listo para iniciar.",
-              "Choose a duration. Saving prepares the timer to start.",
-            )}
-          >
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                const seconds =
-                  Number(duration.hours) * 3600 +
-                  Number(duration.minutes) * 60 +
-                  Number(duration.seconds);
-                if (!Number.isInteger(seconds) || seconds <= 0) return;
-                clock.preset(seconds);
-                setChosen(seconds);
-                setEditingTimer(false);
-              }}
-            >
-              <div className="grid grid-cols-3 gap-3">
+            {editingTimer ? (
+              <form
+                className="timer-inline-edit"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const seconds =
+                    Number(duration.hours) * 3600 +
+                    Number(duration.minutes) * 60 +
+                    Number(duration.seconds);
+                  if (Number.isInteger(seconds) && seconds > 0) {
+                    clock.preset(seconds);
+                    setChosen(seconds);
+                  }
+                  setEditingTimer(false);
+                }}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget))
+                    event.currentTarget.requestSubmit();
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") setEditingTimer(false);
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    event.currentTarget.requestSubmit();
+                  }
+                }}
+              >
                 {(
                   [
-                    ["hours", t("Horas", "Hours"), 999],
-                    ["minutes", t("Minutos", "Minutes"), 59],
-                    ["seconds", t("Segundos", "Seconds"), 59],
+                    ["hours", t("Horas", "Hours")],
+                    ["minutes", t("Minutos", "Minutes")],
+                    ["seconds", t("Segundos", "Seconds")],
                   ] as const
-                ).map(([key, label, max]) => (
-                  <label key={key}>
-                    {label}
-                    <Input
-                      type="number"
-                      min={0}
-                      max={max}
-                      step={1}
-                      required
+                ).map(([key, label], index) => (
+                  <span key={key}>
+                    {index > 0 && <b aria-hidden="true">:</b>}
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      className={key === "hours" ? "timer-hours" : undefined}
+                      aria-label={label}
+                      // eslint-disable-next-line jsx-a11y/no-autofocus
+                      autoFocus={key === "minutes"}
+                      maxLength={3}
                       value={duration[key]}
+                      onFocus={(event) => event.currentTarget.select()}
                       onChange={(event) =>
                         setDuration((previous) => ({
                           ...previous,
-                          [key]: event.target.value,
+                          [key]: event.target.value.replace(/\D/g, ""),
                         }))
                       }
                     />
-                  </label>
+                  </span>
                 ))}
-              </div>
-              <div className="mt-4 flex justify-end gap-3">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setEditingTimer(false)}
-                >
-                  {t("Cancelar", "Cancel")}
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={
-                    Number(duration.hours) * 3600 +
-                      Number(duration.minutes) * 60 +
-                      Number(duration.seconds) <=
-                    0
-                  }
-                >
-                  {t("Guardar tiempo", "Save duration")}
-                </Button>
-              </div>
-            </form>
-          </AppDialog>
-          <div className="timer-presets" role="group" aria-label={t("Tiempos predeterminados", "Preset times")}>
+              </form>
+            ) : (
+              <button
+                type="button"
+                className="timer-duration-button"
+                aria-label={t("Editar tiempo del timer", "Edit timer duration")}
+                onClick={() => {
+                  const seconds = Math.ceil(clock.timer.remaining);
+                  setDuration({
+                    hours: String(Math.floor(seconds / 3600)),
+                    minutes: String(Math.floor(seconds / 60) % 60),
+                    seconds: String(seconds % 60),
+                  });
+                  setEditingTimer(true);
+                }}
+              >
+                {timeFormat(clock.timer.remaining)}
+              </button>
+            )}
+          </div>
+          <div
+            ref={presets}
+            className="timer-presets"
+            role="group"
+            aria-label={t("Tiempos predeterminados", "Preset times")}
+            onWheel={(event) => {
+              if (presets.current && Math.abs(event.deltaY) > Math.abs(event.deltaX))
+                presets.current.scrollLeft += event.deltaY;
+            }}
+            onPointerDown={(event) => {
+              if (event.pointerType !== "mouse" || !presets.current) return;
+              drag.current = {
+                x: event.clientX,
+                left: presets.current.scrollLeft,
+                moved: false,
+              };
+            }}
+            onPointerMove={(event) => {
+              const state = drag.current;
+              if (!state || !presets.current) return;
+              const delta = event.clientX - state.x;
+              if (Math.abs(delta) > 4) state.moved = true;
+              if (state.moved) presets.current.scrollLeft = state.left - delta;
+            }}
+            onPointerUp={() => {
+              window.setTimeout(() => (drag.current = null), 0);
+            }}
+            onPointerLeave={() => (drag.current = null)}
+            onClickCapture={(event) => {
+              if (drag.current?.moved) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            }}
+          >
             {[
               [15, "15seg"],
               [30, "30seg"],

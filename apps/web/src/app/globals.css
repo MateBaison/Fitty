@@ -3528,3 +3528,111 @@ input[type="range"] {
   opacity: 0;
   pointer-events: none;
 }
+
+/* Library zone card: tappable body image, zone and equipment pickers. */
+.muscle-summary-image {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: #0d1016;
+  cursor: pointer;
+}
+.muscle-summary-image span {
+  color: var(--warning, #f8c830);
+  font-size: 44px;
+}
+.zone-controls {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.zone-controls .eyebrow {
+  text-align: center;
+}
+.zone-pick {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--secondary);
+  color: var(--foreground);
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
+}
+.zone-list {
+  display: grid;
+  gap: 8px;
+}
+.zone-list button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--secondary);
+  color: var(--foreground);
+  text-align: left;
+  cursor: pointer;
+}
+.zone-list button[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 18%, var(--secondary));
+}
+.zone-list img {
+  width: 56px;
+  height: 70px;
+  border-radius: 10px;
+  background: #0d1016;
+  object-fit: contain;
+}
+.zone-list span {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 70px;
+  border-radius: 10px;
+  background: #0d1016;
+  color: #f8c830;
+  font-size: 28px;
+}
+
+.timer-presets {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  cursor: grab;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.timer-inline-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.timer-inline-edit span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.timer-inline-edit input {
+  width: 2.4ch;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 2px solid var(--primary);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+}
+.timer-inline-edit .timer-hours {
+  width: 1.6ch;
+  opacity: 0.6;
+}

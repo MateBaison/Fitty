@@ -1,7 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { useKeepAwake } from "expo-keep-awake";
 import { useEffect, useRef, useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import {
   calorieMetrics,
   calorieTargets,
@@ -287,18 +287,80 @@ function Timer() {
   return (
     <Card>
       {running ? <KeepAwake /> : null}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t("Cambiar el tiempo", "Change the time")}
-        disabled={running}
-        onPress={() => {
-          setMinutes(String(Math.floor(seconds / 60)));
-          setExtra(String(seconds % 60));
-          setEditing(true);
-        }}
-      >
-        <Digits value={clock(left)} />
-      </Pressable>
+      {editing ? (
+        <View style={{ gap: space(2) }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingVertical: space(3),
+            }}
+          >
+            {(
+              [
+                [minutes, setMinutes, t("Minutos", "Minutes"), 3],
+                [extra, setExtra, t("Segundos", "Seconds"), 2],
+              ] as const
+            ).map(([value, setValue, label, max], index) => (
+              <View
+                key={label}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
+                {index ? (
+                  <Text style={{ color: colors.foreground, fontSize: 64, fontWeight: "800" }}>
+                    :
+                  </Text>
+                ) : null}
+                <TextInput
+                  value={value}
+                  onChangeText={(text) => setValue(text.replace(/\D/g, "").slice(0, max))}
+                  keyboardType="number-pad"
+                  accessibilityLabel={label}
+                  autoFocus={index === 0}
+                  selectTextOnFocus
+                  style={{
+                    minWidth: 96,
+                    color: colors.foreground,
+                    fontSize: 64,
+                    fontWeight: "800",
+                    textAlign: "center",
+                    fontVariant: ["tabular-nums"],
+                    borderBottomColor: colors.primary,
+                    borderBottomWidth: 3,
+                    paddingVertical: 0,
+                  }}
+                />
+              </View>
+            ))}
+          </View>
+          <Button
+            onPress={() => {
+              const total = Math.min(
+                5999,
+                (Number(minutes) || 0) * 60 + (Number(extra) || 0),
+              );
+              if (total > 0) choose(total);
+              setEditing(false);
+            }}
+          >
+            {t("Listo", "Done")}
+          </Button>
+        </View>
+      ) : (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("Cambiar el tiempo", "Change the time")}
+          disabled={running}
+          onPress={() => {
+            setMinutes(String(Math.floor(seconds / 60)));
+            setExtra(String(seconds % 60));
+            setEditing(true);
+          }}
+        >
+          <Digits value={clock(left)} />
+        </Pressable>
+      )}
       <View>
         <ScrollView
           horizontal
@@ -356,82 +418,6 @@ function Timer() {
           </Button>
         </View>
       </View>
-      <Modal
-        visible={editing}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setEditing(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            padding: space(4),
-            backgroundColor: "#000a",
-          }}
-        >
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("Cerrar", "Close")}
-            onPress={() => setEditing(false)}
-            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
-          />
-          <Card>
-            <Text
-              accessibilityRole="header"
-              style={{
-                color: colors.foreground,
-                fontSize: 20,
-                fontWeight: "800",
-                textAlign: "center",
-              }}
-            >
-              {t("Elegir tiempo", "Set the time")}
-            </Text>
-            <View style={{ flexDirection: "row", gap: space(3) }}>
-              <View style={{ flex: 1 }}>
-                <Field
-                  label={t("Minutos", "Minutes")}
-                  value={minutes}
-                  onChangeText={(value) => setMinutes(value.replace(/\D/g, "").slice(0, 3))}
-                  keyboardType="number-pad"
-                  selectTextOnFocus
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Field
-                  label={t("Segundos", "Seconds")}
-                  value={extra}
-                  onChangeText={(value) => setExtra(value.replace(/\D/g, "").slice(0, 2))}
-                  keyboardType="number-pad"
-                  selectTextOnFocus
-                />
-              </View>
-            </View>
-            <View style={{ flexDirection: "row", gap: space(3) }}>
-              <View style={{ flex: 1 }}>
-                <Button variant="secondary" onPress={() => setEditing(false)}>
-                  {t("Cancelar", "Cancel")}
-                </Button>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Button
-                  onPress={() => {
-                    const total = Math.min(
-                      5999,
-                      Math.max(1, (Number(minutes) || 0) * 60 + (Number(extra) || 0)),
-                    );
-                    choose(total);
-                    setEditing(false);
-                  }}
-                >
-                  {t("Aplicar", "Apply")}
-                </Button>
-              </View>
-            </View>
-          </Card>
-        </View>
-      </Modal>
     </Card>
   );
 }

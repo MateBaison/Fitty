@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { login } from "./login-helper";
+import { chooseZone } from "./zones";
 import { readFileSync } from "node:fs";
 
 // Playwright's loader cannot import the catalog JSON, so count selectable exercises from the files.
@@ -36,15 +37,10 @@ test("glutes has its own cover and exercises while Full body includes every choi
   await login(page);
   await page.goto("/library");
   await expect(page.getByTestId("launch-splash")).toHaveCount(0);
-  const groups = page.getByRole("group", {
-    name: "Zonas musculares",
-    exact: true,
-  });
   const summary = page.locator(".muscle-summary");
-  await expect(groups.getByRole("button").first()).toHaveText("★ Favoritos");
   await expect(
-    groups.getByRole("button", { name: "Todo", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
+    summary.getByRole("button", { name: /Seleccionar zona: Todo/ }),
+  ).toBeVisible();
   await expect(summary.getByRole("img")).toHaveAttribute(
     "src",
     "/assets/grupo-full-body-v1.jpg",
@@ -52,9 +48,9 @@ test("glutes has its own cover and exercises while Full body includes every choi
   await expect(page.locator(".exercise-grid > button")).toHaveCount(
     availableExercises.length,
   );
-  await groups.getByRole("button", { name: "Glúteos", exact: true }).click();
+  await chooseZone(page, "Glúteos");
   await expect(
-    summary.getByRole("heading", { name: "Glúteos", exact: true }),
+    summary.getByRole("button", { name: /Seleccionar zona: Glúteos/ }),
   ).toBeVisible();
   await expect(summary.getByRole("img")).toHaveAttribute(
     "src",
@@ -71,7 +67,7 @@ test("glutes has its own cover and exercises while Full body includes every choi
   await page.screenshot({
     path: `artifacts/glutes-library-${test.info().project.name}.png`,
   });
-  await groups.getByRole("button", { name: "Piernas", exact: true }).click();
+  await chooseZone(page, "Piernas");
   await expect(
     page.getByRole("button", {
       name: "Ver Caminata lateral con minibanda",
@@ -81,7 +77,7 @@ test("glutes has its own cover and exercises while Full body includes every choi
   await expect(
     page.getByRole("button", { name: "Ver Sentadilla", exact: true }),
   ).toBeVisible();
-  await groups.getByRole("button", { name: "Todo", exact: true }).click();
+  await chooseZone(page, "Todo");
   await expect(page.locator(".exercise-grid > button")).toHaveCount(
     availableExercises.length,
   );
