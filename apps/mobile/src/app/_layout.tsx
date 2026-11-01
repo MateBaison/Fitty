@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { LaunchSplash } from "@/components/launch-splash";
 import { queryClient, queryPersister } from "@/lib/query-client";
 import { SessionProvider, useSession } from "@/state/session";
 import { colors } from "@/theme";
@@ -42,6 +43,7 @@ export default function RootLayout() {
       <SessionProvider>
         <StatusBar style="light" />
         <Routes />
+        <LaunchSplash />
       </SessionProvider>
     </PersistQueryClientProvider>
   );
