@@ -274,7 +274,7 @@ export function RoutinesSection() {
         const active = snapshot.selected === routine.id;
         const expanded = open === routine.id;
         return (
-          <Card key={routine.id}>
+          <Card key={routine.id} style={{ paddingVertical: space(3) }}>
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ expanded }}
@@ -285,9 +285,18 @@ export function RoutinesSection() {
                 gap: space(2),
               }}
             >
-              <View style={{ flex: 1, gap: 4 }}>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: space(2),
+                }}
+              >
                 <Text
+                  numberOfLines={1}
                   style={{
+                    flexShrink: 1,
                     color: colors.foreground,
                     fontSize: 20,
                     fontWeight: "800",
@@ -295,29 +304,24 @@ export function RoutinesSection() {
                 >
                   {routine.name}
                 </Text>
-                <View
-                  style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-                >
-                  <Label muted>
-                    {routine.days.length} {t("días", "days")}
-                  </Label>
-                  {active ? (
-                    <Text
-                      style={{
-                        color: colors.success,
-                        fontSize: 12,
-                        fontWeight: "800",
-                        borderColor: colors.success,
-                        borderWidth: 1,
-                        borderRadius: 999,
-                        paddingHorizontal: 8,
-                        paddingVertical: 2,
-                      }}
-                    >
-                      {t("Activa", "Active")}
-                    </Text>
-                  ) : null}
-                </View>
+                <Text style={{ color: colors.muted, fontSize: 16, fontWeight: "700" }}>
+                  ({routine.days.length})
+                </Text>
+                {active ? (
+                  <View
+                    accessibilityLabel={t("Rutina activa", "Active routine")}
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      backgroundColor: "#22c55e",
+                      shadowColor: "#22c55e",
+                      shadowOpacity: 0.9,
+                      shadowRadius: 6,
+                      shadowOffset: { width: 0, height: 0 },
+                    }}
+                  />
+                ) : null}
               </View>
               <SymbolView
                 name={
@@ -420,9 +424,10 @@ export function RoutinesSection() {
                           gap: space(2),
                           borderColor: colors.border,
                           borderWidth: 1,
-                          borderRadius: 18,
+                          borderRadius: 16,
                           backgroundColor: "#0b0e14",
-                          padding: space(3),
+                          paddingHorizontal: space(3),
+                          paddingVertical: space(1.5),
                         }}
                       >
                         <Pressable
@@ -442,7 +447,7 @@ export function RoutinesSection() {
                             )
                           }
                           style={{
-                            minHeight: 40,
+                            minHeight: 34,
                             flexDirection: "row",
                             alignItems: "center",
                             justifyContent: "center",
