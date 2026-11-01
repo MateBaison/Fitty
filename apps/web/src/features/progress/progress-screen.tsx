@@ -6,7 +6,6 @@ import {
   ChevronRight,
   ArrowUpRight,
   Trophy,
-  Activity,
   Clock,
   CalendarDays,
 } from "lucide-react";
@@ -29,6 +28,7 @@ import {
 import { ProgressChart, type ChartPoint } from "./progress-chart";
 import { shareWorkoutPoster } from "@/features/sharing/workout-poster";
 import { ProgressComparison } from "./progress-comparison";
+import { BackButton } from "@/components/layout/back-button";
 import { BodyProgress } from "./body-progress";
 const periods = [
   ["day", "Día", "Day"],
@@ -150,18 +150,8 @@ export function ProgressScreen() {
           onClose={() => setDay(null)}
         />
       )}
-      <div className="progress-intro">
-        <div>
-          <span className="eyebrow">{t("Tu recorrido", "Your journey")}</span>
-          <h2>{t("Cada entrenamiento cuenta", "Every workout counts")}</h2>
-          <p>
-            {t(
-              "Mirá lo que hiciste y cómo venís avanzando.",
-              "See what you did and how you are progressing.",
-            )}
-          </p>
-        </div>
-        <Activity aria-hidden="true" />
+      <div className="progress-top">
+        <BackButton />
       </div>
       <div
         className="progress-tabs"
@@ -251,6 +241,7 @@ export function ProgressScreen() {
           )}
         </details>
       )}
+      {tab !== "body" && (
       <section
         className="progress-period"
         aria-label={t("Período de progreso", "Progress period")}
@@ -323,6 +314,7 @@ export function ProgressScreen() {
           </div>
         }
       </section>
+      )}
       {tab === "summary" && (
         <>
           <section aria-label={t("Resumen", "Summary")}>
@@ -605,7 +597,7 @@ export function ProgressScreen() {
           {t("Compartir último entrenamiento", "Share latest workout")}
         </Button>
       )}
-      {tab === "body" && <BodyProgress range={range} period={period} />}
+      {tab === "body" && <BodyProgress range={progressRange("all", new Date())} period="all" />}
     </div>
   );
 }

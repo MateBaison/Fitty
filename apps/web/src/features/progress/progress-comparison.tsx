@@ -7,7 +7,7 @@ import {
   shiftProgressDate,
   type ProgressPeriod,
 } from "@fitty/core/domain/progress-period";
-import { Input } from "@/components/ui/input";
+import { RangeField } from "./range-field";
 export function ProgressComparison({
   range,
   period,
@@ -86,22 +86,14 @@ export function ProgressComparison({
                 ? t("Período A", "Period A")
                 : t("Período B", "Period B")}
             </legend>
-            {(["start", "end"] as const).map((edge) => (
-              <label key={edge}>
-                {edge === "start" ? t("Desde", "From") : t("Hasta", "To")}
-                <Input
-                  type="date"
-                  value={dates[key][edge]}
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    setDates((current) => ({
-                      ...current,
-                      [key]: { ...current[key], [edge]: value },
-                    }));
-                  }}
-                />
-              </label>
-            ))}
+            <RangeField
+              label={t("Fechas", "Dates")}
+              start={dates[key].start}
+              end={dates[key].end}
+              onChange={(range) =>
+                setDates((current) => ({ ...current, [key]: range }))
+              }
+            />
           </fieldset>
         ))}
       </div>

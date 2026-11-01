@@ -1,5 +1,4 @@
 import { useRouter } from "expo-router";
-import { SymbolView } from "expo-symbols";
 import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
 import { Modal, Pressable, ScrollView, Switch, Text, View } from "react-native";
@@ -26,7 +25,7 @@ import { catalogFor, localDateKey } from "@fitty/core/domain/workouts";
 import { BodyPanel } from "@/app/(app)/body";
 import { ProgressChart, type ChartPoint } from "@/components/progress-chart";
 import { BackButton } from "@/components/back-button";
-import { DateField } from "@/components/pickers";
+import { RangeField } from "@/components/pickers";
 import { Button, Card, Label, Screen, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -106,11 +105,6 @@ function Comparison({
     ),
     b: comparisonDates(initial),
   }));
-  const set = (key: "a" | "b", edge: "start" | "end", value: string) =>
-    setDates((current) => ({
-      ...current,
-      [key]: { ...current[key], [edge]: value },
-    }));
   const totals = compareProgress(snapshot, dates.a, dates.b);
   const number = (value: number) =>
     value.toLocaleString(locale, { maximumFractionDigits: 1 });
@@ -139,18 +133,15 @@ function Comparison({
           <Text style={{ color: colors.foreground, fontWeight: "800" }}>
             {key === "a" ? t("Período A", "Period A") : t("Período B", "Period B")}
           </Text>
-          <View style={{ flexDirection: "row", gap: space(3) }}>
-            {(["start", "end"] as const).map((edge) => (
-              <View key={edge} style={{ flex: 1 }}>
-                <DateField
-                  label={edge === "start" ? t("Desde", "From") : t("Hasta", "To")}
-                  value={dates[key][edge]}
-                  onChange={(value) => set(key, edge, value)}
-                  max={localDateKey(new Date())}
-                />
-              </View>
-            ))}
-          </View>
+          <RangeField
+            label={t("Fechas", "Dates")}
+            start={dates[key].start}
+            end={dates[key].end}
+            onChange={(range) =>
+              setDates((current) => ({ ...current, [key]: range }))
+            }
+            max={localDateKey(new Date())}
+          />
         </View>
       ))}
       {totals ? (
@@ -325,33 +316,6 @@ export default function Progress() {
           onPress={() =>
             router.canGoBack() ? router.back() : router.navigate("/")
           }
-        />
-        <View style={{ flex: 1, gap: space(1) }}>
-          <Text
-            style={{
-              color: colors.primary,
-              fontSize: 12,
-              fontWeight: "800",
-              letterSpacing: 1.6,
-              textTransform: "uppercase",
-            }}
-          >
-            {t("Tu recorrido", "Your journey")}
-          </Text>
-          <Text style={{ color: colors.foreground, fontSize: 26, fontWeight: "800" }}>
-            {t("Cada entrenamiento cuenta", "Every workout counts")}
-          </Text>
-          <Label muted>
-            {t(
-              "Mirá lo que hiciste y cómo venís avanzando.",
-              "See what you did and how you are progressing.",
-            )}
-          </Label>
-        </View>
-        <SymbolView
-          name={{ ios: "waveform.path.ecg", android: "monitor_heart" }}
-          tintColor={colors.primary}
-          size={40}
         />
       </View>
       <View

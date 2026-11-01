@@ -680,7 +680,12 @@
     "Seleccionar zona": "Choisir la zone",
     "Tiempos predeterminados": "Durées prédéfinies",
     "Agregar entrenamiento": "Ajouter un entraînement",
-    "Filtrar por equipo": "Filtrer par équipement"
+    "Filtrar por equipo": "Filtrer par équipement",
+    "Fechas": "Dates",
+    "Elegir fechas": "Choisir les dates",
+    "Ahora elegí el último día": "Choisissez maintenant le dernier jour",
+    "Elegí el primer día": "Choisissez le premier jour",
+    "Detener": "Arrêter"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1363,7 +1368,12 @@
     "Seleccionar zona": "选择部位",
     "Tiempos predeterminados": "预设时间",
     "Agregar entrenamiento": "添加训练",
-    "Filtrar por equipo": "按器械筛选"
+    "Filtrar por equipo": "按器械筛选",
+    "Fechas": "日期",
+    "Elegir fechas": "选择日期",
+    "Ahora elegí el último día": "现在选择最后一天",
+    "Elegí el primer día": "选择第一天",
+    "Detener": "停止"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2046,7 +2056,12 @@
     "Seleccionar zona": "क्षेत्र चुनें",
     "Tiempos predeterminados": "पूर्व निर्धारित समय",
     "Agregar entrenamiento": "वर्कआउट जोड़ें",
-    "Filtrar por equipo": "उपकरण के अनुसार फ़िल्टर करें"
+    "Filtrar por equipo": "उपकरण के अनुसार फ़िल्टर करें",
+    "Fechas": "तारीखें",
+    "Elegir fechas": "तारीखें चुनें",
+    "Ahora elegí el último día": "अब आखिरी दिन चुनें",
+    "Elegí el primer día": "पहला दिन चुनें",
+    "Detener": "रोकें"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2729,7 +2744,12 @@
     "Seleccionar zona": "اختر المنطقة",
     "Tiempos predeterminados": "الأوقات المحددة مسبقًا",
     "Agregar entrenamiento": "إضافة تمرين",
-    "Filtrar por equipo": "التصفية حسب المعدات"
+    "Filtrar por equipo": "التصفية حسب المعدات",
+    "Fechas": "التواريخ",
+    "Elegir fechas": "اختر التواريخ",
+    "Ahora elegí el último día": "اختر الآن اليوم الأخير",
+    "Elegí el primer día": "اختر اليوم الأول",
+    "Detener": "إيقاف"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -3411,7 +3431,12 @@
     "Seleccionar zona": "Bereich wählen",
     "Tiempos predeterminados": "Voreingestellte Zeiten",
     "Agregar entrenamiento": "Training hinzufügen",
-    "Filtrar por equipo": "Nach Gerät filtern"
+    "Filtrar por equipo": "Nach Gerät filtern",
+    "Fechas": "Daten",
+    "Elegir fechas": "Daten wählen",
+    "Ahora elegí el último día": "Wähle jetzt den letzten Tag",
+    "Elegí el primer día": "Wähle den ersten Tag",
+    "Detener": "Stoppen"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -4093,7 +4118,12 @@
     "Seleccionar zona": "Seleziona zona",
     "Tiempos predeterminados": "Tempi predefiniti",
     "Agregar entrenamiento": "Aggiungi allenamento",
-    "Filtrar por equipo": "Filtra per attrezzo"
+    "Filtrar por equipo": "Filtra per attrezzo",
+    "Fechas": "Date",
+    "Elegir fechas": "Scegli le date",
+    "Ahora elegí el último día": "Ora scegli l'ultimo giorno",
+    "Elegí el primer día": "Scegli il primo giorno",
+    "Detener": "Ferma"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4775,7 +4805,12 @@
     "Seleccionar zona": "Selecionar zona",
     "Tiempos predeterminados": "Tempos predefinidos",
     "Agregar entrenamiento": "Adicionar treino",
-    "Filtrar por equipo": "Filtrar por equipamento"
+    "Filtrar por equipo": "Filtrar por equipamento",
+    "Fechas": "Datas",
+    "Elegir fechas": "Escolher datas",
+    "Ahora elegí el último día": "Agora escolha o último dia",
+    "Elegí el primer día": "Escolha o primeiro dia",
+    "Detener": "Parar"
   },
   "en": {
     "Sexo": "Sex",
@@ -5126,6 +5161,11 @@
     "Tiempos predeterminados": "Preset times",
     "Agregar entrenamiento": "Add workout",
     "Continuar": "Resume",
-    "Filtrar por equipo": "Filter by equipment"
+    "Filtrar por equipo": "Filter by equipment",
+    "Fechas": "Dates",
+    "Elegir fechas": "Choose dates",
+    "Ahora elegí el último día": "Now choose the last day",
+    "Elegí el primer día": "Choose the first day",
+    "Detener": "Stop"
   }
 }

@@ -3636,3 +3636,132 @@ input[type="range"] {
   width: 1.6ch;
   opacity: 0.6;
 }
+
+/* Back button, one-line date ranges, inline equipment filter, clock icons. */
+.back-button {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+.library-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.library-search-row input {
+  flex: 1;
+  min-width: 0;
+}
+.progress-top {
+  display: flex;
+  align-items: center;
+}
+.equipment-menu {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.equipment-menu button {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--secondary);
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-align: center;
+}
+.range-field {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--secondary);
+  text-align: start;
+}
+.range-field small {
+  color: var(--muted-foreground);
+}
+.range-field span {
+  font-weight: 700;
+}
+.range-calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: capitalize;
+  margin-block: 8px;
+}
+.range-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+.range-weekday {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+}
+.range-calendar button {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  font-weight: 500;
+}
+.range-calendar button[data-inside] {
+  background: var(--secondary);
+}
+.range-calendar button[aria-pressed="true"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 800;
+}
+.range-calendar button:disabled {
+  opacity: 0.3;
+}
+.app-header-section,
+.app-header-section::before,
+.bottom-nav,
+.bottom-nav::before {
+  border-top: 0;
+  border-bottom: 0;
+}
+.tools-sections button[aria-pressed="true"] {
+  background: #f8c830;
+  border-color: #f8c830;
+  color: #1f1a06;
+}
+.clock-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.clock-controls-side {
+  display: inline-flex;
+  width: 48px;
+  justify-content: center;
+}
+.clock-controls button {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+}
+.clock-controls .clock-main-button {
+  width: 72px;
+  height: 72px;
+}
+.clock-controls .clock-main-button svg {
+  width: 30px;
+  height: 30px;
+}

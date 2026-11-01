@@ -20,7 +20,7 @@ export function ToolsScreen() {
   });
   return (
     <div className="swipe-navigation" {...swipe}>
-      <div className="muscle-chips">
+      <div className="muscle-chips tools-sections">
         <button
           aria-pressed={section === "clocks"}
           onClick={() => setSection("clocks")}

@@ -6,9 +6,66 @@ import { useApp } from "@/state/app-provider";
 import { timeFormat } from "@fitty/core/domain/combat";
 import { RouteMap } from "./route-map";
 import { TrackingHistory } from "./tracking-history";
+import { Pause, Play, RotateCcw, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NumericInput } from "@/components/ui/numeric-input";
+/** Icon controls: stop shows on the left only while running or paused. */
+function ClockControls({
+  running,
+  active,
+  resumable = false,
+  onToggle,
+  onStop,
+  onReset,
+}: {
+  running: boolean;
+  active: boolean;
+  resumable?: boolean;
+  onToggle: () => void;
+  onStop: () => void;
+  onReset: () => void;
+}) {
+  const { t } = useApp();
+  return (
+    <div className="clock-controls">
+      <span className="clock-controls-side">
+        {active && (
+          <Button
+            variant="secondary"
+            size="icon"
+            aria-label={t("Detener", "Stop")}
+            onClick={onStop}
+          >
+            <Square aria-hidden="true" />
+          </Button>
+        )}
+      </span>
+      <Button
+        className="clock-main-button"
+        size="icon"
+        aria-label={
+          running
+            ? t("Pausar", "Pause")
+            : resumable
+              ? t("Continuar", "Resume")
+              : t("Iniciar", "Start")
+        }
+        onClick={onToggle}
+      >
+        {running ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+      </Button>
+      <Button
+        variant="secondary"
+        size="icon"
+        aria-label={t("Reiniciar", "Reset")}
+        onClick={onReset}
+      >
+        <RotateCcw aria-hidden="true" />
+      </Button>
+    </div>
+  );
+}
 export function ClocksScreen() {
   const [editingTimer, setEditingTimer] = useState(false);
   const [chosen, setChosen] = useState(60);
@@ -91,14 +148,13 @@ export function ClocksScreen() {
           >
             {timeFormat(elapsed / 1000)}
           </div>
-          <div className="flex justify-center gap-3">
-            <Button onClick={clock.toggleSw}>
-              {clock.sw.running ? t("Pausar", "Pause") : t("Iniciar", "Start")}
-            </Button>
-            <Button variant="secondary" onClick={clock.resetSw}>
-              {t("Reiniciar", "Reset")}
-            </Button>
-          </div>
+          <ClockControls
+            running={clock.sw.running}
+            active={clock.sw.running || elapsed > 0}
+            onToggle={clock.toggleSw}
+            onStop={clock.resetSw}
+            onReset={clock.resetSw}
+          />
         </section>
       )}
       {clock.section === "timer" && (
@@ -241,18 +297,21 @@ export function ClocksScreen() {
               </Button>
             ))}
           </div>
-          <div className="flex justify-center gap-3">
-            <Button onClick={clock.toggleTimer}>
-              {clock.timer.running
-                ? t("Pausar", "Pause")
-                : clock.timer.remaining > 0 && clock.timer.remaining < chosen
-                  ? t("Continuar", "Resume")
-                  : t("Iniciar", "Start")}
-            </Button>
-            <Button variant="secondary" onClick={() => clock.preset(chosen)}>
-              {t("Reiniciar", "Reset")}
-            </Button>
-          </div>
+          <ClockControls
+            running={clock.timer.running}
+            active={
+              clock.timer.running ||
+              (clock.timer.remaining > 0 && clock.timer.remaining < chosen)
+            }
+            resumable={
+              !clock.timer.running &&
+              clock.timer.remaining > 0 &&
+              clock.timer.remaining < chosen
+            }
+            onToggle={clock.toggleTimer}
+            onStop={() => clock.preset(chosen)}
+            onReset={() => clock.preset(chosen)}
+          />
         </section>
       )}
       {clock.section === "combat" && (
@@ -309,18 +368,14 @@ export function ClocksScreen() {
               ),
             )}
           </div>
-          <div className="mt-5 flex justify-center gap-3">
-            <Button onClick={clock.toggleCombat}>
-              {combat.state.running
-                ? t("Pausar", "Pause")
-                : t("Iniciar", "Start")}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => clock.configureCombat(combat.config)}
-            >
-              {t("Reiniciar", "Reset")}
-            </Button>
+          <div className="mt-5">
+            <ClockControls
+              running={combat.state.running}
+              active={combat.state.running}
+              onToggle={clock.toggleCombat}
+              onStop={() => clock.configureCombat(combat.config)}
+              onReset={() => clock.configureCombat(combat.config)}
+            />
           </div>
         </section>
       )}

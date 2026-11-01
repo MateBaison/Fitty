@@ -247,6 +247,144 @@ export function DateField({
   );
 }
 
+/** One calendar for a date range: tap the first day, then the last, without closing. */
+export function RangeField({
+  label,
+  start,
+  end,
+  onChange,
+  max,
+}: {
+  label: string;
+  start: string;
+  end: string;
+  onChange: (range: { start: string; end: string }) => void;
+  max: string;
+}) {
+  const { t } = useAccount();
+  const locale = localeFor(useSnapshot().settings.language ?? "es");
+  const valid = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
+  const [open, setOpen] = useState(false);
+  const [pending, setPending] = useState<string | null>(null);
+  const anchor = valid(end) ? end : valid(start) ? start : max;
+  const first = new Date(`${anchor}T12:00:00`);
+  const [year, setYear] = useState(first.getFullYear());
+  const [month, setMonth] = useState(first.getMonth());
+  const offset = (new Date(year, month, 1).getDay() + 6) % 7;
+  const length = new Date(year, month + 1, 0).getDate();
+  const cells = [
+    ...Array.from({ length: offset }, () => null),
+    ...Array.from({ length }, (_, index) => index + 1),
+  ];
+  const shift = (delta: number) => {
+    const next = new Date(year, month + delta, 1);
+    setYear(next.getFullYear());
+    setMonth(next.getMonth());
+  };
+  const short = (value: string) =>
+    new Date(`${value}T12:00:00`).toLocaleDateString(locale, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  const shown =
+    valid(start) && valid(end)
+      ? start === end
+        ? short(start)
+        : `${short(start)} – ${short(end)}`
+      : "";
+  const from = pending ?? start;
+  const to = pending ? pending : end;
+  const choose = (dateKey: string) => {
+    if (!pending) {
+      setPending(dateKey);
+      return;
+    }
+    const range =
+      dateKey < pending
+        ? { start: dateKey, end: pending }
+        : { start: pending, end: dateKey };
+    setPending(null);
+    onChange(range);
+    setOpen(false);
+  };
+  return (
+    <>
+      <PickerButton
+        label={label}
+        value={shown}
+        placeholder={t("Elegir fechas", "Choose dates")}
+        onPress={() => {
+          setPending(null);
+          setOpen(true);
+        }}
+      />
+      <Sheet visible={open} onClose={() => setOpen(false)}>
+        <Label muted>
+          {pending
+            ? t("Ahora elegí el último día", "Now choose the last day")
+            : t("Elegí el primer día", "Choose the first day")}
+        </Label>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t("Mes anterior", "Previous month")} onPress={() => shift(-1)} style={navStyle}>
+            <Text style={navText}>‹</Text>
+          </Pressable>
+          <Text style={{ flex: 1, textAlign: "center", color: colors.foreground, fontSize: 18, fontWeight: "800", textTransform: "capitalize" }}>
+            {new Date(year, month, 1).toLocaleDateString(locale, { month: "long" })} {year}
+          </Text>
+          <Pressable accessibilityRole="button" accessibilityLabel={t("Mes siguiente", "Next month")} onPress={() => shift(1)} style={navStyle}>
+            <Text style={navText}>›</Text>
+          </Pressable>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          {Array.from({ length: 7 }, (_, index) => (
+            <Text key={index} style={{ width: `${100 / 7}%`, textAlign: "center", color: colors.muted, fontSize: 12, fontWeight: "700", textTransform: "uppercase" }}>
+              {new Date(2024, 0, 1 + index).toLocaleDateString(locale, { weekday: "narrow" })}
+            </Text>
+          ))}
+        </View>
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {cells.map((day, index) => {
+            if (!day) return <View key={`b${index}`} style={{ width: `${100 / 7}%`, aspectRatio: 1 }} />;
+            const dateKey = key(year, month, day);
+            const disabled = dateKey > max;
+            const edge = dateKey === from || (!pending && dateKey === to);
+            const inside = !pending && valid(from) && valid(to) && dateKey > from && dateKey < to;
+            return (
+              <Pressable
+                key={dateKey}
+                accessibilityRole="button"
+                accessibilityState={{ selected: edge, disabled }}
+                disabled={disabled}
+                onPress={() => choose(dateKey)}
+                style={{ width: `${100 / 7}%`, aspectRatio: 1, padding: 2 }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    borderRadius: 12,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: edge ? colors.primary : inside ? colors.secondary : "transparent",
+                    opacity: disabled ? 0.3 : 1,
+                  }}
+                >
+                  <Text style={{ color: edge ? colors.primaryForeground : colors.foreground, fontWeight: edge ? "800" : "500" }}>
+                    {day}
+                  </Text>
+                </View>
+              </Pressable>
+            );
+          })}
+        </View>
+        <Button variant="secondary" onPress={() => setOpen(false)}>
+          {t("Cerrar", "Close")}
+        </Button>
+      </Sheet>
+    </>
+  );
+}
+
 const navStyle = {
   width: 44,
   height: 44,

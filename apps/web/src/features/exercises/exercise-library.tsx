@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AppDialog } from "@/components/ui/app-dialog";
+import { BackButton } from "@/components/layout/back-button";
 import { ExerciseVisual } from "./exercise-visual";
 import { ExerciseDetails } from "./exercise-details";
 export function ExerciseLibrary() {
@@ -66,13 +67,16 @@ export function ExerciseLibrary() {
         >
           {t("Buscar ejercicios", "Search exercises")}
         </label>
-        <Input
-          id="exercise-search"
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t("Buscar ejercicio", "Search exercise")}
-        />
+        <div className="library-search-row">
+          <BackButton />
+          <Input
+            id="exercise-search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={t("Buscar ejercicio", "Search exercise")}
+          />
+        </div>
       </div>
       <section className="muscle-summary">
         <button

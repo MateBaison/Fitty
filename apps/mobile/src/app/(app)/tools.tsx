@@ -1,5 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { useKeepAwake } from "expo-keep-awake";
+import { SymbolView } from "expo-symbols";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import {
@@ -174,6 +175,92 @@ function Digits({ value }: { value: string }) {
   );
 }
 
+/** Round icon button for clock controls (play, pause, stop, reset). */
+function ClockButton({
+  icon,
+  label,
+  onPress,
+  main = false,
+}: {
+  icon: "play" | "pause" | "stop" | "reset";
+  label: string;
+  onPress: () => void;
+  main?: boolean;
+}) {
+  const names = {
+    play: { ios: "play.fill", android: "play_arrow" },
+    pause: { ios: "pause.fill", android: "pause" },
+    stop: { ios: "stop.fill", android: "stop" },
+    reset: { ios: "arrow.counterclockwise", android: "replay" },
+  } as const;
+  const size = main ? 72 : 52;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: main ? colors.primary : colors.secondary,
+        borderColor: main ? colors.primary : colors.border,
+        borderWidth: 1,
+      }}
+    >
+      <SymbolView
+        name={names[icon]}
+        tintColor={main ? colors.primaryForeground : colors.foreground}
+        size={main ? 30 : 22}
+      />
+    </Pressable>
+  );
+}
+
+/** Stop sits on the left only while something is running or paused. */
+function ClockControls({
+  running,
+  active,
+  onToggle,
+  onStop,
+  onReset,
+}: {
+  running: boolean;
+  active: boolean;
+  onToggle: () => void;
+  onStop: () => void;
+  onReset: () => void;
+}) {
+  const { t } = useAccount();
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: space(4),
+      }}
+    >
+      <View style={{ width: 52 }}>
+        {active ? (
+          <ClockButton icon="stop" label={t("Detener", "Stop")} onPress={onStop} />
+        ) : null}
+      </View>
+      <ClockButton
+        main
+        icon={running ? "pause" : "play"}
+        label={
+          running ? t("Pausar", "Pause") : active ? t("Continuar", "Resume") : t("Iniciar", "Start")
+        }
+        onPress={onToggle}
+      />
+      <ClockButton icon="reset" label={t("Reiniciar", "Reset")} onPress={onReset} />
+    </View>
+  );
+}
+
 function Stopwatch() {
   const { t } = useAccount();
   const [start, setStart] = useState<number | null>(null);
@@ -184,32 +271,25 @@ function Stopwatch() {
     <Card>
       {start !== null ? <KeepAwake /> : null}
       <Digits value={clock(elapsed)} />
-      <View style={{ flexDirection: "row", gap: space(3) }}>
-        <View style={{ flex: 1 }}>
-          <Button
-            onPress={() => {
-              if (start === null) setStart(Date.now());
-              else {
-                setSaved(elapsed);
-                setStart(null);
-              }
-            }}
-          >
-            {start === null ? t("Iniciar", "Start") : t("Pausar", "Pause")}
-          </Button>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button
-            variant="secondary"
-            onPress={() => {
-              setStart(null);
-              setSaved(0);
-            }}
-          >
-            {t("Reiniciar", "Reset")}
-          </Button>
-        </View>
-      </View>
+      <ClockControls
+        running={start !== null}
+        active={start !== null || saved > 0}
+        onToggle={() => {
+          if (start === null) setStart(Date.now());
+          else {
+            setSaved(elapsed);
+            setStart(null);
+          }
+        }}
+        onStop={() => {
+          setStart(null);
+          setSaved(0);
+        }}
+        onReset={() => {
+          setSaved(0);
+          setStart(start === null ? null : Date.now());
+        }}
+      />
     </Card>
   );
 }
@@ -265,6 +345,18 @@ function Timer() {
   const [minutes, setMinutes] = useState("1");
   const [extra, setExtra] = useState("0");
   const [edges, setEdges] = useState({ left: false, right: true });
+  const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const [box, setBox] = useState(0);
+  const [slot, setSlot] = useState<{ x: number; width: number } | null>(null);
+  const centered = useRef(false);
+  useEffect(() => {
+    if (centered.current || !box || !slot) return;
+    centered.current = true;
+    scroller.current?.scrollTo({
+      x: Math.max(0, slot.x + slot.width / 2 - box / 2),
+      animated: false,
+    });
+  }, [box, slot]);
   const now = useNow(end !== null);
   const left = end !== null ? end - now : (remaining ?? seconds * 1000);
   const notified = useRef(false);
@@ -361,8 +453,9 @@ function Timer() {
           <Digits value={clock(left)} />
         </Pressable>
       )}
-      <View>
+      <View onLayout={({ nativeEvent }) => setBox(nativeEvent.layout.width)}>
         <ScrollView
+          ref={scroller}
           horizontal
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
@@ -379,45 +472,50 @@ function Timer() {
           contentContainerStyle={{ gap: space(2), paddingHorizontal: space(1) }}
         >
           {timerPresets.map(([value, label]) => (
-            <Pill
+            <View
               key={value}
-              label={label}
-              small
-              active={seconds === value}
-              onPress={() => choose(value)}
-            />
+              onLayout={
+                value === 60
+                  ? ({ nativeEvent }) =>
+                      setSlot({
+                        x: nativeEvent.layout.x,
+                        width: nativeEvent.layout.width,
+                      })
+                  : undefined
+              }
+            >
+              <Pill
+                label={label}
+                small
+                active={seconds === value}
+                onPress={() => choose(value)}
+              />
+            </View>
           ))}
         </ScrollView>
         {edges.left ? <EdgeFade side="left" /> : null}
         {edges.right ? <EdgeFade side="right" /> : null}
       </View>
-      <View style={{ flexDirection: "row", gap: space(3) }}>
-        <View style={{ flex: 1 }}>
-          <Button
-            onPress={() => {
-              if (running) {
-                setRemaining(Math.max(0, end - Date.now()));
-                setEnd(null);
-              } else {
-                notified.current = false;
-                setEnd(Date.now() + (remaining ?? seconds * 1000));
-                setRemaining(null);
-              }
-            }}
-          >
-            {running
-              ? t("Pausar", "Pause")
-              : paused
-                ? t("Continuar", "Resume")
-                : t("Iniciar", "Start")}
-          </Button>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button variant="secondary" onPress={() => choose(seconds)}>
-            {t("Reiniciar", "Reset")}
-          </Button>
-        </View>
-      </View>
+      <ClockControls
+        running={running}
+        active={running || paused}
+        onToggle={() => {
+          if (running) {
+            setRemaining(Math.max(0, end - Date.now()));
+            setEnd(null);
+          } else {
+            notified.current = false;
+            setEnd(Date.now() + (remaining ?? seconds * 1000));
+            setRemaining(null);
+          }
+        }}
+        onStop={() => choose(seconds)}
+        onReset={() => {
+          notified.current = false;
+          if (running) setEnd(Date.now() + seconds * 1000);
+          else choose(seconds);
+        }}
+      />
     </Card>
   );
 }

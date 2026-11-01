@@ -50,7 +50,7 @@ test("unified periods, glute bars, exercise records and body measurements", asyn
   await expect(page.getByTestId("launch-splash")).toHaveCount(0);
   await page
     .getByRole("combobox", { name: "Período", exact: true })
-    .selectOption("month");
+    .selectOption("all");
   await expect(
     page.getByRole("region", { name: "Resumen", exact: true }),
   ).toBeVisible();
@@ -68,12 +68,14 @@ test("unified periods, glute bars, exercise records and body measurements", asyn
   await expect(comparison.getByRole("table")).toBeVisible();
   await comparison
     .getByRole("group", { name: "Período A", exact: true })
-    .getByLabel("Desde", { exact: true })
-    .fill("2020-01-01");
-  await comparison
-    .getByRole("group", { name: "Período A", exact: true })
-    .getByLabel("Hasta", { exact: true })
-    .fill("2020-01-31");
+    .getByRole("button", { name: /^Fechas/ })
+    .click();
+  const first = page.locator('[data-range-date="2020-01-01"]');
+  for (let i = 0; i < 150 && !(await first.count()); i += 1)
+    await page.getByRole("button", { name: "Mes anterior", exact: true }).click();
+  await first.click();
+  await page.locator('[data-range-date="2020-01-31"]').click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(
     comparison.getByRole("row", { name: /Entrenamientos/ }),
   ).toContainText("0");
@@ -160,9 +162,6 @@ test("upload independent dated photos directly from comparison without creating 
 }) => {
   await page.goto("/progress");
   await page.getByRole("button", { name: "Cuerpo", exact: true }).click();
-  await page
-    .getByRole("combobox", { name: "Período", exact: true })
-    .selectOption("all");
   const dialog = page.getByRole("dialog", { name: "Subir foto", exact: true });
   for (const [index, file] of [
     "public/assets/grupo-piernas.jpg",
@@ -215,9 +214,6 @@ test("upload independent dated photos directly from comparison without creating 
   ]);
   await page.reload();
   await page.getByRole("button", { name: "Cuerpo", exact: true }).click();
-  await page
-    .getByRole("combobox", { name: "Período", exact: true })
-    .selectOption("all");
   await expect(page.locator(".progress-photo-comparison img")).toHaveCount(2);
   await expect(
     page.getByRole("img", { name: "Foto anterior", exact: true }),
