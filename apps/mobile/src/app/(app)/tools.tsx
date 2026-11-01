@@ -102,6 +102,57 @@ function Pills<T extends string>({
   );
 }
 
+/** Equal-width options in a grid (two per row), so the names line up neatly. */
+function GridPills<T extends string>({
+  options,
+  value,
+  onChange,
+}: {
+  options: readonly (readonly [T, string])[];
+  value: T;
+  onChange: (value: T) => void;
+}) {
+  return (
+    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
+      {options.map(([key, label]) => {
+        const active = value === key;
+        return (
+          <Pressable
+            key={key}
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
+            onPress={() => onChange(key)}
+            style={{
+              width: "48.5%",
+              minHeight: 48,
+              borderRadius: 14,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: space(2),
+              backgroundColor: active ? colors.primary : colors.secondary,
+              borderColor: active ? colors.primary : colors.border,
+              borderWidth: 1,
+            }}
+          >
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={{
+                color: active ? colors.primaryForeground : colors.foreground,
+                fontWeight: "800",
+                fontSize: 15,
+                textAlign: "center",
+              }}
+            >
+              {label}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 function Digits({ value }: { value: string }) {
   return (
     <Text
@@ -346,8 +397,7 @@ function Calculators() {
   );
   return (
     <>
-      <Pills
-        small
+      <GridPills
         options={[
           ["calories", t("Calorías", "Calories")],
           ["macros", "Macros"],
@@ -541,7 +591,7 @@ export default function Tools() {
   const [tool, setTool] = useState<"stopwatch" | "timer" | "combat" | "tracking">("stopwatch");
   return (
     <Screen>
-      <Pills
+      <GridPills
         options={[
           ["clock", t("Reloj", "Clock")],
           ["calculators", t("Calculadoras", "Calculators")],
@@ -551,13 +601,12 @@ export default function Tools() {
       />
       {group === "clock" ? (
         <>
-          <Pills
-            small
+          <GridPills
             options={[
               ["stopwatch", t("Cronómetro", "Stopwatch")],
-              ["timer", "Timer"],
+              ["timer", t("Temporizador", "Timer")],
               ["combat", t("Combate", "Combat")],
-              ["tracking", "Tracking"],
+              ["tracking", t("Recorrido GPS", "GPS route")],
             ]}
             value={tool}
             onChange={setTool}

@@ -1,12 +1,12 @@
 import { View } from "react-native";
 import { localDateKey } from "@fitty/core/domain/workouts";
-import { ChipGroup } from "@/components/chip";
+import { Dropdown } from "@/components/dropdown";
 import {
   CountryField,
   DateField,
   MeasureField,
 } from "@/components/pickers";
-import { Field, Label } from "@/components/ui";
+import { Field } from "@/components/ui";
 import { useAccount } from "@/state/account";
 import { space } from "@/theme";
 
@@ -109,13 +109,14 @@ export function ProfileFields({
           />
         </View>
       </View>
-      <Label muted>{t("Género", "Gender")}</Label>
-      <ChipGroup
+      <Dropdown
+        label={t("Género", "Gender")}
+        placeholder={t("Seleccioná una opción", "Select an option")}
         options={genders.map(([gender, es, en]) => ({
           value: gender as string,
           label: t(es, en),
         }))}
-        value={value.gender}
+        value={value.gender || null}
         onChange={set("gender")}
       />
     </>

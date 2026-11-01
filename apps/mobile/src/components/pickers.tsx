@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { countryCodes } from "@fitty/core/data/country-codes";
 import { localeFor } from "@fitty/core/data/translations";
-import { Button, Card, Field, Label, styles } from "@/components/ui";
+import { Button, Card, Label, styles } from "@/components/ui";
 import { Slider } from "@/components/slider";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -345,7 +345,65 @@ export function CountryField({
   );
 }
 
-/** Height (vertical slider) or weight (horizontal slider) with a field to type the number. */
+/** Ruler whose marks slide past a fixed center line as the value changes. */
+function Ruler({
+  value,
+  tick,
+  labelEvery,
+  length,
+  vertical = false,
+}: {
+  value: number;
+  /** Value distance between two marks. */
+  tick: number;
+  /** A longer mark with a number every this many marks. */
+  labelEvery: number;
+  length: number;
+  vertical?: boolean;
+}) {
+  const gap = 10;
+  const half = Math.ceil(length / 2 / gap) + 1;
+  const base = Math.round(value / tick);
+  const marks = Array.from({ length: half * 2 + 1 }, (_, index) => base - half + index);
+  const thickness = 56;
+  return (
+    <View
+      pointerEvents="none"
+      style={
+        vertical
+          ? { width: thickness, height: length, overflow: "hidden" }
+          : { height: thickness, width: length, overflow: "hidden" }
+      }
+    >
+      {marks.map((mark) => {
+        const offset = (mark - value / tick) * gap;
+        const major = mark % labelEvery === 0;
+        const position = (vertical ? length / 2 - offset : length / 2 + offset) - 1;
+        const label = Math.round(mark * tick * 100) / 100;
+        return vertical ? (
+          <View key={mark} style={{ position: "absolute", top: position - 8, left: 0, flexDirection: "row", alignItems: "center", gap: 4, height: 16 }}>
+            <View style={{ width: major ? 22 : 12, height: 2, backgroundColor: major ? colors.foreground : colors.muted }} />
+            {major ? <Text style={{ color: colors.muted, fontSize: 11 }}>{label}</Text> : null}
+          </View>
+        ) : (
+          <View key={mark} style={{ position: "absolute", left: position - 12, top: 0, width: 24, alignItems: "center" }}>
+            <View style={{ width: 2, height: major ? 22 : 12, backgroundColor: major ? colors.foreground : colors.muted }} />
+            {major ? <Text style={{ color: colors.muted, fontSize: 11 }}>{label}</Text> : null}
+          </View>
+        );
+      })}
+      <View
+        style={
+          vertical
+            ? { position: "absolute", top: length / 2 - 1, left: 0, width: 34, height: 3, backgroundColor: colors.primary }
+            : { position: "absolute", left: length / 2 - 1, top: 0, height: 34, width: 3, backgroundColor: colors.primary }
+        }
+      />
+    </View>
+  );
+}
+
+/** Height (vertical slider) or weight (horizontal slider); the blue number can be typed directly. */
 export function MeasureField({
   kind,
   label,
@@ -365,9 +423,9 @@ export function MeasureField({
   const range =
     kind === "height"
       ? unit === "ft"
-        ? { min: 3, max: 9, step: 0.1, fallback: 5.7 }
-        : { min: 100, max: 250, step: 1, fallback: 175 }
-      : { min: 25, max: 425, step: 0.5, fallback: 75 };
+        ? { min: 3, max: 9, step: 0.1, fallback: 5.7, tick: 0.1, labelEvery: 5 }
+        : { min: 100, max: 250, step: 1, fallback: 175, tick: 1, labelEvery: 10 }
+      : { min: 25, max: 425, step: 0.5, fallback: 75, tick: 1, labelEvery: 5 };
   const [open, setOpen] = useState(false);
   const numeric = Number(value.replace(",", "."));
   const current = Number.isFinite(numeric) && numeric > 0 ? numeric : range.fallback;
@@ -386,26 +444,50 @@ export function MeasureField({
         <Text style={{ color: colors.foreground, fontSize: 20, fontWeight: "800", textAlign: "center" }}>
           {label} ({unit})
         </Text>
-        <Text style={{ color: colors.primary, fontSize: 44, fontWeight: "800", textAlign: "center" }}>
-          {text(clamped)}
-        </Text>
-        <View style={{ alignItems: "center" }}>
-          <Slider
-            vertical={kind === "height"}
-            length={kind === "height" ? 240 : 250}
-            value={clamped}
-            min={range.min}
-            max={range.max}
-            step={range.step}
-            onChange={(next) => onChange(text(next))}
-          />
-        </View>
-        <Field
-          label={t("O escribilo directamente", "Or type it")}
-          value={value}
+        <TextInput
+          value={value || text(clamped)}
           onChangeText={onChange}
           keyboardType="decimal-pad"
+          selectTextOnFocus
+          returnKeyType="done"
+          accessibilityLabel={`${label} (${unit})`}
+          style={{
+            color: colors.primary,
+            fontSize: 48,
+            fontWeight: "800",
+            textAlign: "center",
+            paddingVertical: space(1),
+          }}
         />
+        <Text style={{ color: colors.muted, fontSize: 12, textAlign: "center" }}>
+          {t("Tocá el número para escribirlo", "Tap the number to type it")}
+        </Text>
+        {kind === "height" ? (
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: space(2) }}>
+            <Slider
+              vertical
+              length={240}
+              value={clamped}
+              min={range.min}
+              max={range.max}
+              step={range.step}
+              onChange={(next) => onChange(text(next))}
+            />
+            <Ruler vertical value={clamped} tick={range.tick} labelEvery={range.labelEvery} length={268} />
+          </View>
+        ) : (
+          <View style={{ alignItems: "center", gap: space(1) }}>
+            <Ruler value={clamped} tick={range.tick} labelEvery={range.labelEvery} length={278} />
+            <Slider
+              length={250}
+              value={clamped}
+              min={range.min}
+              max={range.max}
+              step={range.step}
+              onChange={(next) => onChange(text(next))}
+            />
+          </View>
+        )}
         <Button onPress={() => setOpen(false)}>{t("Listo", "Done")}</Button>
       </Sheet>
     </>

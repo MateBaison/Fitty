@@ -18,6 +18,7 @@ import { missingProfileFields } from "@fitty/core/domain/profile-validation";
 import { localDateKey } from "@fitty/core/domain/workouts";
 import { accountCacheKey } from "@fitty/core/storage/account-cache";
 import { Notice } from "@/components/notice";
+import { flags } from "@/components/language-menu";
 import { languageOptions } from "@/components/onboarding";
 import {
   ProfileFields,
@@ -72,6 +73,66 @@ function Pill({
         {label}
       </Text>
     </Pressable>
+  );
+}
+
+/** Two-sided switch: the unit names sit inside each half, centered on it. */
+function SegmentSwitch({
+  label,
+  first,
+  second,
+  value,
+  onChange,
+}: {
+  label: string;
+  first: string;
+  second: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <View
+      accessibilityLabel={label}
+      style={{
+        flexDirection: "row",
+        alignSelf: "stretch",
+        height: 48,
+        borderRadius: 16,
+        padding: 4,
+        borderColor: colors.border,
+        borderWidth: 1,
+        backgroundColor: colors.secondary,
+      }}
+    >
+      {[first, second].map((option) => {
+        const active = value === option;
+        return (
+          <Pressable
+            key={option}
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
+            onPress={() => onChange(option)}
+            style={{
+              flex: 1,
+              borderRadius: 12,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: active ? colors.primary : "transparent",
+            }}
+          >
+            <Text
+              style={{
+                color: active ? colors.primaryForeground : colors.muted,
+                fontWeight: "800",
+                fontSize: 15,
+              }}
+            >
+              {option}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
   );
 }
 
@@ -603,7 +664,7 @@ export default function Profile() {
                         }}
                       >
                         <Text style={{ color: colors.foreground, fontSize: 17, fontWeight: "800" }}>
-                          {option.label}
+                          {`${flags[option.value] ?? "🌐"}  ${option.label}`}
                         </Text>
                       </Pressable>
                     ))}
@@ -626,22 +687,13 @@ export default function Profile() {
                       ).map(([key, label, first, second]) => (
                         <View key={key} style={{ width: "47%", gap: space(2), alignItems: "center" }}>
                           <Text style={{ color: colors.muted, fontWeight: "800" }}>{label}</Text>
-                          <View style={{ flexDirection: "row", alignItems: "center", gap: space(2), minHeight: 52 }}>
-                            <Text style={{ color: prefs[key] === first ? colors.foreground : colors.muted, fontWeight: "800" }}>
-                              {first}
-                            </Text>
-                            <Switch
-                              accessibilityLabel={label}
-                              value={prefs[key] === second}
-                              trackColor={{ true: colors.primary, false: colors.primary }}
-                              onValueChange={(on) =>
-                                setPrefs({ ...prefs, [key]: on ? second : first })
-                              }
-                            />
-                            <Text style={{ color: prefs[key] === second ? colors.foreground : colors.muted, fontWeight: "800" }}>
-                              {second}
-                            </Text>
-                          </View>
+                          <SegmentSwitch
+                            label={label}
+                            first={first}
+                            second={second}
+                            value={prefs[key]}
+                            onChange={(next) => setPrefs({ ...prefs, [key]: next })}
+                          />
                         </View>
                       ))}
                       <View style={{ width: "47%", gap: space(2), alignItems: "center" }}>
@@ -663,6 +715,7 @@ export default function Profile() {
                           }}
                         >
                           <Text style={{ color: colors.foreground, fontWeight: "800" }}>
+                            {flags[prefs.language] ?? "🌐"}{"  "}
                             {languageOptions.find((option) => option.value === prefs.language)?.label ?? prefs.language} ▾
                           </Text>
                         </Pressable>

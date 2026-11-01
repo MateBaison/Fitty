@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { languageOptions } from "@/components/onboarding";
 import { colors, radius, space } from "@/theme";
 
-const flags: Record<string, string> = {
+export const flags: Record<string, string> = {
   es: "🇪🇸",
   en: "🇬🇧",
   fr: "🇫🇷",
