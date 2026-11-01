@@ -729,11 +729,14 @@ export default function Progress() {
         animationType="fade"
         onRequestClose={() => setPicking(false)}
       >
-        <Pressable
-          onPress={() => setPicking(false)}
-          style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}
-        >
-          <Pressable onPress={() => undefined} style={{ maxHeight: "85%" }}>
+        <View style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setPicking(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "85%" }}>
             <Card>
               <Text style={{ ...heading, textAlign: "center" }}>
                 {t("Elegí un ejercicio", "Choose an exercise")}
@@ -756,8 +759,8 @@ export default function Progress() {
                 ) : null}
               </DialogScroll>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     </Screen>
   );

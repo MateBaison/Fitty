@@ -36,18 +36,21 @@ export default function Library() {
         animationType="fade"
         onRequestClose={() => setSelected(null)}
       >
-        <Pressable
-          onPress={() => setSelected(null)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setSelected(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "90%" }}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
-              <DialogScroll contentContainerStyle={{ gap: space(3) }}>
+              <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
                 {selected ? (
                   <Image
                     source={`${env.apiUrl}${exerciseImage(selected, snapshot.profile.gender)}`}
@@ -142,8 +145,8 @@ export default function Library() {
                 </View>
               </DialogScroll>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
       <Modal
         visible={adding !== null}
@@ -151,16 +154,19 @@ export default function Library() {
         animationType="fade"
         onRequestClose={() => setAdding(null)}
       >
-        <Pressable
-          onPress={() => setAdding(null)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setAdding(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card>
               <Text
                 accessibilityRole="header"
@@ -208,8 +214,8 @@ export default function Library() {
                 {t("Cancelar", "Cancel")}
               </Button>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
       <CustomExerciseForm
         visible={creating}

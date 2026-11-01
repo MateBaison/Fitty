@@ -175,16 +175,19 @@ export default function Home() {
         animationType="fade"
         onRequestClose={() => setPicking(false)}
       >
-        <Pressable
-          onPress={() => setPicking(false)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setPicking(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card>
               <Text
                 accessibilityRole="header"
@@ -224,8 +227,8 @@ export default function Home() {
                 {t("Cancelar", "Cancel")}
               </Button>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
       <DaySheet
         day={day}

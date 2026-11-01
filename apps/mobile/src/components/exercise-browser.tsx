@@ -368,16 +368,19 @@ export function ExerciseBrowser({
         animationType="fade"
         onRequestClose={() => setZoning(false)}
       >
-        <Pressable
-          onPress={() => setZoning(false)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined} style={{ maxHeight: "88%" }}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setZoning(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "88%" }}>
             <Card>
               <Text
                 accessibilityRole="header"
@@ -459,8 +462,8 @@ export function ExerciseBrowser({
                 )}
               </DialogScroll>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     </>
   );

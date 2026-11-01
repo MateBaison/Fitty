@@ -680,16 +680,19 @@ export function RoutinesSection() {
         animationType="fade"
         onRequestClose={() => setRemovingDay(null)}
       >
-        <Pressable
-          onPress={() => setRemovingDay(null)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setRemovingDay(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card>
               <Text
                 accessibilityRole="header"
@@ -738,8 +741,8 @@ export function RoutinesSection() {
                 {t("Cancelar", "Cancel")}
               </Button>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
       <Modal
         visible={superset !== null}
@@ -747,15 +750,18 @@ export function RoutinesSection() {
         animationType="fade"
         onRequestClose={() => setSuperset(null)}
       >
-        <Pressable
-          onPress={() => setSuperset(null)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "flex-end",
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setSuperset(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card style={{ margin: space(4) }}>
               <Title>{t("Superseries", "Supersets")}</Title>
               <Label muted>
@@ -824,8 +830,8 @@ export function RoutinesSection() {
                 </Button>
               ) : null}
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
       <ExercisePicker
         visible={picker !== null}

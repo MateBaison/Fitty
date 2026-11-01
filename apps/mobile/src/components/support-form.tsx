@@ -167,11 +167,14 @@ export function SupportForm({
   };
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={close}>
-      <Pressable
-        onPress={close}
-        style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}
-      >
-        <Pressable onPress={() => undefined} style={{ maxHeight: "92%" }}>
+      <View style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Cerrar"
+          onPress={close}
+          style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+        />
+        <View style={{ maxHeight: "92%" }}>
           <Card>
             <DialogScroll
               contentContainerStyle={{ gap: space(3) }}
@@ -196,8 +199,8 @@ export function SupportForm({
                 <>
                   <Label muted>
                     {t(
-                      "Contanos cómo podemos ayudarte. Tu consulta, adjuntos y correo de cuenta se enviarán a soporte@fitty.uy. Te responderemos por correo.",
-                      "Tell us how we can help. Your inquiry, attachments and account email will be sent to soporte@fitty.uy. We will reply by email.",
+                      "Contanos cómo podemos ayudarte. Te responderemos por correo.",
+                      "Tell us how we can help. We will reply by email.",
                     )}
                   </Label>
                   <Label muted>{t("Tipo de consulta", "Inquiry type")}</Label>
@@ -279,14 +282,12 @@ export function SupportForm({
                     value={message}
                     onChangeText={edit(setMessage)}
                     onResizing={setResizing}
+                    initialHeight={92}
                   />
                   <Label muted>
-                    {t("Archivos adjuntos (opcional)", "Attachments (optional)")}
-                  </Label>
-                  <Label muted>
                     {t(
-                      "Hasta 5 imágenes y 3 MB en total.",
-                      "Up to 5 images and 3 MB total.",
+                      "Adjuntos (opcional): hasta 5 imágenes y 3 MB",
+                      "Attachments (optional): up to 5 images, 3 MB",
                     )}
                   </Label>
                   <Button
@@ -348,8 +349,8 @@ export function SupportForm({
               )}
             </DialogScroll>
           </Card>
-        </Pressable>
-      </Pressable>
+        </View>
+      </View>
     </Modal>
   );
 }

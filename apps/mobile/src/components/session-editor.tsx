@@ -11,7 +11,8 @@ import {
   type Extras,
   type Session,
 } from "@fitty/core/domain/workouts";
-import { NumberInput } from "@/components/number-input";
+import { EntryCard } from "@/components/entry-card";
+import { SetTypeDialog } from "@/components/set-type-dialog";
 import { SessionExtras } from "@/components/session-extras";
 import { Button, Card, Field, Label, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -36,6 +37,8 @@ export function SessionEditor({
     extras: Extras;
   } | null>(null);
   const [resizing, setResizing] = useState(false);
+  const [open, setOpen] = useState<number[]>([0]);
+  const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(null);
   // Load the draft whenever a different session is opened.
   if (session && state?.id !== session.id) {
     const factor =
@@ -131,11 +134,14 @@ export function SessionEditor({
     });
   return (
     <Modal visible={session !== null} transparent animationType="fade" onRequestClose={close}>
-      <Pressable
-        onPress={close}
-        style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}
-      >
-        <Pressable onPress={() => undefined} style={{ maxHeight: "94%" }}>
+      <View style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Cerrar"
+          onPress={close}
+          style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+        />
+        <View style={{ maxHeight: "94%" }}>
           <Card>
             <Text
               accessibilityRole="header"
@@ -165,109 +171,23 @@ export function SessionEditor({
                     }
                     maxLength={80}
                   />
-                  {state.entries.map((entry, index) => {
-                    const exercise = findExercise(snapshot, entry.id);
-                    const metric = entry.tracking === "seconds" ? "seconds" : "reps";
-                    return (
-                      <View
-                        key={`${entry.id}-${index}`}
-                        style={{
-                          gap: space(2),
-                          padding: space(3),
-                          borderRadius: 16,
-                          borderColor: colors.border,
-                          borderWidth: 1,
-                          backgroundColor: "#0b0e14",
-                        }}
-                      >
-                        <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 16 }}>
-                          {translate(
-                            language,
-                            exercise?.name ?? entry.id,
-                            exercise?.name ?? entry.id,
-                          )}
-                        </Text>
-                        <View style={{ flexDirection: "row", gap: space(2) }}>
-                          <Label muted style={{ width: 28, textAlign: "center" }}>
-                            #
-                          </Label>
-                          <Label muted style={{ flex: 1, textAlign: "center" }}>
-                            {unit}
-                          </Label>
-                          <Label muted style={{ flex: 1, textAlign: "center" }}>
-                            {metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")}
-                          </Label>
-                          <View style={{ width: 36 }} />
-                        </View>
-                        {entry.sets.map((set, number) => (
-                          <View
-                            key={number}
-                            style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}
-                          >
-                            <Text style={{ width: 28, textAlign: "center", color: colors.foreground, fontWeight: "800" }}>
-                              {number + 1}
-                            </Text>
-                            <NumberInput
-                              decimal
-                              value={set.kg}
-                              accessibilityLabel={`${t("Peso", "Weight")} ${number + 1}`}
-                              onCommit={(value) =>
-                                setEntry(index, (draft) => {
-                                  const current = draft.sets[number];
-                                  if (current) {
-                                    current.kg = value ?? 0;
-                                    current.entered = true;
-                                  }
-                                })
-                              }
-                            />
-                            <NumberInput
-                              value={set[metric]}
-                              accessibilityLabel={`${metric === "seconds" ? t("Segundos", "Seconds") : t("Repeticiones", "Repetitions")} ${number + 1}`}
-                              onCommit={(value) =>
-                                setEntry(index, (draft) => {
-                                  const current = draft.sets[number];
-                                  if (current) {
-                                    current[metric] = value;
-                                    current.entered = true;
-                                  }
-                                })
-                              }
-                            />
-                            <Pressable
-                              accessibilityRole="button"
-                              accessibilityLabel={t("Quitar serie", "Remove set")}
-                              disabled={entry.sets.length <= 1}
-                              onPress={() =>
-                                setEntry(index, (draft) => void draft.sets.splice(number, 1))
-                              }
-                              style={{ width: 36, alignItems: "center", opacity: entry.sets.length <= 1 ? 0.3 : 1 }}
-                            >
-                              <Text style={{ color: colors.destructive, fontSize: 20, fontWeight: "800" }}>
-                                ✕
-                              </Text>
-                            </Pressable>
-                          </View>
-                        ))}
-                        <Button
-                          variant="secondary"
-                          onPress={() =>
-                            setEntry(index, (draft) => void draft.sets.push(blankSet(metric)))
-                          }
-                        >
-                          {t("+ Serie", "+ Set")}
-                        </Button>
-                        <Field
-                          label={t("Nota de este ejercicio", "Note for this exercise")}
-                          value={entry.note ?? ""}
-                          onChangeText={(note) =>
-                            setEntry(index, (draft) => void (draft.note = note))
-                          }
-                          maxLength={500}
-                        />
-                      </View>
-                    );
-                  })}
+                  {state.entries.map((entry, index) => (
+                    <EntryCard
+                      key={`${entry.id}-${index}`}
+                      entry={entry}
+                      exercise={findExercise(snapshot, entry.id)}
+                      expanded={open.includes(index)}
+                      onToggle={() =>
+                        setOpen((current) =>
+                          current.includes(index)
+                            ? current.filter((item) => item !== index)
+                            : [...current, index],
+                        )
+                      }
+                      onChange={(edit) => setEntry(index, edit)}
+                      onTypePress={(set) => setTypeFor({ entry: index, set })}
+                    />
+                  ))}
                   <SessionExtras
                     value={state.extras}
                     onChange={(extras) => setState({ ...state, extras })}
@@ -281,8 +201,26 @@ export function SessionEditor({
               {t("Cancelar", "Cancel")}
             </Button>
           </Card>
-        </Pressable>
-      </Pressable>
+        </View>
+      </View>
+      <SetTypeDialog
+        visible={typeFor !== null}
+        current={
+          (typeFor && state?.entries[typeFor.entry]?.sets[typeFor.set]?.type) ||
+          "normal"
+        }
+        onClose={() => setTypeFor(null)}
+        onSelect={(typeId) => {
+          if (!typeFor) return;
+          setEntry(typeFor.entry, (draft) => {
+            const current = draft.sets[typeFor.set];
+            if (!current) return;
+            current.type = typeId;
+            if (!["drop", "pyramid"].includes(typeId)) delete current.dropGroup;
+          });
+          setTypeFor(null);
+        }}
+      />
     </Modal>
   );
 }

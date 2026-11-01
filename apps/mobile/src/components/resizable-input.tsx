@@ -9,14 +9,16 @@ export function ResizableInput({
   value,
   onChangeText,
   onResizing,
+  initialHeight = 168,
 }: {
   label: string;
   value: string;
   onChangeText: (value: string) => void;
   onResizing: (resizing: boolean) => void;
+  initialHeight?: number;
 }) {
-  const [height, setHeight] = useState(168);
-  const start = useRef(168);
+  const [height, setHeight] = useState(initialHeight);
+  const start = useRef(initialHeight);
   const latest = useRef(onResizing);
   latest.current = onResizing;
   const pan = useRef(
@@ -29,7 +31,7 @@ export function ResizableInput({
         latest.current(true);
       },
       onPanResponderMove: (_, gesture) => {
-        const next = Math.min(520, Math.max(110, start.current + gesture.dy));
+        const next = Math.min(520, Math.max(72, start.current + gesture.dy));
         heightRef.current = next;
         setHeight(next);
       },
@@ -37,7 +39,7 @@ export function ResizableInput({
       onPanResponderTerminate: () => latest.current(false),
     }),
   ).current;
-  const heightRef = useRef(168);
+  const heightRef = useRef(initialHeight);
   return (
     <View style={{ gap: space(1.5) }}>
       <Label muted>{label}</Label>

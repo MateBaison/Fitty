@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Pressable, ScrollView } from "react-native";
+import { Modal, Pressable, ScrollView, View } from "react-native";
 import {
   workoutReadinessAdvice,
   type WorkoutReadiness,
@@ -38,15 +38,18 @@ export function ReadinessCheck({
       animationType="fade"
       onRequestClose={close}
     >
-      <Pressable
-        onPress={close}
-        style={{
+      <View style={{
           flex: 1,
           justifyContent: "flex-end",
           backgroundColor: "#000a",
-        }}
-      >
-        <Pressable onPress={() => undefined}>
+        }}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Cerrar"
+          onPress={close}
+          style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+        />
+        <View>
           <ScrollView
  showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: space(4) }}>
             <Card>
@@ -164,8 +167,8 @@ export function ReadinessCheck({
               )}
             </Card>
           </ScrollView>
-        </Pressable>
-      </Pressable>
+        </View>
+      </View>
     </Modal>
   );
 }

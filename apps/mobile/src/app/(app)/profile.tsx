@@ -121,16 +121,19 @@ function ResetAccount() {
         animationType="fade"
         onRequestClose={() => { if (!busy) setOpen(false); }}
       >
-        <Pressable
-          onPress={() => !busy && setOpen(false)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => !busy && setOpen(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card>
               <Text style={{ ...sectionTitle, textAlign: "center" }}>
                 {t("Reiniciar cuenta", "Reset account")}
@@ -171,8 +174,8 @@ function ResetAccount() {
                 </View>
               </View>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     </>
   );
@@ -555,16 +558,19 @@ export default function Profile() {
         animationType="fade"
         onRequestClose={() => setSettingsOpen(false)}
       >
-        <Pressable
-          onPress={() => setSettingsOpen(false)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setSettingsOpen(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "90%" }}>
             <Card>
               <DialogScroll
                 contentContainerStyle={{ gap: space(3) }}
@@ -673,8 +679,8 @@ export default function Profile() {
                 )}
               </DialogScroll>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     </Screen>
   );

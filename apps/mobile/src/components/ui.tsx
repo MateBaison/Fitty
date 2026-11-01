@@ -80,14 +80,31 @@ export function Screen({
   );
 }
 
-/** Scrollable body of a dialog: limited to a share of the screen so long content scrolls. */
-export function DialogScroll({ style, ...props }: ScrollViewProps) {
+/**
+ * Scrollable body of a dialog: limited to a share of the screen so long content
+ * scrolls, and stretched over the dialog's side padding so a swipe works from the
+ * edges too. Use `flush` when the dialog card has no padding of its own.
+ */
+export function DialogScroll({
+  style,
+  contentContainerStyle,
+  flush = false,
+  ...props
+}: ScrollViewProps & { flush?: boolean }) {
   const { height } = useWindowDimensions();
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
-      style={[{ maxHeight: height * 0.66 }, style]}
+      style={[
+        { maxHeight: height * 0.66 },
+        flush ? null : { marginHorizontal: -space(4.5) },
+        style,
+      ]}
+      contentContainerStyle={[
+        flush ? null : { paddingHorizontal: space(4.5) },
+        contentContainerStyle,
+      ]}
       {...props}
     />
   );

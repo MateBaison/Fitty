@@ -34,6 +34,7 @@ import {
 } from "@fitty/core/domain/workouts";
 import { Chip } from "@/components/chip";
 import { ExercisePicker } from "@/components/exercise-picker";
+import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
 import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
 import { SessionExtras } from "@/components/session-extras";
@@ -46,44 +47,6 @@ import { useAccount, useSnapshot } from "@/state/account";
 import { colors, radius, space } from "@/theme";
 
 const pad = (value: number) => String(value).padStart(2, "0");
-const typeColor: Record<string, string> = {
-  warmup: "#facc15",
-  normal: "#4ade80",
-  failure: "#fb7185",
-  drop: "#38bdf8",
-  pyramid: "#c084fc",
-};
-
-function typeHelp(id: string, t: (es: string, en: string) => string) {
-  switch (id) {
-    case "warmup":
-      return t(
-        "Usá una carga liviana para preparar el movimiento y practicar la técnica antes de las series de trabajo, sin agotarte.",
-        "Use a light load to prepare the movement and practice technique before working sets, without tiring yourself out.",
-      );
-    case "failure":
-      return t(
-        "Llegás al límite de repeticiones que podés completar con buena técnica. Registrá solo las repeticiones completas y no fuerces una repetición insegura; usá asistencia o protecciones si corresponde.",
-        "Reach the limit of repetitions you can complete with good form. Log completed repetitions only; do not force an unsafe repetition. Use a spotter or safety equipment when appropriate.",
-      );
-    case "drop":
-      return t(
-        "Empezá con una carga que permita unas 8–12 repeticiones con buena técnica, no con tu peso máximo. Al llegar al fallo técnico, reducí un 20–25% del peso que estás usando y continuá con poco descanso. Podés hacer 1–3 bajadas. Registrá cada tramo por separado.",
-        "Start with a load you can lift for about 8–12 controlled repetitions, not your maximum weight. At technical failure, reduce the current load by 20–25% and continue with little rest. Use 1–3 drops. Log each segment separately.",
-      );
-    case "pyramid":
-      return t(
-        "Subí el peso en cada tramo y luego bajalo. Por ejemplo: 20 → 25 → 30 → 25 → 20 kg. Registrá el peso y las repeticiones de cada tramo por separado.",
-        "Increase the weight in each segment, then decrease it. For example: 20 → 25 → 30 → 25 → 20 kg. Log weight and repetitions for each segment separately.",
-      );
-    default:
-      return t(
-        "Realizá las repeticiones previstas con una carga adecuada y buena técnica. Descansá antes de la siguiente serie.",
-        "Perform your planned repetitions with an appropriate load and good technique. Rest before the next set.",
-      );
-  }
-}
-
 /** Rest countdown shared by every exercise in the workout. */
 function RestBanner({ end, onStop }: { end: number; onStop: () => void }) {
   const { t } = useAccount();
@@ -705,16 +668,19 @@ export default function Workout() {
         animationType="fade"
         onRequestClose={() => setFinishing(false)}
       >
-        <Pressable
-          onPress={() => setFinishing(false)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setFinishing(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card>
               <Text
                 accessibilityRole="header"
@@ -749,202 +715,52 @@ export default function Workout() {
                 {t("Seguir entrenando", "Keep training")}
               </Button>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
-      <Modal
+      <SetTypeDialog
         visible={typeFor !== null}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setTypeFor(null)}
-      >
-        <Pressable
-          onPress={() => setTypeFor(null)}
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            padding: space(4),
-            backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
-            <Card>
-              <DialogScroll contentContainerStyle={{ gap: space(3) }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={t("Volver", "Back")}
-                    onPress={() => setTypeFor(null)}
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 18,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: colors.secondary,
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.accent,
-                        fontSize: 22,
-                        fontWeight: "800",
-                        lineHeight: 26,
-                      }}
-                    >
-                      ‹
-                    </Text>
-                  </Pressable>
-                  <Text
-                    accessibilityRole="header"
-                    style={{
-                      flex: 1,
-                      textAlign: "center",
-                      color: colors.foreground,
-                      fontSize: 20,
-                      fontWeight: "800",
-                    }}
-                  >
-                    {t("Tipo de serie", "Set type")}
-                  </Text>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={t(
-                      "Ayuda sobre tipos de serie",
-                      "Help with set types",
-                    )}
-                    accessibilityState={{ expanded: showHelp }}
-                    onPress={() => setShowHelp((current) => !current)}
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 18,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: showHelp ? colors.primary : colors.secondary,
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: showHelp
-                          ? colors.primaryForeground
-                          : colors.accent,
-                        fontSize: 18,
-                        fontWeight: "800",
-                      }}
-                    >
-                      ?
-                    </Text>
-                  </Pressable>
-                </View>
-                {types.map((type) => (
-                  <View key={type.id} style={{ gap: space(2) }}>
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityState={{
-                        selected: (selected?.type ?? "normal") === type.id,
-                      }}
-                      onPress={() => {
-                        if (!typeFor) return;
-                        editEntry(typeFor.entry, (draft) => {
-                          const current = draft.sets[typeFor.set];
-                          if (!current) return;
-                          current.type = type.id;
-                          if (!["drop", "pyramid"].includes(type.id))
-                            delete current.dropGroup;
-                        });
-                        setTypeFor(null);
-                      }}
-                      style={{
-                        minHeight: 52,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: space(3),
-                        borderRadius: 16,
-                        borderWidth: 1,
-                        borderColor:
-                          (selected?.type ?? "normal") === type.id
-                            ? typeColor[type.id]
-                            : colors.border,
-                        backgroundColor: colors.secondary,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: typeColor[type.id],
-                          fontSize: 18,
-                          fontWeight: "800",
-                        }}
-                      >
-                        {type.letter}
-                      </Text>
-                      <Text
-                        style={{
-                          color: colors.foreground,
-                          fontSize: 16,
-                          fontWeight: "800",
-                        }}
-                      >
-                        {type.name}
-                      </Text>
-                    </Pressable>
-                    {showHelp ? (
-                      <Label muted>{typeHelp(type.id, t)}</Label>
-                    ) : null}
-                  </View>
-                ))}
-                {selected && ["drop", "pyramid"].includes(selected.type ?? "") ? (
-                  <Button
-                    variant="secondary"
-                    onPress={() => {
-                      if (!typeFor) return;
-                      const entry = workout.entries[typeFor.entry];
-                      if (!entry) return;
-                      editEntry(typeFor.entry, (draft) =>
-                        addDropSegment(
-                          draft,
-                          typeFor.set,
-                          metricFor(snapshot, entry.id, entry),
-                        ),
-                      );
-                      setTypeFor(null);
-                    }}
-                  >
-                    {t("+ Agregar descenso", "+ Add drop")}
-                  </Button>
-                ) : null}
-              </DialogScroll>
-            </Card>
-          </Pressable>
-        </Pressable>
-      </Modal>
+        current={selected?.type ?? "normal"}
+        onClose={() => setTypeFor(null)}
+        onSelect={(typeId) => {
+          if (!typeFor) return;
+          editEntry(typeFor.entry, (draft) => {
+            const current = draft.sets[typeFor.set];
+            if (!current) return;
+            current.type = typeId;
+            if (!["drop", "pyramid"].includes(typeId)) delete current.dropGroup;
+          });
+          setTypeFor(null);
+        }}
+        onAddDrop={() => {
+          if (!typeFor) return;
+          const entry = workout.entries[typeFor.entry];
+          if (!entry) return;
+          editEntry(typeFor.entry, (draft) =>
+            addDropSegment(draft, typeFor.set, metricFor(snapshot, entry.id, entry)),
+          );
+          setTypeFor(null);
+        }}
+      />
       <Modal
         visible={supersetOpen}
         transparent
         animationType="fade"
         onRequestClose={() => setSupersetOpen(false)}
       >
-        <Pressable
-          onPress={() => setSupersetOpen(false)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setSupersetOpen(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "90%" }}>
             <Card>
               <DialogScroll contentContainerStyle={{ gap: space(3) }}>
                 <Text
@@ -1008,8 +824,8 @@ export default function Workout() {
                 </Button>
               </DialogScroll>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
       <Modal
         visible={imageFor !== null}
@@ -1017,18 +833,21 @@ export default function Workout() {
         animationType="fade"
         onRequestClose={() => setImageFor(null)}
       >
-        <Pressable
-          onPress={() => setImageFor(null)}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined} style={{ maxHeight: "90%" }}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setImageFor(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "90%" }}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
-              <DialogScroll contentContainerStyle={{ gap: space(3) }}>
+              <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
                 {imageFor ? (
                   <Image
                     source={`${env.apiUrl}${exerciseImage(imageFor, snapshot.profile.gender)}`}
@@ -1080,8 +899,8 @@ export default function Workout() {
                 </View>
               </DialogScroll>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
       <ExercisePicker
         visible={adding}

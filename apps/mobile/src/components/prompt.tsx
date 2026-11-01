@@ -46,17 +46,19 @@ export function TextPrompt({
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
       >
-        <Pressable
-          accessibilityLabel={cancel}
-          onPress={onClose}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={onClose}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card style={{ borderColor: colors.border }}>
               <Title>{title}</Title>
               <Field
@@ -84,8 +86,8 @@ export function TextPrompt({
                 </View>
               </View>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </KeyboardAvoidingView>
     </Modal>
   );

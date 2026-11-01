@@ -48,17 +48,19 @@ export function SignOut() {
         animationType="fade"
         onRequestClose={close}
       >
-        <Pressable
-          accessibilityLabel={t("Cancelar", "Cancel")}
-          onPress={close}
-          style={{
+        <View style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}
-        >
-          <Pressable onPress={() => undefined}>
+          }}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={close}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View>
             <Card style={{ borderColor: colors.border }}>
               <Text
                 accessibilityRole="header"
@@ -93,8 +95,8 @@ export function SignOut() {
                   : t("Cerrar sesión", "Sign out")}
               </Button>
             </Card>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     </>
   );
