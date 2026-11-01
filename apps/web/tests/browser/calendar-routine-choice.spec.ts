@@ -31,7 +31,7 @@ test("manual calendar entry chooses any routine day and quick start only lists a
   await expect(
     page
       .getByRole("dialog")
-      .getByRole("button", { name: /Rutina principal ·/ }),
+      .getByRole("button", { name: /Pecho y tríceps|Espalda y bíceps|Piernas y abdomen/ }),
   ).toHaveCount(3);
   await expect(page.getByRole("dialog")).not.toContainText("Otra rutina");
   await page.keyboard.press("Escape");
@@ -53,7 +53,7 @@ test("manual calendar entry chooses any routine day and quick start only lists a
   await page.locator(`[data-calendar-date="${date}"]`).click();
   await page
     .getByRole("button", {
-      name: "Agregar entrenamiento a este día",
+      name: "Agregar entrenamiento",
       exact: true,
     })
     .click();
@@ -64,7 +64,7 @@ test("manual calendar entry chooses any routine day and quick start only lists a
     .getByRole("combobox", { name: "Nombre del día", exact: true })
     .selectOption("d1");
   await expect(page.getByRole("dialog")).toContainText(
-    "Press de banca con barra",
+    "Press banca con barra",
   );
   await expect(page.getByRole("dialog").locator(".routine-day")).toHaveCount(3);
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("40");
@@ -87,7 +87,7 @@ test("manual calendar entry chooses any routine day and quick start only lists a
   );
   await page
     .getByRole("button", {
-      name: "Agregar entrenamiento a este día",
+      name: "Agregar entrenamiento",
       exact: true,
     })
     .click();

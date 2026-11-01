@@ -26,7 +26,7 @@ test("rest timer sounds at start and completes once", async ({ page }) => {
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await page.getByRole("switch", { name: "Descanso entre series" }).check();
   await page.getByLabel("Segundos", { exact: true }).fill("5");

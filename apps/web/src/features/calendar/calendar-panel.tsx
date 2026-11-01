@@ -501,7 +501,7 @@ export function CalendarPanel({
             if (selectedDate) edit(selectedDate);
           }}
         >
-          {t("Agregar entrenamiento a este día", "Add workout to this day")}
+          {t("Agregar entrenamiento", "Add workout")}
         </Button>
       </AppDialog>
       <AppDialog

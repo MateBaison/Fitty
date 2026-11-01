@@ -9,7 +9,7 @@ test("add an extra exercise to an active routine workout and retain it after rel
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await expect(page).toHaveURL(/\/workout$/);
   const before = await page.locator("[data-workout-entry]").count();

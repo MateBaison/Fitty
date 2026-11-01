@@ -60,10 +60,7 @@ export function ExerciseLibrary() {
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder={t(
-            "Buscar ejercicio o equipo…",
-            "Search exercise or equipment…",
-          )}
+          placeholder={t("Buscar ejercicio", "Search exercise")}
         />
         <div
           className="muscle-chips"
@@ -108,32 +105,18 @@ export function ExerciseLibrary() {
           />
           <div>
             <span className="eyebrow">
-              {group === "Todos"
-                ? t("Cuerpo completo", "Whole body")
-                : t("Zona principal", "Primary area")}
+              {t("Seleccionar zona", "Select area")}
             </span>
             <h2 className="text-xl font-bold">
               {group === "Todos" ? t("Todo", "All") : t(group, group)}
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {group === "Todos"
-                ? t(
-                    "Todos los ejercicios de la biblioteca.",
-                    "All exercises in the library.",
-                  )
-                : t(
-                    "El naranja señala el grupo elegido.",
-                    "Orange marks the selected muscle group.",
-                  )}
-            </p>
           </div>
         </section>
       )}
       <div className="exercise-results">
         <details ref={filterMenu}>
           <summary>
-            {t("Filtrar", "Filter")}
-            {equipment !== "Todos" ? ` · ${equipment}` : ""}
+            {equipment !== "Todos" ? equipment : t("Filtrar", "Filter")}
           </summary>
           <div
             className="equipment-menu"

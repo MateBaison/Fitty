@@ -14,7 +14,7 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   const entry = page.locator('[data-workout-entry="0"]');
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("40");

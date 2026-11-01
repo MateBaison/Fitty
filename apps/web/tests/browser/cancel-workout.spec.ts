@@ -14,7 +14,7 @@ test("cancel workout asks in an in-app dialog even when the browser blocks confi
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await expect(page).toHaveURL(/\/workout$/);
   await page

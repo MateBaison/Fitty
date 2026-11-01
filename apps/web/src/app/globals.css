@@ -3466,3 +3466,65 @@ input[type="range"] {
     padding-bottom: 6px;
   }
 }
+
+/* Timer presets: one scrollable row with soft edges that hint at more options. */
+.timer-presets {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 0 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+}
+.timer-presets::-webkit-scrollbar {
+  display: none;
+}
+.timer-presets > button {
+  flex: none;
+}
+
+/* Superset picker rows with photo and order badge. */
+.superset-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--secondary);
+  cursor: pointer;
+}
+.superset-row[data-chosen="true"] {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 18%, var(--secondary));
+}
+.superset-row .picker-thumb {
+  flex: none;
+}
+.superset-row > span:nth-of-type(1) {
+  flex: 1;
+  min-width: 0;
+}
+.superset-order {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  font-weight: 800;
+}
+.superset-row[data-chosen="true"] .superset-order {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.superset-row input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}

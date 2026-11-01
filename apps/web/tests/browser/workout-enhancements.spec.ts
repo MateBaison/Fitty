@@ -14,7 +14,7 @@ test("compact workout controls, grouped drops, remembered metric and record sour
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await expect(page).toHaveURL(/\/workout$/);
   const first = page.locator('[data-workout-entry="0"]');
@@ -175,7 +175,7 @@ test("pyramid help and numbered ascending and descending segments", async ({
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   const first = page.locator('[data-workout-entry="0"]');
   await page

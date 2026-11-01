@@ -674,7 +674,12 @@
     "No pudimos completar la acción. Reintentá más tarde.": "Impossible de terminer l'action. Réessaie plus tard.",
     "Siempre podés entrar con un código enviado a este correo.": "Tu peux toujours te connecter avec un code envoyé à cette adresse e-mail.",
     "Al continuar aceptás la Política de privacidad.": "En continuant, tu acceptes la politique de confidentialité.",
-    "Día": "Jour"
+    "Día": "Jour",
+    "Guardar superserie": "Enregistrer le superset",
+    "Elegí al menos 2 ejercicios": "Choisis au moins 2 exercices",
+    "Seleccionar zona": "Choisir la zone",
+    "Tiempos predeterminados": "Durées prédéfinies",
+    "Agregar entrenamiento": "Ajouter un entraînement"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1351,7 +1356,12 @@
     "No pudimos completar la acción. Reintentá más tarde.": "无法完成操作,请稍后重试。",
     "Siempre podés entrar con un código enviado a este correo.": "你始终可以使用发送到此邮箱的验证码登录。",
     "Al continuar aceptás la Política de privacidad.": "继续即表示你接受隐私政策。",
-    "Día": "训练日"
+    "Día": "训练日",
+    "Guardar superserie": "保存超级组",
+    "Elegí al menos 2 ejercicios": "至少选择 2 个动作",
+    "Seleccionar zona": "选择部位",
+    "Tiempos predeterminados": "预设时间",
+    "Agregar entrenamiento": "添加训练"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2028,7 +2038,12 @@
     "No pudimos completar la acción. Reintentá más tarde.": "हम यह कार्य पूरा नहीं कर सके। बाद में फिर कोशिश करें।",
     "Siempre podés entrar con un código enviado a este correo.": "आप हमेशा इस ईमेल पर भेजे गए कोड से साइन इन कर सकते हैं।",
     "Al continuar aceptás la Política de privacidad.": "जारी रखकर आप गोपनीयता नीति स्वीकार करते हैं।",
-    "Día": "दिन"
+    "Día": "दिन",
+    "Guardar superserie": "सुपरसेट सहेजें",
+    "Elegí al menos 2 ejercicios": "कम से कम 2 व्यायाम चुनें",
+    "Seleccionar zona": "क्षेत्र चुनें",
+    "Tiempos predeterminados": "पूर्व निर्धारित समय",
+    "Agregar entrenamiento": "वर्कआउट जोड़ें"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2705,7 +2720,12 @@
     "No pudimos completar la acción. Reintentá más tarde.": "تعذر إكمال الإجراء. حاول مرة أخرى لاحقًا.",
     "Siempre podés entrar con un código enviado a este correo.": "يمكنك دائمًا تسجيل الدخول برمز يُرسل إلى هذا البريد.",
     "Al continuar aceptás la Política de privacidad.": "بالمتابعة فإنك توافق على سياسة الخصوصية.",
-    "Día": "اليوم"
+    "Día": "اليوم",
+    "Guardar superserie": "حفظ السوبرسِت",
+    "Elegí al menos 2 ejercicios": "اختر تمرينين على الأقل",
+    "Seleccionar zona": "اختر المنطقة",
+    "Tiempos predeterminados": "الأوقات المحددة مسبقًا",
+    "Agregar entrenamiento": "إضافة تمرين"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -3381,7 +3401,12 @@
     "No pudimos completar la acción. Reintentá más tarde.": "Die Aktion konnte nicht abgeschlossen werden. Versuche es später erneut.",
     "Siempre podés entrar con un código enviado a este correo.": "Du kannst dich jederzeit mit einem an diese E-Mail gesendeten Code anmelden.",
     "Al continuar aceptás la Política de privacidad.": "Mit dem Fortfahren akzeptierst du die Datenschutzerklärung.",
-    "Día": "Tag"
+    "Día": "Tag",
+    "Guardar superserie": "Supersatz speichern",
+    "Elegí al menos 2 ejercicios": "Wähle mindestens 2 Übungen",
+    "Seleccionar zona": "Bereich wählen",
+    "Tiempos predeterminados": "Voreingestellte Zeiten",
+    "Agregar entrenamiento": "Training hinzufügen"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -4057,7 +4082,12 @@
     "No pudimos completar la acción. Reintentá más tarde.": "Impossibile completare l'azione. Riprova più tardi.",
     "Siempre podés entrar con un código enviado a este correo.": "Puoi sempre accedere con un codice inviato a questa e-mail.",
     "Al continuar aceptás la Política de privacidad.": "Continuando accetti l'informativa sulla privacy.",
-    "Día": "Giorno"
+    "Día": "Giorno",
+    "Guardar superserie": "Salva superserie",
+    "Elegí al menos 2 ejercicios": "Scegli almeno 2 esercizi",
+    "Seleccionar zona": "Seleziona zona",
+    "Tiempos predeterminados": "Tempi predefiniti",
+    "Agregar entrenamiento": "Aggiungi allenamento"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4733,7 +4763,12 @@
     "No pudimos completar la acción. Reintentá más tarde.": "Não foi possível concluir a ação. Tente novamente mais tarde.",
     "Siempre podés entrar con un código enviado a este correo.": "Você sempre pode entrar com um código enviado para este e-mail.",
     "Al continuar aceptás la Política de privacidad.": "Ao continuar, você aceita a Política de privacidade.",
-    "Día": "Dia"
+    "Día": "Dia",
+    "Guardar superserie": "Salvar superssérie",
+    "Elegí al menos 2 ejercicios": "Escolha pelo menos 2 exercícios",
+    "Seleccionar zona": "Selecionar zona",
+    "Tiempos predeterminados": "Tempos predefinidos",
+    "Agregar entrenamiento": "Adicionar treino"
   },
   "en": {
     "Sexo": "Sex",
@@ -5077,6 +5112,12 @@
     "No podés desvincular tu único método de inicio de sesión.": "You cannot unlink your only sign-in method.",
     "No pudimos completar la acción. Reintentá más tarde.": "We could not complete the action. Try again later.",
     "Siempre podés entrar con un código enviado a este correo.": "You can always sign in with a code sent to this email.",
-    "Al continuar aceptás la Política de privacidad.": "By continuing you accept the Privacy policy."
+    "Al continuar aceptás la Política de privacidad.": "By continuing you accept the Privacy policy.",
+    "Guardar superserie": "Save superset",
+    "Elegí al menos 2 ejercicios": "Choose at least 2 exercises",
+    "Seleccionar zona": "Select area",
+    "Tiempos predeterminados": "Preset times",
+    "Agregar entrenamiento": "Add workout",
+    "Continuar": "Resume"
   }
 }

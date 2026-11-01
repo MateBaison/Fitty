@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { NumericInput } from "@/components/ui/numeric-input";
 export function ClocksScreen() {
   const [editingTimer, setEditingTimer] = useState(false);
+  const [chosen, setChosen] = useState(60);
   const [duration, setDuration] = useState({
     hours: "0",
     minutes: "0",
@@ -141,6 +142,7 @@ export function ClocksScreen() {
                   Number(duration.seconds);
                 if (!Number.isInteger(seconds) || seconds <= 0) return;
                 clock.preset(seconds);
+                setChosen(seconds);
                 setEditingTimer(false);
               }}
             >
@@ -193,18 +195,25 @@ export function ClocksScreen() {
               </div>
             </form>
           </AppDialog>
-          <div className="my-4 flex flex-wrap justify-center gap-2">
+          <div className="timer-presets" role="group" aria-label={t("Tiempos predeterminados", "Preset times")}>
             {[
               [15, "15seg"],
               [30, "30seg"],
+              [45, "45seg"],
               [60, "1min"],
+              [90, "1:30"],
+              [120, "2min"],
               [180, "3min"],
               [300, "5min"],
+              [600, "10min"],
             ].map(([seconds, label]) => (
               <Button
-                variant="secondary"
+                variant={chosen === seconds ? "default" : "secondary"}
                 key={seconds}
-                onClick={() => clock.preset(Number(seconds))}
+                onClick={() => {
+                  clock.preset(Number(seconds));
+                  setChosen(Number(seconds));
+                }}
               >
                 {label}
               </Button>
@@ -214,9 +223,11 @@ export function ClocksScreen() {
             <Button onClick={clock.toggleTimer}>
               {clock.timer.running
                 ? t("Pausar", "Pause")
-                : t("Iniciar", "Start")}
+                : clock.timer.remaining > 0 && clock.timer.remaining < chosen
+                  ? t("Continuar", "Resume")
+                  : t("Iniciar", "Start")}
             </Button>
-            <Button variant="secondary" onClick={() => clock.preset(30)}>
+            <Button variant="secondary" onClick={() => clock.preset(chosen)}>
               {t("Reiniciar", "Reset")}
             </Button>
           </div>

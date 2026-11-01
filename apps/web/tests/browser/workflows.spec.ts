@@ -19,7 +19,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await expect(page).toHaveURL(/\/workout$/);
   await page
@@ -255,7 +255,7 @@ test("personal record highlights appear while logging and remain in the calendar
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("20");
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("10");
@@ -701,7 +701,7 @@ test("optional menstrual readiness check offers advice before starting", async (
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   const dialog = page.getByRole("dialog", { name: "¿Cómo te sentís hoy?" });
   await dialog
@@ -741,7 +741,7 @@ test("exercise replacement preserves logged sets and filters same-zone equipment
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("20");
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("12");
@@ -912,7 +912,7 @@ test("weekly summary and translated screens fit a narrow viewport", async ({
     .getByRole("button", { name: "Start workout", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .first()
     .click();
   await expect(
@@ -1089,7 +1089,7 @@ test("masculine profiles hide menstrual calendar borders and legend with saved d
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("button", { name: /Rutina principal · Pecho y tríceps/ })
+    .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await expect(page).toHaveURL(/\/workout$/);
   await expect(

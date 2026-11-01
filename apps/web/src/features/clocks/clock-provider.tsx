@@ -55,7 +55,7 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
     [now, setNow] = useState(Date.now()),
     [section, setSection] = useState("stopwatch"),
     [sw, setSw] = useState({ running: false, elapsed: 0, started: 0 }),
-    [timer, setTimer] = useState({ running: false, remaining: 30, end: 0 });
+    [timer, setTimer] = useState({ running: false, remaining: 60, end: 0 });
   const timerRef = useRef(timer);
   const timerAnnounced = useRef(0);
   timerRef.current = timer;

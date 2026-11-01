@@ -99,6 +99,8 @@ export function SessionExtras({
       <label className="block">
         {t("Comentario del entrenamiento", "Workout comment")}
         <textarea
+          rows={1}
+          style={{ height: 52, minHeight: 52, resize: "vertical" }}
           maxLength={2000}
           value={value.comment}
           onChange={(event) =>

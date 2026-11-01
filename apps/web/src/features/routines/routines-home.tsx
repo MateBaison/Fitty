@@ -1,6 +1,7 @@
 "use client";
 
 import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -499,7 +500,7 @@ export function RoutinesHome() {
                 disabled={!day.items.length}
                 onClick={() => begin(routine.id, day.id)}
               >
-                {routine.name} · {day.name}
+                {day.name}
               </Button>
             )),
           )}
@@ -738,13 +739,17 @@ export function RoutinesHome() {
       <AppDialog
         open={superset !== null}
         onClose={() => setSuperset(null)}
-        title="Superseries"
+        title={t("Crear superserie", "Create superset")}
       >
         {snapshot.routines
           .find((routine) => routine.id === superset?.rid)
           ?.days.find((day) => day.id === superset?.did)
           ?.items.map((id, index) => (
-            <label key={index} className="flex min-h-12 items-center gap-3">
+            <label
+              key={index}
+              className="superset-row"
+              data-chosen={members.includes(id)}
+            >
               <input
                 type="checkbox"
                 checked={members.includes(id)}
@@ -756,7 +761,15 @@ export function RoutinesHome() {
                   )
                 }
               />
-              {short(findExercise(snapshot, id)?.name ?? id)}
+              {findExercise(snapshot, id) && (
+                <span className="picker-thumb">
+                  <ExerciseVisual exercise={findExercise(snapshot, id)!} />
+                </span>
+              )}
+              <span>{short(findExercise(snapshot, id)?.name ?? id)}</span>
+              <span className="superset-order" aria-hidden="true">
+                {members.includes(id) ? members.indexOf(id) + 1 : ""}
+              </span>
             </label>
           ))}
         <Button
@@ -779,7 +792,9 @@ export function RoutinesHome() {
               setSuperset(null);
           }}
         >
-          {t("Crear superserie", "Create superset")}
+          {members.length >= 2
+            ? `${t("Guardar superserie", "Save superset")} (${members.length})`
+            : t("Elegí al menos 2 ejercicios", "Choose at least 2 exercises")}
         </Button>
         <Button
           variant="secondary"
