@@ -138,129 +138,115 @@ export function ExerciseBrowser({
               style={[styles.input, { flex: 1, minHeight: 44, paddingVertical: space(2) }]}
             />
             </View>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={t("Seleccionar zona", "Select area")}
-              onPress={() => setZoning(true)}
+            <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
                 gap: space(3),
-                padding: space(4),
+                padding: space(3),
                 borderRadius: 24,
                 borderColor: colors.border,
                 borderWidth: 1,
                 backgroundColor: colors.card,
               }}
             >
-              {group === "Favoritos" ? (
-                <View
-                  style={{
-                    width: 104,
-                    height: 128,
-                    borderRadius: 14,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "#0d1016",
-                  }}
-                >
-                  <Text style={{ color: colors.warning, fontSize: 44 }}>★</Text>
-                </View>
-              ) : (
-                <Image
-                  source={`${env.apiUrl}/assets/${group === "Todos" ? fullBodyImage : muscleImages[group]}`}
-                  style={{
-                    width: 104,
-                    height: 128,
-                    borderRadius: 14,
-                    backgroundColor: "#0d1016",
-                  }}
-                  contentFit="cover"
-                  cachePolicy="disk"
-                  accessibilityIgnoresInvertColors
-                />
-              )}
-              <View style={{ flex: 1, gap: 4 }}>
-                <Text
-                  style={{
-                    color: colors.primary,
-                    fontSize: 11,
-                    fontWeight: "800",
-                    letterSpacing: 1.2,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {t("Seleccionar zona", "Select area")} ▾
-                </Text>
-                <View
-                  style={{
-                    paddingVertical: space(3),
-                    paddingHorizontal: space(3),
-                    borderRadius: 14,
-                    backgroundColor: colors.secondary,
-                    borderColor: colors.border,
-                    borderWidth: 1,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: colors.foreground,
-                      fontSize: 20,
-                      fontWeight: "800",
-                    }}
-                  >
-                    {groupName(group).replace("★ ", "")}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-            <View
-              style={{
-                padding: space(4),
-                gap: space(2),
-                borderRadius: 24,
-                borderColor: colors.border,
-                borderWidth: 1,
-                backgroundColor: colors.card,
-              }}
-            >
-              <Text
-                style={{
-                  color: colors.primary,
-                  fontSize: 11,
-                  fontWeight: "800",
-                  letterSpacing: 1.2,
-                  textTransform: "uppercase",
-                }}
-              >
-                {t("Filtrar", "Filter")} ▾
-              </Text>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={t("Filtrar por equipo", "Filter by equipment")}
-                accessibilityState={{ expanded: filtering }}
-                onPress={() => setFiltering((current) => !current)}
-                style={{
-                  paddingVertical: space(3),
-                  paddingHorizontal: space(3),
-                  borderRadius: 14,
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                }}
+                accessibilityLabel={t("Seleccionar zona", "Select area")}
+                onPress={() => setZoning(true)}
               >
-                <Text
-                  style={{
-                    color: colors.foreground,
-                    fontSize: 20,
-                    fontWeight: "800",
-                  }}
-                >
-                  {equipment === "Todos"
-                    ? t("Todo", "All")
-                    : translate(language, equipment, equipment)}
-                </Text>
+                {group === "Favoritos" ? (
+                  <View
+                    style={{
+                      width: 96,
+                      height: 132,
+                      borderRadius: 14,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#0d1016",
+                    }}
+                  >
+                    <Text style={{ color: colors.warning, fontSize: 44 }}>★</Text>
+                  </View>
+                ) : (
+                  <Image
+                    source={`${env.apiUrl}/assets/${group === "Todos" ? fullBodyImage : muscleImages[group]}`}
+                    style={{
+                      width: 96,
+                      height: 132,
+                      borderRadius: 14,
+                      backgroundColor: "#0d1016",
+                    }}
+                    contentFit="cover"
+                    cachePolicy="disk"
+                    accessibilityIgnoresInvertColors
+                  />
+                )}
               </Pressable>
+              <View style={{ flex: 1, gap: space(2) }}>
+                {(
+                  [
+                    [
+                      t("Seleccionar zona", "Select area"),
+                      groupName(group).replace("★ ", ""),
+                      () => setZoning(true),
+                      false,
+                    ],
+                    [
+                      t("Filtrar", "Filter"),
+                      equipment === "Todos"
+                        ? t("Todo", "All")
+                        : translate(language, equipment, equipment),
+                      () => setFiltering((current) => !current),
+                      filtering,
+                    ],
+                  ] as const
+                ).map(([title, value, onPress, expanded]) => (
+                  <View key={title} style={{ gap: 4 }}>
+                    <Text
+                      style={{
+                        color: colors.primary,
+                        fontSize: 11,
+                        fontWeight: "800",
+                        letterSpacing: 1.2,
+                        textTransform: "uppercase",
+                        textAlign: "center",
+                      }}
+                    >
+                      {title} ▾
+                    </Text>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={title}
+                      accessibilityState={{ expanded }}
+                      onPress={onPress}
+                      style={{
+                        minHeight: 44,
+                        paddingHorizontal: space(2),
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: 14,
+                        backgroundColor: colors.secondary,
+                        borderColor: colors.border,
+                        borderWidth: 1,
+                      }}
+                    >
+                      <Text
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        style={{
+                          color: colors.foreground,
+                          fontSize: 17,
+                          fontWeight: "800",
+                          textAlign: "center",
+                        }}
+                      >
+                        {value}
+                      </Text>
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
             </View>
             <View
               style={{

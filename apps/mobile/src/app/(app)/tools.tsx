@@ -1,7 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { useKeepAwake } from "expo-keep-awake";
 import { useEffect, useRef, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import {
   calorieMetrics,
   calorieTargets,
@@ -217,17 +217,56 @@ function Stopwatch() {
 const timerPresets = [
   [15, "15seg"],
   [30, "30seg"],
+  [45, "45seg"],
   [60, "1min"],
+  [90, "1:30"],
+  [120, "2min"],
   [180, "3min"],
   [300, "5min"],
+  [600, "10min"],
 ] as const;
+
+/** Soft edge that hints at more content beyond a horizontal scroller. */
+function EdgeFade({ side }: { side: "left" | "right" }) {
+  const steps = 8;
+  return (
+    <View
+      pointerEvents="none"
+      style={{
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        [side]: 0,
+        width: steps * 4,
+        flexDirection: side === "left" ? "row" : "row-reverse",
+      }}
+    >
+      {Array.from({ length: steps }, (_, index) => (
+        <View
+          key={index}
+          style={{
+            width: 4,
+            backgroundColor: colors.card,
+            opacity: 1 - index / steps,
+          }}
+        />
+      ))}
+    </View>
+  );
+}
 
 function Timer() {
   const { t } = useAccount();
-  const [seconds, setSeconds] = useState(30);
+  const [seconds, setSeconds] = useState(60);
+  // Running: `end` is set. Paused: `remaining` holds what was left.
   const [end, setEnd] = useState<number | null>(null);
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [minutes, setMinutes] = useState("1");
+  const [extra, setExtra] = useState("0");
+  const [edges, setEdges] = useState({ left: false, right: true });
   const now = useNow(end !== null);
-  const left = end === null ? seconds * 1000 : end - now;
+  const left = end !== null ? end - now : (remaining ?? seconds * 1000);
   const notified = useRef(false);
   useEffect(() => {
     if (end !== null && left <= 0 && !notified.current) {
@@ -235,43 +274,164 @@ function Timer() {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       playRestDone();
       setEnd(null);
+      setRemaining(null);
     }
   }, [end, left]);
+  const choose = (value: number) => {
+    setSeconds(value);
+    setEnd(null);
+    setRemaining(null);
+  };
+  const running = end !== null;
+  const paused = !running && remaining !== null;
   return (
     <Card>
-      {end !== null ? <KeepAwake /> : null}
-      <Digits value={clock(left)} />
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
-        {timerPresets.map(([value, label]) => (
-          <Pill
-            key={value}
-            label={label}
-            small
-            active={seconds === value}
-            onPress={() => {
-              setSeconds(value);
-              setEnd(null);
-            }}
-          />
-        ))}
+      {running ? <KeepAwake /> : null}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t("Cambiar el tiempo", "Change the time")}
+        disabled={running}
+        onPress={() => {
+          setMinutes(String(Math.floor(seconds / 60)));
+          setExtra(String(seconds % 60));
+          setEditing(true);
+        }}
+      >
+        <Digits value={clock(left)} />
+      </Pressable>
+      <View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onScroll={({ nativeEvent }) => {
+            const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
+            const next = {
+              left: contentOffset.x > 4,
+              right:
+                contentOffset.x + layoutMeasurement.width < contentSize.width - 4,
+            };
+            if (next.left !== edges.left || next.right !== edges.right)
+              setEdges(next);
+          }}
+          contentContainerStyle={{ gap: space(2), paddingHorizontal: space(1) }}
+        >
+          {timerPresets.map(([value, label]) => (
+            <Pill
+              key={value}
+              label={label}
+              small
+              active={seconds === value}
+              onPress={() => choose(value)}
+            />
+          ))}
+        </ScrollView>
+        {edges.left ? <EdgeFade side="left" /> : null}
+        {edges.right ? <EdgeFade side="right" /> : null}
       </View>
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
           <Button
             onPress={() => {
-              notified.current = false;
-              setEnd(end === null ? Date.now() + seconds * 1000 : null);
+              if (running) {
+                setRemaining(Math.max(0, end - Date.now()));
+                setEnd(null);
+              } else {
+                notified.current = false;
+                setEnd(Date.now() + (remaining ?? seconds * 1000));
+                setRemaining(null);
+              }
             }}
           >
-            {end === null ? t("Iniciar", "Start") : t("Detener", "Stop")}
+            {running
+              ? t("Pausar", "Pause")
+              : paused
+                ? t("Continuar", "Resume")
+                : t("Iniciar", "Start")}
           </Button>
         </View>
         <View style={{ flex: 1 }}>
-          <Button variant="secondary" onPress={() => setEnd(null)}>
+          <Button variant="secondary" onPress={() => choose(seconds)}>
             {t("Reiniciar", "Reset")}
           </Button>
         </View>
       </View>
+      <Modal
+        visible={editing}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setEditing(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("Cerrar", "Close")}
+            onPress={() => setEditing(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <Card>
+            <Text
+              accessibilityRole="header"
+              style={{
+                color: colors.foreground,
+                fontSize: 20,
+                fontWeight: "800",
+                textAlign: "center",
+              }}
+            >
+              {t("Elegir tiempo", "Set the time")}
+            </Text>
+            <View style={{ flexDirection: "row", gap: space(3) }}>
+              <View style={{ flex: 1 }}>
+                <Field
+                  label={t("Minutos", "Minutes")}
+                  value={minutes}
+                  onChangeText={(value) => setMinutes(value.replace(/\D/g, "").slice(0, 3))}
+                  keyboardType="number-pad"
+                  selectTextOnFocus
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Field
+                  label={t("Segundos", "Seconds")}
+                  value={extra}
+                  onChangeText={(value) => setExtra(value.replace(/\D/g, "").slice(0, 2))}
+                  keyboardType="number-pad"
+                  selectTextOnFocus
+                />
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", gap: space(3) }}>
+              <View style={{ flex: 1 }}>
+                <Button variant="secondary" onPress={() => setEditing(false)}>
+                  {t("Cancelar", "Cancel")}
+                </Button>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Button
+                  onPress={() => {
+                    const total = Math.min(
+                      5999,
+                      Math.max(1, (Number(minutes) || 0) * 60 + (Number(extra) || 0)),
+                    );
+                    choose(total);
+                    setEditing(false);
+                  }}
+                >
+                  {t("Aplicar", "Apply")}
+                </Button>
+              </View>
+            </View>
+          </Card>
+        </View>
+      </Modal>
     </Card>
   );
 }

@@ -424,20 +424,20 @@ export default function Workout() {
                     </Text>
                   </View>
                 </View>
-                <View style={{ flexDirection: "row", gap: 6 }}>
-                  <Label muted numberOfLines={1} style={{ width: 64, textAlign: "center" }}>
+                <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+                  <Label muted numberOfLines={1} style={{ width: 64, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {t("Serie", "Set")}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ flex: 1.5, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ flex: 1.5, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {t("Anterior", "Previous")}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {unit}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ width: 44, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ width: 44, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {t("Tipo", "Type")}
                   </Label>
                 </View>

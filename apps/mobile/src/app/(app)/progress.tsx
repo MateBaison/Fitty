@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
@@ -24,7 +25,9 @@ import {
 import { catalogFor, localDateKey } from "@fitty/core/domain/workouts";
 import { BodyPanel } from "@/app/(app)/body";
 import { ProgressChart, type ChartPoint } from "@/components/progress-chart";
-import { Button, Card, Field, Label, Screen, DialogScroll } from "@/components/ui";
+import { BackButton } from "@/components/back-button";
+import { DateField } from "@/components/pickers";
+import { Button, Card, Label, Screen, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -127,8 +130,8 @@ function Comparison({
       <Text style={heading}>{t("Comparar períodos", "Compare periods")}</Text>
       <Label muted>
         {t(
-          "Elegí dos rangos de fechas (AAAA-MM-DD). Las cifras muestran lo registrado en cada uno; más cantidad no siempre significa mejor progreso.",
-          "Choose two date ranges (YYYY-MM-DD). Figures show what was logged in each; a higher amount does not always mean better progress.",
+          "Elegí dos rangos de fechas. Las cifras muestran lo registrado en cada uno; más cantidad no siempre significa mejor progreso.",
+          "Choose two date ranges. Figures show what was logged in each; a higher amount does not always mean better progress.",
         )}
       </Label>
       {(["a", "b"] as const).map((key) => (
@@ -139,13 +142,11 @@ function Comparison({
           <View style={{ flexDirection: "row", gap: space(3) }}>
             {(["start", "end"] as const).map((edge) => (
               <View key={edge} style={{ flex: 1 }}>
-                <Field
+                <DateField
                   label={edge === "start" ? t("Desde", "From") : t("Hasta", "To")}
                   value={dates[key][edge]}
-                  onChangeText={(value) => set(key, edge, value)}
-                  placeholder="AAAA-MM-DD"
-                  keyboardType="numbers-and-punctuation"
-                  maxLength={10}
+                  onChange={(value) => set(key, edge, value)}
+                  max={localDateKey(new Date())}
                 />
               </View>
             ))}
@@ -206,6 +207,7 @@ function Comparison({
 }
 
 export default function Progress() {
+  const router = useRouter();
   const snapshot = useSnapshot();
   const { t } = useAccount();
   const locale = snapshot.settings.language ?? "es";
@@ -319,6 +321,11 @@ export default function Progress() {
           paddingTop: space(2),
         }}
       >
+        <BackButton
+          onPress={() =>
+            router.canGoBack() ? router.back() : router.navigate("/")
+          }
+        />
         <View style={{ flex: 1, gap: space(1) }}>
           <Text
             style={{

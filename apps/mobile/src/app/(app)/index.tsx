@@ -212,7 +212,7 @@ export default function Home() {
                         : start(routine.id, item.id)
                     }
                   >
-                    {`${routine.name} · ${item.name}`}
+                    {item.name}
                   </Button>
                 ))
               ) : (
@@ -223,7 +223,7 @@ export default function Home() {
                   )}
                 </Label>
               )}
-              <Button variant="secondary" onPress={() => setPicking(false)}>
+              <Button variant="destructive" onPress={() => setPicking(false)}>
                 {t("Cancelar", "Cancel")}
               </Button>
             </Card>
