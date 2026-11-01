@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { exerciseName } from "@/lib/exercise-name";
 import { useState } from "react";
 import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
@@ -180,7 +181,7 @@ export function RoutinesSection() {
                 accessibilityIgnoresInvertColors
               />
               <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800", textAlign: "center" }}>
-                {translate(language, viewing.name, viewing.name)}
+                {exerciseName(language, viewing.name)}
               </Text>
             </Card>
           ) : null}
@@ -591,11 +592,7 @@ export function RoutinesSection() {
                                         }}
                                       >
                                         {exercise
-                                          ? translate(
-                                              language,
-                                              exercise.name,
-                                              exercise.name,
-                                            )
+                                          ? exerciseName(language, exercise.name)
                                           : id}
                                       </Text>
                                     </Pressable>
@@ -825,7 +822,7 @@ export function RoutinesSection() {
                     key={`${id}-${index}`}
                     role="checkbox"
                     active={members.includes(id)}
-                    label={`${grouped ? "🔗 " : ""}${exercise ? translate(language, exercise.name, exercise.name) : id}`}
+                    label={`${grouped ? "🔗 " : ""}${exercise ? exerciseName(language, exercise.name) : id}`}
                     onPress={() =>
                       setMembers((current) =>
                         current.includes(id)

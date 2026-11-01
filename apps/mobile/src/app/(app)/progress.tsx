@@ -1,4 +1,5 @@
 import { SymbolView } from "expo-symbols";
+import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
 import { Modal, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { translate } from "@fitty/core/data/translations";
@@ -619,7 +620,7 @@ export default function Progress() {
           >
             <Text style={{ flex: 1, color: colors.foreground, fontWeight: "800" }} numberOfLines={1}>
               {selectedExercise
-                ? translate(locale, selectedExercise.name, selectedExercise.name)
+                ? exerciseName(locale, selectedExercise.name)
                 : t("Sin ejercicios registrados", "No exercises recorded")}
             </Text>
             <Text style={{ color: colors.accent }}>▾</Text>
@@ -751,7 +752,7 @@ export default function Progress() {
                       setPicking(false);
                     }}
                   >
-                    {translate(locale, exercise.name, exercise.name)}
+                    {exerciseName(locale, exercise.name)}
                   </Button>
                 ))}
                 {!recorded.length ? (

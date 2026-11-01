@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { exerciseName } from "@/lib/exercise-name";
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -81,7 +82,7 @@ export default function Library() {
                       }}
                     >
                       {selected
-                        ? translate(language, selected.name, selected.name)
+                        ? exerciseName(language, selected.name)
                         : ""}
                     </Text>
                     <Pressable

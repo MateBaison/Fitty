@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { exerciseName } from "@/lib/exercise-name";
 import { SymbolView } from "expo-symbols";
 import { Pressable, Switch, Text, View } from "react-native";
 import { exerciseImage } from "@fitty/core/data/exercises";
@@ -61,7 +62,7 @@ export function EntryCard({
         ) : null}
         <View style={{ flex: 1, gap: 2 }}>
           <Text style={{ color: colors.foreground, fontSize: 17, fontWeight: "800" }}>
-            {exercise ? translate(language, exercise.name, exercise.name) : entry.id}
+            {exercise ? exerciseName(language, exercise.name) : entry.id}
           </Text>
           <Label muted>
             {entry.sets.length} {t("series", "sets")}

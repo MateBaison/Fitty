@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { exerciseName } from "@/lib/exercise-name";
 import { Modal, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native";
@@ -164,7 +165,7 @@ export function ManualSession({
                   }}
                 >
                   {exercise
-                    ? translate(language, exercise.name, exercise.name)
+                    ? exerciseName(language, exercise.name)
                     : entry.id}
                 </Text>
                 {entry.sets.map((set, number) => (

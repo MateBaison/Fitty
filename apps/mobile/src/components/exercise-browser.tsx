@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
 import {
   FlatList,
@@ -101,7 +102,7 @@ export function ExerciseBrowser({
         matchesEquipment(exercise, equipment) &&
         (!search ||
           normalizeSearch(
-            translate(language, exercise.name, exercise.name),
+            exerciseName(language, exercise.name),
           ).includes(search) ||
           normalizeSearch(`${exercise.name} ${exercise.equipment}`).includes(
             search,
@@ -352,7 +353,7 @@ export function ExerciseBrowser({
                   fontWeight: "800",
                 }}
               >
-                {translate(language, item.name, item.name)}
+                {exerciseName(language, item.name)}
               </Text>
               <Label muted>
                 {translate(language, item.group, item.group)} ·{" "}

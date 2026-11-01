@@ -1,4 +1,5 @@
 import * as Haptics from "expo-haptics";
+import { exerciseName } from "@/lib/exercise-name";
 import { Image } from "expo-image";
 import { SymbolView } from "expo-symbols";
 import { useKeepAwake } from "expo-keep-awake";
@@ -343,7 +344,7 @@ export default function Workout() {
                   }}
                 >
                   {exercise
-                    ? translate(language, exercise.name, exercise.name)
+                    ? exerciseName(language, exercise.name)
                     : entry.id}
                 </Text>
                 <Label muted>
@@ -782,7 +783,7 @@ export default function Workout() {
                       active={members.includes(index)}
                       label={
                         exercise
-                          ? translate(language, exercise.name, exercise.name)
+                          ? exerciseName(language, exercise.name)
                           : entry.id
                       }
                       onPress={() =>
@@ -870,7 +871,7 @@ export default function Workout() {
                     }}
                   >
                     {imageFor
-                      ? translate(language, imageFor.name, imageFor.name)
+                      ? exerciseName(language, imageFor.name)
                       : ""}
                   </Text>
                   {imageFor ? (
