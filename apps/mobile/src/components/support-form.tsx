@@ -130,6 +130,7 @@ export function SupportForm({
       });
       const data = (await response.json().catch(() => null)) as {
         ok?: boolean;
+        error?: string;
       } | null;
       if (response.ok && data?.ok === true) {
         setCategory("");
@@ -140,7 +141,8 @@ export function SupportForm({
         setSent(true);
       } else
         setFeedback(
-          response.status === 429
+          `[${response.status}${data?.error ? ` ${data.error}` : ""}] ` +
+          (response.status === 429
             ? t(
                 "Esperá unos minutos antes de enviar otra consulta.",
                 "Wait a few minutes before sending another inquiry.",
@@ -160,10 +162,12 @@ export function SupportForm({
                       "Revisá el mensaje y los archivos adjuntos.",
                       "Check the message and attachments.",
                     )
-                  : retry,
+                  : retry),
         );
-    } catch {
-      setFeedback(retry);
+    } catch (error) {
+      setFeedback(
+        `[${error instanceof Error ? error.message : "error"}] ${retry}`,
+      );
     } finally {
       inFlight.current = false;
       setBusy(false);
