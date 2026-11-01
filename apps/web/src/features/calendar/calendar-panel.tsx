@@ -1,4 +1,6 @@
 "use client";
+
+import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { personalRecords } from "@fitty/core/domain/personal-records";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
@@ -321,7 +323,7 @@ export function CalendarPanel({
               return (
                 <div key={index} className="my-3">
                   <strong>
-                    {findExercise(snapshot, exercise.id)?.name ?? exercise.id}
+                    {short(findExercise(snapshot, exercise.id)?.name ?? exercise.id)}
                   </strong>
                   {exercise.performedSets?.map((set, number) => (
                     <p
@@ -617,7 +619,7 @@ export function CalendarPanel({
                     <ExerciseVisual exercise={exercise} />
                   </div>
                 )}
-                <strong>{exercise?.name ?? entry.id}</strong>
+                <strong>{short(exercise?.name ?? entry.id)}</strong>
               </summary>
               <SetGrid
                 entry={entry}

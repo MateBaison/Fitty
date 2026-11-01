@@ -1,4 +1,6 @@
 "use client";
+
+import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -429,7 +431,7 @@ export function RoutinesHome() {
                     {day.supersets
                       .map((group) =>
                         group
-                          .map((id) => findExercise(snapshot, id)?.name ?? id)
+                          .map((id) => short(findExercise(snapshot, id)?.name ?? id))
                           .join(" + "),
                       )
                       .join(" · ")}
@@ -754,7 +756,7 @@ export function RoutinesHome() {
                   )
                 }
               />
-              {findExercise(snapshot, id)?.name ?? id}
+              {short(findExercise(snapshot, id)?.name ?? id)}
             </label>
           ))}
         <Button

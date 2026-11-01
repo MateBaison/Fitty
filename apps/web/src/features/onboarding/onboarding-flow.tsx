@@ -1,4 +1,6 @@
 "use client";
+
+import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/state/app-provider";
@@ -504,7 +506,7 @@ export function OnboardingFlow() {
                                 >
                                   <ExerciseVisual exercise={exercise} />
                                 </button>
-                                <span>{exercise.name}</span>
+                                <span>{short(exercise.name)}</span>
                               </div>
                             ) : <span>{id}</span>;
                           })()}

@@ -1,4 +1,6 @@
 "use client";
+
+import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
 import {
   DndContext,
   MouseSensor,
@@ -60,7 +62,7 @@ function SortableItem({
           <ExerciseVisual exercise={exercise} />
         </div>
       )}
-      <span className="min-w-0 flex-1">{exercise?.name ?? exerciseId}</span>
+      <span className="min-w-0 flex-1">{short(exercise?.name ?? exerciseId)}</span>
       <Button
         variant="ghost"
         aria-label={`Quitar ${exercise?.name ?? exerciseId}`}

@@ -1,4 +1,6 @@
 "use client";
+
+import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
 import { useState } from "react";
 import { Star } from "lucide-react";
 import { useApp } from "@/state/app-provider";
@@ -111,7 +113,7 @@ export function ExercisePicker({
                   <ExerciseVisual exercise={exercise} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <strong>{exercise.name}</strong>
+                  <strong>{short(exercise.name)}</strong>
                   <small className="block text-muted-foreground">
                     {exercise.equipment}
                   </small>

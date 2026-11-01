@@ -1,10 +1,8 @@
+import { shortExerciseName } from "@fitty/core/data/exercise-name";
 import { translate } from "@fitty/core/data/translations";
 
-/** Shorter Spanish names for display only; stored names and ids stay untouched. */
+/** Display name: translated, and shortened only in Spanish. */
 export function exerciseName(language: string, name: string) {
   const text = translate(language, name, name);
-  if (language !== "es") return text;
-  return text
-    .replace(/^Press de banca/, "Press banca")
-    .replace(/^Press de hombros?/, (match) => match.replace(" de", ""));
+  return language === "es" ? shortExerciseName(text) : text;
 }

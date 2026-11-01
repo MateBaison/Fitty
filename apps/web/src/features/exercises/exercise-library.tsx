@@ -1,4 +1,6 @@
 "use client";
+
+import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
 import { useMemo, useRef, useState } from "react";
 import { useApp } from "@/state/app-provider";
 import { catalogFor, type CatalogExercise } from "@fitty/core/domain/workouts";
@@ -174,7 +176,7 @@ export function ExerciseLibrary() {
             aria-label={`Ver ${exercise.name}`}
           >
             <ExerciseVisual exercise={exercise} />
-            <h2>{exercise.name}</h2>
+            <h2>{short(exercise.name)}</h2>
             <p>
               {exercise.group} · {exercise.equipment}
             </p>

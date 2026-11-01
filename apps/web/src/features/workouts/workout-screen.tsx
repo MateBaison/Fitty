@@ -1,4 +1,6 @@
 "use client";
+
+import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
 import { useState } from "react";
 import { Switch } from "@base-ui/react/switch";
 import { useRouter } from "next/navigation";
@@ -174,7 +176,7 @@ export function WorkoutScreen() {
             {exercise && <ExerciseVisual exercise={exercise} />}
           </button>
           <span className="min-w-0 flex-1">
-            <strong>{exercise?.name ?? entry.id}</strong>
+            <strong>{short(exercise?.name ?? entry.id)}</strong>
             <small className="block text-muted-foreground">
               {entry.superset ? `${t("Superserie", "Superset")} · ` : ""}
               {countSetGroups(entry.sets)} {t("series", "sets")}
@@ -445,7 +447,7 @@ export function WorkoutScreen() {
                 )
               }
             />
-            {findExercise(snapshot, entry.id)?.name ?? entry.id}
+            {short(findExercise(snapshot, entry.id)?.name ?? entry.id)}
           </label>
         ))}
         <Button
