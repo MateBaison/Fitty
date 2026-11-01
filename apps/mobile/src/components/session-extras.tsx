@@ -137,6 +137,7 @@ export function SessionExtras({
       </View>
       <ResizableInput
         label={t("Comentario del entrenamiento", "Workout comment")}
+        initialHeight={56}
         value={value.comment}
         onChangeText={(comment) => onChange({ ...value, comment })}
         onResizing={(resizing) => onResizing?.(resizing)}

@@ -132,10 +132,7 @@ export function ExerciseBrowser({
             <TextInput
               value={query}
               onChangeText={setQuery}
-              placeholder={t(
-                "Buscar ejercicio o equipo…",
-                "Search exercise or equipment…",
-              )}
+              placeholder={t("Buscar ejercicio", "Search exercise")}
               placeholderTextColor={colors.muted}
               accessibilityLabel={t("Buscar ejercicios", "Search exercises")}
               style={[styles.input, { flex: 1, minHeight: 44, paddingVertical: space(2) }]}
@@ -219,52 +216,85 @@ export function ExerciseBrowser({
             </Pressable>
             <View
               style={{
+                padding: space(4),
+                gap: space(2),
+                borderRadius: 24,
+                borderColor: colors.border,
+                borderWidth: 1,
+                backgroundColor: colors.card,
+              }}
+            >
+              <Text
+                style={{
+                  color: colors.primary,
+                  fontSize: 11,
+                  fontWeight: "800",
+                  letterSpacing: 1.2,
+                  textTransform: "uppercase",
+                }}
+              >
+                {t("Filtrar", "Filter")} ▾
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t("Filtrar por equipo", "Filter by equipment")}
+                accessibilityState={{ expanded: filtering }}
+                onPress={() => setFiltering((current) => !current)}
+                style={{
+                  paddingVertical: space(3),
+                  paddingHorizontal: space(3),
+                  borderRadius: 14,
+                  backgroundColor: colors.secondary,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                }}
+              >
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 20,
+                    fontWeight: "800",
+                  }}
+                >
+                  {equipment === "Todos"
+                    ? t("Todo", "All")
+                    : translate(language, equipment, equipment)}
+                </Text>
+              </Pressable>
+            </View>
+            <View
+              style={{
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
                 gap: space(2),
               }}
             >
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ expanded: filtering }}
-                onPress={() => setFiltering((current) => !current)}
-                style={{
-                  minHeight: 48,
-                  paddingHorizontal: space(4),
-                  borderRadius: 14,
-                  justifyContent: "center",
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                }}
-              >
-                <Text style={{ color: colors.foreground, fontWeight: "800" }}>
-                  {filtering ? "▾" : "▸"} {t("Filtrar", "Filter")}
-                  {equipment !== "Todos" ? ` · ${equipment}` : ""}
-                </Text>
-              </Pressable>
               <Label muted>
                 {exercises.length} {t("ejercicios", "exercises")}
               </Label>
               {onCreate ? (
-              <Pressable
-                accessibilityRole="button"
-                onPress={onCreate}
-                style={{
-                  minHeight: 48,
-                  paddingHorizontal: space(3),
-                  borderRadius: 14,
-                  justifyContent: "center",
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                }}
-              >
-                <Text style={{ color: colors.foreground, fontWeight: "800" }}>
-                  ＋ {t("Crear ejercicio", "Create exercise")}
-                </Text>
-              </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={onCreate}
+                  style={{
+                    flexShrink: 1,
+                    minHeight: 44,
+                    paddingHorizontal: space(3),
+                    borderRadius: 14,
+                    justifyContent: "center",
+                    backgroundColor: colors.secondary,
+                    borderColor: colors.border,
+                    borderWidth: 1,
+                  }}
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={{ color: colors.foreground, fontWeight: "800" }}
+                  >
+                    ＋ {t("Crear ejercicio", "Create exercise")}
+                  </Text>
+                </Pressable>
               ) : null}
             </View>
             {filtering ? (

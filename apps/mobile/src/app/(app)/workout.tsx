@@ -424,20 +424,20 @@ export default function Workout() {
                     </Text>
                   </View>
                 </View>
-                <View style={{ flexDirection: "row", gap: space(2) }}>
-                  <Label muted style={{ width: 72, textAlign: "center" }}>
+                <View style={{ flexDirection: "row", gap: 6 }}>
+                  <Label muted numberOfLines={1} style={{ width: 64, textAlign: "center" }}>
                     {t("Serie", "Set")}
                   </Label>
-                  <Label muted style={{ flex: 1.3, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ flex: 1.5, textAlign: "center" }}>
                     {t("Anterior", "Previous")}
                   </Label>
-                  <Label muted style={{ flex: 1, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center" }}>
                     {unit}
                   </Label>
-                  <Label muted style={{ flex: 1, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center" }}>
                     {metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")}
                   </Label>
-                  <Label muted style={{ width: 44, textAlign: "center" }}>
+                  <Label muted numberOfLines={1} style={{ width: 44, textAlign: "center" }}>
                     {t("Tipo", "Type")}
                   </Label>
                 </View>
@@ -452,13 +452,13 @@ export default function Workout() {
                       key={number}
                       style={{
                         flexDirection: "row",
-                        gap: space(2),
+                        gap: 6,
                         alignItems: "center",
                       }}
                     >
                       <View
                         style={{
-                          width: 72,
+                          width: 64,
                           flexDirection: "row",
                           alignItems: "center",
                           justifyContent: "center",
@@ -518,7 +518,7 @@ export default function Workout() {
                         accessibilityLabel={`${t("Usar datos anteriores", "Use previous values")} ${number + 1}`}
                         disabled={!old}
                         style={{
-                          flex: 1.3,
+                          flex: 1.5,
                           minHeight: 52,
                           borderRadius: 14,
                           borderColor: colors.border,
@@ -542,9 +542,13 @@ export default function Workout() {
                         {old ? (
                           <>
                             <Text
+                              numberOfLines={1}
+                              adjustsFontSizeToFit
                               style={{
                                 color: colors.foreground,
                                 fontWeight: "800",
+                                fontSize: 14,
+                                paddingHorizontal: 4,
                               }}
                             >
                               {old.kg} {unit}

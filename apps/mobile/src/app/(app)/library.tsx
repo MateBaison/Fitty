@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
 import { type CatalogExercise } from "@fitty/core/domain/workouts";
+import { useRouter } from "expo-router";
+import { BackButton } from "@/components/back-button";
 import { CustomExerciseForm } from "@/components/custom-exercise-form";
 import { ExerciseBrowser } from "@/components/exercise-browser";
 import { Notice } from "@/components/notice";
@@ -17,6 +19,7 @@ import { colors, space } from "@/theme";
 export default function Library() {
   const snapshot = useSnapshot();
   const { t, change, notify } = useAccount();
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const language = snapshot.settings.language ?? "es";
   const [selected, setSelected] = useState<CatalogExercise | null>(null);
@@ -28,6 +31,7 @@ export default function Library() {
       <Glow />
       <Notice />
       <ExerciseBrowser
+        leading={<BackButton onPress={() => (router.canGoBack() ? router.back() : router.navigate("/"))} />}
         onPress={setSelected}
         onCreate={() => setCreating(true)}
       />

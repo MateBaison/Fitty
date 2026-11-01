@@ -20,7 +20,7 @@ import { ReorderList } from "@/components/reorder-list";
 import { Notice } from "@/components/notice";
 import { goals } from "@/components/onboarding";
 import { TextPrompt } from "@/components/prompt";
-import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import { Button, Card, DialogScroll, Field, Label, Screen, Title } from "@/components/ui";
 import { env } from "@/lib/env";
 import { makeId } from "@/lib/id";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -805,34 +805,102 @@ export function RoutinesSection() {
           />
           <View>
             <Card style={{ margin: space(4) }}>
-              <Title>{t("Superseries", "Supersets")}</Title>
+              <Title>{t("Crear superserie", "Create superset")}</Title>
               <Label muted>
                 {t(
-                  "Elegí los ejercicios que se hacen seguidos, sin descanso entre ellos.",
-                  "Choose exercises done back to back, without rest between them.",
+                  "Tocá los ejercicios que se hacen seguidos, sin descanso entre ellos. Se hacen en el orden que los elijas.",
+                  "Tap the exercises done back to back, without rest between them. They run in the order you choose.",
                 )}
               </Label>
-              {supersetDay?.items.map((id, index) => {
-                const exercise = findExercise(snapshot, id);
-                const grouped = supersetDay.supersets?.some((group) =>
-                  group.includes(id),
-                );
-                return (
-                  <Chip
-                    key={`${id}-${index}`}
-                    role="checkbox"
-                    active={members.includes(id)}
-                    label={`${grouped ? "🔗 " : ""}${exercise ? exerciseName(language, exercise.name) : id}`}
-                    onPress={() =>
-                      setMembers((current) =>
-                        current.includes(id)
-                          ? current.filter((item) => item !== id)
-                          : [...current, id],
-                      )
-                    }
-                  />
-                );
-              })}
+              <DialogScroll contentContainerStyle={{ gap: space(2) }}>
+                {supersetDay?.items.map((id, index) => {
+                  const exercise = findExercise(snapshot, id);
+                  const grouped = supersetDay.supersets?.some((group) =>
+                    group.includes(id),
+                  );
+                  const order = members.indexOf(id);
+                  const chosen = order >= 0;
+                  return (
+                    <Pressable
+                      key={`${id}-${index}`}
+                      accessibilityRole="checkbox"
+                      accessibilityState={{ checked: chosen }}
+                      onPress={() =>
+                        setMembers((current) =>
+                          current.includes(id)
+                            ? current.filter((item) => item !== id)
+                            : [...current, id],
+                        )
+                      }
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: space(3),
+                        padding: space(2),
+                        borderRadius: 16,
+                        backgroundColor: chosen ? "#173a52" : colors.secondary,
+                        borderColor: chosen ? colors.primary : colors.border,
+                        borderWidth: 1,
+                      }}
+                    >
+                      {exercise ? (
+                        <Image
+                          source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                          style={{
+                            width: 52,
+                            height: 52,
+                            borderRadius: 12,
+                            backgroundColor: "#0d1016",
+                          }}
+                          contentFit="cover"
+                          cachePolicy="disk"
+                          accessibilityIgnoresInvertColors
+                        />
+                      ) : null}
+                      <View style={{ flex: 1, gap: 2 }}>
+                        <Text
+                          numberOfLines={2}
+                          style={{
+                            color: colors.foreground,
+                            fontSize: 15,
+                            fontWeight: "700",
+                          }}
+                        >
+                          {exercise ? exerciseName(language, exercise.name) : id}
+                        </Text>
+                        {grouped ? (
+                          <Text style={{ color: colors.muted, fontSize: 12 }}>
+                            🔗 {t("Ya está en una superserie", "Already in a superset")}
+                          </Text>
+                        ) : null}
+                      </View>
+                      <View
+                        style={{
+                          width: 30,
+                          height: 30,
+                          borderRadius: 15,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backgroundColor: chosen ? colors.primary : "transparent",
+                          borderColor: chosen ? colors.primary : colors.border,
+                          borderWidth: 2,
+                        }}
+                      >
+                        {chosen ? (
+                          <Text
+                            style={{
+                              color: colors.primaryForeground,
+                              fontWeight: "900",
+                            }}
+                          >
+                            {order + 1}
+                          </Text>
+                        ) : null}
+                      </View>
+                    </Pressable>
+                  );
+                })}
+              </DialogScroll>
               <Button
                 disabled={members.length < 2}
                 onPress={() => {
@@ -850,7 +918,9 @@ export function RoutinesSection() {
                     setSuperset(null);
                 }}
               >
-                {t("Guardar superserie", "Save superset")}
+                {members.length >= 2
+                  ? `${t("Guardar superserie", "Save superset")} (${members.length})`
+                  : t("Elegí al menos 2 ejercicios", "Choose at least 2 exercises")}
               </Button>
               {supersetDay?.supersets?.length ? (
                 <Button

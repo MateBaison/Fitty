@@ -131,13 +131,20 @@ export function Label({
   children,
   muted,
   style,
+  numberOfLines,
 }: {
   children: ReactNode;
   muted?: boolean;
   style?: object;
+  numberOfLines?: number;
 }) {
   return (
-    <Text style={[styles.label, muted && styles.muted, style]}>{children}</Text>
+    <Text
+      numberOfLines={numberOfLines}
+      style={[styles.label, muted && styles.muted, style]}
+    >
+      {children}
+    </Text>
   );
 }
 
