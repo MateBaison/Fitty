@@ -39,7 +39,7 @@ function ToneFrame({
   return (
     <View
       onLayout={({ nativeEvent }) => setSize(nativeEvent.layout)}
-      style={{ paddingTop: space(4), paddingBottom: space(2) }}
+      style={{ paddingTop: space(7), paddingBottom: space(2) }}
     >
       {size.width ? (
         <Svg
