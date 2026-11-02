@@ -527,15 +527,27 @@ function Calculators() {
           : t("Estimación de objetivo de peso", "Weight goal estimate");
   const bodyFields = (
     <>
-      <OptionField
-        label={t("Sexo", "Sex")}
-        options={[
-          ["male", t("Masculino", "Male")],
-          ["female", t("Femenino", "Female")],
-        ]}
-        value={sex}
-        onChange={(value) => setSex(value as typeof sex)}
-      />
+      <View style={{ flexDirection: "row", gap: space(3) }}>
+        <View style={{ flex: 1 }}>
+          <OptionField
+            label={t("Sexo", "Sex")}
+            options={[
+              ["male", t("Masculino", "Male")],
+              ["female", t("Femenino", "Female")],
+            ]}
+            value={sex}
+            onChange={(value) => setSex(value as typeof sex)}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <OptionField
+            label={t("Actividad", "Activity")}
+            options={activities.map(([value, es, en]) => [String(value), t(es, en)] as const)}
+            value={String(activity)}
+            onChange={(value) => setActivity(Number(value) as typeof activity)}
+          />
+        </View>
+      </View>
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
           <Field label={t("Edad", "Age")} value={age} onChangeText={setAge} keyboardType="number-pad" />
@@ -547,12 +559,6 @@ function Calculators() {
           <Field label={`${t("Altura", "Height")} (cm)`} value={height} onChangeText={setHeight} keyboardType="decimal-pad" />
         </View>
       </View>
-      <OptionField
-        label={t("Actividad", "Activity")}
-        options={activities.map(([value, es, en]) => [String(value), t(es, en)] as const)}
-        value={String(activity)}
-        onChange={(value) => setActivity(Number(value) as typeof activity)}
-      />
     </>
   );
   return (
