@@ -17,6 +17,41 @@ import {
 } from "@fitty/core/domain/workouts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+/** Reps / time switch; it can live in the exercise header or inside the grid toolbar. */
+export function MetricSwitch({
+  entry,
+  onChange,
+}: {
+  entry: Entry;
+  onChange: (edit: (draft: Entry) => void) => void;
+}) {
+  const { snapshot, change, t } = useApp(),
+    metric = metricFor(snapshot, entry.id, entry);
+  return (
+    <div className="metric-switch-control">
+      <span>{t("Rep", "Reps")}</span>
+      <Switch.Root
+        render={<button type="button" />}
+        className="routine-switch"
+        checked={metric === "seconds"}
+        aria-label={t("Registrar por tiempo", "Track by time")}
+        onCheckedChange={(checked) => {
+          const next = checked ? "seconds" : "reps";
+          onChange((draft) => switchEntryMetric(draft, metric, next));
+          change((draft) => {
+            draft.settings.exerciseMetrics = {
+              ...draft.settings.exerciseMetrics,
+              [entry.id]: next,
+            };
+          });
+        }}
+      >
+        <Switch.Thumb className="routine-switch-thumb" />
+      </Switch.Root>
+      <span>{t("Temp", "Time")}</span>
+    </div>
+  );
+}
 export function SetGrid({
   entry,
   index,
@@ -24,7 +59,9 @@ export function SetGrid({
   onChange,
   toolbar,
   onRest,
+  externalMetric = false,
 }: {
+  externalMetric?: boolean;
   toolbar?: React.ReactNode;
   onRest?: () => void;
   entry: Entry;
@@ -165,28 +202,7 @@ export function SetGrid({
       </AppDialog>
       <div className="set-grid-toolbar mb-3 flex flex-wrap items-center gap-2">
         {toolbar}
-        <div className="metric-switch-control">
-          <span>{t("Rep", "Reps")}</span>
-          <Switch.Root
-            render={<button type="button" />}
-            className="routine-switch"
-            checked={metric === "seconds"}
-            aria-label={t("Registrar por tiempo", "Track by time")}
-            onCheckedChange={(checked) => {
-              const next = checked ? "seconds" : "reps";
-              onChange((draft) => switchEntryMetric(draft, metric, next));
-              change((draft) => {
-                draft.settings.exerciseMetrics = {
-                  ...draft.settings.exerciseMetrics,
-                  [entry.id]: next,
-                };
-              });
-            }}
-          >
-            <Switch.Thumb className="routine-switch-thumb" />
-          </Switch.Root>
-          <span>{t("Temp", "Time")}</span>
-        </div>
+        {!externalMetric && <MetricSwitch entry={entry} onChange={onChange} />}
       </div>
       <div className="set-grid-heading" data-rest-enabled={!!onRest}>
         <span>{t("Series", "Sets")}</span>

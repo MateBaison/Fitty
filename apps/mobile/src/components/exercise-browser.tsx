@@ -79,7 +79,7 @@ export function ExerciseBrowser({
   leading,
 }: {
   leading?: React.ReactNode;
-  onPress: (exercise: CatalogExercise) => void;
+  onPress: (exercise: CatalogExercise, list: CatalogExercise[]) => void;
   selectedIds?: readonly string[];
   onCreate?: () => void;
 }) {
@@ -317,7 +317,7 @@ export function ExerciseBrowser({
         renderItem={({ item }) => (
           <Pressable
             accessibilityRole="button"
-            onPress={() => onPress(item)}
+            onPress={() => onPress(item, exercises)}
             style={{
               flex: 1,
               marginBottom: space(3),

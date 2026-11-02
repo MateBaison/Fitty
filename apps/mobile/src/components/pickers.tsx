@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { countryCodes } from "@fitty/core/data/country-codes";
+import countryNames from "@fitty/core/data/country-names.json";
 import { localeFor } from "@fitty/core/data/translations";
 import { Button, Card, Label, styles } from "@/components/ui";
 import { Slider } from "@/components/slider";
@@ -385,6 +386,62 @@ export function RangeField({
   );
 }
 
+/** Looks like an input; tapping it lists the options, and choosing one closes the list. */
+export function OptionField({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: readonly (readonly [string, string])[];
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const shown = options.find(([key]) => key === value)?.[1] ?? "";
+  return (
+    <>
+      <PickerButton label={label} value={shown} onPress={() => setOpen(true)} />
+      <Sheet visible={open} onClose={() => setOpen(false)}>
+        <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}>
+          {label}
+        </Text>
+        {options.map(([key, text]) => {
+          const active = key === value;
+          return (
+            <Pressable
+              key={key}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}
+              onPress={() => {
+                onChange(key);
+                setOpen(false);
+              }}
+              style={{
+                minHeight: 48,
+                borderRadius: 14,
+                justifyContent: "center",
+                paddingHorizontal: space(3),
+                backgroundColor: active ? colors.primary : colors.secondary,
+              }}
+            >
+              <Text
+                style={{
+                  color: active ? colors.primaryForeground : colors.foreground,
+                  fontWeight: "700",
+                }}
+              >
+                {text}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </Sheet>
+    </>
+  );
+}
+
 const navStyle = {
   width: 44,
   height: 44,
@@ -394,6 +451,10 @@ const navStyle = {
   backgroundColor: colors.secondary,
 };
 const navText = { color: colors.accent, fontSize: 24, fontWeight: "700" as const };
+
+/** Flag emoji built from the two regional-indicator letters of an ISO country code. */
+const flag = (code: string) =>
+  String.fromCodePoint(...[...code].map((letter) => 0x1f1a5 + letter.charCodeAt(0)));
 
 /** Country chosen from the same list as the web; the stored value is the localized name. */
 export function CountryField({
@@ -411,26 +472,36 @@ export function CountryField({
   const language = useSnapshot().settings.language ?? "es";
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const names = useMemo(() => {
-    let display: Intl.DisplayNames | null = null;
-    try {
-      display = new Intl.DisplayNames([localeFor(language)], { type: "region" });
-    } catch {
-      display = null;
-    }
+  const locale = localeFor(language);
+  // Names come from a bundled table (same text the web saves), so the phone's own locale data is not needed.
+  const countries = useMemo(() => {
+    const table: Record<string, string> =
+      (countryNames as Record<string, Record<string, string>>)[locale] ?? {};
     return countryCodes
-      .map((code) => display?.of(code) ?? code)
-      .sort((a, b) => a.localeCompare(b));
-  }, [language]);
+      .map((code) => ({ code, name: table[code] ?? code }))
+      .sort((a, b) => a.name.localeCompare(b.name, locale));
+  }, [locale]);
   const normalized = query.trim().toLowerCase();
   const list = normalized
-    ? names.filter((name) => name.toLowerCase().includes(normalized))
-    : names;
+    ? countries.filter((country) => country.name.toLowerCase().includes(normalized))
+    : countries;
+  const current =
+    countries.find((country) => country.name === value) ??
+    countryCodes
+      .map((code) => ({
+        code,
+        name: Object.values(countryNames as Record<string, Record<string, string>>).some(
+          (names) => names[code] === value,
+        )
+          ? value
+          : "",
+      }))
+      .find((country) => country.name);
   return (
     <>
       <PickerButton
         label={label}
-        value={value}
+        value={value ? `${current ? `${flag(current.code)}  ` : ""}${value}` : ""}
         placeholder={t("Seleccioná un país", "Select a country")}
         invalid={invalid}
         onPress={() => {
@@ -454,24 +525,34 @@ export function CountryField({
           data={list}
           style={{ maxHeight: 380 }}
           keyboardShouldPersistTaps="handled"
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.code}
           renderItem={({ item }) => (
             <Pressable
               accessibilityRole="button"
               onPress={() => {
-                onChange(item);
+                onChange(item.name);
                 setOpen(false);
               }}
               style={{
                 minHeight: 48,
                 paddingHorizontal: space(3),
-                justifyContent: "center",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: space(3),
                 borderRadius: 12,
-                backgroundColor: item === value ? "#173a52" : "transparent",
+                backgroundColor: item.name === value ? "#173a52" : "transparent",
               }}
             >
-              <Text style={{ color: colors.foreground, fontSize: 16, fontWeight: item === value ? "800" : "500" }}>
-                {item}
+              <Text style={{ fontSize: 24 }}>{flag(item.code)}</Text>
+              <Text
+                style={{
+                  flex: 1,
+                  color: colors.foreground,
+                  fontSize: 16,
+                  fontWeight: item.name === value ? "800" : "500",
+                }}
+              >
+                {item.name}
               </Text>
             </Pressable>
           )}

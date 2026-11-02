@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { exerciseName } from "@/lib/exercise-name";
-import { useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Modal, PanResponder, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
@@ -23,6 +23,28 @@ export default function Library() {
   const insets = useSafeAreaInsets();
   const language = snapshot.settings.language ?? "es";
   const [selected, setSelected] = useState<CatalogExercise | null>(null);
+  const [list, setList] = useState<CatalogExercise[]>([]);
+  const [selectedIndex, selectedCount] = [
+    selected ? list.findIndex((item) => item.id === selected.id) : -1,
+    list.length,
+  ];
+  // Swipe left for the next exercise and right for the previous one.
+  const swipe = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponderCapture: (_, gesture) =>
+          Math.abs(gesture.dx) > 24 && Math.abs(gesture.dx) > Math.abs(gesture.dy) * 2,
+        onPanResponderRelease: (_, gesture) => {
+          if (Math.abs(gesture.dx) < 60) return;
+          setSelected((current) => {
+            const at = current ? list.findIndex((item) => item.id === current.id) : -1;
+            const next = list[at + (gesture.dx < 0 ? 1 : -1)];
+            return at >= 0 && next ? next : current;
+          });
+        },
+      }),
+    [list],
+  );
   const [adding, setAdding] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const favorite = selected ? snapshot.favorites.includes(selected.id) : false;
@@ -32,7 +54,10 @@ export default function Library() {
       <Notice />
       <ExerciseBrowser
         leading={<BackButton onPress={() => (router.canGoBack() ? router.back() : router.navigate("/"))} />}
-        onPress={setSelected}
+        onPress={(exercise, shown) => {
+          setList(shown);
+          setSelected(exercise);
+        }}
         onCreate={() => setCreating(true)}
       />
       <Modal
@@ -53,7 +78,7 @@ export default function Library() {
             onPress={() => setSelected(null)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />
-          <View style={{ maxHeight: "90%" }}>
+          <View style={{ maxHeight: "90%" }} {...swipe.panHandlers}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
               <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
                 {selected ? (
@@ -144,6 +169,12 @@ export default function Library() {
                   >
                     {t("Agregar a un día", "Add to a day")}
                   </Button>
+                  {selectedIndex >= 0 && selectedCount > 1 ? (
+                    <Label muted>
+                      ‹ {selectedIndex + 1} / {selectedCount} ›{" "}
+                      {t("Deslizá para cambiar de ejercicio", "Swipe to change exercise")}
+                    </Label>
+                  ) : null}
                   <Button variant="secondary" onPress={() => setSelected(null)}>
                     {t("Cerrar", "Close")}
                   </Button>

@@ -152,7 +152,6 @@ export function ProgressScreen() {
       )}
       <div className="progress-top">
         <BackButton />
-      </div>
       <div
         className="progress-tabs"
         role="group"
@@ -174,6 +173,7 @@ export function ProgressScreen() {
             {t(es, en)}
           </Button>
         ))}
+      </div>
       </div>
       {tab === "summary" && (
         <details className="panel progress-advances" open>

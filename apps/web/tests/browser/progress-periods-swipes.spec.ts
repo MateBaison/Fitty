@@ -87,7 +87,7 @@ test("period menu, precise custom dates, natural resets and independent collapsi
   expect(first).toContain("progress-advances");
   expect(
     await page
-      .locator(".progress-tabs")
+      .locator(".progress-top")
       .evaluate((el) =>
         el.nextElementSibling?.classList.contains("progress-advances"),
       ),

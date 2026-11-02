@@ -13,6 +13,7 @@ import {
 import { CombatPanel } from "@/app/(app)/combat";
 import { TrackingPanel } from "@/app/(app)/tracking";
 import { Button, Card, Field, Label, Screen } from "@/components/ui";
+import { OptionField } from "@/components/pickers";
 import { ClockControls } from "@/components/clock-controls";
 import { playRestDone } from "@/lib/sound";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -526,15 +527,14 @@ function Calculators() {
           : t("Estimación de objetivo de peso", "Weight goal estimate");
   const bodyFields = (
     <>
-      <Label muted>{t("Sexo", "Sex")}</Label>
-      <Pills
-        small
+      <OptionField
+        label={t("Sexo", "Sex")}
         options={[
           ["male", t("Masculino", "Male")],
           ["female", t("Femenino", "Female")],
         ]}
         value={sex}
-        onChange={setSex}
+        onChange={(value) => setSex(value as typeof sex)}
       />
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
@@ -547,9 +547,8 @@ function Calculators() {
           <Field label={`${t("Altura", "Height")} (cm)`} value={height} onChangeText={setHeight} keyboardType="decimal-pad" />
         </View>
       </View>
-      <Label muted>{t("Actividad", "Activity")}</Label>
-      <Pills
-        small
+      <OptionField
+        label={t("Actividad", "Activity")}
         options={activities.map(([value, es, en]) => [String(value), t(es, en)] as const)}
         value={String(activity)}
         onChange={(value) => setActivity(Number(value) as typeof activity)}
@@ -627,16 +626,16 @@ function Calculators() {
         ) : null}
         {section === "macros" && macros ? (
           <View style={{ gap: space(2) }}>
-            <Result label={t("Carbohidratos", "Carbohydrates")} value={`${macros.daily.carbs} g`} />
-            <Result label={t("Proteínas", "Protein")} value={`${macros.daily.protein} g`} />
-            <Result label={t("Grasas", "Fat")} value={`${macros.daily.fat} g`} />
+            <Result tone="carbs" label={t("Carbohidratos", "Carbohydrates")} value={`${macros.daily.carbs} g`} />
+            <Result tone="protein" label={t("Proteínas", "Protein")} value={`${macros.daily.protein} g`} />
+            <Result tone="fat" label={t("Grasas", "Fat")} value={`${macros.daily.fat} g`} />
             <Label muted>
               {t("Por comida", "Per meal")} · {meals} {t("comidas", "meals")}
             </Label>
-            <Result label={t("Calorías por comida", "Calories per meal")} value={`${macros.perMeal.calories} kcal`} />
-            <Result label={t("Carbohidratos por comida", "Carbs per meal")} value={`${macros.perMeal.carbs} g`} />
-            <Result label={t("Proteínas por comida", "Protein per meal")} value={`${macros.perMeal.protein} g`} />
-            <Result label={t("Grasas por comida", "Fat per meal")} value={`${macros.perMeal.fat} g`} />
+            <Result tone="daily" label={t("Calorías por comida", "Calories per meal")} value={`${macros.perMeal.calories} kcal`} />
+            <Result tone="carbs" label={t("Carbohidratos por comida", "Carbs per meal")} value={`${macros.perMeal.carbs} g`} />
+            <Result tone="protein" label={t("Proteínas por comida", "Protein per meal")} value={`${macros.perMeal.protein} g`} />
+            <Result tone="fat" label={t("Grasas por comida", "Fat per meal")} value={`${macros.perMeal.fat} g`} />
           </View>
         ) : null}
         {section === "maximum" && maximum !== null ? (
@@ -705,14 +704,23 @@ function Calculators() {
   );
 }
 
+const resultTones = {
+  carbs: { bg: "#173244", border: "#327ba0", value: "#8fd0f0" },
+  protein: { bg: "#422d1b", border: "#9c6338", value: "#e8b783" },
+  fat: { bg: "#403712", border: "#b59b24", value: "#facc15" },
+  daily: { bg: "#322345", border: "#8d62c7", value: "#cfb6ff" },
+} as const;
+
 function Result({
   label,
   value,
   onUse,
+  tone,
 }: {
   label: string;
   value: string;
   onUse?: () => void;
+  tone?: keyof typeof resultTones;
 }) {
   const { t } = useAccount();
   const body = (
@@ -720,14 +728,14 @@ function Result({
       style={{
         padding: space(3),
         borderRadius: 14,
-        borderColor: colors.border,
+        borderColor: tone ? resultTones[tone].border : colors.border,
         borderWidth: 1,
-        backgroundColor: colors.secondary,
+        backgroundColor: tone ? resultTones[tone].bg : colors.secondary,
         gap: 2,
       }}
     >
       <Text style={{ color: colors.muted, fontSize: 13 }}>{label}</Text>
-      <Text style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}>
+      <Text style={{ color: tone ? resultTones[tone].value : colors.foreground, fontSize: 22, fontWeight: "800" }}>
         {value}
       </Text>
       {onUse ? (

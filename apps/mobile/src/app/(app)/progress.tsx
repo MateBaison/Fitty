@@ -307,8 +307,7 @@ export default function Progress() {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
-          gap: space(3),
+          gap: space(2),
           paddingTop: space(2),
         }}
       >
@@ -317,9 +316,9 @@ export default function Progress() {
             router.canGoBack() ? router.back() : router.navigate("/")
           }
         />
-      </View>
       <View
         style={{
+          flex: 1,
           flexDirection: "row",
           padding: 6,
           gap: 6,
@@ -360,6 +359,7 @@ export default function Progress() {
             </Text>
           </Pressable>
         ))}
+      </View>
       </View>
       {tab === "summary" ? (
         <Card>

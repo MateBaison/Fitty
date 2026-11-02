@@ -30,6 +30,7 @@ import {
   setNumber,
   type Session,
 } from "@fitty/core/domain/workouts";
+import { personalRecords } from "@fitty/core/domain/personal-records";
 import { shareToInstagramStory } from "@/lib/instagram";
 import { ManualSession } from "@/components/manual-session";
 import { SessionEditor } from "@/components/session-editor";
@@ -408,31 +409,60 @@ export function DaySheet({
               <Label muted>
                 {t("Tiempo", "Time")}: {time(detail)} · {t("Volumen", "Volume")}: {volume(detail)}
               </Label>
-              {detail.exercises?.map((exercise, index) => (
-                <View key={index} style={{ gap: 2, marginTop: space(2) }}>
-                  <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 16 }}>
-                    {translate(
-                      locale,
-                      findExercise(snapshot, exercise.id)?.name ?? exercise.id,
-                      findExercise(snapshot, exercise.id)?.name ?? exercise.id,
-                    )}
-                  </Text>
-                  {exercise.performedSets?.map((set, number) => {
-                    const type = types.find((item) => item.id === (set.type ?? "normal"));
-                    return (
-                      <Text key={number} style={{ color: colors.muted, fontSize: 14 }}>
-                        <Text style={{ color: typeColor[set.type ?? "normal"], fontWeight: "800" }}>
-                          {type?.letter ?? "N"}
-                        </Text>{" "}
-                        {t("Serie", "Set")} {setNumber(exercise.performedSets ?? [], number)}: {set.kg ?? 0}{" "}
-                        {detail.weightUnit ?? "kg"} ×{" "}
-                        {set.seconds != null ? `${set.seconds} s` : `${set.reps ?? 0} reps`}
-                      </Text>
-                    );
-                  })}
-                  {exercise.note ? <Label>{exercise.note}</Label> : null}
-                </View>
-              ))}
+              {detail.exercises?.map((exercise, index) => {
+                const records = personalRecords(
+                  snapshot,
+                  exercise.id,
+                  exercise.performedSets ?? [],
+                  detail.weightUnit ?? "kg",
+                  Date.parse(detail.date),
+                  detail.id,
+                );
+                return (
+                  <View key={index} style={{ gap: 2, marginTop: space(2) }}>
+                    <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 16 }}>
+                      {translate(
+                        locale,
+                        findExercise(snapshot, exercise.id)?.name ?? exercise.id,
+                        findExercise(snapshot, exercise.id)?.name ?? exercise.id,
+                      )}
+                    </Text>
+                    {exercise.performedSets?.map((set, number) => {
+                      const type = types.find((item) => item.id === (set.type ?? "normal"));
+                      const record = !!records[number]?.length;
+                      return (
+                        <View
+                          key={number}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: space(2),
+                          }}
+                        >
+                          <Text style={{ flex: 1, color: record ? "#facc15" : colors.muted, fontSize: 14 }}>
+                            <Text style={{ color: typeColor[set.type ?? "normal"], fontWeight: "800" }}>
+                              {type?.letter ?? "N"}
+                            </Text>{" "}
+                            {t("Serie", "Set")} {setNumber(exercise.performedSets ?? [], number)}: {set.kg ?? 0}{" "}
+                            {detail.weightUnit ?? "kg"} ×{" "}
+                            {set.seconds != null ? `${set.seconds} s` : `${set.reps ?? 0} reps`}
+                          </Text>
+                          {record ? (
+                            <SymbolView
+                              name={{ ios: "trophy.fill", android: "emoji_events" }}
+                              tintColor="#facc15"
+                              size={18}
+                              accessibilityLabel={t("Nuevo récord", "New personal record")}
+                            />
+                          ) : null}
+                        </View>
+                      );
+                    })}
+                    {exercise.note ? <Label>{exercise.note}</Label> : null}
+                  </View>
+                );
+              })}
               {detail.comment ? <Label>{detail.comment}</Label> : null}
               {detail.bodyWeightStartKg != null ? (
                 <Label muted>

@@ -3,6 +3,7 @@ import { useKeepAwake } from "expo-keep-awake";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Text, Vibration, View } from "react-native";
+import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 import {
   CombatMachine,
   combatTone,
@@ -25,6 +26,54 @@ const modes = [
   ["tabata", "Tabata", "Tabata"],
   ["hiit", "HIIT", "HIIT"],
 ] as const;
+
+/** Thin frame whose color fades from top to bottom instead of ending abruptly. */
+function ToneFrame({
+  color,
+  children,
+}: {
+  color: string;
+  children: React.ReactNode;
+}) {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  return (
+    <View
+      onLayout={({ nativeEvent }) => setSize(nativeEvent.layout)}
+      style={{ paddingVertical: space(2) }}
+    >
+      {size.width ? (
+        <Svg
+          pointerEvents="none"
+          width={size.width}
+          height={size.height}
+          style={{ position: "absolute", top: 0, left: 0 }}
+        >
+          <Defs>
+            <LinearGradient id="frame" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={color} stopOpacity="1" />
+              <Stop offset="1" stopColor={color} stopOpacity="0.25" />
+            </LinearGradient>
+            <LinearGradient id="tint" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={color} stopOpacity="0.16" />
+              <Stop offset="1" stopColor={color} stopOpacity="0.02" />
+            </LinearGradient>
+          </Defs>
+          <Rect
+            x={1}
+            y={1}
+            width={size.width - 2}
+            height={size.height - 2}
+            rx={22}
+            fill="url(#tint)"
+            stroke="url(#frame)"
+            strokeWidth={2}
+          />
+        </Svg>
+      ) : null}
+      {children}
+    </View>
+  );
+}
 
 function KeepAwake() {
   useKeepAwake();
@@ -114,15 +163,7 @@ export function CombatPanel() {
   return (
     <Card>
       {state.running ? <KeepAwake /> : null}
-      <View
-        style={{
-          borderWidth: 4,
-          borderRadius: 24,
-          paddingVertical: space(2),
-          borderColor: frame,
-          backgroundColor: frame + "22",
-        }}
-      >
+      <ToneFrame color={frame}>
       <Text
         style={{
           color: "#fdba74",
@@ -148,7 +189,7 @@ export function CombatPanel() {
           state.running ? state.remaining : state.remaining || config.work,
         )}
       </Text>
-      </View>
+      </ToneFrame>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3), justifyContent: "space-between" }}>
         {field("rounds", t("Rondas", "Rounds"), 1, 100)}
         {field("work", t("Trabajo (seg)", "Work (sec)"), 1, 3600)}

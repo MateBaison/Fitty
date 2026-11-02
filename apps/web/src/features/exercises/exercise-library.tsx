@@ -61,16 +61,11 @@ export function ExerciseLibrary() {
   return (
     <>
       <div className="library-controls">
-        <label
-          htmlFor="exercise-search"
-          className="mb-2 block text-sm text-muted-foreground"
-        >
-          {t("Buscar ejercicios", "Search exercises")}
-        </label>
         <div className="library-search-row">
           <BackButton />
           <Input
             id="exercise-search"
+            aria-label={t("Buscar ejercicios", "Search exercises")}
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}

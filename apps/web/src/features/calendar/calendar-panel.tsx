@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
-import { SetGrid } from "@/features/workouts/set-grid";
+import { MetricSwitch, SetGrid } from "@/features/workouts/set-grid";
 import { SessionExtras, emptyExtras } from "@/features/workouts/session-extras";
 import { safePhoto } from "@/lib/browser/photos";
 import { shareWorkoutPoster } from "@/features/sharing/workout-poster";
@@ -352,7 +352,7 @@ export function CalendarPanel({
                         ? `${set.seconds} s`
                         : `${set.reps ?? 0} reps`}
                       {!!records[number]?.length && (
-                        <span className="ms-2 inline-flex items-center gap-1 font-semibold text-yellow-300">
+                        <span className="record-badge ms-2 inline-flex items-center gap-1 font-semibold text-yellow-300">
                           <Trophy
                             className="size-4 record-trophy"
                             aria-hidden="true"
@@ -509,9 +509,11 @@ export function CalendarPanel({
         onClose={() => setEditing(null)}
         title={editing?.id ? "Editar entrenamiento" : "Agregar entrenamiento"}
       >
+        {!editing?.id && (
         <label>
           {t("Fecha", "Date")}
           <Input
+            className="text-center"
             type="date"
             value={editing?.date ?? ""}
             onChange={(event) =>
@@ -521,6 +523,7 @@ export function CalendarPanel({
             }
           />
         </label>
+        )}
         <div className="form-grid">
           <label>
             {t("Rutina", "Routine")}
@@ -619,9 +622,29 @@ export function CalendarPanel({
                     <ExerciseVisual exercise={exercise} />
                   </div>
                 )}
-                <strong>{short(exercise?.name ?? entry.id)}</strong>
+                <strong className="min-w-0 flex-1">
+                  {short(exercise?.name ?? entry.id)}
+                </strong>
+                <span
+                  onClick={(event) => event.stopPropagation()}
+                  onKeyDown={(event) => event.stopPropagation()}
+                >
+                  <MetricSwitch
+                    entry={entry}
+                    onChange={(mutate) => {
+                      setDetailsEdited(true);
+                      setEntries((previous) => {
+                        const next = structuredClone(previous);
+                        const item = next[index];
+                        if (item) mutate(item);
+                        return next;
+                      });
+                    }}
+                  />
+                </span>
               </summary>
               <SetGrid
+                externalMetric
                 entry={entry}
                 index={index}
                 started={
