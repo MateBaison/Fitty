@@ -117,6 +117,15 @@ export class CombatMachine {
     return signals;
   }
 }
+/** Frame color for the combat clock: yellow while getting ready and in the last seconds of a round. */
+export type CombatTone = "idle" | "work" | "warning" | "rest";
+export function combatTone(state: CombatState, config: CombatConfig): CombatTone {
+  if (state.phase === "done" || (!state.running && state.end === 0))
+    return "idle";
+  if (state.phase === "prep") return "warning";
+  if (state.phase === "rest") return "rest";
+  return state.remaining <= 10 && config.work > 10 ? "warning" : "work";
+}
 export function timeFormat(seconds: number) {
   const value = Math.max(0, Math.floor(seconds)),
     hours = Math.floor(value / 3600),

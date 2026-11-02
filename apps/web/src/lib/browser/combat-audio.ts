@@ -1,6 +1,22 @@
 import type { CombatSignal } from "@fitty/core/domain/combat";
 export class CombatAudio {
   private context: AudioContext | null = null;
+  private release: ReturnType<typeof setTimeout> | null = null;
+  /** After the tone, go back to a mixable session so other apps' music can resume. */
+  private releaseSession(milliseconds: number) {
+    if (this.release) clearTimeout(this.release);
+    this.release = setTimeout(() => {
+      this.release = null;
+      try {
+        const session = (
+          navigator as Navigator & { audioSession?: { type: string } }
+        ).audioSession;
+        if (session) session.type = "ambient";
+      } catch {
+        // Unsupported browsers keep their default session.
+      }
+    }, milliseconds);
+  }
   private configureSession() {
     // Keep alerts audible on iOS. Mixable ambient/transient sessions can
     // remain silent on physical iPhones even while Web Audio is running.
@@ -45,6 +61,7 @@ export class CombatAudio {
     if (!this.context) return;
     if (this.context.state !== "running") await this.unlock();
     this.configureSession();
+    this.releaseSession(signal === "boards" ? 1200 : 4500);
     if (signal === "boards") {
       // Three short, pitched impacts imitate the wooden 15-second clapper.
       for (let hit = 0; hit < 3; hit++) {
@@ -142,6 +159,8 @@ export class CombatAudio {
     }
   }
   close() {
+    if (this.release) clearTimeout(this.release);
+    this.release = null;
     if (this.context && this.context.state !== "closed")
       void this.context.close().catch(() => {});
     this.context = null;

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Text, Vibration, View } from "react-native";
 import {
   CombatMachine,
+  combatTone,
   combatPresets,
   readCombatConfig,
   timeFormat,
@@ -72,6 +73,15 @@ export function CombatPanel() {
     setState({ ...machine.current.state });
     change((draft) => void (draft.settings.combatClock = next));
   };
+  const tone = combatTone(state, config);
+  const frame =
+    tone === "work"
+      ? "#22c55e"
+      : tone === "rest"
+        ? "#ef4444"
+        : tone === "warning"
+          ? "#facc15"
+          : colors.border;
   const phase =
     state.phase === "prep"
       ? t("Preparación", "Get ready")
@@ -104,6 +114,15 @@ export function CombatPanel() {
   return (
     <Card>
       {state.running ? <KeepAwake /> : null}
+      <View
+        style={{
+          borderWidth: 4,
+          borderRadius: 24,
+          paddingVertical: space(2),
+          borderColor: frame,
+          backgroundColor: frame + "22",
+        }}
+      >
       <Text
         style={{
           color: "#fdba74",
@@ -129,6 +148,7 @@ export function CombatPanel() {
           state.running ? state.remaining : state.remaining || config.work,
         )}
       </Text>
+      </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3), justifyContent: "space-between" }}>
         {field("rounds", t("Rondas", "Rounds"), 1, 100)}
         {field("work", t("Trabajo (seg)", "Work (sec)"), 1, 3600)}

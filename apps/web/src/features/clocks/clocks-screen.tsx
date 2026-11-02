@@ -3,7 +3,7 @@ import { useSwipeNavigation } from "@/lib/browser/use-swipe-navigation";
 import { useRef, useState } from "react";
 import { useClock } from "./clock-provider";
 import { useApp } from "@/state/app-provider";
-import { timeFormat } from "@fitty/core/domain/combat";
+import { combatTone, timeFormat } from "@fitty/core/domain/combat";
 import { RouteMap } from "./route-map";
 import { TrackingHistory } from "./tracking-history";
 import { Pause, Play, RotateCcw, Square } from "lucide-react";
@@ -317,6 +317,10 @@ export function ClocksScreen() {
       )}
       {clock.section === "combat" && (
         <section className="panel">
+          <div
+            className="combat-frame"
+            data-tone={combatTone(combat.state, combat.config)}
+          >
           <p className="text-center text-orange-300">
             {phase === "done"
               ? t("Sesión terminada", "Session finished")
@@ -334,6 +338,7 @@ export function ClocksScreen() {
             aria-label={t("Combate", "Combat")}
           >
             {timeFormat(combat.state.remaining)}
+          </div>
           </div>
           <div className="form-grid">
             {(["rounds", "work", "rest", "prep"] as const).map(
