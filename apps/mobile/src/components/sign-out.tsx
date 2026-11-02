@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { Button, Card, Label } from "@/components/ui";
+import { queryClient, queryPersister } from "@/lib/query-client";
 import { supabase } from "@/lib/supabase";
 import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -33,6 +34,8 @@ export function SignOut() {
         }
       }
       await supabase.auth.signOut();
+      queryClient.clear();
+      await queryPersister.removeClient();
     } finally {
       setBusy(false);
     }
