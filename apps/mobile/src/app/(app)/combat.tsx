@@ -11,6 +11,8 @@ import {
   type CombatConfig,
   type CombatSignal,
 } from "@fitty/core/domain/combat";
+import { ClockControls } from "@/components/clock-controls";
+import { playSound } from "@/lib/sound";
 import { NumberInput } from "@/components/number-input";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -30,6 +32,15 @@ function KeepAwake() {
 
 // Audio cues on the web become haptics and vibration patterns on the phone.
 function signal(kind: CombatSignal) {
+  playSound(
+    kind === "round"
+      ? "round"
+      : kind === "rest"
+        ? "breather"
+        : kind === "warning"
+          ? "warning"
+          : "end",
+  );
   if (kind === "round") Vibration.vibrate([0, 400]);
   else if (kind === "rest")
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -124,29 +135,22 @@ export function CombatPanel() {
         {field("rest", t("Descanso (seg)", "Rest (sec)"), 0, 3600)}
         {field("prep", t("Preparación (seg)", "Preparation (sec)"), 0, 600)}
       </View>
-      <View style={{ flexDirection: "row", gap: space(3) }}>
-        <View style={{ flex: 1 }}>
-          <Button
-            onPress={() => {
-              machine.current.toggle(Date.now()).forEach(signal);
-              setState({ ...machine.current.state });
-            }}
-          >
-            {state.running ? t("Pausar", "Pause") : t("Iniciar", "Start")}
-          </Button>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button
-            variant="secondary"
-            onPress={() => {
-              machine.current.reset(config);
-              setState({ ...machine.current.state });
-            }}
-          >
-            {t("Reiniciar", "Reset")}
-          </Button>
-        </View>
-      </View>
+      <ClockControls
+        running={state.running}
+        active={state.running || (state.remaining > 0 && state.phase !== "done")}
+        onToggle={() => {
+          machine.current.toggle(Date.now()).forEach(signal);
+          setState({ ...machine.current.state });
+        }}
+        onStop={() => {
+          machine.current.reset(config);
+          setState({ ...machine.current.state });
+        }}
+        onReset={() => {
+          machine.current.reset(config);
+          setState({ ...machine.current.state });
+        }}
+      />
     </Card>
   );
 }
