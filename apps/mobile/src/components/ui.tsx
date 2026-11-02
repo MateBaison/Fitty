@@ -12,6 +12,7 @@ import {
   type TextInputProps,
   type ViewStyle,
 } from "react-native";
+import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 import { colors, radius, space } from "@/theme";
@@ -211,16 +212,57 @@ export function Button({
   );
 }
 
-export function Field({ label, ...props }: TextInputProps & { label: string }) {
+export function Field({
+  label,
+  icon,
+  locked,
+  ...props
+}: TextInputProps & {
+  label: string;
+  /** Symbol shown at the right edge of the input. */
+  icon?: SymbolViewProps["name"];
+  /** Read-only look: dimmer box and text. */
+  locked?: boolean;
+}) {
   return (
     <View style={{ gap: space(1.5) }}>
       <Label muted>{label}</Label>
-      <TextInput
-        placeholderTextColor={colors.muted}
-        accessibilityLabel={label}
-        style={styles.input}
-        {...props}
-      />
+      <View>
+        <TextInput
+          placeholderTextColor={colors.muted}
+          accessibilityLabel={label}
+          style={[
+            styles.input,
+            icon ? { paddingRight: space(11) } : null,
+            locked
+              ? {
+                  backgroundColor: "#12151c",
+                  borderColor: "#1c212b",
+                  color: colors.muted,
+                }
+              : null,
+          ]}
+          {...props}
+        />
+        {icon ? (
+          <View
+            pointerEvents="none"
+            style={{
+              position: "absolute",
+              right: space(3.5),
+              top: 0,
+              bottom: 0,
+              justifyContent: "center",
+            }}
+          >
+            <SymbolView
+              name={icon}
+              tintColor={locked ? "#5b6475" : colors.muted}
+              size={18}
+            />
+          </View>
+        ) : null}
+      </View>
     </View>
   );
 }

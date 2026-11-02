@@ -1,3 +1,4 @@
+import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useMemo, useRef, useState } from "react";
 import {
   FlatList,
@@ -23,12 +24,15 @@ export function PickerButton({
   placeholder,
   onPress,
   invalid,
+  icon,
 }: {
   label: string;
   value: string;
   placeholder?: string;
   onPress: () => void;
   invalid?: boolean;
+  /** Symbol at the right edge hinting what tapping opens. */
+  icon?: SymbolViewProps["name"];
 }) {
   return (
     <View style={{ gap: space(1.5) }}>
@@ -40,19 +44,23 @@ export function PickerButton({
         style={[
           styles.input,
           {
-            justifyContent: "center",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: space(2),
             borderColor: invalid ? colors.destructive : colors.border,
           },
         ]}
       >
         <Text
           style={{
+            flex: 1,
             color: value ? colors.foreground : colors.muted,
             fontSize: 16,
           }}
         >
           {value || placeholder || ""}
         </Text>
+        {icon ? <SymbolView name={icon} tintColor={colors.muted} size={18} /> : null}
       </Pressable>
     </View>
   );
@@ -136,6 +144,7 @@ export function DateField({
         label={label}
         value={shown}
         placeholder={t("Elegir fecha", "Choose date")}
+        icon={{ ios: "calendar", android: "calendar_month" }}
         invalid={invalid}
         onPress={() => {
           setChoosingYear(false);
@@ -315,6 +324,7 @@ export function RangeField({
         label={label}
         value={shown}
         placeholder={t("Elegir fechas", "Choose dates")}
+        icon={{ ios: "calendar", android: "calendar_month" }}
         onPress={() => {
           setPending(null);
           setOpen(true);
@@ -402,7 +412,12 @@ export function OptionField({
   const shown = options.find(([key]) => key === value)?.[1] ?? "";
   return (
     <>
-      <PickerButton label={label} value={shown} onPress={() => setOpen(true)} />
+      <PickerButton
+        label={label}
+        value={shown}
+        icon={{ ios: "chevron.down", android: "keyboard_arrow_down" }}
+        onPress={() => setOpen(true)}
+      />
       <Sheet visible={open} onClose={() => setOpen(false)}>
         <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}>
           {label}
@@ -503,6 +518,7 @@ export function CountryField({
         label={label}
         value={value ? `${current ? `${flag(current.code)}  ` : ""}${value}` : ""}
         placeholder={t("Seleccioná un país", "Select a country")}
+        icon={{ ios: "chevron.down", android: "keyboard_arrow_down" }}
         invalid={invalid}
         onPress={() => {
           setQuery("");
@@ -690,6 +706,11 @@ export function MeasureField({
         label={`${label} (${unit})`}
         value={value ? `${value} ${unit}` : ""}
         placeholder={t("Elegir", "Choose")}
+        icon={
+          kind === "height"
+            ? { ios: "ruler", android: "straighten" }
+            : { ios: "scalemass", android: "monitor_weight" }
+        }
         invalid={invalid}
         onPress={() => setOpen(true)}
       />

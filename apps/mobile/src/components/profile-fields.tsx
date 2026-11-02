@@ -70,6 +70,7 @@ export function ProfileFields({
         value={value.name}
         onChangeText={set("name")}
         maxLength={80}
+        icon={{ ios: "pencil", android: "edit" }}
         autoComplete="name"
       />
       {email ? (
@@ -77,6 +78,8 @@ export function ProfileFields({
           label={t("Email de contacto", "Contact email")}
           value={email}
           editable={false}
+          locked
+          icon={{ ios: "lock.fill", android: "lock" }}
           autoComplete="email"
         />
       ) : null}
