@@ -39,7 +39,7 @@ function ToneFrame({
   return (
     <View
       onLayout={({ nativeEvent }) => setSize(nativeEvent.layout)}
-      style={{ paddingVertical: space(2) }}
+      style={{ paddingTop: space(4), paddingBottom: space(2) }}
     >
       {size.width ? (
         <Svg
@@ -51,7 +51,7 @@ function ToneFrame({
           <Defs>
             <LinearGradient id="frame" x1="0" y1="0" x2="0" y2="1">
               <Stop offset="0" stopColor={color} stopOpacity="1" />
-              <Stop offset="1" stopColor={color} stopOpacity="0.25" />
+              <Stop offset="1" stopColor={color} stopOpacity="0.6" />
             </LinearGradient>
             <LinearGradient id="tint" x1="0" y1="0" x2="0" y2="1">
               <Stop offset="0" stopColor={color} stopOpacity="0.16" />

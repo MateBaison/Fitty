@@ -3826,26 +3826,29 @@ input[type="range"] {
   border: 2px solid transparent;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--tone) 16%, transparent), color-mix(in srgb, var(--tone) 2%, transparent)) padding-box,
-    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 25%, transparent)) border-box;
+    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 60%, transparent)) border-box;
 }
 .combat-frame[data-tone="work"] {
   --tone: #22c55e;
   border-color: transparent;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--tone) 16%, transparent), color-mix(in srgb, var(--tone) 2%, transparent)) padding-box,
-    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 25%, transparent)) border-box;
+    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 60%, transparent)) border-box;
 }
 .combat-frame[data-tone="rest"] {
   --tone: #ef4444;
   border-color: transparent;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--tone) 16%, transparent), color-mix(in srgb, var(--tone) 2%, transparent)) padding-box,
-    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 25%, transparent)) border-box;
+    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 60%, transparent)) border-box;
 }
 .combat-frame[data-tone="warning"] {
   --tone: #facc15;
   border-color: transparent;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--tone) 16%, transparent), color-mix(in srgb, var(--tone) 2%, transparent)) padding-box,
-    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 25%, transparent)) border-box;
+    linear-gradient(180deg, var(--tone), color-mix(in srgb, var(--tone) 60%, transparent)) border-box;
+}
+.combat-frame {
+  padding-top: 24px;
 }
