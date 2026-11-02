@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { exerciseName } from "@/lib/exercise-name";
-import { useMemo, useState } from "react";
-import { Modal, PanResponder, Pressable, ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
@@ -28,23 +28,12 @@ export default function Library() {
     selected ? list.findIndex((item) => item.id === selected.id) : -1,
     list.length,
   ];
-  // Swipe left for the next exercise and right for the previous one.
-  const swipe = useMemo(
-    () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponderCapture: (_, gesture) =>
-          Math.abs(gesture.dx) > 24 && Math.abs(gesture.dx) > Math.abs(gesture.dy) * 2,
-        onPanResponderRelease: (_, gesture) => {
-          if (Math.abs(gesture.dx) < 60) return;
-          setSelected((current) => {
-            const at = current ? list.findIndex((item) => item.id === current.id) : -1;
-            const next = list[at + (gesture.dx < 0 ? 1 : -1)];
-            return at >= 0 && next ? next : current;
-          });
-        },
-      }),
-    [list],
-  );
+  const step = (delta: number) =>
+    setSelected((current) => {
+      const at = current ? list.findIndex((item) => item.id === current.id) : -1;
+      const next = list[at + delta];
+      return at >= 0 && next ? next : current;
+    });
   const [adding, setAdding] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const favorite = selected ? snapshot.favorites.includes(selected.id) : false;
@@ -78,21 +67,59 @@ export default function Library() {
             onPress={() => setSelected(null)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />
-          <View style={{ maxHeight: "90%" }} {...swipe.panHandlers}>
+          <View style={{ maxHeight: "90%" }}>
             <Card style={{ padding: 0, overflow: "hidden" }}>
               <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
                 {selected ? (
-                  <Image
-                    source={`${env.apiUrl}${exerciseImage(selected, snapshot.profile.gender)}`}
-                    style={{
-                      width: "100%",
-                      aspectRatio: 3 / 2,
-                      backgroundColor: "#0d1016",
-                    }}
-                    contentFit="cover"
-                    cachePolicy="disk"
-                    accessibilityIgnoresInvertColors
-                  />
+                  <View>
+                    <Image
+                      source={`${env.apiUrl}${exerciseImage(selected, snapshot.profile.gender)}`}
+                      style={{
+                        width: "100%",
+                        aspectRatio: 3 / 2,
+                        backgroundColor: "#0d1016",
+                      }}
+                      contentFit="cover"
+                      cachePolicy="disk"
+                      accessibilityIgnoresInvertColors
+                    />
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={t("Ejercicio anterior", "Previous exercise")}
+                      disabled={selectedIndex <= 0}
+                      onPress={() => step(-1)}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        width: "50%",
+                        justifyContent: "center",
+                        alignItems: "flex-start",
+                        paddingHorizontal: space(2),
+                      }}
+                    >
+                      <Text style={{ color: "#fffc", fontSize: 40, fontWeight: "300", textShadowColor: "#000a", textShadowRadius: 6 }}>‹</Text>
+                    </Pressable>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={t("Ejercicio siguiente", "Next exercise")}
+                      disabled={selectedIndex >= selectedCount - 1}
+                      onPress={() => step(1)}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        bottom: 0,
+                        right: 0,
+                        width: "50%",
+                        justifyContent: "center",
+                        alignItems: "flex-end",
+                        paddingHorizontal: space(2),
+                      }}
+                    >
+                      <Text style={{ color: "#fffc", fontSize: 40, fontWeight: "300", textShadowColor: "#000a", textShadowRadius: 6 }}>›</Text>
+                    </Pressable>
+                  </View>
                 ) : null}
                 <View style={{ padding: space(4), gap: space(3) }}>
                   <View
@@ -172,7 +199,7 @@ export default function Library() {
                   {selectedIndex >= 0 && selectedCount > 1 ? (
                     <Label muted>
                       ‹ {selectedIndex + 1} / {selectedCount} ›{" "}
-                      {t("Deslizá para cambiar de ejercicio", "Swipe to change exercise")}
+                      {t("Tocá los lados de la imagen para cambiar de ejercicio", "Tap the sides of the image to change exercise")}
                     </Label>
                   ) : null}
                   <Button variant="secondary" onPress={() => setSelected(null)}>
