@@ -106,8 +106,8 @@ export class CombatMachine {
       : 0;
     if (
       state.phase === "work" &&
-      state.remaining <= 15 &&
-      this.config.work > 15 &&
+      state.remaining <= 10 &&
+      this.config.work > 10 &&
       this.warned !== state.round
     ) {
       this.warned = state.round;
