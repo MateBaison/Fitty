@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { login } from "./login-helper";
 
-test("boxing bells, fifteen-second boards and final signal survive audio suspension", async ({
+test("boxing bells, ten-second boards and final signal survive audio suspension", async ({
   page,
 }, info) => {
   await page.request.get("http://127.0.0.1:54329/__reset");
@@ -58,17 +58,19 @@ test("boxing bells, fifteen-second boards and final signal survive audio suspens
     )
     .toBe("running");
   await page.clock.runFor(1000);
-  await count(21);
+  await count(18);
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  await count(18);
+  await page.clock.runFor(4000);
   await count(21);
-  await page.clock.runFor(15000);
+  await page.clock.runFor(10000);
   await count(33);
   await page.clock.runFor(1000);
   await count(51);
-  await page.clock.runFor(1000);
+  await page.clock.runFor(6000);
   await count(54);
-  await page.clock.runFor(15000);
+  await page.clock.runFor(10000);
   await count(75);
   await expect(
     page.getByText("Sesión terminada", { exact: false }),

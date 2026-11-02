@@ -18,8 +18,8 @@ test("combat preparation, rounds, warning, rest and finish are emitted once", ()
   });
   expect(clock.toggle(0)).toEqual([]);
   expect(clock.advance(3000)).toEqual(["round"]);
-  expect(clock.advance(8000)).toEqual(["warning"]);
-  expect(clock.advance(9000)).toEqual([]);
+  expect(clock.advance(13000)).toEqual(["warning"]);
+  expect(clock.advance(14000)).toEqual([]);
   expect(clock.advance(23000)).toEqual(["rest"]);
   expect(clock.advance(24000)).toEqual([]);
   expect(clock.state.phase).toBe("rest");
@@ -39,7 +39,7 @@ test("combat pause preserves deadline, resume does not repeat sound, catch-up en
   clock.toggle(5000);
   expect(clock.state.remaining).toBe(15);
   expect(clock.toggle(100000)).toEqual([]);
-  expect(clock.advance(100000)).toEqual(["warning"]);
+  expect(clock.advance(105000)).toEqual(["warning"]);
   expect(clock.advance(135000)).toEqual(["round", "finish"]);
   expect(clock.state.running).toBe(false);
   expect(() => clock.reset({ ...clock.config, rounds: 0 })).toThrow();
