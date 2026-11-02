@@ -82,7 +82,7 @@ export function Calendar({
             textTransform: "capitalize",
           }}
         >
-          {month.toLocaleDateString(locale, { month: "long", year: "numeric" })}
+          {month.toLocaleDateString(locale, { month: "long" })} {month.getFullYear()}
         </Text>
         <Pressable
           accessibilityRole="button"
