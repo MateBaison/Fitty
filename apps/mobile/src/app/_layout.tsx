@@ -1,4 +1,5 @@
 import "@/lib/polyfills";
+import "@/lib/tracking-feed";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";

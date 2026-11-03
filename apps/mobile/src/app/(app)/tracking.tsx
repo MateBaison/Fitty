@@ -17,6 +17,11 @@ import { ChipGroup } from "@/components/chip";
 import { Notice } from "@/components/notice";
 import { RouteMap } from "@/components/route-map";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import {
+  TRACKING_TASK,
+  clearTrackingBuffer,
+  setTrackingListener,
+} from "@/lib/tracking-feed";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -92,11 +97,19 @@ export function TrackingPanel() {
   const [now, setNow] = useState(Date.now());
   const [viewing, setViewing] = useState<TrackingSession | null>(null);
   const subscription = useRef<Location.LocationSubscription | null>(null);
+  const background = useRef(false);
+  const modeRef = useRef<"run" | "cycle">("run");
   const reading = useRef<GPSReading | null>(null);
   const fixTime = useRef(0);
   const stopWatch = () => {
     subscription.current?.remove();
     subscription.current = null;
+    setTrackingListener(null);
+    clearTrackingBuffer();
+    if (background.current) {
+      background.current = false;
+      void Location.stopLocationUpdatesAsync(TRACKING_TASK).catch(() => {});
+    }
   };
   useEffect(() => stopWatch, []);
   useEffect(() => {
@@ -125,47 +138,76 @@ export function TrackingPanel() {
     };
     setPrepEnd(null);
     setTrack(current);
+    modeRef.current = current.mode;
+    const handle = (position: Location.LocationObject) => {
+      const result = gpsReading(
+        reading.current,
+        {
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+          time: position.timestamp,
+          speed: position.coords.speed,
+          accuracy: position.coords.accuracy ?? Number.NaN,
+        },
+        modeRef.current,
+        Date.now(),
+      );
+      if (!result) return;
+      reading.current = result.reading;
+      fixTime.current = Date.now();
+      setTrack((previous) =>
+        previous
+          ? {
+              ...previous,
+              distance: previous.distance + result.distance,
+              speed: result.reading.speed,
+              points: [
+                ...previous.points,
+                {
+                  lat: position.coords.latitude,
+                  lon: position.coords.longitude,
+                  time: position.timestamp,
+                  speed: result.reading.speed,
+                },
+              ],
+            }
+          : previous,
+      );
+    };
+    // With "always" access the recording continues with the phone locked or
+    // another app in front; otherwise it only follows while the app is open.
+    try {
+      const allowed = (await Location.getBackgroundPermissionsAsync()).granted;
+      if (allowed) {
+        setTrackingListener((positions) => positions.forEach(handle));
+        await Location.startLocationUpdatesAsync(TRACKING_TASK, {
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 1000,
+          distanceInterval: 0,
+          activityType: Location.ActivityType.Fitness,
+          pausesUpdatesAutomatically: false,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: "Fitty",
+            notificationBody: t(
+              "Registrando tu recorrido",
+              "Recording your route",
+            ),
+          },
+        });
+        background.current = true;
+        return;
+      }
+    } catch {
+      setTrackingListener(null);
+    }
     subscription.current = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.BestForNavigation,
         timeInterval: 1000,
         distanceInterval: 0,
       },
-      (position) => {
-        const result = gpsReading(
-          reading.current,
-          {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-            time: position.timestamp,
-            speed: position.coords.speed,
-            accuracy: position.coords.accuracy ?? Number.NaN,
-          },
-          current.mode,
-          Date.now(),
-        );
-        if (!result) return;
-        reading.current = result.reading;
-        fixTime.current = Date.now();
-        setTrack((previous) =>
-          previous
-            ? {
-                ...previous,
-                distance: previous.distance + result.distance,
-                speed: result.reading.speed,
-                points: [
-                  ...previous.points,
-                  {
-                    lat: position.coords.latitude,
-                    lon: position.coords.longitude,
-                    time: position.timestamp,
-                    speed: result.reading.speed,
-                  },
-                ],
-              }
-            : previous,
-        );
-      },
+      handle,
     );
   };
   // The countdown ends by itself and starts recording.
@@ -182,6 +224,19 @@ export function TrackingPanel() {
           "Couldn't access your location. Check the permission in Settings.",
         ),
       );
+    // Ask for "always" access too, so the route keeps recording with the phone locked.
+    try {
+      const always = await Location.requestBackgroundPermissionsAsync();
+      if (!always.granted)
+        notify(
+          t(
+            "Sin permiso 'Siempre' el recorrido solo se registra con la app abierta.",
+            "Without 'Always' access the route only records while the app is open.",
+          ),
+        );
+    } catch {
+      // Older builds without background support keep foreground tracking.
+    }
     const seconds = Math.max(0, Math.min(600, Number(prep) || 0));
     if (seconds > 0) {
       setNow(Date.now());

@@ -55,7 +55,11 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Fitty usa tu ubicación para registrar el recorrido mientras corrés o pedaleás con la app abierta."
+          "locationWhenInUsePermission": "Fitty usa tu ubicación para registrar el recorrido mientras corrés o pedaleás.",
+          "locationAlwaysAndWhenInUsePermission": "Fitty usa tu ubicación para seguir registrando el recorrido cuando bloqueás el celular o cambiás de app mientras corrés o pedaleás.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ],
       ["expo-audio", { "microphonePermission": false }]

@@ -3892,3 +3892,27 @@ input[type="range"] {
   background: #173a52;
   border-color: var(--primary);
 }
+.field-icon-wrap {
+  position: relative;
+  display: block;
+}
+.field-icon-wrap > svg {
+  position: absolute;
+  inset-inline-end: 14px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  translate: 0 -50%;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+.field-icon-wrap > input,
+.field-icon-wrap > select {
+  padding-inline-end: 44px;
+}
+.field-icon-wrap > select {
+  background-image: none;
+}
+.field-icon-wrap[data-locked="true"] > svg {
+  color: #5b6475;
+}

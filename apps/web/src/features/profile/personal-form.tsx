@@ -3,6 +3,7 @@ import type { Snapshot } from "@fitty/core/domain/schemas/snapshot";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
 import { localeFor } from "@fitty/core/data/translations";
 import { useEffect, useRef, useState } from "react";
+import { Lock, Pencil, Ruler, Scale } from "lucide-react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/state/app-provider";
@@ -225,24 +226,30 @@ export function PersonalForm({
         <div className="space-y-3">
           <label className="block">
             {t("Nombre", "Name")}
-            <Input
-              required
-              aria-invalid={missing.includes("name")}
-              maxLength={80}
-              value={draft.name ?? ""}
-              onChange={(event) => set("name", event.target.value)}
-            />
+            <span className="field-icon-wrap">
+              <Input
+                required
+                aria-invalid={missing.includes("name")}
+                maxLength={80}
+                value={draft.name ?? ""}
+                onChange={(event) => set("name", event.target.value)}
+              />
+              <Pencil aria-hidden="true" />
+            </span>
           </label>
           <label className="block">
             {t("Email de contacto", "Contact email")}
-            <Input
-              type="email"
-              aria-label={t("Email de contacto", "Contact email")}
-              value={user.email}
-              readOnly
-              className="profile-account-email"
-              autoComplete="email"
-            />
+            <span className="field-icon-wrap" data-locked="true">
+              <Input
+                type="email"
+                aria-label={t("Email de contacto", "Contact email")}
+                value={user.email}
+                readOnly
+                className="profile-account-email"
+                autoComplete="email"
+              />
+              <Lock aria-hidden="true" />
+            </span>
           </label>
         </div>
       </div>
@@ -282,66 +289,75 @@ export function PersonalForm({
         </label>
         <label>
           {t("Altura", "Height")} ({snapshot.settings.height})
-          <select
-            required={onboarding}
-            aria-invalid={missing.includes("height")}
-            value={
-              onboarding ? (draft.height ?? "") : Number(draft.height) || 175
-            }
-            onChange={(event) => set("height", Number(event.target.value))}
-          >
-            {onboarding && (
-              <option value="">
-                {t("Seleccioná una opción", "Select an option")}
-              </option>
-            )}
-            {[
-              ...new Set([
-                Number(draft.height) || 175,
-                ...(snapshot.settings.height === "ft"
-                  ? Array.from(
-                      { length: 61 },
-                      (_, i) => Math.round((3 + i * 0.1) * 10) / 10,
-                    )
-                  : Array.from({ length: 151 }, (_, i) => 100 + i)),
-              ]),
-            ]
-              .sort((a, b) => a - b)
-              .map((height) => (
-                <option key={height} value={height}>
-                  {height}
+          <span className="field-icon-wrap">
+            <select
+              required={onboarding}
+              aria-invalid={missing.includes("height")}
+              value={
+                onboarding ? (draft.height ?? "") : Number(draft.height) || 175
+              }
+              onChange={(event) => set("height", Number(event.target.value))}
+            >
+              {onboarding && (
+                <option value="">
+                  {t("Seleccioná una opción", "Select an option")}
                 </option>
-              ))}
-          </select>
+              )}
+              {[
+                ...new Set([
+                  Number(draft.height) || 175,
+                  ...(snapshot.settings.height === "ft"
+                    ? Array.from(
+                        { length: 61 },
+                        (_, i) => Math.round((3 + i * 0.1) * 10) / 10,
+                      )
+                    : Array.from({ length: 151 }, (_, i) => 100 + i)),
+                ]),
+              ]
+                .sort((a, b) => a - b)
+                .map((height) => (
+                  <option key={height} value={height}>
+                    {height}
+                  </option>
+                ))}
+            </select>
+            <Ruler aria-hidden="true" />
+          </span>
         </label>
         <label>
           {t("Peso", "Weight")} ({snapshot.settings.weight})
-          <select
-            required={onboarding}
-            aria-invalid={missing.includes("weight")}
-            value={
-              onboarding ? (draft.weight ?? "") : Number(draft.weight) || 75
-            }
-            onChange={(event) => set("weight", Number(event.target.value))}
-          >
-            {onboarding && (
-              <option value="">
-                {t("Seleccioná una opción", "Select an option")}
-              </option>
-            )}
-            {[
-              ...new Set([
-                Number(draft.weight) || 75,
-                ...Array.from({ length: 801 }, (_, index) => 25 + index * 0.5),
-              ]),
-            ]
-              .sort((a, b) => a - b)
-              .map((weight) => (
-                <option key={weight} value={weight}>
-                  {weight}
+          <span className="field-icon-wrap">
+            <select
+              required={onboarding}
+              aria-invalid={missing.includes("weight")}
+              value={
+                onboarding ? (draft.weight ?? "") : Number(draft.weight) || 75
+              }
+              onChange={(event) => set("weight", Number(event.target.value))}
+            >
+              {onboarding && (
+                <option value="">
+                  {t("Seleccioná una opción", "Select an option")}
                 </option>
-              ))}
-          </select>
+              )}
+              {[
+                ...new Set([
+                  Number(draft.weight) || 75,
+                  ...Array.from(
+                    { length: 801 },
+                    (_, index) => 25 + index * 0.5,
+                  ),
+                ]),
+              ]
+                .sort((a, b) => a - b)
+                .map((weight) => (
+                  <option key={weight} value={weight}>
+                    {weight}
+                  </option>
+                ))}
+            </select>
+            <Scale aria-hidden="true" />
+          </span>
         </label>
         <label>
           {t("Género", "Gender")}
