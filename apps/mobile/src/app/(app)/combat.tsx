@@ -168,8 +168,8 @@ export function CombatPanel() {
         style={{
           color: "#ffffff",
           textAlign: "center",
-          fontSize: 16,
-          fontWeight: "700",
+          fontSize: 20,
+          fontWeight: "800",
         }}
       >
         {phase} · {t("Ronda", "Round")} {state.round}/{config.rounds}

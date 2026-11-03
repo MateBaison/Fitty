@@ -297,7 +297,7 @@ export function ClocksScreen() {
             className="combat-frame"
             data-tone={combatTone(combat.state, combat.config)}
           >
-          <p className="text-center text-white">
+          <p className="text-center text-xl font-extrabold text-white">
             {phase === "done"
               ? t("Sesión terminada", "Session finished")
               : phase === "prep"
