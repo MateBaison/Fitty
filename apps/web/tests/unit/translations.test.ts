@@ -6,11 +6,14 @@ import additions from "@fitty/core/data/ui-translations.json";
 
 test("literal translated UI messages have entries in every additional language", () => {
   const keys = new Set<string>();
-  for (const path of globSync("src/**/*.tsx")) {
+  for (const path of [
+    ...globSync("src/**/*.tsx"),
+    ...globSync("../mobile/src/**/*.{ts,tsx}"),
+  ]) {
     for (const match of readFileSync(path, "utf8").matchAll(
-      /\bt\(\s*"([^"\n]+)"/g,
+      /\b(?:t|translate)\(\s*(?:language,\s*)?"([^"\n]+)"/g,
     ))
-      keys.add(match[1]!);
+      keys.add(JSON.parse(`"${match[1]!}"`) as string);
   }
   const original: Record<string, Record<string, string>> = legacy;
   const added: Record<string, Record<string, string>> = additions;

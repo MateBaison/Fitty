@@ -596,6 +596,16 @@ export default function Profile() {
         </Card>
       ) : null}
       <ResetAccount />
+      <Button
+        variant="secondary"
+        onPress={() =>
+          void Linking.openURL(
+            `https://fitty.uy/terminos?lang=${settings.language ?? "es"}`,
+          )
+        }
+      >
+        {t("Términos y condiciones", "Terms and conditions")}
+      </Button>
       <View style={{ flexDirection: "row", gap: space(3) }}>
         <View style={{ flex: 1 }}>
           <Button

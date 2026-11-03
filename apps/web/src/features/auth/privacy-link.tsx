@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { languages, privacyNotice } from "@fitty/core/data/translations";
+import { languages, privacyNotice, translate } from "@fitty/core/data/translations";
 
 /** "By continuing you accept the Privacy policy." with the policy name linking to it in the chosen language. */
 export function PrivacyLink() {
@@ -30,6 +30,13 @@ export function PrivacyLink() {
         {notice.link}
       </a>
       {notice.after}
+      <br />
+      <a
+        href={`/terminos?lang=${language}`}
+        className="text-primary underline"
+      >
+        {translate(language, "Términos y condiciones", "Terms and conditions")}
+      </a>
     </>
   );
 }

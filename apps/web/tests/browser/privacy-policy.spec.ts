@@ -46,3 +46,16 @@ test("profile ends with reset account, then privacy policy next to a red sign ou
   await link.click();
   await expect((await popup).url()).toContain("/privacidad?lang=es");
 });
+
+test("terms and conditions open in the language of the app", async ({
+  page,
+}) => {
+  await page.goto("/terminos?lang=de");
+  await expect(
+    page.getByRole("heading", { name: "Nutzungsbedingungen" }),
+  ).toBeVisible();
+  await page.goto("/terminos?lang=ar");
+  await expect(page.locator("main")).toHaveAttribute("dir", "rtl");
+  await page.goto("/robots.txt");
+  await expect(page.locator("body")).toContainText("Disallow: /api/");
+});

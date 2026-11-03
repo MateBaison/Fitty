@@ -5,7 +5,7 @@ export type Policy = {
   intro: string;
   sections: Section[];
 };
-const updated = "31 de octubre de 2026";
+const updated = "3 de noviembre de 2026";
 export const policies: Record<string, Policy> = {
   es: {
     heading: "Política de privacidad",
@@ -19,7 +19,7 @@ export const policies: Record<string, Policy> = {
           "Cuenta: tu correo electrónico, o el identificador y correo que nos entrega Google o Apple si iniciás sesión con ellos.",
           "Perfil: nombre, foto, fecha de nacimiento, género, altura, peso, experiencia y objetivos de entrenamiento, idioma y unidades que elijas.",
           "Entrenamiento: rutinas, ejercicios, series, repeticiones, pesos, notas, fotos de entrenamientos y medidas corporales.",
-          "Recorridos GPS: si usás el seguimiento de recorridos, la ubicación se obtiene solo mientras la app está abierta y se guarda como parte de tu registro. No usamos ubicación en segundo plano.",
+          "Recorridos GPS (solo en la app): al grabar un recorrido, la ubicación se obtiene mientras está en curso y se guarda como parte de tu registro. Si das el permiso de ubicación «Siempre», la grabación continúa con el celular bloqueado o con otra app abierta. Solo se usa mientras grabás y se detiene al finalizar el recorrido.",
           "Calendario menstrual (opcional): solo si lo activás; son datos de salud que tratamos con especial cuidado.",
           "Soporte: el mensaje y el correo que nos envíes desde el formulario de ayuda.",
         ],
@@ -37,6 +37,7 @@ export const policies: Record<string, Policy> = {
         title: "Dónde se guardan y quién los procesa",
         body: [
           "Tus datos se guardan en Supabase (base de datos y autenticación). El sitio se aloja en Vercel. Los avisos del formulario de soporte se envían con Resend y el correo de soporte se recibe con Zoho.",
+          "Los mapas del seguimiento se cargan desde Esri: al ver un mapa, Esri recibe la zona del mapa que estás mirando, pero no tu cuenta ni tu recorrido.",
           "Estos proveedores tratan los datos solo para prestar el servicio y pueden operar servidores fuera de Uruguay.",
           "También guardamos una copia local en tu dispositivo para que la app funcione sin conexión.",
         ],
@@ -87,7 +88,7 @@ export const policies: Record<string, Policy> = {
   },
   en: {
     heading: "Privacy policy",
-    updated: "Last updated: October 31, 2026",
+    updated: "Last updated: November 3, 2026",
     intro:
       "Fitty is an app for logging workouts, routines and physical progress, available at fitty.uy and as an iPhone and Android app. This policy explains what data we handle and the control you have over it.",
     sections: [
@@ -97,7 +98,7 @@ export const policies: Record<string, Policy> = {
           "Account: your email address, or the identifier and email Google or Apple give us if you sign in with them.",
           "Profile: name, photo, date of birth, gender, height, weight, training experience and goals, and the language and units you choose.",
           "Training: routines, exercises, sets, repetitions, weights, notes, workout photos and body measurements.",
-          "GPS routes: if you use route tracking, location is read only while the app is open and is saved as part of your record. We do not use background location.",
+          "GPS routes (app only): when you record a route, location is read while it is in progress and saved as part of your record. If you grant the “Always” location permission, recording continues with the phone locked or another app open. It is used only while you record and stops when you finish the route.",
           "Menstrual calendar (optional): only if you turn it on; this is health data and we treat it with extra care.",
           "Support: the message and email you send through the help form.",
         ],
@@ -115,6 +116,7 @@ export const policies: Record<string, Policy> = {
         title: "Where it is stored and who processes it",
         body: [
           "Your data is stored in Supabase (database and authentication). The site is hosted on Vercel. Support form notices are sent with Resend and the support inbox is received with Zoho.",
+          "Tracking maps are loaded from Esri: when you view a map, Esri receives the map area you are looking at, but not your account or your route.",
           "These providers process data only to provide the service and may operate servers outside Uruguay.",
           "We also keep a local copy on your device so the app works offline.",
         ],
@@ -165,7 +167,7 @@ export const policies: Record<string, Policy> = {
   },
   fr: {
     heading: "Politique de confidentialité",
-    updated: "Dernière mise à jour : 31 octobre 2026",
+    updated: "Dernière mise à jour : 3 novembre 2026",
     intro:
       "Fitty est une application pour enregistrer tes entraînements, tes routines et ta progression physique, disponible sur fitty.uy et en application iPhone et Android. Cette politique explique quelles données nous traitons et quel contrôle tu en as.",
     sections: [
@@ -175,7 +177,7 @@ export const policies: Record<string, Policy> = {
           "Compte : ton adresse e-mail, ou l'identifiant et l'e-mail que Google ou Apple nous transmettent si tu te connectes avec eux.",
           "Profil : nom, photo, date de naissance, genre, taille, poids, expérience et objectifs d'entraînement, langue et unités choisies.",
           "Entraînement : routines, exercices, séries, répétitions, poids, notes, photos d'entraînement et mensurations.",
-          "Parcours GPS : si tu utilises le suivi de parcours, la position n'est lue que lorsque l'application est ouverte et elle est enregistrée avec ton historique. Nous n'utilisons pas la localisation en arrière-plan.",
+          "Parcours GPS (application uniquement) : pendant l'enregistrement d'un parcours, la position est lue tant qu'il est en cours et enregistrée avec ton historique. Si tu accordes l'autorisation de localisation « Toujours », l'enregistrement continue téléphone verrouillé ou avec une autre application ouverte. Elle n'est utilisée que pendant l'enregistrement et s'arrête à la fin du parcours.",
           "Calendrier menstruel (facultatif) : uniquement si tu l'actives ; ce sont des données de santé que nous traitons avec un soin particulier.",
           "Assistance : le message et l'e-mail que tu envoies depuis le formulaire d'aide.",
         ],
@@ -193,6 +195,7 @@ export const policies: Record<string, Policy> = {
         title: "Où elles sont stockées et qui les traite",
         body: [
           "Tes données sont stockées chez Supabase (base de données et authentification). Le site est hébergé chez Vercel. Les avis du formulaire d'assistance sont envoyés avec Resend et la boîte d'assistance est reçue via Zoho.",
+          "Les cartes du suivi sont chargées depuis Esri : en affichant une carte, Esri reçoit la zone visible, mais ni ton compte ni ton parcours.",
           "Ces prestataires traitent les données uniquement pour fournir le service et peuvent exploiter des serveurs hors d'Uruguay.",
           "Nous gardons aussi une copie locale sur ton appareil pour que l'application fonctionne hors ligne.",
         ],
@@ -243,7 +246,7 @@ export const policies: Record<string, Policy> = {
   },
   zh: {
     heading: "隐私政策",
-    updated: "最后更新:2026年10月31日",
+    updated: "最后更新:2026年11月3日",
     intro:
       "Fitty 是一款用于记录训练、计划和身体进步的应用,可在 fitty.uy 使用,也提供 iPhone 和 Android 应用。本政策说明我们处理哪些数据,以及你对这些数据拥有哪些控制权。",
     sections: [
@@ -253,7 +256,7 @@ export const policies: Record<string, Policy> = {
           "账户:你的电子邮箱;如果你使用 Google 或 Apple 登录,则包括它们提供给我们的标识符和邮箱。",
           "个人资料:姓名、照片、出生日期、性别、身高、体重、训练经验和目标,以及你选择的语言和单位。",
           "训练:计划、动作、组数、次数、重量、备注、训练照片和身体测量数据。",
-          "GPS 路线:如果你使用路线追踪,仅在应用打开时读取位置,并作为你记录的一部分保存。我们不使用后台定位。",
+          "GPS 路线(仅限应用):记录路线时,会在记录进行期间读取位置,并作为你记录的一部分保存。如果你授予“始终”位置权限,锁屏或使用其他应用时也会继续记录。位置仅在记录期间使用,路线结束后即停止。",
           "月经日历(可选):仅在你开启时使用;这属于健康数据,我们会格外谨慎地处理。",
           "支持:你通过帮助表单发送的消息和邮箱。",
         ],
@@ -271,6 +274,7 @@ export const policies: Record<string, Policy> = {
         title: "数据存放位置及处理方",
         body: [
           "你的数据存储在 Supabase(数据库和身份验证)。网站托管在 Vercel。支持表单通知通过 Resend 发送,支持邮箱通过 Zoho 接收。",
+          "跟踪地图由 Esri 加载:查看地图时,Esri 会收到你正在查看的地图区域,但不会收到你的账户或路线。",
           "这些服务商仅为提供服务而处理数据,其服务器可能位于乌拉圭境外。",
           "我们还会在你的设备上保留一份本地副本,使应用可以离线使用。",
         ],
@@ -321,7 +325,7 @@ export const policies: Record<string, Policy> = {
   },
   hi: {
     heading: "गोपनीयता नीति",
-    updated: "अंतिम अपडेट: 31 अक्टूबर 2026",
+    updated: "अंतिम अपडेट: 3 नवंबर 2026",
     intro:
       "Fitty वर्कआउट, रूटीन और शारीरिक प्रगति दर्ज करने वाला ऐप है, जो fitty.uy पर और iPhone व Android ऐप के रूप में उपलब्ध है। यह नीति बताती है कि हम कौन-सा डेटा संभालते हैं और उस पर आपका क्या नियंत्रण है।",
     sections: [
@@ -331,7 +335,7 @@ export const policies: Record<string, Policy> = {
           "खाता: आपका ईमेल पता, या Google या Apple से साइन इन करने पर वे जो पहचान और ईमेल हमें देते हैं।",
           "प्रोफ़ाइल: नाम, फ़ोटो, जन्म तिथि, लिंग, कद, वज़न, प्रशिक्षण का अनुभव और लक्ष्य, तथा आपकी चुनी हुई भाषा और इकाइयाँ।",
           "प्रशिक्षण: रूटीन, व्यायाम, सेट, दोहराव, वज़न, नोट्स, वर्कआउट की फ़ोटो और शरीर के माप।",
-          "GPS रूट: यदि आप रूट ट्रैकिंग का उपयोग करते हैं, तो स्थान केवल तब पढ़ा जाता है जब ऐप खुला हो और वह आपके रिकॉर्ड का हिस्सा बनकर सहेजा जाता है। हम बैकग्राउंड लोकेशन का उपयोग नहीं करते।",
+          "GPS रूट (केवल ऐप): रूट रिकॉर्ड करते समय, रिकॉर्डिंग चलने तक आपकी लोकेशन पढ़ी जाती है और आपके रिकॉर्ड के हिस्से के रूप में सहेजी जाती है। यदि आप “हमेशा” लोकेशन अनुमति देते हैं, तो फ़ोन लॉक होने या दूसरा ऐप खुला होने पर भी रिकॉर्डिंग जारी रहती है। इसका उपयोग केवल रिकॉर्डिंग के दौरान होता है और रूट समाप्त करने पर रुक जाता है।",
           "मासिक धर्म कैलेंडर (वैकल्पिक): केवल तभी जब आप इसे चालू करें; यह स्वास्थ्य डेटा है और हम इसे विशेष सावधानी से संभालते हैं।",
           "सहायता: आप सहायता फ़ॉर्म से जो संदेश और ईमेल भेजते हैं।",
         ],
@@ -349,6 +353,7 @@ export const policies: Record<string, Policy> = {
         title: "डेटा कहाँ रखा जाता है और कौन संसाधित करता है",
         body: [
           "आपका डेटा Supabase (डेटाबेस और प्रमाणीकरण) में रखा जाता है। साइट Vercel पर होस्ट है। सहायता फ़ॉर्म की सूचनाएँ Resend से भेजी जाती हैं और सहायता इनबॉक्स Zoho से प्राप्त होता है।",
+          "ट्रैकिंग के नक्शे Esri से लोड होते हैं: नक्शा देखने पर Esri को वह क्षेत्र मिलता है जो आप देख रहे हैं, पर आपका खाता या रूट नहीं।",
           "ये प्रदाता केवल सेवा देने के लिए डेटा संसाधित करते हैं और उनके सर्वर उरुग्वे के बाहर हो सकते हैं।",
           "ऐप बिना इंटरनेट के भी चल सके, इसके लिए हम आपके उपकरण पर एक स्थानीय प्रति भी रखते हैं।",
         ],
@@ -399,7 +404,7 @@ export const policies: Record<string, Policy> = {
   },
   ar: {
     heading: "سياسة الخصوصية",
-    updated: "آخر تحديث: 31 أكتوبر 2026",
+    updated: "آخر تحديث: 3 نوفمبر 2026",
     intro:
       "Fitty تطبيق لتسجيل التمارين والروتينات والتقدم البدني، متاح على fitty.uy وكتطبيق لـ iPhone وAndroid. توضح هذه السياسة البيانات التي نعالجها ومقدار التحكم الذي تملكه عليها.",
     sections: [
@@ -409,7 +414,7 @@ export const policies: Record<string, Policy> = {
           "الحساب: بريدك الإلكتروني، أو المعرّف والبريد اللذان تزودنا بهما Google أو Apple إذا سجلت الدخول عبرهما.",
           "الملف الشخصي: الاسم والصورة وتاريخ الميلاد والجنس والطول والوزن وخبرة التدريب وأهدافه واللغة والوحدات التي تختارها.",
           "التدريب: الروتينات والتمارين والمجموعات والتكرارات والأوزان والملاحظات وصور التمارين وقياسات الجسم.",
-          "مسارات GPS: إذا استخدمت تتبع المسارات، تُقرأ الموقع فقط أثناء فتح التطبيق وتُحفظ ضمن سجلك. لا نستخدم الموقع في الخلفية.",
+          "مسارات GPS (في التطبيق فقط): عند تسجيل مسار، يُقرأ الموقع طوال التسجيل وتُحفظ كجزء من سجلك. إذا منحت إذن الموقع «دائمًا»، يستمر التسجيل والهاتف مقفل أو عند فتح تطبيق آخر. تُستخدم فقط أثناء التسجيل وتتوقف عند إنهاء المسار.",
           "تقويم الدورة الشهرية (اختياري): فقط إذا فعّلته؛ وهي بيانات صحية نعاملها بعناية خاصة.",
           "الدعم: الرسالة والبريد اللذان ترسلهما من نموذج المساعدة.",
         ],
@@ -427,6 +432,7 @@ export const policies: Record<string, Policy> = {
         title: "أين تُخزَّن ومن يعالجها",
         body: [
           "تُخزَّن بياناتك في Supabase (قاعدة البيانات والمصادقة). يُستضاف الموقع على Vercel. تُرسل إشعارات نموذج الدعم عبر Resend ويُستلم بريد الدعم عبر Zoho.",
+          "تُحمَّل خرائط التتبع من Esri: عند عرض خريطة تتلقى Esri المنطقة التي تشاهدها، لكن ليس حسابك ولا مسارك.",
           "يعالج هؤلاء المزودون البيانات فقط لتقديم الخدمة وقد تكون خوادمهم خارج أوروغواي.",
           "نحتفظ أيضًا بنسخة محلية على جهازك ليعمل التطبيق دون اتصال.",
         ],
@@ -477,7 +483,7 @@ export const policies: Record<string, Policy> = {
   },
   de: {
     heading: "Datenschutzerklärung",
-    updated: "Zuletzt aktualisiert: 31. Oktober 2026",
+    updated: "Zuletzt aktualisiert: 3. November 2026",
     intro:
       "Fitty ist eine App zum Erfassen von Trainings, Routinen und körperlichem Fortschritt, verfügbar auf fitty.uy sowie als App für iPhone und Android. Diese Erklärung beschreibt, welche Daten wir verarbeiten und welche Kontrolle du darüber hast.",
     sections: [
@@ -487,7 +493,7 @@ export const policies: Record<string, Policy> = {
           "Konto: deine E-Mail-Adresse oder die Kennung und E-Mail, die uns Google oder Apple übermitteln, wenn du dich damit anmeldest.",
           "Profil: Name, Foto, Geburtsdatum, Geschlecht, Größe, Gewicht, Trainingserfahrung und -ziele sowie die von dir gewählte Sprache und Einheiten.",
           "Training: Routinen, Übungen, Sätze, Wiederholungen, Gewichte, Notizen, Trainingsfotos und Körpermaße.",
-          "GPS-Strecken: Wenn du die Streckenaufzeichnung nutzt, wird der Standort nur gelesen, solange die App geöffnet ist, und als Teil deines Eintrags gespeichert. Wir nutzen keinen Standort im Hintergrund.",
+          "GPS-Strecken (nur in der App): Beim Aufzeichnen einer Strecke wird der Standort gelesen, solange sie läuft, und als Teil deines Eintrags gespeichert. Wenn du die Standortberechtigung „Immer“ erteilst, läuft die Aufzeichnung bei gesperrtem Telefon oder geöffneter anderer App weiter. Er wird nur während der Aufzeichnung genutzt und endet mit dem Ende der Strecke.",
           "Menstruationskalender (optional): nur, wenn du ihn aktivierst; das sind Gesundheitsdaten, die wir besonders sorgfältig behandeln.",
           "Support: die Nachricht und E-Mail, die du über das Hilfeformular sendest.",
         ],
@@ -505,6 +511,7 @@ export const policies: Record<string, Policy> = {
         title: "Wo sie gespeichert werden und wer sie verarbeitet",
         body: [
           "Deine Daten werden bei Supabase (Datenbank und Authentifizierung) gespeichert. Die Website wird bei Vercel gehostet. Benachrichtigungen des Supportformulars werden mit Resend versendet, das Support-Postfach wird über Zoho empfangen.",
+          "Die Karten der Aufzeichnung werden von Esri geladen: Beim Ansehen einer Karte erhält Esri den angezeigten Kartenausschnitt, aber weder dein Konto noch deine Strecke.",
           "Diese Anbieter verarbeiten Daten nur zur Erbringung des Dienstes und können Server außerhalb Uruguays betreiben.",
           "Außerdem speichern wir eine lokale Kopie auf deinem Gerät, damit die App offline funktioniert.",
         ],
@@ -555,7 +562,7 @@ export const policies: Record<string, Policy> = {
   },
   it: {
     heading: "Informativa sulla privacy",
-    updated: "Ultimo aggiornamento: 31 ottobre 2026",
+    updated: "Ultimo aggiornamento: 3 novembre 2026",
     intro:
       "Fitty è un'app per registrare allenamenti, routine e progressi fisici, disponibile su fitty.uy e come app per iPhone e Android. Questa informativa spiega quali dati trattiamo e quale controllo hai su di essi.",
     sections: [
@@ -565,7 +572,7 @@ export const policies: Record<string, Policy> = {
           "Account: il tuo indirizzo e-mail, oppure l'identificativo e l'e-mail che Google o Apple ci forniscono se accedi con loro.",
           "Profilo: nome, foto, data di nascita, genere, altezza, peso, esperienza e obiettivi di allenamento, lingua e unità che scegli.",
           "Allenamento: routine, esercizi, serie, ripetizioni, pesi, note, foto degli allenamenti e misure corporee.",
-          "Percorsi GPS: se usi il tracciamento dei percorsi, la posizione viene letta solo mentre l'app è aperta e salvata come parte del tuo registro. Non usiamo la posizione in background.",
+          "Percorsi GPS (solo nell'app): durante la registrazione di un percorso la posizione viene letta finché è in corso e salvata come parte del tuo registro. Se concedi il permesso di posizione «Sempre», la registrazione continua con il telefono bloccato o con un'altra app aperta. Viene usata solo durante la registrazione e si interrompe al termine del percorso.",
           "Calendario mestruale (facoltativo): solo se lo attivi; sono dati sulla salute che trattiamo con particolare cura.",
           "Assistenza: il messaggio e l'e-mail che invii dal modulo di aiuto.",
         ],
@@ -583,6 +590,7 @@ export const policies: Record<string, Policy> = {
         title: "Dove sono conservati e chi li tratta",
         body: [
           "I tuoi dati sono conservati su Supabase (database e autenticazione). Il sito è ospitato su Vercel. Gli avvisi del modulo di assistenza sono inviati con Resend e la casella di assistenza è ricevuta tramite Zoho.",
+          "Le mappe del tracciamento sono caricate da Esri: quando vedi una mappa, Esri riceve l'area visualizzata, ma non il tuo account né il tuo percorso.",
           "Questi fornitori trattano i dati solo per erogare il servizio e possono gestire server fuori dall'Uruguay.",
           "Conserviamo anche una copia locale sul tuo dispositivo per far funzionare l'app offline.",
         ],
@@ -633,7 +641,7 @@ export const policies: Record<string, Policy> = {
   },
   pt: {
     heading: "Política de privacidade",
-    updated: "Última atualização: 31 de outubro de 2026",
+    updated: "Última atualização: 3 de novembro de 2026",
     intro:
       "O Fitty é um aplicativo para registrar treinos, rotinas e progresso físico, disponível em fitty.uy e como app para iPhone e Android. Esta política explica quais dados tratamos e que controle você tem sobre eles.",
     sections: [
@@ -643,7 +651,7 @@ export const policies: Record<string, Policy> = {
           "Conta: seu e-mail, ou o identificador e o e-mail que o Google ou a Apple nos fornecem se você entrar com eles.",
           "Perfil: nome, foto, data de nascimento, gênero, altura, peso, experiência e objetivos de treino, além do idioma e das unidades que você escolher.",
           "Treino: rotinas, exercícios, séries, repetições, pesos, anotações, fotos de treinos e medidas corporais.",
-          "Percursos GPS: se você usar o rastreamento de percursos, a localização é lida apenas com o app aberto e salva como parte do seu registro. Não usamos localização em segundo plano.",
+          "Percursos GPS (somente no app): ao gravar um percurso, a localização é lida enquanto ele está em andamento e salva como parte do seu registro. Se você conceder a permissão de localização «Sempre», a gravação continua com o celular bloqueado ou com outro app aberto. Ela só é usada durante a gravação e para quando você finaliza o percurso.",
           "Calendário menstrual (opcional): somente se você ativar; são dados de saúde que tratamos com cuidado especial.",
           "Suporte: a mensagem e o e-mail que você enviar pelo formulário de ajuda.",
         ],
@@ -661,6 +669,7 @@ export const policies: Record<string, Policy> = {
         title: "Onde ficam armazenados e quem os processa",
         body: [
           "Seus dados ficam no Supabase (banco de dados e autenticação). O site é hospedado na Vercel. Os avisos do formulário de suporte são enviados com o Resend e a caixa de suporte é recebida pelo Zoho.",
+          "Os mapas do rastreamento são carregados da Esri: ao ver um mapa, a Esri recebe a área exibida, mas não sua conta nem seu percurso.",
           "Esses provedores tratam os dados apenas para prestar o serviço e podem operar servidores fora do Uruguai.",
           "Também mantemos uma cópia local no seu dispositivo para que o app funcione offline.",
         ],

@@ -1,12 +1,12 @@
-import "expo-sqlite/localStorage/install";
 import { createClient } from "@supabase/supabase-js";
 import { AppState } from "react-native";
 import { env } from "./env";
+import { secureStorage } from "./secure-storage";
 
 // Supabase is used only for sign-in; account data goes through the Fitty API.
 export const supabase = createClient(env.supabaseUrl, env.supabaseKey, {
   auth: {
-    storage: localStorage,
+    storage: secureStorage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

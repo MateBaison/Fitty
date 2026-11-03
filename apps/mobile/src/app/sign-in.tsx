@@ -191,6 +191,18 @@ export default function SignIn() {
               {notice.link}
             </Text>
             {notice.after}
+            {"\n"}
+            <Text
+              accessibilityRole="link"
+              onPress={() =>
+                void Linking.openURL(
+                  `https://fitty.uy/terminos?lang=${language}`,
+                )
+              }
+              style={{ color: colors.accent, textDecorationLine: "underline" }}
+            >
+              {t("Términos y condiciones", "Terms and conditions")}
+            </Text>
           </Label>
         </Screen>
       </KeyboardAvoidingView>

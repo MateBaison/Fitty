@@ -16,7 +16,10 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["instagram-stories", "instagram"]
+        "LSApplicationQueriesSchemes": [
+          "instagram-stories",
+          "instagram"
+        ]
       }
     },
     "android": {
@@ -62,7 +65,13 @@
           "isAndroidForegroundServiceEnabled": true
         }
       ],
-      ["expo-audio", { "microphonePermission": false }]
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false
+        }
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

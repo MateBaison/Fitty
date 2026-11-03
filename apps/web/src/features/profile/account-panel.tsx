@@ -25,6 +25,15 @@ export function AccountPanel() {
         </section>
       )}
       <ResetAccount />
+      <a
+        href={`/terminos?lang=${snapshot.settings.language ?? "es"}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-slot="button"
+        className={buttonVariants({ variant: "secondary" }) + " w-full"}
+      >
+        {t("Términos y condiciones", "Terms and conditions")}
+      </a>
       <div className="grid grid-cols-2 gap-3">
         <a
           href={`/privacidad?lang=${snapshot.settings.language ?? "es"}`}
