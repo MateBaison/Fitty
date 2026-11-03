@@ -2,9 +2,10 @@ import { useKeepAwake } from "expo-keep-awake";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, Modal, Pressable, Text, View } from "react-native";
 import Svg, { Polyline } from "react-native-svg";
 import { timeFormat } from "@fitty/core/domain/combat";
+import type { TrackingSession } from "@fitty/core/domain/schemas/snapshot";
 import {
   gpsReading,
   recordedRoute,
@@ -14,7 +15,8 @@ import {
 } from "@fitty/core/domain/tracking";
 import { ChipGroup } from "@/components/chip";
 import { Notice } from "@/components/notice";
-import { Button, Card, Label, Screen, Title } from "@/components/ui";
+import { RouteMap } from "@/components/route-map";
+import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -52,30 +54,56 @@ function RouteShape({ points }: { points: Point[] }) {
   );
 }
 
+function Metric({ value, label }: { value: string; label: string }) {
+  return (
+    <View
+      style={{
+        width: "48.5%",
+        padding: space(3),
+        borderRadius: 14,
+        borderColor: colors.border,
+        borderWidth: 1,
+        backgroundColor: colors.secondary,
+        gap: 2,
+      }}
+    >
+      <Text style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}>
+        {value}
+      </Text>
+      <Text style={{ color: colors.muted, fontSize: 12 }}>{label}</Text>
+    </View>
+  );
+}
+
 /**
- * Foreground GPS route recording. Unfinished routes stay in memory only;
- * a finished route is saved through the normal account change/sync path.
+ * Foreground GPS route recording with a street map, live stats and saved routes.
+ * Unfinished routes stay in memory only; a finished route is saved through the
+ * normal account change/sync path.
  */
 export function TrackingPanel() {
   const snapshot = useSnapshot();
   const { change, notify, t } = useAccount();
-  const router = useRouter();
   const kilometers = (snapshot.settings.distance ?? "km") === "km";
+  const language = snapshot.settings.language ?? "es";
   const [mode, setMode] = useState<"run" | "cycle">("run");
+  const [prep, setPrep] = useState("10");
+  const [prepEnd, setPrepEnd] = useState<number | null>(null);
   const [track, setTrack] = useState<Track | null>(null);
   const [now, setNow] = useState(Date.now());
+  const [viewing, setViewing] = useState<TrackingSession | null>(null);
   const subscription = useRef<Location.LocationSubscription | null>(null);
   const reading = useRef<GPSReading | null>(null);
+  const fixTime = useRef(0);
   const stopWatch = () => {
     subscription.current?.remove();
     subscription.current = null;
   };
   useEffect(() => stopWatch, []);
   useEffect(() => {
-    if (!track) return;
+    if (!track && prepEnd === null) return;
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
-  }, [track]);
+  }, [track, prepEnd]);
   const distance = (meters: number) =>
     kilometers
       ? `${(meters / 1000).toFixed(2)} km`
@@ -85,16 +113,9 @@ export function TrackingPanel() {
     if (meters < 10 || seconds <= 0) return "—";
     return `${timeFormat((seconds / meters) * unit)} /${kilometers ? "km" : "mi"}`;
   };
-  const start = async () => {
-    const permission = await Location.requestForegroundPermissionsAsync();
-    if (!permission.granted)
-      return notify(
-        t(
-          "No se pudo acceder a tu ubicación. Revisá el permiso en Ajustes.",
-          "Couldn't access your location. Check the permission in Settings.",
-        ),
-      );
+  const begin = async () => {
     reading.current = null;
+    fixTime.current = 0;
     const current: Track = {
       mode,
       started: Date.now(),
@@ -102,6 +123,7 @@ export function TrackingPanel() {
       points: [],
       speed: 0,
     };
+    setPrepEnd(null);
     setTrack(current);
     subscription.current = await Location.watchPositionAsync(
       {
@@ -124,6 +146,7 @@ export function TrackingPanel() {
         );
         if (!result) return;
         reading.current = result.reading;
+        fixTime.current = Date.now();
         setTrack((previous) =>
           previous
             ? {
@@ -144,6 +167,26 @@ export function TrackingPanel() {
         );
       },
     );
+  };
+  // The countdown ends by itself and starts recording.
+  useEffect(() => {
+    if (prepEnd !== null && now >= prepEnd) void begin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [now, prepEnd]);
+  const start = async () => {
+    const permission = await Location.requestForegroundPermissionsAsync();
+    if (!permission.granted)
+      return notify(
+        t(
+          "No se pudo acceder a tu ubicación. Revisá el permiso en Ajustes.",
+          "Couldn't access your location. Check the permission in Settings.",
+        ),
+      );
+    const seconds = Math.max(0, Math.min(600, Number(prep) || 0));
+    if (seconds > 0) {
+      setNow(Date.now());
+      setPrepEnd(Date.now() + seconds * 1000);
+    } else await begin();
   };
   const finish = () => {
     stopWatch();
@@ -172,6 +215,26 @@ export function TrackingPanel() {
     .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
     .slice(0, 20);
   const elapsed = track ? Math.floor((now - track.started) / 1000) : 0;
+  const preparing = prepEnd !== null && !track;
+  const activeMode = track?.mode ?? mode;
+  const speed =
+    track && now - fixTime.current <= 10000 ? track.speed : 0;
+  const speedLabel =
+    speed >= 0.5
+      ? activeMode === "cycle"
+        ? `${(speed * (kilometers ? 3.6 : 2.236936)).toFixed(1)} ${kilometers ? "km/h" : "mph"}`
+        : `${timeFormat((kilometers ? 1000 : 1609.344) / speed)} /${kilometers ? "km" : "mi"}`
+      : "—";
+  const kg =
+    Number(snapshot.profile.weight ?? 75) /
+    (snapshot.settings.weight === "lb" ? 2.20462 : 1);
+  const kcal = Math.round(
+    ((activeMode === "run" ? 9.8 : 7.5) * (Number.isFinite(kg) && kg > 0 ? kg : 75) * elapsed) / 3600,
+  );
+  const describe = (session: TrackingSession) =>
+    `${new Date(session.date).toLocaleString(language)} · ${
+      session.mode === "cycle" ? t("Bicicleta", "Cycling") : t("Correr", "Run")
+    }`;
   return (
     <>
       <Notice />
@@ -182,27 +245,43 @@ export function TrackingPanel() {
             { value: "run" as const, label: t("Correr", "Run") },
             { value: "cycle" as const, label: t("Bicicleta", "Cycling") },
           ]}
-          value={track?.mode ?? mode}
-          onChange={(value) => !track && setMode(value)}
+          value={activeMode}
+          onChange={(value) => !track && !preparing && setMode(value)}
         />
-        <Text
-          accessibilityRole="timer"
-          style={{
-            color: colors.foreground,
-            fontSize: 48,
-            fontWeight: "800",
-            textAlign: "center",
-            fontVariant: ["tabular-nums"],
-          }}
-        >
-          {timeFormat(elapsed)}
-        </Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <Label>{distance(track?.distance ?? 0)}</Label>
-          <Label>{pace(track?.distance ?? 0, elapsed)}</Label>
-          <Label>{((track?.speed ?? 0) * 3.6).toFixed(1)} km/h</Label>
+        {!track ? (
+          <Field
+            label={t("Preparación inicial (seg)", "Initial preparation (sec)")}
+            value={prep}
+            onChangeText={(text) => setPrep(text.replace(/\D/g, "").slice(0, 3))}
+            keyboardType="number-pad"
+            editable={!preparing}
+          />
+        ) : null}
+        {preparing ? (
+          <Text
+            accessibilityRole="timer"
+            style={{
+              color: colors.warning,
+              fontSize: 48,
+              fontWeight: "800",
+              textAlign: "center",
+              fontVariant: ["tabular-nums"],
+            }}
+          >
+            {t("Preparación:", "Preparation:")}{" "}
+            {timeFormat(Math.max(0, Math.ceil((prepEnd - now) / 1000)))}
+          </Text>
+        ) : null}
+        <RouteMap points={track?.points ?? []} live={!!track} locateOnOpen />
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2), justifyContent: "space-between" }}>
+          <Metric value={timeFormat(elapsed)} label={t("Tiempo", "Time")} />
+          <Metric value={distance(track?.distance ?? 0)} label={t("Distancia", "Distance")} />
+          <Metric
+            value={speedLabel}
+            label={activeMode === "cycle" ? t("Velocidad", "Speed") : t("Ritmo", "Pace")}
+          />
+          <Metric value={`${kcal} kcal`} label={t("Estimación", "Estimate")} />
         </View>
-        {track ? <RouteShape points={track.points} /> : null}
         {track ? (
           <Button
             variant="destructive"
@@ -220,10 +299,14 @@ export function TrackingPanel() {
               )
             }
           >
-            {t("Terminar", "Finish")}
+            {t("Finalizar", "Finish")}
+          </Button>
+        ) : preparing ? (
+          <Button variant="secondary" onPress={() => setPrepEnd(null)}>
+            {t("Cancelar preparación", "Cancel preparation")}
           </Button>
         ) : (
-          <Button onPress={() => void start()}>{t("Iniciar", "Start")}</Button>
+          <Button onPress={() => void start()}>{t("Iniciar GPS", "Start GPS")}</Button>
         )}
         <Label muted>
           {t(
@@ -232,29 +315,71 @@ export function TrackingPanel() {
           )}
         </Label>
       </Card>
+      <Label>{t("Recorridos guardados", "Saved routes")}</Label>
+      {!history.length ? (
+        <Label muted>
+          {t(
+            "Al finalizar una actividad con GPS, tu recorrido se guarda aquí.",
+            "Finish a GPS activity to save its route here.",
+          )}
+        </Label>
+      ) : null}
       {history.map((session) => (
-        <Card key={session.id}>
-          <Label>
-            {session.mode === "run"
-              ? t("Correr", "Run")
-              : t("Bicicleta", "Cycling")}{" "}
-            ·{" "}
-            {new Date(session.date).toLocaleDateString(
-              snapshot.settings.language ?? "es",
-              {
-                day: "numeric",
-                month: "short",
-              },
-            )}
-          </Label>
-          <Label muted>
-            {distance(session.distanceMeters)} ·{" "}
-            {timeFormat(session.durationSeconds)} ·{" "}
-            {pace(session.distanceMeters, session.durationSeconds)}
-          </Label>
-          <RouteShape points={session.points} />
-        </Card>
+        <Pressable
+          key={session.id}
+          accessibilityRole="button"
+          onPress={() => setViewing(session)}
+        >
+          <Card>
+            <Label>{describe(session)}</Label>
+            <Label muted>
+              {distance(session.distanceMeters)} ·{" "}
+              {timeFormat(session.durationSeconds)} ·{" "}
+              {pace(session.distanceMeters, session.durationSeconds)}
+            </Label>
+            <RouteShape points={session.points} />
+          </Card>
+        </Pressable>
       ))}
+      <Modal
+        visible={viewing !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setViewing(null)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("Cerrar", "Close")}
+            onPress={() => setViewing(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          {viewing ? (
+            <Card>
+              <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}>
+                {t("Recorrido guardado", "Saved route")}
+              </Text>
+              <Label muted>{describe(viewing)}</Label>
+              <Label muted>
+                {distance(viewing.distanceMeters)} ·{" "}
+                {timeFormat(viewing.durationSeconds)} ·{" "}
+                {pace(viewing.distanceMeters, viewing.durationSeconds)}
+              </Label>
+              <RouteMap key={viewing.id} points={viewing.points} />
+              <Button variant="secondary" onPress={() => setViewing(null)}>
+                {t("Cerrar", "Close")}
+              </Button>
+            </Card>
+          ) : null}
+        </View>
+      </Modal>
     </>
   );
 }

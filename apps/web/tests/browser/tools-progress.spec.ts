@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
     .getByRole("link", { name: "Herramientas", exact: true })
     .click();
 });
-test("clocks persist through navigation, combat works and GPS preparation records a route", async ({
+test("clocks persist through navigation and combat works", async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -48,80 +48,6 @@ test("clocks persist through navigation, combat works and GPS preparation record
   await page.screenshot({
     path: `artifacts/combat-${info.project.name}.png`,
     fullPage: true,
-  });
-  // Browser-local GPS simulation: physical device/location permissions are a release check.
-  await page.evaluate(() => {
-    let active = false;
-    Object.defineProperty(navigator, "geolocation", {
-      configurable: true,
-      value: {
-        watchPosition: (success: (value: unknown) => void) => {
-          active = true;
-          success({
-            coords: { latitude: 52, longitude: 13, speed: 0, accuracy: 5 },
-            timestamp: Date.now(),
-          });
-          window.addEventListener("test-position", () => {
-            if (active)
-              success({
-                coords: {
-                  latitude: 52.001,
-                  longitude: 13,
-                  speed: 0,
-                  accuracy: 5,
-                },
-                timestamp: Date.now(),
-              });
-          });
-          return 1;
-        },
-        clearWatch: () => {
-          active = false;
-        },
-      },
-    });
-  });
-  await page.getByRole("button", { name: "Tracking", exact: true }).click();
-  await page.getByLabel("Preparación inicial (seg)").fill("1");
-  await page.getByRole("button", { name: "Iniciar GPS", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "Finalizar", exact: true }),
-  ).toBeVisible();
-  // Positions are ignored during the preparation countdown, so keep sending until the route has a line.
-  await expect(
-    page.locator(".route-map .leaflet-overlay-pane path").first(),
-  ).toBeAttached();
-  await expect
-    .poll(async () => {
-      await page.evaluate(() =>
-        window.dispatchEvent(new Event("test-position")),
-      );
-      return page
-        .locator(".route-map .leaflet-overlay-pane path")
-        .first()
-        .getAttribute("d");
-    })
-    .toMatch(/M.*L/);
-  await expect(page.locator(".route-map")).toContainText("OpenStreetMap");
-  await page.getByRole("button", { name: "Finalizar", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Recorridos guardados", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: /Correr ·.*km ·/ }),
-  ).toHaveCount(1);
-  await page.reload();
-  await page.getByRole("button", { name: "Tracking", exact: true }).click();
-  await page.getByRole("button", { name: /Correr ·.*km ·/ }).click();
-  await expect(
-    page.getByRole("dialog", { name: "Recorrido guardado", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("dialog").locator(".leaflet-overlay-pane path").first(),
-  ).toBeAttached();
-  await page.screenshot({
-    path: `artifacts/gps-route-${info.project.name}.png`,
-    animations: "disabled",
   });
   expect(errors).toEqual([]);
   expect(
@@ -226,80 +152,6 @@ test("progress renders empty-state analytics without removed time totals", async
   ).toBe(true);
 });
 
-test("tracking locates automatically and renders a basemap without symbols", async ({
-  page,
-}) => {
-  await page.route("https://tiles.openfreemap.org/styles/positron", (route) =>
-    route.fulfill({
-      json: {
-        version: 8,
-        sources: {
-          streets: {
-            type: "geojson",
-            data: {
-              type: "Feature",
-              properties: {},
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  [13, 52],
-                  [13.001, 52.001],
-                ],
-              },
-            },
-          },
-        },
-        layers: [
-          {
-            id: "background",
-            type: "background",
-            paint: { "background-color": "#e9eef0" },
-          },
-          {
-            id: "road",
-            type: "line",
-            source: "streets",
-            paint: { "line-color": "#fff" },
-          },
-          { id: "hidden-label", type: "symbol", source: "not-requested" },
-        ],
-      },
-    }),
-  );
-  await page.evaluate(() => {
-    Object.defineProperty(navigator, "geolocation", {
-      configurable: true,
-      value: {
-        getCurrentPosition: (success: (position: unknown) => void) => {
-          (window as unknown as { locationRequests: number }).locationRequests =
-            ((window as unknown as { locationRequests: number })
-              .locationRequests ?? 0) + 1;
-          success({ coords: { latitude: 52, longitude: 13 } });
-        },
-      },
-    });
-  });
-  await page.getByRole("button", { name: "Tracking", exact: true }).click();
-  await expect(page.locator('.route-map path[fill="#38bdf8"]')).toHaveAttribute(
-    "fill-opacity",
-    "1",
-  );
-  expect(
-    await page.evaluate(
-      () =>
-        (window as unknown as { locationRequests: number }).locationRequests,
-    ),
-  ).toBe(1);
-  await expect(page.locator(".route-map canvas")).toBeVisible();
-  await expect(page.locator(".route-map")).toHaveAttribute(
-    "data-basemap-ready",
-    "true",
-  );
-  await expect(page.locator(".route-map")).toContainText("OpenFreeMap");
-  await expect(
-    page.getByText("El mapa de calles no pudo cargarse.", { exact: false }),
-  ).toHaveCount(0);
-});
 test("numeric settings allow clearing and replacing the whole value", async ({
   page,
 }) => {
@@ -314,12 +166,6 @@ test("numeric settings allow clearing and replacing the whole value", async ({
   await rounds.fill("");
   await page.getByLabel("Trabajo (seg)", { exact: true }).click();
   await expect(rounds).toHaveValue("3");
-  await page.getByRole("button", { name: "Tracking", exact: true }).click();
-  const prep = page.getByLabel("Preparación inicial (seg)", { exact: true });
-  await prep.fill("");
-  await expect(prep).toHaveValue("");
-  await prep.fill("3");
-  await expect(prep).toHaveValue("3");
   await page.getByRole("button", { name: "Calculadoras", exact: true }).click();
   const age = page.getByLabel("Edad", { exact: true });
   await age.fill("");

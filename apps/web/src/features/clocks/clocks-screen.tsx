@@ -4,8 +4,6 @@ import { useRef, useState } from "react";
 import { useClock } from "./clock-provider";
 import { useApp } from "@/state/app-provider";
 import { combatTone, timeFormat } from "@fitty/core/domain/combat";
-import { RouteMap } from "./route-map";
-import { TrackingHistory } from "./tracking-history";
 import { Pause, Play, RotateCcw, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,30 +81,9 @@ export function ClocksScreen() {
     phase = combat.state.phase;
   const elapsed = clock.sw.running
       ? clock.now - clock.sw.started
-      : clock.sw.elapsed,
-    track = clock.track,
-    distance =
-      snapshot.settings.distance === "mi"
-        ? track.distance / 1609.344
-        : track.distance / 1000;
-  const kg =
-      Number(snapshot.profile.weight ?? 75) /
-      (snapshot.settings.weight === "lb" ? 2.20462 : 1),
-    speed = track.running
-      ? clock.now - track.fixTime <= 10000
-        ? track.currentSpeed
-        : 0
-      : track.elapsed
-        ? track.distance / track.elapsed
-        : 0,
-    pace =
-      speed >= 0.5
-        ? track.mode === "cycle"
-          ? `${(speed * (snapshot.settings.distance === "mi" ? 2.236936 : 3.6)).toFixed(1)} ${snapshot.settings.distance === "mi" ? "mph" : "km/h"}`
-          : `${timeFormat((snapshot.settings.distance === "mi" ? 1609.344 : 1000) / speed)} /${snapshot.settings.distance}`
-        : "—";
+      : clock.sw.elapsed;
   const swipe = useSwipeNavigation((direction) => {
-    const tabs = ["stopwatch", "timer", "combat", "tracking"];
+    const tabs = ["stopwatch", "timer", "combat"];
     const next =
       tabs[tabs.indexOf(clock.section) + (direction === "next" ? 1 : -1)];
     if (!next) return false;
@@ -120,7 +97,6 @@ export function ClocksScreen() {
           ["stopwatch", "Cronómetro"],
           ["timer", "Timer"],
           ["combat", "Combate"],
-          ["tracking", "Tracking"],
         ].map(([id, name]) => (
           <button
             key={id}
@@ -383,101 +359,6 @@ export function ClocksScreen() {
               onReset={() => clock.configureCombat(combat.config)}
             />
           </div>
-        </section>
-      )}
-      {clock.section === "tracking" && (
-        <section className="panel">
-          <div className="my-3 flex gap-3">
-            <Button
-              variant="secondary"
-              onClick={() => clock.configureTrack({ mode: "run" })}
-            >
-              {t("Correr", "Running")}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => clock.configureTrack({ mode: "cycle" })}
-            >
-              {t("Ciclismo", "Cycling")}
-            </Button>
-          </div>
-          <label>
-            {t("Preparación inicial (seg)", "Initial preparation (sec)")}
-            <NumericInput
-              type="number"
-              min={0}
-              max={600}
-              value={track.prep}
-              disabled={track.running || track.preparing}
-              onChange={(event) =>
-                clock.configureTrack({
-                  prep: Math.max(0, Math.min(600, Number(event.target.value))),
-                })
-              }
-            />
-          </label>
-          {track.preparing && (
-            <p className="my-3">
-              {t("Preparación:", "Preparation:")}
-              {timeFormat((track.prepEnd - clock.now) / 1000)}
-            </p>
-          )}
-          <RouteMap
-            key={track.saved ? "saved" : "active"}
-            points={track.points}
-            live={track.running}
-            locateOnOpen
-          />
-          {track.error && <p role="alert">{track.error}</p>}
-          <div className="metric-grid">
-            <div>
-              <strong>{timeFormat(track.elapsed)}</strong>
-              <small>{t("Tiempo", "Time")}</small>
-            </div>
-            <div>
-              <strong>
-                {distance.toFixed(2)} {snapshot.settings.distance}
-              </strong>
-              <small>{t("Distancia", "Distance")}</small>
-            </div>
-            <div>
-              <strong>{pace}</strong>
-              <small>{track.mode === "cycle" ? "Velocidad" : "Ritmo"}</small>
-            </div>
-            <div>
-              <strong>
-                {Math.round(
-                  ((track.mode === "run" ? 9.8 : 7.5) * kg * track.elapsed) /
-                    3600,
-                )}{" "}
-                kcal
-              </strong>
-              <small>{t("Estimación", "Estimate")}</small>
-            </div>
-          </div>
-          <div className="mt-5 flex justify-center gap-3">
-            <Button onClick={clock.toggleTrack}>
-              {track.preparing
-                ? "Cancelar preparación"
-                : track.running
-                  ? "Finalizar"
-                  : "Iniciar GPS"}
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={track.running || track.preparing}
-              onClick={clock.resetTrack}
-            >
-              {t("Reiniciar", "Reset")}
-            </Button>
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground">
-            {t(
-              "Finalizá la actividad para guardar el recorrido. Mantené la app visible: el navegador puede limitar el GPS en segundo plano.",
-              "Finish the activity to save the route. Keep the app visible: the browser may limit GPS in the background.",
-            )}
-          </p>
-          <TrackingHistory />
         </section>
       )}
     </div>
