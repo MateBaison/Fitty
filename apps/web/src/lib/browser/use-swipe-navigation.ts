@@ -36,7 +36,7 @@ export function useSwipeNavigation(
       if (
         !target ||
         target.closest(
-          'form,input,select,textarea,button,a,summary,[contenteditable="true"],[role="slider"],[draggable="true"],[data-no-swipe],.leaflet-container,.maplibregl-map',
+          'form,input,select,textarea,button,a,summary,[contenteditable="true"],[role="slider"],[draggable="true"],[data-no-swipe]',
         )
       )
         return;

@@ -9,28 +9,7 @@ import {
 } from "@fitty/core/domain/combat";
 import { useScreenWakeLock } from "@/lib/browser/use-screen-wake-lock";
 import { CombatAudio } from "@/lib/browser/combat-audio";
-import {
-  gpsReading,
-  recordedRoute,
-  type GPSReading,
-  type Point,
-} from "@fitty/core/domain/tracking";
 import { useApp } from "@/state/app-provider";
-type Track = {
-  mode: "run" | "cycle";
-  running: boolean;
-  preparing: boolean;
-  prep: number;
-  prepEnd: number;
-  started: number;
-  elapsed: number;
-  distance: number;
-  points: Point[];
-  error: string;
-  saved: boolean;
-  currentSpeed: number;
-  fixTime: number;
-};
 type ClockContext = {
   now: number;
   section: string;
@@ -44,10 +23,6 @@ type ClockContext = {
   combat: CombatMachine;
   configureCombat: (config: CombatConfig) => void;
   toggleCombat: () => void;
-  track: Track;
-  configureTrack: (change: Partial<Track>) => void;
-  toggleTrack: () => void;
-  resetTrack: () => void;
 };
 const Context = createContext<ClockContext | null>(null);
 export function ClockProvider({ children }: { children: React.ReactNode }) {
@@ -59,36 +34,16 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
   const timerRef = useRef(timer);
   const timerAnnounced = useRef(0);
   timerRef.current = timer;
-  const [track, setTrack] = useState<Track>({
-    mode: "run",
-    running: false,
-    preparing: false,
-    prep: 10,
-    prepEnd: 0,
-    started: 0,
-    elapsed: 0,
-    distance: 0,
-    points: [],
-    error: "",
-    saved: false,
-    currentSpeed: 0,
-    fixTime: 0,
-  });
   const [combatMachine] = useState(
     () => new CombatMachine(readCombatConfig(snapshot.settings.combatClock)),
   );
   const combat = useRef(combatMachine),
-    audio = useRef(new CombatAudio()),
-    watch = useRef<number | null>(null),
-    trackRef = useRef(track);
+    audio = useRef(new CombatAudio());
   useScreenWakeLock(
     sw.running ||
       timer.running ||
-      combat.current.state.running ||
-      track.running ||
-      track.preparing,
+      combat.current.state.running,
   );
-  trackRef.current = track;
   useEffect(() => {
     const machine = combat.current;
     // Refresh idle preferences after cloud reconciliation, without restarting
@@ -124,85 +79,6 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
         .catch(() => reportSoundFailureRef.current());
     });
   };
-  const stopWatch = () => {
-    if (watch.current !== null)
-      navigator.geolocation?.clearWatch(watch.current);
-    watch.current = null;
-  };
-  const gps = useRef<GPSReading | null>(null);
-  const startGPS = () => {
-    gps.current = null;
-    if (!navigator.geolocation) {
-      setTrack((previous) => ({
-        ...previous,
-        running: false,
-        preparing: false,
-        error: "GPS no disponible.",
-      }));
-      return;
-    }
-    setTrack((previous) => ({
-      ...previous,
-      running: true,
-      preparing: false,
-      currentSpeed: 0,
-      fixTime: 0,
-      started: Date.now() - (previous.saved ? 0 : previous.elapsed) * 1000,
-      ...(previous.saved
-        ? { elapsed: 0, points: [], distance: 0, saved: false }
-        : {}),
-      error: "",
-    }));
-    watch.current = navigator.geolocation.watchPosition(
-      (position) => {
-        if (!trackRef.current.running) return;
-        const result = gpsReading(
-          gps.current,
-          {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-            time: position.timestamp,
-            speed: position.coords.speed,
-            accuracy: position.coords.accuracy,
-          },
-          trackRef.current.mode,
-          Date.now(),
-        );
-        if (!result) return;
-        gps.current = result.reading;
-        const point: Point = {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-          time: position.timestamp,
-          speed: result.reading.speed,
-        };
-        setTrack((previous) =>
-          previous.running
-            ? {
-                ...previous,
-                distance: previous.distance + result.distance,
-                points: [...previous.points, point],
-                currentSpeed: result.reading.speed,
-                fixTime: point.time,
-              }
-            : previous,
-        );
-      },
-      () => {
-        stopWatch();
-        setTrack((previous) => ({
-          ...previous,
-          running: false,
-          preparing: false,
-          error:
-            "No se pudo acceder a tu ubicación. Revisá el permiso del navegador.",
-        }));
-      },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 12000 },
-    );
-  };
-  const startGPSRef = useRef(startGPS);
-  startGPSRef.current = startGPS;
   useEffect(() => {
     const recoverAudio = () => {
       if (
@@ -240,24 +116,12 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
             }
           : previous,
       );
-      const current = trackRef.current;
-      if (current.preparing && time >= current.prepEnd) {
-        trackRef.current = { ...current, preparing: false };
-        startGPSRef.current();
-      }
-      if (current.running)
-        setTrack((previous) => ({
-          ...previous,
-          elapsed: Math.floor((time - previous.started) / 1000),
-        }));
     }, 100);
     return () => {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", recoverAudio);
       window.removeEventListener("pageshow", recoverAudio);
       window.removeEventListener("pointerdown", recoverAudio);
-      if (watch.current !== null)
-        navigator.geolocation?.clearWatch(watch.current);
       audio.current.close();
     };
   }, []);
@@ -355,56 +219,6 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
               signal(combat.current.toggle(Date.now()));
               reportSoundFailureRef.current();
             });
-        },
-        track,
-        configureTrack: (change) => {
-          if (!track.running && !track.preparing)
-            setTrack((previous) => ({ ...previous, ...change }));
-        },
-        toggleTrack: () => {
-          if (track.preparing)
-            setTrack((previous) => ({ ...previous, preparing: false }));
-          else if (track.running) {
-            stopWatch();
-            const current = trackRef.current;
-            if (!current.running) return;
-            trackRef.current = { ...current, running: false };
-            let saved = false;
-            if (current.points.length >= 2 && Date.now() > current.started) {
-              const record = recordedRoute(current, Date.now());
-              saved = change((draft) => {
-                (draft.trackingSessions ??= []).unshift(record);
-              });
-              if (saved) notify(t("Recorrido guardado", "Route saved"));
-            }
-            setTrack((previous) => ({
-              ...previous,
-              running: false,
-              elapsed: Math.floor((Date.now() - previous.started) / 1000),
-              saved,
-            }));
-          } else if (track.prep > 0)
-            setTrack((previous) => ({
-              ...previous,
-              preparing: true,
-              prepEnd: Date.now() + previous.prep * 1000,
-              error: "",
-            }));
-          else startGPS();
-        },
-        resetTrack: () => {
-          stopWatch();
-          setTrack((previous) => ({
-            ...previous,
-            running: false,
-            preparing: false,
-            elapsed: 0,
-            distance: 0,
-            points: [],
-            error: "",
-            saved: false,
-            started: 0,
-          }));
         },
       }}
     >
