@@ -685,7 +685,8 @@
     "Elegir fechas": "Choisir les dates",
     "Ahora elegí el último día": "Choisissez maintenant le dernier jour",
     "Elegí el primer día": "Choisissez le premier jour",
-    "Detener": "Arrêter"
+    "Detener": "Arrêter",
+    "Recorrido completo": "Parcours complet"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1373,7 +1374,8 @@
     "Elegir fechas": "选择日期",
     "Ahora elegí el último día": "现在选择最后一天",
     "Elegí el primer día": "选择第一天",
-    "Detener": "停止"
+    "Detener": "停止",
+    "Recorrido completo": "完整路线"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2061,7 +2063,8 @@
     "Elegir fechas": "तारीखें चुनें",
     "Ahora elegí el último día": "अब आखिरी दिन चुनें",
     "Elegí el primer día": "पहला दिन चुनें",
-    "Detener": "रोकें"
+    "Detener": "रोकें",
+    "Recorrido completo": "पूरा मार्ग"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -2749,7 +2752,8 @@
     "Elegir fechas": "اختر التواريخ",
     "Ahora elegí el último día": "اختر الآن اليوم الأخير",
     "Elegí el primer día": "اختر اليوم الأول",
-    "Detener": "إيقاف"
+    "Detener": "إيقاف",
+    "Recorrido completo": "المسار الكامل"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -3436,7 +3440,8 @@
     "Elegir fechas": "Daten wählen",
     "Ahora elegí el último día": "Wähle jetzt den letzten Tag",
     "Elegí el primer día": "Wähle den ersten Tag",
-    "Detener": "Stoppen"
+    "Detener": "Stoppen",
+    "Recorrido completo": "Gesamte Route"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -4123,7 +4128,8 @@
     "Elegir fechas": "Scegli le date",
     "Ahora elegí el último día": "Ora scegli l'ultimo giorno",
     "Elegí el primer día": "Scegli il primo giorno",
-    "Detener": "Ferma"
+    "Detener": "Ferma",
+    "Recorrido completo": "Percorso completo"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -4810,7 +4816,8 @@
     "Elegir fechas": "Escolher datas",
     "Ahora elegí el último día": "Agora escolha o último dia",
     "Elegí el primer día": "Escolha o primeiro dia",
-    "Detener": "Parar"
+    "Detener": "Parar",
+    "Recorrido completo": "Percurso completo"
   },
   "en": {
     "Sexo": "Sex",
@@ -5166,6 +5173,7 @@
     "Elegir fechas": "Choose dates",
     "Ahora elegí el último día": "Now choose the last day",
     "Elegí el primer día": "Choose the first day",
-    "Detener": "Stop"
+    "Detener": "Stop",
+    "Recorrido completo": "Full route"
   }
 }

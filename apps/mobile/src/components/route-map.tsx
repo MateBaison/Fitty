@@ -10,10 +10,10 @@ import { colors, space } from "@/theme";
 
 const TILE = 256;
 const MIN_ZOOM = 2;
-const MAX_ZOOM = 18;
+const MAX_ZOOM = 16;
 // One place to swap the street-map provider.
 const tileUrl = (z: number, x: number, y: number) =>
-  `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+  `https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/${z}/${y}/${x}`;
 
 const worldSize = (zoom: number) => TILE * 2 ** zoom;
 function project(lat: number, lon: number, zoom: number) {
@@ -306,7 +306,7 @@ export function RouteMap({
             paddingHorizontal: 4,
           }}
         >
-          © OpenStreetMap
+          © Esri
         </Text>
       </View>
       <View style={{ flexDirection: "row", gap: space(2) }}>
@@ -324,7 +324,7 @@ export function RouteMap({
               fit(points);
             }}
           >
-            {t("Ver recorrido completo", "View full route")}
+            {t("Recorrido completo", "Full route")}
           </Button>
         </View>
       </View>
