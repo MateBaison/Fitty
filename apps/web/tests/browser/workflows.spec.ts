@@ -324,7 +324,7 @@ test("favorites, multiple exercise selection, touch-ready picker and routine reo
     .click();
   await page.getByRole("button", { name: "Gemelos", exact: true }).click();
   await page
-    .getByLabel("Seleccionar Elevación de gemelos de pie", { exact: true })
+    .getByLabel("Seleccionar Elevación de gemelos parado", { exact: true })
     .check();
   await page
     .getByLabel("Seleccionar Elevación de gemelos sentado", { exact: true })

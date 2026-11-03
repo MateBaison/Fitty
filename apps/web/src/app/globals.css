@@ -3874,3 +3874,21 @@ input[type="range"] {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+.filter-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+.filter-list button {
+  min-height: 52px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--secondary);
+  text-align: start;
+  font-weight: 700;
+}
+.filter-list button[aria-pressed="true"] {
+  background: #173a52;
+  border-color: var(--primary);
+}

@@ -102,18 +102,18 @@ export function ExerciseLibrary() {
             className="zone-pick"
             aria-expanded={filtering}
             aria-label={t("Filtrar por equipo", "Filter by equipment")}
-            onClick={() => setFiltering((current) => !current)}
+            onClick={() => setFiltering(true)}
           >
             {equipment === "Todos" ? t("Todo", "All") : equipment}
           </button>
         </div>
       </section>
-      {filtering && (
-        <div
-          className="equipment-menu"
-          role="group"
-          aria-label={t("Equipo", "Equipment")}
-        >
+      <AppDialog
+        open={filtering}
+        onClose={() => setFiltering(false)}
+        title={t("Filtrar", "Filter")}
+      >
+        <div className="filter-list" role="group" aria-label={t("Equipo", "Equipment")}>
           {equipmentFilters.map((filter) => (
             <button
               type="button"
@@ -124,11 +124,11 @@ export function ExerciseLibrary() {
                 setFiltering(false);
               }}
             >
-              {filter}
+              {filter === "Todos" ? t("Todo", "All") : filter}
             </button>
           ))}
         </div>
-      )}
+      </AppDialog>
       <AppDialog
         open={zoning}
         onClose={() => setZoning(false)}

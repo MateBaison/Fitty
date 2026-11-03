@@ -1786,7 +1786,7 @@
   },
   {
     "id": "elevaciones-de-cadera-con-barra",
-    "name": "Elevaciones de cadera con barra",
+    "name": "Elevación de cadera (hip thrust)",
     "group": "Piernas",
     "equipment": "Barra",
     "pattern": "hip",
@@ -1801,7 +1801,7 @@
   },
   {
     "id": "abducciones-de-cadera-sentado-con-banda",
-    "name": "Abducciones de cadera sentado con banda",
+    "name": "Abductores sentado con banda",
     "group": "Piernas",
     "equipment": "Banda",
     "pattern": "hip",
@@ -1816,7 +1816,7 @@
   },
   {
     "id": "abduccion-de-cadera-en-maquina",
-    "name": "Abducción de cadera en máquina",
+    "name": "Abductores en máquina",
     "group": "Piernas",
     "equipment": "Máquina",
     "pattern": "hip",
@@ -1831,7 +1831,7 @@
   },
   {
     "id": "abduccion-con-polea",
-    "name": "Abducción con polea",
+    "name": "Abductores con polea",
     "group": "Piernas",
     "equipment": "Polea",
     "pattern": "hip",
@@ -2026,7 +2026,7 @@
   },
   {
     "id": "elevacion-de-gemelos-de-pie",
-    "name": "Elevación de gemelos de pie",
+    "name": "Elevación de gemelos parado",
     "group": "Gemelos",
     "equipment": "Peso corporal",
     "pattern": "calf",

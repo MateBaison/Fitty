@@ -197,8 +197,8 @@ export function ExerciseBrowser({
                       equipment === "Todos"
                         ? t("Todo", "All")
                         : translate(language, equipment, equipment),
-                      () => setFiltering((current) => !current),
-                      filtering,
+                      () => setFiltering(true),
+                      false,
                     ],
                   ] as const
                 ).map(([title, value, onPress, expanded]) => (
@@ -283,27 +283,6 @@ export function ExerciseBrowser({
                 </Pressable>
               ) : null}
             </View>
-            {filtering ? (
-              <View
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: space(2),
-                }}
-              >
-                {equipmentFilters.map((name) => (
-                  <ChipButton
-                    key={name}
-                    label={translate(language, name, name)}
-                    active={equipment === name}
-                    onPress={() => {
-                      setEquipment(name);
-                      setFiltering(false);
-                    }}
-                  />
-                ))}
-              </View>
-            ) : null}
           </View>
         }
         ListEmptyComponent={
@@ -379,6 +358,72 @@ export function ExerciseBrowser({
           </Pressable>
         )}
       />
+      <Modal
+        visible={filtering}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setFiltering(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            onPress={() => setFiltering(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "88%" }}>
+            <Card>
+              <Text
+                accessibilityRole="header"
+                style={{
+                  color: colors.foreground,
+                  fontSize: 20,
+                  fontWeight: "800",
+                  textAlign: "center",
+                }}
+              >
+                {t("Filtrar", "Filter")}
+              </Text>
+              <DialogScroll contentContainerStyle={{ gap: space(2) }}>
+                {equipmentFilters.map((name) => {
+                  const active = equipment === name;
+                  return (
+                    <Pressable
+                      key={name}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: active }}
+                      onPress={() => {
+                        setEquipment(name);
+                        setFiltering(false);
+                      }}
+                      style={{
+                        minHeight: 52,
+                        justifyContent: "center",
+                        paddingHorizontal: space(3),
+                        borderRadius: 16,
+                        backgroundColor: active ? "#173a52" : colors.secondary,
+                        borderColor: active ? colors.primary : colors.border,
+                        borderWidth: 1,
+                      }}
+                    >
+                      <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 16 }}>
+                        {name === "Todos" ? t("Todo", "All") : translate(language, name, name)}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </DialogScroll>
+            </Card>
+          </View>
+        </View>
+      </Modal>
       <Modal
         visible={zoning}
         transparent
