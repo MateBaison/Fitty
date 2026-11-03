@@ -13,7 +13,7 @@ const MIN_ZOOM = 2;
 const MAX_ZOOM = 18;
 // One place to swap the street-map provider.
 const tileUrl = (z: number, x: number, y: number) =>
-  `https://basemaps.cartocdn.com/light_all/${z}/${x}/${y}@2x.png`;
+  `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
 
 const worldSize = (zoom: number) => TILE * 2 ** zoom;
 function project(lat: number, lon: number, zoom: number) {
@@ -306,7 +306,7 @@ export function RouteMap({
             paddingHorizontal: 4,
           }}
         >
-          © OpenStreetMap © CARTO
+          © OpenStreetMap
         </Text>
       </View>
       <View style={{ flexDirection: "row", gap: space(2) }}>
