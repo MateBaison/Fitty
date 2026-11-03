@@ -1,11 +1,17 @@
 "use client";
+import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { Button } from "@/components/ui/button";
 export default function ErrorPage({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
   return (
     <div className="mx-auto max-w-[720px] space-y-4 p-6" role="alert">
       <h1 className="text-2xl font-bold">No pudimos cargar esta pantalla</h1>

@@ -38,6 +38,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "Tus datos se guardan en Supabase (base de datos y autenticación). El sitio se aloja en Vercel. Los avisos del formulario de soporte se envían con Resend y el correo de soporte se recibe con Zoho.",
           "Los mapas del seguimiento se cargan desde Esri: al ver un mapa, Esri recibe la zona del mapa que estás mirando, pero no tu cuenta ni tu recorrido.",
+          "Si la app o el sitio fallan, enviamos un reporte técnico del error a Sentry (tipo de error, versión y dispositivo). No incluye tus entrenamientos, notas ni fotos, ni vendemos ni usamos esa información para publicidad.",
           "Estos proveedores tratan los datos solo para prestar el servicio y pueden operar servidores fuera de Uruguay.",
           "También guardamos una copia local en tu dispositivo para que la app funcione sin conexión.",
         ],
@@ -117,6 +118,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "Your data is stored in Supabase (database and authentication). The site is hosted on Vercel. Support form notices are sent with Resend and the support inbox is received with Zoho.",
           "Tracking maps are loaded from Esri: when you view a map, Esri receives the map area you are looking at, but not your account or your route.",
+          "If the app or site crashes, we send a technical error report to Sentry (error type, version and device). It does not include your workouts, notes or photos, and we do not sell it or use it for advertising.",
           "These providers process data only to provide the service and may operate servers outside Uruguay.",
           "We also keep a local copy on your device so the app works offline.",
         ],
@@ -196,6 +198,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "Tes données sont stockées chez Supabase (base de données et authentification). Le site est hébergé chez Vercel. Les avis du formulaire d'assistance sont envoyés avec Resend et la boîte d'assistance est reçue via Zoho.",
           "Les cartes du suivi sont chargées depuis Esri : en affichant une carte, Esri reçoit la zone visible, mais ni ton compte ni ton parcours.",
+          "Si l'application ou le site plante, nous envoyons un rapport technique de l'erreur à Sentry (type d'erreur, version et appareil). Il n'inclut ni tes entraînements, ni tes notes, ni tes photos, et nous ne le vendons pas ni ne l'utilisons pour la publicité.",
           "Ces prestataires traitent les données uniquement pour fournir le service et peuvent exploiter des serveurs hors d'Uruguay.",
           "Nous gardons aussi une copie locale sur ton appareil pour que l'application fonctionne hors ligne.",
         ],
@@ -275,6 +278,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "你的数据存储在 Supabase(数据库和身份验证)。网站托管在 Vercel。支持表单通知通过 Resend 发送,支持邮箱通过 Zoho 接收。",
           "跟踪地图由 Esri 加载:查看地图时,Esri 会收到你正在查看的地图区域,但不会收到你的账户或路线。",
+          "如果应用或网站出错,我们会向 Sentry 发送技术错误报告(错误类型、版本和设备)。报告不包含你的训练、笔记或照片,我们也不会出售或用于广告。",
           "这些服务商仅为提供服务而处理数据,其服务器可能位于乌拉圭境外。",
           "我们还会在你的设备上保留一份本地副本,使应用可以离线使用。",
         ],
@@ -354,6 +358,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "आपका डेटा Supabase (डेटाबेस और प्रमाणीकरण) में रखा जाता है। साइट Vercel पर होस्ट है। सहायता फ़ॉर्म की सूचनाएँ Resend से भेजी जाती हैं और सहायता इनबॉक्स Zoho से प्राप्त होता है।",
           "ट्रैकिंग के नक्शे Esri से लोड होते हैं: नक्शा देखने पर Esri को वह क्षेत्र मिलता है जो आप देख रहे हैं, पर आपका खाता या रूट नहीं।",
+          "यदि ऐप या साइट विफल होती है, तो हम Sentry को तकनीकी त्रुटि रिपोर्ट भेजते हैं (त्रुटि का प्रकार, संस्करण और डिवाइस)। इसमें आपके वर्कआउट, नोट्स या फ़ोटो शामिल नहीं होते, और हम इसे न बेचते हैं, न विज्ञापन के लिए उपयोग करते हैं।",
           "ये प्रदाता केवल सेवा देने के लिए डेटा संसाधित करते हैं और उनके सर्वर उरुग्वे के बाहर हो सकते हैं।",
           "ऐप बिना इंटरनेट के भी चल सके, इसके लिए हम आपके उपकरण पर एक स्थानीय प्रति भी रखते हैं।",
         ],
@@ -433,6 +438,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "تُخزَّن بياناتك في Supabase (قاعدة البيانات والمصادقة). يُستضاف الموقع على Vercel. تُرسل إشعارات نموذج الدعم عبر Resend ويُستلم بريد الدعم عبر Zoho.",
           "تُحمَّل خرائط التتبع من Esri: عند عرض خريطة تتلقى Esri المنطقة التي تشاهدها، لكن ليس حسابك ولا مسارك.",
+          "إذا تعطّل التطبيق أو الموقع، نرسل تقريرًا تقنيًا عن الخطأ إلى Sentry (نوع الخطأ والإصدار والجهاز). لا يتضمن تمارينك أو ملاحظاتك أو صورك، ولا نبيعه ولا نستخدمه للإعلانات.",
           "يعالج هؤلاء المزودون البيانات فقط لتقديم الخدمة وقد تكون خوادمهم خارج أوروغواي.",
           "نحتفظ أيضًا بنسخة محلية على جهازك ليعمل التطبيق دون اتصال.",
         ],
@@ -512,6 +518,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "Deine Daten werden bei Supabase (Datenbank und Authentifizierung) gespeichert. Die Website wird bei Vercel gehostet. Benachrichtigungen des Supportformulars werden mit Resend versendet, das Support-Postfach wird über Zoho empfangen.",
           "Die Karten der Aufzeichnung werden von Esri geladen: Beim Ansehen einer Karte erhält Esri den angezeigten Kartenausschnitt, aber weder dein Konto noch deine Strecke.",
+          "Wenn die App oder Website abstürzt, senden wir einen technischen Fehlerbericht an Sentry (Fehlerart, Version und Gerät). Er enthält weder deine Trainings, Notizen noch Fotos, und wir verkaufen ihn nicht und nutzen ihn nicht für Werbung.",
           "Diese Anbieter verarbeiten Daten nur zur Erbringung des Dienstes und können Server außerhalb Uruguays betreiben.",
           "Außerdem speichern wir eine lokale Kopie auf deinem Gerät, damit die App offline funktioniert.",
         ],
@@ -591,6 +598,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "I tuoi dati sono conservati su Supabase (database e autenticazione). Il sito è ospitato su Vercel. Gli avvisi del modulo di assistenza sono inviati con Resend e la casella di assistenza è ricevuta tramite Zoho.",
           "Le mappe del tracciamento sono caricate da Esri: quando vedi una mappa, Esri riceve l'area visualizzata, ma non il tuo account né il tuo percorso.",
+          "Se l'app o il sito vanno in errore, inviamo un rapporto tecnico a Sentry (tipo di errore, versione e dispositivo). Non include i tuoi allenamenti, note o foto, e non lo vendiamo né lo usiamo per la pubblicità.",
           "Questi fornitori trattano i dati solo per erogare il servizio e possono gestire server fuori dall'Uruguay.",
           "Conserviamo anche una copia locale sul tuo dispositivo per far funzionare l'app offline.",
         ],
@@ -670,6 +678,7 @@ export const policies: Record<string, Policy> = {
         body: [
           "Seus dados ficam no Supabase (banco de dados e autenticação). O site é hospedado na Vercel. Os avisos do formulário de suporte são enviados com o Resend e a caixa de suporte é recebida pelo Zoho.",
           "Os mapas do rastreamento são carregados da Esri: ao ver um mapa, a Esri recebe a área exibida, mas não sua conta nem seu percurso.",
+          "Se o app ou o site falharem, enviamos um relatório técnico do erro ao Sentry (tipo de erro, versão e dispositivo). Ele não inclui seus treinos, notas ou fotos, e não o vendemos nem o usamos para publicidade.",
           "Esses provedores tratam os dados apenas para prestar o serviço e podem operar servidores fora do Uruguai.",
           "Também mantemos uma cópia local no seu dispositivo para que o app funcione offline.",
         ],

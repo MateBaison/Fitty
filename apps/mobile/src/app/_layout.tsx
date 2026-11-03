@@ -1,6 +1,7 @@
 import "@/lib/polyfills";
 import "@/lib/tracking-feed";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import * as Sentry from "@sentry/react-native";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -9,6 +10,14 @@ import { LaunchSplash } from "@/components/launch-splash";
 import { queryClient, queryPersister } from "@/lib/query-client";
 import { SessionProvider, useSession } from "@/state/session";
 import { colors } from "@/theme";
+
+// Error reports are sent only when a Sentry DSN is configured; no personal data is attached.
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  enabled: Boolean(process.env.EXPO_PUBLIC_SENTRY_DSN) && !__DEV__,
+  sendDefaultPii: false,
+  tracesSampleRate: 0,
+});
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -35,7 +44,7 @@ function Routes() {
   );
 }
 
-export default function RootLayout() {
+function RootLayout() {
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -49,3 +58,5 @@ export default function RootLayout() {
     </PersistQueryClientProvider>
   );
 }
+
+export default Sentry.wrap(RootLayout);
