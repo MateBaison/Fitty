@@ -166,7 +166,7 @@ export function CombatPanel() {
       <ToneFrame color={frame}>
       <Text
         style={{
-          color: "#fdba74",
+          color: "#ffffff",
           textAlign: "center",
           fontSize: 16,
           fontWeight: "700",
