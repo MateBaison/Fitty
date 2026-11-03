@@ -261,11 +261,7 @@ export function RoutinesHome() {
             <h2 className="my-2 text-2xl font-bold">
               {activeDay?.name ?? "Entrenamiento"}
             </h2>
-            <p>
-              {activeRoutine?.name} ·{" "}
-              {findExercise(snapshot, workout.entries[workout.index]?.id ?? "")
-                ?.name ?? ""}
-            </p>
+            <p>{activeRoutine?.name}</p>
           </div>
           <Link href="/workout" className="primary-link">
             {t("Continuar", "Continue")}

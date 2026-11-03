@@ -3855,3 +3855,13 @@ input[type="range"] {
 .combat-frame {
   padding-top: 36px;
 }
+.active-workout-details {
+  min-width: 0;
+}
+.active-workout-details .eyebrow {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(0.58rem, 2.9vw, 0.75rem);
+}
