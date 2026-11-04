@@ -1,6 +1,6 @@
 "use client";
 
-import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { useExerciseName } from "@/state/exercise-name";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { personalRecords } from "@fitty/core/domain/personal-records";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
@@ -47,6 +47,7 @@ export function CalendarPanel({
   onClose?: () => void;
 } = {}) {
   const [ask, confirmDialog] = useConfirm();
+  const short = useExerciseName();
   const { snapshot, change, notify, t } = useApp(),
     [month, setMonth] = useState(
       () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),

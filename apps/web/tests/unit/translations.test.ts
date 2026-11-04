@@ -30,3 +30,14 @@ test("literal translated UI messages have entries in every additional language",
     "ملخص أسبوعي",
   );
 });
+
+test("every catalog exercise has a name in every language", async () => {
+  const { exercises: exerciseCatalog } = await import("@fitty/core/data/exercises");
+  const added: Record<string, Record<string, string>> = additions;
+  for (const language of ["en", "fr", "zh", "hi", "ar", "de", "it", "pt"]) {
+    const missing = exerciseCatalog
+      .map((exercise) => exercise.name)
+      .filter((name) => !added[language]?.[name]);
+    expect(missing).toEqual([]);
+  }
+});

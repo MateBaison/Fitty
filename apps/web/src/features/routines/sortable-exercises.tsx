@@ -1,6 +1,6 @@
 "use client";
 
-import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { useExerciseName } from "@/state/exercise-name";
 import {
   DndContext,
   MouseSensor,
@@ -35,6 +35,7 @@ function SortableItem({
   exerciseId: string;
   remove: () => void;
 }) {
+  const short = useExerciseName();
   const { snapshot } = useApp(),
     exercise = findExercise(snapshot, exerciseId),
     sort = useSortable({ id }),

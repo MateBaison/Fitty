@@ -1,4 +1,5 @@
 import { forwardRef, Fragment } from "react";
+import { exerciseName } from "@/lib/exercise-name";
 import Svg, {
   Defs,
   Image as SvgImage,
@@ -124,7 +125,13 @@ export const WorkoutPoster = forwardRef<
               fontSize="30"
               fontWeight="700"
             >
-              {short(findExercise(snapshot, exercise.id)?.name ?? exercise.id, 44)}
+              {short(
+                exerciseName(
+                  snapshot.settings.language ?? "es",
+                  findExercise(snapshot, exercise.id)?.name ?? exercise.id,
+                ),
+                44,
+              )}
             </SvgText>
             <SvgText
               x="165"

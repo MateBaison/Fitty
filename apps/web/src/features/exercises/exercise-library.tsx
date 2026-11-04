@@ -1,6 +1,6 @@
 "use client";
 
-import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { useExerciseName } from "@/state/exercise-name";
 import { useMemo, useState } from "react";
 import { useApp } from "@/state/app-provider";
 import { catalogFor, type CatalogExercise } from "@fitty/core/domain/workouts";
@@ -21,6 +21,7 @@ import { BackButton } from "@/components/layout/back-button";
 import { ExerciseVisual } from "./exercise-visual";
 import { ExerciseDetails } from "./exercise-details";
 export function ExerciseLibrary() {
+  const short = useExerciseName();
   const { snapshot, change, notify, t } = useApp();
   const [group, setGroup] = useState<MuscleGroup | "Todos" | "Favoritos">(
       "Todos",
@@ -51,7 +52,7 @@ export function ExerciseLibrary() {
               ? snapshot.favorites.includes(exercise.id)
               : exercise.group === group)) &&
           matchesEquipment(exercise, equipment) &&
-          normalizeSearch(exercise.name + " " + exercise.equipment).includes(
+          normalizeSearch(exercise.name + " " + short(exercise.name) + " " + exercise.equipment).includes(
             normalizeSearch(query),
           ),
       ),

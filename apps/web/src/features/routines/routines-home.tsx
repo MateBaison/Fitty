@@ -1,6 +1,6 @@
 "use client";
 
-import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { useExerciseName } from "@/state/exercise-name";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { useEffect, useState } from "react";
@@ -39,6 +39,7 @@ type Editor = {
 } | null;
 
 export function RoutinesHome() {
+  const short = useExerciseName();
   const { snapshot, change, notify, t } = useApp(),
     router = useRouter();
   const [editor, setEditor] = useState<Editor>(null),

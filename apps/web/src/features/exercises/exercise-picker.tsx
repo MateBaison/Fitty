@@ -1,6 +1,6 @@
 "use client";
 
-import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { useExerciseName } from "@/state/exercise-name";
 import { useState } from "react";
 import { Star } from "lucide-react";
 import { useApp } from "@/state/app-provider";
@@ -19,6 +19,7 @@ export function ExercisePicker({
   onClose: () => void;
   onPick: (ids: string[]) => void;
 }) {
+  const short = useExerciseName();
   const { snapshot, change, t } = useApp();
   const [creating, setCreating] = useState(false);
   const [group, setGroup] = useState<MuscleGroup | "Favoritos" | null>(null),
@@ -29,7 +30,7 @@ export function ExercisePicker({
       (group === "Favoritos"
         ? snapshot.favorites.includes(exercise.id)
         : exercise.group === group) &&
-      normalizeSearch(exercise.name + exercise.equipment).includes(
+      normalizeSearch(exercise.name + " " + short(exercise.name) + " " + exercise.equipment).includes(
         normalizeSearch(query),
       ),
   );

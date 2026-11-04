@@ -1,6 +1,6 @@
 "use client";
 
-import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { useExerciseName } from "@/state/exercise-name";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/state/app-provider";
@@ -20,6 +20,7 @@ import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
 import { localeFor } from "@fitty/core/data/translations";
 export function OnboardingFlow() {
+  const short = useExerciseName();
   const { snapshot, change, flush, notify, t, user } = useApp();
   const router = useRouter();
   const [profile, setProfile] = useState<Snapshot["profile"]>(snapshot.profile);

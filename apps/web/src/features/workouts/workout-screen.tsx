@@ -1,6 +1,6 @@
 "use client";
 
-import { shortExerciseName as short } from "@fitty/core/data/exercise-name";
+import { useExerciseName } from "@/state/exercise-name";
 import { useState } from "react";
 import { Switch } from "@base-ui/react/switch";
 import { useRouter } from "next/navigation";
@@ -31,6 +31,7 @@ export function WorkoutScreen() {
   const [picking, setPicking] = useState(false);
   const [replacement, setReplacement] = useState<number | null>(null);
   const [ask, confirmDialog] = useConfirm();
+  const short = useExerciseName();
   const { snapshot, change, notify, t } = useApp(),
     router = useRouter(),
     workout = snapshot.workout;
