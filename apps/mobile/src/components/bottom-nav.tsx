@@ -5,19 +5,30 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAccount } from "@/state/account";
 import { colors } from "@/theme";
 
+// Professionals is not functional yet: kept in the list but hidden from the bar.
+// Set `hidden` to false to show it again (it sits on the left of Home).
 const destinations: {
   href: "/professionals" | "/" | "/tools" | "/profile";
   es: string;
   en: string;
   icon: SymbolViewProps["name"];
   match: string[];
+  hidden?: boolean;
 }[] = [
+  {
+    href: "/tools",
+    es: "Herramientas",
+    en: "Tools",
+    icon: { ios: "timer", android: "timer" },
+    match: ["/tools", "/tracking", "/combat"],
+  },
   {
     href: "/professionals",
     es: "Profesionales",
     en: "Professionals",
     icon: { ios: "person.2", android: "group" },
     match: ["/professionals"],
+    hidden: true,
   },
   {
     href: "/",
@@ -25,13 +36,6 @@ const destinations: {
     en: "Home",
     icon: { ios: "house", android: "home" },
     match: ["/", "/workout", "/library", "/progress", "/routines", "/body"],
-  },
-  {
-    href: "/tools",
-    es: "Herramientas",
-    en: "Tools",
-    icon: { ios: "timer", android: "timer" },
-    match: ["/tools", "/tracking", "/combat"],
   },
   {
     href: "/profile",
@@ -42,7 +46,7 @@ const destinations: {
   },
 ];
 
-/** Same four destinations as the web bottom navigation; Inicio also covers Biblioteca, Progreso and workouts. */
+/** Bottom navigation (Professionals hidden for now); Inicio also covers Biblioteca, Progreso and workouts. */
 export function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
@@ -62,44 +66,46 @@ export function BottomNav() {
         gap: 4,
       }}
     >
-      {destinations.map((item) => {
-        const active = item.match.includes(pathname);
-        return (
-          <Pressable
-            key={item.href}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: active }}
-            onPress={() => router.navigate(item.href)}
-            style={{
-              flex: 1,
-              minHeight: 57,
-              borderRadius: 16,
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 6,
-              backgroundColor: active ? "#173a52" : "transparent",
-              borderColor: active ? "#2b6a8f" : "transparent",
-              borderWidth: 1,
-            }}
-          >
-            <SymbolView
-              name={item.icon}
-              tintColor={active ? colors.primary : colors.muted}
-              size={21}
-            />
-            <Text
-              numberOfLines={1}
+      {destinations
+        .filter((item) => !item.hidden)
+        .map((item) => {
+          const active = item.match.includes(pathname);
+          return (
+            <Pressable
+              key={item.href}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: active }}
+              onPress={() => router.navigate(item.href)}
               style={{
-                color: active ? colors.primary : colors.muted,
-                fontSize: 10.5,
-                fontWeight: "800",
+                flex: 1,
+                minHeight: 57,
+                borderRadius: 16,
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                backgroundColor: active ? "#173a52" : "transparent",
+                borderColor: active ? "#2b6a8f" : "transparent",
+                borderWidth: 1,
               }}
             >
-              {t(item.es, item.en)}
-            </Text>
-          </Pressable>
-        );
-      })}
+              <SymbolView
+                name={item.icon}
+                tintColor={active ? colors.primary : colors.muted}
+                size={21}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: active ? colors.primary : colors.muted,
+                  fontSize: 10.5,
+                  fontWeight: "800",
+                }}
+              >
+                {t(item.es, item.en)}
+              </Text>
+            </Pressable>
+          );
+        })}
     </View>
   );
 }
