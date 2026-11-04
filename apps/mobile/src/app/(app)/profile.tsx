@@ -29,6 +29,7 @@ import { DeleteAccount } from "@/components/delete-account";
 import { LinkedApps } from "@/components/linked-apps";
 import { SignOut } from "@/components/sign-out";
 import { Button, Card, Field, Label, Screen, DialogScroll } from "@/components/ui";
+import { setIntroSeen } from "@/lib/intro";
 import { pickPhoto, safePhoto } from "@/lib/photos";
 import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
@@ -596,6 +597,12 @@ export default function Profile() {
         </Card>
       ) : null}
       <ResetAccount />
+      <Button
+        variant="secondary"
+        onPress={() => setIntroSeen(session?.user.id ?? "", false)}
+      >
+        {t("Ver introducción", "View introduction")}
+      </Button>
       <Button
         variant="secondary"
         onPress={() =>

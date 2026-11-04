@@ -970,7 +970,16 @@
     "Elevación de gemelos parado": "Mollets debout",
     "Plancha lateral": "Gainage latéral",
     "Lumbares tipo Superman": "Extensions lombaires type Superman",
-    "Lumbares cruzados": "Lombaires croisées"
+    "Lumbares cruzados": "Lombaires croisées",
+    "Tus rutinas": "Tes routines",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "Crée ta routine par jours ou laisse Fitty t'en proposer une selon ton niveau et tes objectifs.",
+    "Biblioteca de ejercicios": "Bibliothèque d'exercices",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "Vois comment faire chaque exercice, avec des images et des étapes claires. Filtre par zone et équipement.",
+    "Tu progreso": "Ta progression",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "Note tes séries, suis tes records et vois comment tu progresses semaine après semaine.",
+    "Omitir": "Passer",
+    "Siguiente": "Suivant",
+    "Ver introducción": "Voir l'introduction"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1943,7 +1952,16 @@
     "Elevación de gemelos parado": "站姿提踵",
     "Plancha lateral": "侧平板支撑",
     "Lumbares tipo Superman": "超人式腰背伸展",
-    "Lumbares cruzados": "交叉腰背伸展"
+    "Lumbares cruzados": "交叉腰背伸展",
+    "Tus rutinas": "你的训练计划",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "按天搭建你的计划,或让 Fitty 根据你的水平和目标推荐一个。",
+    "Biblioteca de ejercicios": "动作库",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "通过图片和清晰的步骤查看每个动作的做法。可按部位和器械筛选。",
+    "Tu progreso": "你的进步",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "记录你的训练组,追踪个人纪录,看看你每周的进步。",
+    "Omitir": "跳过",
+    "Siguiente": "下一步",
+    "Ver introducción": "查看介绍"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2916,7 +2934,16 @@
     "Elevación de gemelos parado": "खड़े होकर काफ रेज़",
     "Plancha lateral": "साइड प्लैंक",
     "Lumbares tipo Superman": "सुपरमैन बैक एक्सटेंशन",
-    "Lumbares cruzados": "क्रॉस बैक एक्सटेंशन"
+    "Lumbares cruzados": "क्रॉस बैक एक्सटेंशन",
+    "Tus rutinas": "आपके रूटीन",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "अपना रूटीन दिनों के हिसाब से बनाएँ या Fitty को अपने स्तर और लक्ष्यों के अनुसार सुझाने दें।",
+    "Biblioteca de ejercicios": "व्यायाम लाइब्रेरी",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "हर व्यायाम कैसे करें, छवियों और स्पष्ट चरणों के साथ देखें। क्षेत्र और उपकरण से फ़िल्टर करें।",
+    "Tu progreso": "आपकी प्रगति",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "अपने सेट दर्ज करें, रिकॉर्ड ट्रैक करें और देखें कि आप हर हफ़्ते कैसे सुधर रहे हैं।",
+    "Omitir": "छोड़ें",
+    "Siguiente": "आगे",
+    "Ver introducción": "परिचय देखें"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3889,7 +3916,16 @@
     "Elevación de gemelos parado": "رفع الساق (السمانة) واقفًا",
     "Plancha lateral": "بلانك جانبي",
     "Lumbares tipo Superman": "تمديد الظهر على طريقة سوبرمان",
-    "Lumbares cruzados": "تمديد الظهر المتقاطع"
+    "Lumbares cruzados": "تمديد الظهر المتقاطع",
+    "Tus rutinas": "روتيناتك",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "ابنِ روتينك حسب الأيام أو دع Fitty يقترح عليك روتينًا بحسب مستواك وأهدافك.",
+    "Biblioteca de ejercicios": "مكتبة التمارين",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "شاهد كيف يُؤدّى كل تمرين بالصور وخطوات واضحة. صفِّ حسب المنطقة والمعدات.",
+    "Tu progreso": "تقدمك",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "سجّل مجموعاتك وتابع أرقامك القياسية وشاهد تحسّنك أسبوعًا بعد أسبوع.",
+    "Omitir": "تخطّي",
+    "Siguiente": "التالي",
+    "Ver introducción": "عرض المقدمة"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4861,7 +4897,16 @@
     "Elevación de gemelos parado": "Wadenheben stehend",
     "Plancha lateral": "Seitlicher Unterarmstütz",
     "Lumbares tipo Superman": "Rückenstrecken im Superman-Stil",
-    "Lumbares cruzados": "Gekreuzte Rückenstrecker"
+    "Lumbares cruzados": "Gekreuzte Rückenstrecker",
+    "Tus rutinas": "Deine Routinen",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "Erstelle deine Routine nach Tagen oder lass dir von Fitty eine passend zu Niveau und Zielen vorschlagen.",
+    "Biblioteca de ejercicios": "Übungsbibliothek",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "Sieh dir an, wie jede Übung geht, mit Bildern und klaren Schritten. Filtere nach Bereich und Gerät.",
+    "Tu progreso": "Dein Fortschritt",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "Erfasse deine Sätze, verfolge deine Rekorde und sieh, wie du dich Woche für Woche verbesserst.",
+    "Omitir": "Überspringen",
+    "Siguiente": "Weiter",
+    "Ver introducción": "Einführung ansehen"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5833,7 +5878,16 @@
     "Elevación de gemelos parado": "Calf in piedi",
     "Plancha lateral": "Plank laterale",
     "Lumbares tipo Superman": "Lombari tipo Superman",
-    "Lumbares cruzados": "Lombari incrociati"
+    "Lumbares cruzados": "Lombari incrociati",
+    "Tus rutinas": "Le tue routine",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "Crea la tua routine per giorni o lascia che Fitty te ne proponga una in base al tuo livello e ai tuoi obiettivi.",
+    "Biblioteca de ejercicios": "Libreria degli esercizi",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "Guarda come si fa ogni esercizio, con immagini e passaggi chiari. Filtra per zona e attrezzatura.",
+    "Tu progreso": "I tuoi progressi",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "Annota le tue serie, segui i tuoi record e guarda come migliori settimana dopo settimana.",
+    "Omitir": "Salta",
+    "Siguiente": "Avanti",
+    "Ver introducción": "Vedi l'introduzione"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6805,7 +6859,16 @@
     "Elevación de gemelos parado": "Panturrilha em pé",
     "Plancha lateral": "Prancha lateral",
     "Lumbares tipo Superman": "Lombares tipo Superman",
-    "Lumbares cruzados": "Lombares cruzados"
+    "Lumbares cruzados": "Lombares cruzados",
+    "Tus rutinas": "Suas rotinas",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "Monte sua rotina por dias ou deixe o Fitty sugerir uma de acordo com seu nível e seus objetivos.",
+    "Biblioteca de ejercicios": "Biblioteca de exercícios",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "Veja como fazer cada exercício, com imagens e passos claros. Filtre por região e equipamento.",
+    "Tu progreso": "Seu progresso",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "Registre suas séries, acompanhe seus recordes e veja como você evolui semana após semana.",
+    "Omitir": "Pular",
+    "Siguiente": "Próximo",
+    "Ver introducción": "Ver introdução"
   },
   "en": {
     "Sexo": "Sex",
@@ -7302,6 +7365,15 @@
     "Elevación de gemelos parado": "Standing calf raise",
     "Plancha lateral": "Side plank",
     "Lumbares tipo Superman": "Superman back extensions",
-    "Lumbares cruzados": "Cross-body back extensions"
+    "Lumbares cruzados": "Cross-body back extensions",
+    "Tus rutinas": "Your routines",
+    "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.": "Armá tu rutina por días o dejá que Fitty te proponga una según tu nivel y tus objetivos.",
+    "Biblioteca de ejercicios": "Exercise library",
+    "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.": "Mirá cómo se hace cada ejercicio, con imágenes y pasos claros. Filtrá por zona y equipo.",
+    "Tu progreso": "Your progress",
+    "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.": "Anotá tus series, seguí tus récords y mirá cómo mejorás semana a semana.",
+    "Omitir": "Skip",
+    "Empezar": "Get started",
+    "Ver introducción": "View introduction"
   }
 }

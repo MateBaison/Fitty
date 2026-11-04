@@ -3,8 +3,10 @@ import { View } from "react-native";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppHeader } from "@/components/app-header";
 import { BottomNav } from "@/components/bottom-nav";
+import { Intro } from "@/components/intro";
 import { Onboarding } from "@/components/onboarding";
 import { Button, Card, Label, Loading, Screen, Title } from "@/components/ui";
+import { setIntroSeen, useIntroSeen } from "@/lib/intro";
 import { supabase } from "@/lib/supabase";
 import { AccountProvider, useAccount } from "@/state/account";
 import { useSession } from "@/state/session";
@@ -13,6 +15,9 @@ import { colors } from "@/theme";
 function AccountGate() {
   const { view, resolve, retry, t } = useAccount();
   const insets = useSafeAreaInsets();
+  const { session } = useSession();
+  const userId = session?.user.id ?? "";
+  const introSeen = useIntroSeen(userId);
   if (view.status === "conflict")
     return (
       <Screen>
@@ -58,6 +63,7 @@ function AccountGate() {
     !view.snapshot.profile.name?.trim()
   )
     return <Onboarding />;
+  if (!introSeen) return <Intro onDone={() => setIntroSeen(userId, true)} />;
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <AppHeader />
