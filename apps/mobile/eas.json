@@ -11,7 +11,8 @@
         "SENTRY_DISABLE_AUTO_UPLOAD": "true",
         "EXPO_PUBLIC_SUPABASE_URL": "https://pebgpdnaihnfjtbrjbto.supabase.co",
         "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_5NC-v7apZq1D-OkU5kWhYA_1xXD95D5",
-        "EXPO_PUBLIC_API_URL": "https://fitty.uy"
+        "EXPO_PUBLIC_API_URL": "https://fitty.uy",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://0da5c4b7f27949059367dbbf05933f5f@o4512373503164416.ingest.de.sentry.io/4512375168499792"
       },
       "ios": {
         "simulator": false
@@ -23,7 +24,8 @@
         "SENTRY_DISABLE_AUTO_UPLOAD": "true",
         "EXPO_PUBLIC_SUPABASE_URL": "https://pebgpdnaihnfjtbrjbto.supabase.co",
         "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_5NC-v7apZq1D-OkU5kWhYA_1xXD95D5",
-        "EXPO_PUBLIC_API_URL": "https://fitty.uy"
+        "EXPO_PUBLIC_API_URL": "https://fitty.uy",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://0da5c4b7f27949059367dbbf05933f5f@o4512373503164416.ingest.de.sentry.io/4512375168499792"
       }
     },
     "production": {
@@ -32,7 +34,8 @@
         "SENTRY_DISABLE_AUTO_UPLOAD": "true",
         "EXPO_PUBLIC_SUPABASE_URL": "https://pebgpdnaihnfjtbrjbto.supabase.co",
         "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_5NC-v7apZq1D-OkU5kWhYA_1xXD95D5",
-        "EXPO_PUBLIC_API_URL": "https://fitty.uy"
+        "EXPO_PUBLIC_API_URL": "https://fitty.uy",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://0da5c4b7f27949059367dbbf05933f5f@o4512373503164416.ingest.de.sentry.io/4512375168499792"
       }
     }
   },
