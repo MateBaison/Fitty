@@ -1,6 +1,6 @@
 type Player = {
-  seekTo: (seconds: number) => unknown;
   play: () => void;
+  remove?: () => void;
   addListener?: (
     event: string,
     listener: (status: { didJustFinish?: boolean }) => void,
@@ -20,7 +20,6 @@ const sources = {
 } as const;
 export type SoundName = keyof typeof sources;
 
-const players: Partial<Record<SoundName, Player | null>> = {};
 let audio: Audio | null | undefined;
 
 function module(): Audio | null {
@@ -49,15 +48,19 @@ export function playSound(name: SoundName) {
       playsInSilentMode: true,
       interruptionMode: "duckOthers",
     });
-    let player = players[name];
-    if (player === undefined) {
-      player = native.createAudioPlayer(sources[name]());
-      players[name] = player;
-    }
-    void player?.seekTo(0);
-    player?.play();
+    // A fresh player per tone: a reused player that already finished stays
+    // silent on iOS from the second play on, which muted every later round.
+    const player = native.createAudioPlayer(sources[name]());
+    player.play();
+    setTimeout(() => {
+      try {
+        player.remove?.();
+      } catch {
+        // Already released.
+      }
+    }, 6000);
   } catch {
-    players[name] = null;
+    // Audio is a nicety: never break the clock if it fails.
   }
 }
 
