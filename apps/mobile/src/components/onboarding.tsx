@@ -62,6 +62,100 @@ export const languageOptions = languages.map((code) => ({
   label: languageNames[code] ?? code,
 }));
 
+/** Two-step progress bar, same look as the web account setup. */
+function SetupProgress({ step }: { step: 1 | 2 }) {
+  const { t } = useAccount();
+  const steps = [
+    t("Tus datos", "Your details"),
+    t("Tu entrenamiento", "Your training"),
+  ];
+  return (
+    <View
+      accessibilityRole="progressbar"
+      accessibilityLabel={t(
+        "Progreso de creación de cuenta",
+        "Account setup progress",
+      )}
+      accessibilityValue={{ min: 0, max: 2, now: step }}
+      style={{ gap: space(3) }}
+    >
+      <View
+        style={{
+          height: 6,
+          borderRadius: 999,
+          overflow: "hidden",
+          backgroundColor: colors.secondary,
+        }}
+      >
+        <View
+          style={{
+            height: "100%",
+            width: `${step * 50}%`,
+            borderRadius: 999,
+            backgroundColor: colors.primary,
+          }}
+        />
+      </View>
+      <View style={{ flexDirection: "row", gap: space(3) }}>
+        {steps.map((label, index) => {
+          const number = index + 1;
+          const done = number < step;
+          const current = number === step;
+          return (
+            <View
+              key={label}
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderWidth: 1,
+                  borderColor: done || current ? colors.primary : colors.border,
+                  backgroundColor: done ? colors.primary : "transparent",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "700",
+                    color: done
+                      ? colors.background
+                      : current
+                        ? colors.primary
+                        : colors.muted,
+                  }}
+                >
+                  {done ? "✓" : number}
+                </Text>
+              </View>
+              <Text
+                numberOfLines={1}
+                style={{
+                  flexShrink: 1,
+                  fontSize: 13,
+                  fontWeight: "600",
+                  color: done || current ? colors.foreground : colors.muted,
+                }}
+              >
+                {label}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
 /** First-use flow: required profile details, then a starting routine. */
 export function Onboarding() {
   const snapshot = useSnapshot();
@@ -134,24 +228,15 @@ export function Onboarding() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <Screen>
-        <Label muted>
-          {t("Paso", "Step")} {step === "profile" ? 1 : 2} {t("de", "of")} 2
-        </Label>
         <Title>
           {step === "profile"
             ? t("Tus datos", "Your details")
             : t("Tu entrenamiento", "Your training")}
         </Title>
+        <SetupProgress step={step === "profile" ? 1 : 2} />
         <Notice />
         {step === "profile" ? (
           <Card>
-            <ChipGroup
-              options={languageOptions}
-              value={language}
-              onChange={(code) =>
-                change((draft) => void (draft.settings.language = code))
-              }
-            />
             <ProfileFields value={profile} onChange={setProfile} />
             <Button
               disabled={missing.length > 0}
