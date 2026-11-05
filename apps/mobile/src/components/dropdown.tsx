@@ -1,9 +1,20 @@
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useRef, useState, type ComponentRef } from "react";
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Label, styles } from "@/components/ui";
 import { colors, space } from "@/theme";
 
-/** A menu that shows only the chosen option until it is tapped, then lists the rest. */
+const ROW = 48;
+const MAX_HEIGHT = 320;
+
+/** Shows the chosen option; tapping opens a floating menu over the screen instead of pushing the content down. */
 export function Dropdown<T extends string | number>({
   label,
   options,
@@ -17,15 +28,42 @@ export function Dropdown<T extends string | number>({
   onChange: (value: T) => void;
   placeholder?: string;
 }) {
-  const [open, setOpen] = useState(false);
+  const [rect, setRect] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
+  const anchor = useRef<ComponentRef<typeof View>>(null);
+  const insets = useSafeAreaInsets();
+  const screen = useWindowDimensions();
   const chosen = options.find((option) => option.value === value);
+  const open = rect !== null;
+  const menuHeight = Math.min(options.length * ROW, MAX_HEIGHT);
+  const placeMenu = () => {
+    if (!rect) return {};
+    const below = rect.y + rect.height + 4;
+    const roomBelow = screen.height - insets.bottom - 8 - below;
+    const top =
+      roomBelow >= menuHeight
+        ? below
+        : Math.max(insets.top + 8, rect.y - menuHeight - 4);
+    return { top, left: rect.x, width: rect.width };
+  };
   return (
     <View style={{ gap: space(1.5) }}>
       {label ? <Label muted>{label}</Label> : null}
       <Pressable
+        ref={anchor}
+        collapsable={false}
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
-        onPress={() => setOpen((current) => !current)}
+        onPress={() =>
+          anchor.current?.measureInWindow(
+            (x: number, y: number, width: number, height: number) =>
+              setRect({ x, y, width, height }),
+          )
+        }
         style={[
           styles.input,
           {
@@ -46,48 +84,73 @@ export function Dropdown<T extends string | number>({
         >
           {chosen?.label ?? placeholder ?? ""}
         </Text>
-        <Text style={{ color: colors.accent }}>{open ? "▴" : "▾"}</Text>
+        <Text style={{ color: colors.accent }}>▾</Text>
       </Pressable>
-      {open ? (
-        <View
-          style={{
-            borderRadius: 14,
-            borderColor: colors.border,
-            borderWidth: 1,
-            backgroundColor: colors.secondary,
-            overflow: "hidden",
-          }}
+      <Modal
+        transparent
+        visible={open}
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() => setRect(null)}
+      >
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={label}
+          style={{ flex: 1 }}
+          onPress={() => setRect(null)}
         >
-          {options.map((option) => (
-            <Pressable
-              key={String(option.value)}
-              accessibilityRole="button"
-              accessibilityState={{ selected: option.value === value }}
-              onPress={() => {
-                onChange(option.value);
-                setOpen(false);
-              }}
-              style={{
-                minHeight: 48,
-                paddingHorizontal: space(4),
-                justifyContent: "center",
-                backgroundColor:
-                  option.value === value ? "#173a52" : "transparent",
-              }}
-            >
-              <Text
-                style={{
-                  color: colors.foreground,
-                  fontSize: 16,
-                  fontWeight: option.value === value ? "800" : "500",
-                }}
-              >
-                {option.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      ) : null}
+          <View
+            style={[
+              {
+                position: "absolute",
+                maxHeight: MAX_HEIGHT,
+                borderRadius: 14,
+                borderColor: colors.border,
+                borderWidth: 1,
+                backgroundColor: colors.card,
+                overflow: "hidden",
+                shadowColor: "#000",
+                shadowOpacity: 0.4,
+                shadowRadius: 16,
+                shadowOffset: { width: 0, height: 6 },
+                elevation: 12,
+              },
+              placeMenu(),
+            ]}
+          >
+            <ScrollView bounces={false}>
+              {options.map((option) => (
+                <Pressable
+                  key={String(option.value)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: option.value === value }}
+                  onPress={() => {
+                    onChange(option.value);
+                    setRect(null);
+                  }}
+                  style={{
+                    minHeight: ROW,
+                    paddingHorizontal: space(4),
+                    justifyContent: "center",
+                    backgroundColor:
+                      option.value === value ? "#173a52" : "transparent",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: colors.foreground,
+                      fontSize: 16,
+                      fontWeight: option.value === value ? "800" : "500",
+                    }}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
