@@ -86,6 +86,10 @@ export function RouteMap({
   };
 
   const last = points.at(-1);
+  // A new recording starts from a fresh view instead of the previous route.
+  useEffect(() => {
+    if (!points.length) initialized.current = false;
+  }, [points.length]);
   useEffect(() => {
     if (!size.width || !last) return;
     setLocationError(false);
@@ -107,6 +111,14 @@ export function RouteMap({
       try {
         const permission = await Location.requestForegroundPermissionsAsync();
         if (!permission.granted) throw new Error("denied");
+        // The last known position shows the map at once; the fresh one refines it.
+        const known = await Location.getLastKnownPositionAsync();
+        if (known && !cancelled && !initialized.current) {
+          const spot = { lat: known.coords.latitude, lon: known.coords.longitude };
+          setPreview(spot);
+          setLocationError(false);
+          setView({ ...spot, zoom: 16 });
+        }
         const position = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
         });

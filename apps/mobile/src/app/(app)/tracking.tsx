@@ -174,8 +174,17 @@ export function TrackingPanel() {
           : previous,
       );
     };
-    // With "always" access the recording continues with the phone locked or
-    // another app in front; otherwise it only follows while the app is open.
+    // Foreground updates arrive at once and drive the screen. With "always"
+    // access a background task keeps recording with the phone locked; fixes
+    // seen twice are discarded because their timestamps do not move forward.
+    subscription.current = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.BestForNavigation,
+        timeInterval: 1000,
+        distanceInterval: 0,
+      },
+      handle,
+    );
     try {
       const allowed = (await Location.getBackgroundPermissionsAsync()).granted;
       if (allowed) {
@@ -196,19 +205,10 @@ export function TrackingPanel() {
           },
         });
         background.current = true;
-        return;
       }
     } catch {
       setTrackingListener(null);
     }
-    subscription.current = await Location.watchPositionAsync(
-      {
-        accuracy: Location.Accuracy.BestForNavigation,
-        timeInterval: 1000,
-        distanceInterval: 0,
-      },
-      handle,
-    );
   };
   // The countdown ends by itself and starts recording.
   useEffect(() => {
@@ -260,8 +260,10 @@ export function TrackingPanel() {
       const record = recordedRoute(current, Date.now());
       if (
         change((draft) => void (draft.trackingSessions ??= []).unshift(record))
-      )
+      ) {
         notify(t("Recorrido guardado", "Route saved"));
+        setViewing(record);
+      }
     } catch (error) {
       notify(error instanceof Error ? error.message : String(error));
     }
@@ -328,6 +330,14 @@ export function TrackingPanel() {
           </Text>
         ) : null}
         <RouteMap points={track?.points ?? []} live={!!track} locateOnOpen />
+        {track && !track.points.length ? (
+          <Label muted>
+            {t(
+              "Buscando señal GPS… puede tardar unos segundos al aire libre.",
+              "Looking for a GPS signal… it can take a few seconds outdoors.",
+            )}
+          </Label>
+        ) : null}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2), justifyContent: "space-between" }}>
           <Metric value={timeFormat(elapsed)} label={t("Tiempo", "Time")} />
           <Metric value={distance(track?.distance ?? 0)} label={t("Distancia", "Distance")} />

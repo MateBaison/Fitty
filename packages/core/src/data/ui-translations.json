@@ -970,7 +970,8 @@
     "Elevación de gemelos parado": "Mollets debout",
     "Plancha lateral": "Gainage latéral",
     "Lumbares tipo Superman": "Extensions lombaires type Superman",
-    "Lumbares cruzados": "Lombaires croisées"
+    "Lumbares cruzados": "Lombaires croisées",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Recherche du signal GPS… cela peut prendre quelques secondes en extérieur."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1943,7 +1944,8 @@
     "Elevación de gemelos parado": "站姿提踵",
     "Plancha lateral": "侧平板支撑",
     "Lumbares tipo Superman": "超人式腰背伸展",
-    "Lumbares cruzados": "交叉腰背伸展"
+    "Lumbares cruzados": "交叉腰背伸展",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "正在搜索 GPS 信号…在户外可能需要几秒钟。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2916,7 +2918,8 @@
     "Elevación de gemelos parado": "खड़े होकर काफ रेज़",
     "Plancha lateral": "साइड प्लैंक",
     "Lumbares tipo Superman": "सुपरमैन बैक एक्सटेंशन",
-    "Lumbares cruzados": "क्रॉस बैक एक्सटेंशन"
+    "Lumbares cruzados": "क्रॉस बैक एक्सटेंशन",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "GPS सिग्नल खोजा जा रहा है… खुली जगह में कुछ सेकंड लग सकते हैं।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3889,7 +3892,8 @@
     "Elevación de gemelos parado": "رفع الساق (السمانة) واقفًا",
     "Plancha lateral": "بلانك جانبي",
     "Lumbares tipo Superman": "تمديد الظهر على طريقة سوبرمان",
-    "Lumbares cruzados": "تمديد الظهر المتقاطع"
+    "Lumbares cruzados": "تمديد الظهر المتقاطع",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "جارٍ البحث عن إشارة GPS… قد يستغرق ذلك بضع ثوانٍ في الأماكن المفتوحة."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4861,7 +4865,8 @@
     "Elevación de gemelos parado": "Wadenheben stehend",
     "Plancha lateral": "Seitlicher Unterarmstütz",
     "Lumbares tipo Superman": "Rückenstrecken im Superman-Stil",
-    "Lumbares cruzados": "Gekreuzte Rückenstrecker"
+    "Lumbares cruzados": "Gekreuzte Rückenstrecker",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "GPS-Signal wird gesucht … im Freien kann das einige Sekunden dauern."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5833,7 +5838,8 @@
     "Elevación de gemelos parado": "Calf in piedi",
     "Plancha lateral": "Plank laterale",
     "Lumbares tipo Superman": "Lombari tipo Superman",
-    "Lumbares cruzados": "Lombari incrociati"
+    "Lumbares cruzados": "Lombari incrociati",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Ricerca del segnale GPS… all'aperto può richiedere qualche secondo."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6805,7 +6811,8 @@
     "Elevación de gemelos parado": "Panturrilha em pé",
     "Plancha lateral": "Prancha lateral",
     "Lumbares tipo Superman": "Lombares tipo Superman",
-    "Lumbares cruzados": "Lombares cruzados"
+    "Lumbares cruzados": "Lombares cruzados",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Procurando sinal de GPS… pode levar alguns segundos ao ar livre."
   },
   "en": {
     "Sexo": "Sex",
@@ -7302,6 +7309,7 @@
     "Elevación de gemelos parado": "Standing calf raise",
     "Plancha lateral": "Side plank",
     "Lumbares tipo Superman": "Superman back extensions",
-    "Lumbares cruzados": "Cross-body back extensions"
+    "Lumbares cruzados": "Cross-body back extensions",
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Looking for a GPS signal… it can take a few seconds outdoors."
   }
 }

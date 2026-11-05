@@ -83,7 +83,8 @@ export function gpsReading(
     estimate < 0.5
       ? 0
       : previous.speed +
-        (estimate - previous.speed) * (seconds / (seconds + 1.5));
+        (estimate - previous.speed) *
+          (seconds / (seconds + (nativeSpeed != null ? 0.6 : 1.5)));
   return {
     reading: {
       fix,
