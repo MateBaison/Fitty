@@ -81,7 +81,7 @@ function IconButton({
   );
 }
 
-export function RoutinesSection() {
+export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {}) {
   const snapshot = useSnapshot();
   const { change, notify, t } = useAccount();
   const language = snapshot.settings.language ?? "es";
@@ -187,6 +187,7 @@ export function RoutinesSection() {
           ) : null}
         </View>
       </Modal>
+      {embedded ? null : (
       <View
         style={{
           flexDirection: "row",
@@ -203,6 +204,7 @@ export function RoutinesSection() {
           </View>
         ) : null}
       </View>
+      )}
       <Notice />
       {creating ? (
         <Card>

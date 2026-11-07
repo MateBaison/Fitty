@@ -14,7 +14,6 @@ import {
   muscleGroups,
   type MuscleGroup,
 } from "@fitty/core/domain/schemas/exercise";
-import type { Routine } from "@fitty/core/domain/schemas/snapshot";
 import { missingProfileFields } from "@fitty/core/domain/profile-validation";
 import {
   createGuidedRoutine,
@@ -32,6 +31,7 @@ import {
   profileValues,
 } from "@/components/profile-fields";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
+import { RoutinesSection } from "@/app/(app)/routines";
 import { MenstrualDays } from "@/components/menstrual-days";
 import { Notice } from "@/components/notice";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
@@ -169,15 +169,15 @@ export function Onboarding() {
   const { change, flush, notify, t } = useAccount();
   const { session } = useSession();
   const language = snapshot.settings.language ?? "es";
-  const [step, setStep] = useState<"profile" | "choice" | "training">("profile");
+  const [step, setStep] = useState<"profile" | "choice" | "training" | "review">("profile");
   const [profile, setProfile] = useState(() => profileDraft(snapshot.profile));
   const [experience, setExperience] = useState<TrainingExperience>("beginner");
   const [days, setDays] = useState(2);
   const [goal, setGoal] = useState<string>("Fuerza e hipertrofia");
   const [groups, setGroups] = useState<MuscleGroup[]>([...muscleGroups]);
-  const [preview, setPreview] = useState<Routine | null>(null);
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [reviewId, setReviewId] = useState<string | null>(null);
   const [mode, setMode] = useState<"custom" | "auto">("custom");
   const [menstrual, setMenstrual] = useState(false);
   const [periodDates, setPeriodDates] = useState<string[]>([]);
@@ -189,13 +189,25 @@ export function Onboarding() {
       { mode: "auto", experience, days, goal, groups, variation: next },
       { makeId, language },
     );
+  /** Adds (or replaces) the suggested routine in the account so it can be edited. */
+  const showRoutine = () => {
+    const routine = proposal(variation);
+    setVariation((current) => current + 1);
+    const previous = reviewId;
+    change((draft) => {
+      draft.routines = draft.routines.filter((item) => item.id !== previous);
+      draft.routines.push(routine);
+      draft.selected = routine.id;
+    });
+    setReviewId(routine.id);
+  };
   const save = async (mode: "auto" | "custom") => {
     if (busy) return;
     setBusy(true);
     try {
       const routine =
         mode === "auto"
-          ? (preview ?? proposal(variation))
+          ? null
           : createGuidedRoutine(
               {
                 mode: "custom",
@@ -226,8 +238,10 @@ export function Onboarding() {
             ? { trainingExperience: experience, trainingGoal: goal }
             : {}),
         };
-        draft.routines.push(routine);
-        draft.selected = routine.id;
+        if (routine) {
+          draft.routines.push(routine);
+          draft.selected = routine.id;
+        }
       });
       if (saved && !(await flush()))
         notify(
@@ -243,6 +257,16 @@ export function Onboarding() {
     }
   };
   const cancel = () => {
+    if (step === "review") {
+      const id = reviewId;
+      change((draft) => {
+        draft.routines = draft.routines.filter((item) => item.id !== id);
+        draft.selected = draft.routines[0]?.id ?? null;
+      });
+      setReviewId(null);
+      setStep("training");
+      return;
+    }
     if (step === "training") {
       setStep("choice");
       return;
@@ -406,6 +430,16 @@ export function Onboarding() {
               {t("Continuar", "Continue")}
             </Button>
           </Card>
+        ) : step === "review" ? (
+          <>
+            <RoutinesSection embedded />
+            <Button variant="secondary" onPress={showRoutine}>
+              {t("Crear otra opción", "Create another option")}
+            </Button>
+            <Button loading={busy} onPress={() => void save("auto")}>
+              {t("Empezar", "Get started")}
+            </Button>
+          </>
         ) : (
           <>
             <Card>
@@ -419,7 +453,6 @@ export function Onboarding() {
                 onChange={(value) => {
                   setExperience(value);
                   setDays(recommendedTrainingDays(value));
-                  setPreview(null);
                 }}
               />
               <Dropdown
@@ -431,7 +464,6 @@ export function Onboarding() {
                 value={days}
                 onChange={(value) => {
                   setDays(value);
-                  setPreview(null);
                 }}
               />
               <Dropdown
@@ -443,7 +475,6 @@ export function Onboarding() {
                 value={goal}
                 onChange={(value) => {
                   setGoal(value);
-                  setPreview(null);
                 }}
               />
               <View
@@ -465,8 +496,7 @@ export function Onboarding() {
                         ? []
                         : [...muscleGroups],
                     );
-                    setPreview(null);
-                  }}
+                    }}
                   style={{
                     minHeight: 40,
                     paddingHorizontal: space(3),
@@ -497,39 +527,17 @@ export function Onboarding() {
                       ? current.filter((item) => item !== group)
                       : [...current, group],
                   );
-                  setPreview(null);
                 }}
               />
-              <Button
-                variant="secondary"
-                disabled={!groups.length}
-                onPress={() => {
-                  setPreview(proposal(variation));
-                  setVariation((current) => current + 1);
-                }}
-              >
-                {preview
-                  ? t("Proponer otra rutina", "Suggest another routine")
-                  : t("Ver rutina propuesta", "See suggested routine")}
-              </Button>
             </Card>
-            {preview ? (
-              <Card>
-                <Label>{preview.name}</Label>
-                {preview.days.map((day) => (
-                  <Label muted key={day.id}>
-                    {day.name}: {day.items.length}{" "}
-                    {t("ejercicios", "exercises")}
-                  </Label>
-                ))}
-              </Card>
-            ) : null}
             <Button
-              loading={busy}
               disabled={!groups.length}
-              onPress={() => void save("auto")}
+              onPress={() => {
+                showRoutine();
+                setStep("review");
+              }}
             >
-              {t("Usar rutina automática", "Use automatic routine")}
+              {t("Ver rutina", "See routine")}
             </Button>
           </>
         )}
