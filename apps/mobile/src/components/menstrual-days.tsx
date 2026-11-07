@@ -117,12 +117,12 @@ export function MenstrualDays({
                   alignItems: "center",
                   justifyContent: "center",
                   opacity: future ? 0.35 : 1,
-                  backgroundColor: selected ? "#e5484d" : colors.secondary,
+                  backgroundColor: selected ? "#f9a8d4" : colors.secondary,
                 }}
               >
                 <Text
                   style={{
-                    color: colors.foreground,
+                    color: selected ? "#171717" : colors.foreground,
                     fontWeight: selected ? "800" : "500",
                   }}
                 >
