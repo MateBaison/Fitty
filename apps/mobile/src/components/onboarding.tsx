@@ -32,6 +32,7 @@ import {
   profileValues,
 } from "@/components/profile-fields";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
+import { MenstrualDays } from "@/components/menstrual-days";
 import { Notice } from "@/components/notice";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { makeId } from "@/lib/id";
@@ -178,6 +179,7 @@ export function Onboarding() {
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
   const [menstrual, setMenstrual] = useState(false);
+  const [periodDates, setPeriodDates] = useState<string[]>([]);
   const menstrualAllowed = menstrualCalendarAllowed({ gender: profile.gender });
   const values = profileValues(profile);
   const missing = missingProfileFields(values, localDateKey(new Date()));
@@ -215,6 +217,7 @@ export function Onboarding() {
                 menstrualCalendar: {
                   ...draft.profile.menstrualCalendar,
                   enabled: menstrual,
+                  ...(periodDates.length ? { dates: periodDates } : {}),
                 },
               }
             : {}),
@@ -308,12 +311,13 @@ export function Onboarding() {
                     onValueChange={setMenstrual}
                   />
                 </View>
-                <Label muted>
-                  {t(
-                    "Marcá los días en el calendario de Inicio. Antes de entrenar te preguntaremos cómo te sentís.",
-                    "Mark days on the Home calendar. Before training we'll ask how you feel.",
-                  )}
-                </Label>
+                {menstrual ? (
+                  <MenstrualDays
+                    dates={periodDates}
+                    onChange={setPeriodDates}
+                    locale={language}
+                  />
+                ) : null}
               </>
             ) : null}
             <Button
