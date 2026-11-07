@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -30,6 +31,7 @@ import {
   profileDraft,
   profileValues,
 } from "@/components/profile-fields";
+import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
 import { Notice } from "@/components/notice";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { makeId } from "@/lib/id";
@@ -175,6 +177,8 @@ export function Onboarding() {
   const [preview, setPreview] = useState<Routine | null>(null);
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [menstrual, setMenstrual] = useState(false);
+  const menstrualAllowed = menstrualCalendarAllowed({ gender: profile.gender });
   const values = profileValues(profile);
   const missing = missingProfileFields(values, localDateKey(new Date()));
   const proposal = (next: number) =>
@@ -206,6 +210,14 @@ export function Onboarding() {
           ...values,
           email: session?.user.email,
           onboardingComplete: true,
+          ...(menstrualAllowed
+            ? {
+                menstrualCalendar: {
+                  ...draft.profile.menstrualCalendar,
+                  enabled: menstrual,
+                },
+              }
+            : {}),
           ...(mode === "auto"
             ? { trainingExperience: experience, trainingGoal: goal }
             : {}),
@@ -259,19 +271,51 @@ export function Onboarding() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <Screen>
-        <View style={{ flexDirection: "row" }}>
-          <BackButton onPress={cancel} />
+        <View style={{ justifyContent: "center" }}>
+          <View style={{ position: "absolute", left: 0, zIndex: 1 }}>
+            <BackButton onPress={cancel} />
+          </View>
+          <Title center>
+            {step === "profile"
+              ? t("Tus datos", "Your details")
+              : t("Tu entrenamiento", "Your training")}
+          </Title>
         </View>
-        <Title>
-          {step === "profile"
-            ? t("Tus datos", "Your details")
-            : t("Tu entrenamiento", "Your training")}
-        </Title>
         <SetupProgress step={step === "profile" ? 1 : 2} />
         <Notice />
         {step === "profile" ? (
           <Card>
             <ProfileFields value={profile} onChange={setProfile} />
+            {menstrualAllowed ? (
+              <>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: space(3),
+                  }}
+                >
+                  <Label style={{ flex: 1 }}>
+                    {t("Calendario menstrual", "Menstrual calendar")}
+                  </Label>
+                  <Switch
+                    accessibilityLabel={t(
+                      "Calendario menstrual",
+                      "Menstrual calendar",
+                    )}
+                    value={menstrual}
+                    trackColor={{ true: "#22c55e", false: colors.border }}
+                    onValueChange={setMenstrual}
+                  />
+                </View>
+                <Label muted>
+                  {t(
+                    "Marcá los días en el calendario de Inicio. Antes de entrenar te preguntaremos cómo te sentís.",
+                    "Mark days on the Home calendar. Before training we'll ask how you feel.",
+                  )}
+                </Label>
+              </>
+            ) : null}
             <Button
               disabled={missing.length > 0}
               onPress={() => setStep("training")}
