@@ -1,9 +1,9 @@
 import { useRouter } from "expo-router";
 import { exerciseName } from "@/lib/exercise-name";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
-import { Alert, Modal, Pressable, Share, Switch, Text, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, Share, Switch, Text, View } from "react-native";
 import { buildAutomaticRoutine } from "@fitty/core/domain/calculations/automatic-routine";
 import {
   muscleGroups,
@@ -101,6 +101,19 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
     null,
   );
   const [open, setOpen] = useState<string | null>(snapshot.selected);
+  // Embedded in account setup, a freshly suggested routine opens by itself
+  // (with its days open too when the previous one had them open).
+  useEffect(() => {
+    if (!embedded || !snapshot.selected) return;
+    setOpen(snapshot.selected);
+    const routine = snapshot.routines.find(
+      (item) => item.id === snapshot.selected,
+    );
+    setOpenDays((current) =>
+      current.length && routine ? routine.days.map((day) => day.id) : current,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [embedded, snapshot.selected]);
   const [openDays, setOpenDays] = useState<string[]>([]);
   const [removingDay, setRemovingDay] = useState<{ rid: string } | null>(null);
 
@@ -183,6 +196,28 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
               <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800", textAlign: "center" }}>
                 {exerciseName(language, viewing.name)}
               </Text>
+              <ScrollView
+                style={{ maxHeight: 220 }}
+                contentContainerStyle={{ gap: space(2) }}
+              >
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 15,
+                    fontWeight: "800",
+                  }}
+                >
+                  {t("Cómo hacerlo", "How to do it")}
+                </Text>
+                {viewing.steps.map((step, index) => (
+                  <Text
+                    key={index}
+                    style={{ color: colors.muted, fontSize: 14, lineHeight: 20 }}
+                  >
+                    {index + 1}. {translate(language, step, step)}
+                  </Text>
+                ))}
+              </ScrollView>
             </Card>
           ) : null}
         </View>
@@ -489,6 +524,8 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                             alignItems: "center",
                             justifyContent: "center",
                             gap: space(2),
+                            flexWrap: "nowrap",
+                            overflow: "hidden",
                           }}
                         >
                           <Text style={{ color: colors.muted, fontSize: 11 }}>
@@ -496,6 +533,8 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                           </Text>
                           <Text
                             style={{
+                              flexShrink: 1,
+                              textAlign: "center",
                               color: colors.foreground,
                               fontSize: 17,
                               fontWeight: "800",
@@ -667,7 +706,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                   </View>
                   <View style={{ flex: 1 }}>
                     <Button
-                      variant="secondary"
+                      variant="success"
                       onPress={() =>
                         setPrompt({ type: "day", rid: routine.id })
                       }

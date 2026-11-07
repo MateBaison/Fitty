@@ -437,7 +437,7 @@ export function Onboarding() {
               {t("Crear otra opción", "Create another option")}
             </Button>
             <Button loading={busy} onPress={() => void save("auto")}>
-              {t("Empezar", "Get started")}
+              {t("Continuar", "Continue")}
             </Button>
           </>
         ) : (

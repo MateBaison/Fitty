@@ -977,7 +977,10 @@
     "Seguir aquí": "Rester ici",
     "Cancelar creación": "Annuler la création",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Marquez les jours de saignement menstruel. Touchez à nouveau pour retirer une date.",
-    "Tu rutina": "Ta routine"
+    "Tu rutina": "Ta routine",
+    "Ver rutina": "Voir la routine",
+    "Crear otra opción": "Créer une autre option",
+    "Cómo hacerlo": "Comment l'exécuter"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1957,7 +1960,10 @@
     "Seguir aquí": "留在这里",
     "Cancelar creación": "取消创建",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "标记有经期出血的日子。再次点击可取消日期。",
-    "Tu rutina": "你的计划"
+    "Tu rutina": "你的计划",
+    "Ver rutina": "查看计划",
+    "Crear otra opción": "创建另一个方案",
+    "Cómo hacerlo": "如何做"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2937,7 +2943,10 @@
     "Seguir aquí": "यहीं रहें",
     "Cancelar creación": "बनाना रद्द करें",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "मासिक धर्म के रक्तस्राव वाले दिन चिह्नित करें। तारीख हटाने के लिए फिर से टैप करें।",
-    "Tu rutina": "आपकी रूटीन"
+    "Tu rutina": "आपकी रूटीन",
+    "Ver rutina": "रूटीन देखें",
+    "Crear otra opción": "दूसरा विकल्प बनाएँ",
+    "Cómo hacerlo": "इसे कैसे करें"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3917,7 +3926,10 @@
     "Seguir aquí": "البقاء هنا",
     "Cancelar creación": "إلغاء الإنشاء",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "حدّد الأيام التي حدث فيها نزيف الدورة الشهرية. اضغط مرة أخرى لإزالة تاريخ.",
-    "Tu rutina": "روتينك"
+    "Tu rutina": "روتينك",
+    "Ver rutina": "عرض الروتين",
+    "Crear otra opción": "إنشاء خيار آخر",
+    "Cómo hacerlo": "طريقة التنفيذ"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4896,7 +4908,10 @@
     "Seguir aquí": "Hier bleiben",
     "Cancelar creación": "Erstellung abbrechen",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Markiere die Tage mit Menstruationsblutung. Tippe erneut, um ein Datum zu entfernen.",
-    "Tu rutina": "Deine Routine"
+    "Tu rutina": "Deine Routine",
+    "Ver rutina": "Routine ansehen",
+    "Crear otra opción": "Weitere Option erstellen",
+    "Cómo hacerlo": "So geht's"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5875,7 +5890,10 @@
     "Seguir aquí": "Resta qui",
     "Cancelar creación": "Annulla creazione",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Segna i giorni con sanguinamento mestruale. Tocca di nuovo per rimuovere una data.",
-    "Tu rutina": "La tua routine"
+    "Tu rutina": "La tua routine",
+    "Ver rutina": "Vedi routine",
+    "Crear otra opción": "Crea un'altra opzione",
+    "Cómo hacerlo": "Come eseguirlo"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6854,7 +6872,10 @@
     "Seguir aquí": "Ficar aqui",
     "Cancelar creación": "Cancelar criação",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Marque os dias com sangramento menstrual. Toque novamente para remover uma data.",
-    "Tu rutina": "Sua rotina"
+    "Tu rutina": "Sua rotina",
+    "Ver rutina": "Ver rotina",
+    "Crear otra opción": "Criar outra opção",
+    "Cómo hacerlo": "Como fazer"
   },
   "en": {
     "Sexo": "Sex",
@@ -7354,6 +7375,9 @@
     "Lumbares cruzados": "Cross-body back extensions",
     "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Looking for a GPS signal… it can take a few seconds outdoors.",
     "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Mark days with menstrual bleeding. Tap again to remove a date.",
-    "Tu rutina": "Your routine"
+    "Tu rutina": "Your routine",
+    "Ver rutina": "See routine",
+    "Crear otra opción": "Create another option",
+    "Cómo hacerlo": "How to do it"
   }
 }
