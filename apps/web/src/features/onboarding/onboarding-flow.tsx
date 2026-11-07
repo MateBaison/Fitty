@@ -313,7 +313,7 @@ export function OnboardingFlow() {
                     value={days}
                     onChange={(event) => setDays(Number(event.target.value))}
                   >
-                    {[1, 2, 3, 4, 5, 6].map((value) => (
+                    {[1, 2, 3, 4, 5, 6, 7].map((value) => (
                       <option key={value} value={value}>
                         {value}
                       </option>

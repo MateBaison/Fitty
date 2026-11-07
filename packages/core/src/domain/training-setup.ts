@@ -17,7 +17,7 @@ export function recommendedTrainingDays(experience: TrainingExperience) {
 export const trainingSetupSchema = z.strictObject({
   experience: experienceSchema,
   mode: z.enum(["custom", "auto"]),
-  days: z.number().int().min(1).max(6),
+  days: z.number().int().min(1).max(7),
   goal: z.enum([
     "Baja grasa corporal",
     "Ganar masa corporal",

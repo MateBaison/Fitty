@@ -338,10 +338,10 @@ export function Onboarding() {
         ) : (
           <>
             <Card>
-              <Label muted>{t("Experiencia", "Experience")}</Label>
-              <ChipGroup
+              <Dropdown
+                label={t("Experiencia", "Experience")}
                 options={experiences.map(([value, es, en]) => ({
-                  value,
+                  value: value as TrainingExperience,
                   label: t(es, en),
                 }))}
                 value={experience}
@@ -351,9 +351,9 @@ export function Onboarding() {
                   setPreview(null);
                 }}
               />
-              <Label muted>{t("Días por semana", "Days per week")}</Label>
-              <ChipGroup
-                options={[1, 2, 3, 4, 5, 6].map((value) => ({
+              <Dropdown
+                label={t("Días por semana", "Days per week")}
+                options={[1, 2, 3, 4, 5, 6, 7].map((value) => ({
                   value,
                   label: String(value),
                 }))}
