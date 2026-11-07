@@ -169,7 +169,7 @@ export function Onboarding() {
   const { change, flush, notify, t } = useAccount();
   const { session } = useSession();
   const language = snapshot.settings.language ?? "es";
-  const [step, setStep] = useState<"profile" | "training">("profile");
+  const [step, setStep] = useState<"profile" | "choice" | "training">("profile");
   const [profile, setProfile] = useState(() => profileDraft(snapshot.profile));
   const [experience, setExperience] = useState<TrainingExperience>("beginner");
   const [days, setDays] = useState(2);
@@ -178,6 +178,7 @@ export function Onboarding() {
   const [preview, setPreview] = useState<Routine | null>(null);
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [mode, setMode] = useState<"custom" | "auto">("custom");
   const [menstrual, setMenstrual] = useState(false);
   const [periodDates, setPeriodDates] = useState<string[]>([]);
   const menstrualAllowed = menstrualCalendarAllowed({ gender: profile.gender });
@@ -243,6 +244,10 @@ export function Onboarding() {
   };
   const cancel = () => {
     if (step === "training") {
+      setStep("choice");
+      return;
+    }
+    if (step === "choice") {
       setStep("profile");
       return;
     }
@@ -322,7 +327,7 @@ export function Onboarding() {
             ) : null}
             <Button
               disabled={missing.length > 0}
-              onPress={() => setStep("training")}
+              onPress={() => setStep("choice")}
             >
               {t("Continuar", "Continue")}
             </Button>
@@ -334,6 +339,72 @@ export function Onboarding() {
                 )}
               </Label>
             ) : null}
+          </Card>
+        ) : step === "choice" ? (
+          <Card>
+            <Label muted>
+              {t(
+                "Elegí cómo querés empezar. Podés cambiar tu rutina más adelante.",
+                "Choose how you want to start. You can change your routine later.",
+              )}
+            </Label>
+            {(
+              [
+                [
+                  "custom",
+                  t("Armar mi rutina después", "Build my routine later"),
+                  t(
+                    "Entrá a Fitty y creala desde Inicio cuando quieras.",
+                    "Go to Fitty and create one from Home whenever you are ready.",
+                  ),
+                ],
+                [
+                  "auto",
+                  t("Crear una rutina sugerida", "Create a suggested routine"),
+                  t(
+                    "Fitty te propone una base según tu experiencia, tus días y tu objetivo.",
+                    "Fitty suggests a starting plan based on your experience, days and goal.",
+                  ),
+                ],
+              ] as const
+            ).map(([value, title, description]) => (
+              <Pressable
+                key={value}
+                accessibilityRole="button"
+                accessibilityState={{ selected: mode === value }}
+                onPress={() => setMode(value)}
+                style={{
+                  padding: space(4),
+                  gap: 4,
+                  borderRadius: 14,
+                  borderWidth: 1,
+                  borderColor: mode === value ? colors.primary : colors.border,
+                  backgroundColor:
+                    mode === value ? "#173a52" : colors.secondary,
+                }}
+              >
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 16,
+                    fontWeight: "800",
+                  }}
+                >
+                  {title}
+                </Text>
+                <Text style={{ color: colors.muted, fontSize: 14 }}>
+                  {description}
+                </Text>
+              </Pressable>
+            ))}
+            <Button
+              loading={busy}
+              onPress={() =>
+                mode === "custom" ? void save("custom") : setStep("training")
+              }
+            >
+              {t("Continuar", "Continue")}
+            </Button>
           </Card>
         ) : (
           <>
@@ -459,16 +530,6 @@ export function Onboarding() {
               onPress={() => void save("auto")}
             >
               {t("Usar rutina automática", "Use automatic routine")}
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={busy}
-              onPress={() => void save("custom")}
-            >
-              {t(
-                "Tengo una rutina: quiero armarla",
-                "I have a routine: I'll build it",
-              )}
             </Button>
           </>
         )}
