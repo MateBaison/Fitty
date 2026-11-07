@@ -41,7 +41,7 @@ test("manual setup makes independent empty days without inventing performed sets
   expect(routine.days.every((day) => day.items.length === 0)).toBe(true);
 });
 test("new routine commands reject invalid days and empty automatic selections", () => {
-  for (const days of [0, 7, 2.5])
+  for (const days of [0, 8, 2.5])
     expect(() =>
       createGuidedRoutine(
         {
