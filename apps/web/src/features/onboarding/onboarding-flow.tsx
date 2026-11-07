@@ -46,7 +46,7 @@ export function OnboardingFlow() {
   const stepDescription =
     step === "profile"
       ? t("Tus datos", "Your details")
-      : t("Tu entrenamiento", "Your training");
+      : t("Tu rutina", "Your routine");
   const makeRoutineProposal = (nextVariation: number) => {
     const routine = createGuidedRoutine(
       {
@@ -175,7 +175,7 @@ export function OnboardingFlow() {
             <span className="onboarding-progress-marker" aria-hidden="true">
               2
             </span>
-            <span>{t("Tu entrenamiento", "Your training")}</span>
+            <span>{t("Tu rutina", "Your routine")}</span>
           </li>
         </ol>
       </div>
@@ -207,7 +207,7 @@ export function OnboardingFlow() {
         >
           <fieldset disabled={busy || pending} className="space-y-4">
             <legend className="sr-only">
-              {t("Tu entrenamiento", "Your training")}
+              {t("Tu rutina", "Your routine")}
             </legend>
             {!configuring && (
               <>

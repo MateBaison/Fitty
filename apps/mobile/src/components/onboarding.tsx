@@ -74,7 +74,7 @@ function SetupProgress({ step }: { step: 1 | 2 }) {
   const { t } = useAccount();
   const steps = [
     t("Tus datos", "Your details"),
-    t("Tu entrenamiento", "Your training"),
+    t("Tu rutina", "Your routine"),
   ];
   return (
     <View
@@ -281,7 +281,7 @@ export function Onboarding() {
           <Title center>
             {step === "profile"
               ? t("Tus datos", "Your details")
-              : t("Tu entrenamiento", "Your training")}
+              : t("Tu rutina", "Your routine")}
           </Title>
         </View>
         <SetupProgress step={step === "profile" ? 1 : 2} />

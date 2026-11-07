@@ -976,7 +976,8 @@
     "Vas a volver a la pantalla de inicio de sesión.": "Vous allez revenir à l'écran de connexion.",
     "Seguir aquí": "Rester ici",
     "Cancelar creación": "Annuler la création",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Marquez les jours de saignement menstruel. Touchez à nouveau pour retirer une date."
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Marquez les jours de saignement menstruel. Touchez à nouveau pour retirer une date.",
+    "Tu rutina": "Ta routine"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1955,7 +1956,8 @@
     "Vas a volver a la pantalla de inicio de sesión.": "你将返回登录界面。",
     "Seguir aquí": "留在这里",
     "Cancelar creación": "取消创建",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "标记有经期出血的日子。再次点击可取消日期。"
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "标记有经期出血的日子。再次点击可取消日期。",
+    "Tu rutina": "你的计划"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2934,7 +2936,8 @@
     "Vas a volver a la pantalla de inicio de sesión.": "आप साइन-इन स्क्रीन पर लौट जाएंगे।",
     "Seguir aquí": "यहीं रहें",
     "Cancelar creación": "बनाना रद्द करें",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "मासिक धर्म के रक्तस्राव वाले दिन चिह्नित करें। तारीख हटाने के लिए फिर से टैप करें।"
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "मासिक धर्म के रक्तस्राव वाले दिन चिह्नित करें। तारीख हटाने के लिए फिर से टैप करें।",
+    "Tu rutina": "आपकी रूटीन"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3913,7 +3916,8 @@
     "Vas a volver a la pantalla de inicio de sesión.": "ستعود إلى شاشة تسجيل الدخول.",
     "Seguir aquí": "البقاء هنا",
     "Cancelar creación": "إلغاء الإنشاء",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "حدّد الأيام التي حدث فيها نزيف الدورة الشهرية. اضغط مرة أخرى لإزالة تاريخ."
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "حدّد الأيام التي حدث فيها نزيف الدورة الشهرية. اضغط مرة أخرى لإزالة تاريخ.",
+    "Tu rutina": "روتينك"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4891,7 +4895,8 @@
     "Vas a volver a la pantalla de inicio de sesión.": "Du kehrst zum Anmeldebildschirm zurück.",
     "Seguir aquí": "Hier bleiben",
     "Cancelar creación": "Erstellung abbrechen",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Markiere die Tage mit Menstruationsblutung. Tippe erneut, um ein Datum zu entfernen."
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Markiere die Tage mit Menstruationsblutung. Tippe erneut, um ein Datum zu entfernen.",
+    "Tu rutina": "Deine Routine"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5869,7 +5874,8 @@
     "Vas a volver a la pantalla de inicio de sesión.": "Tornerai alla schermata di accesso.",
     "Seguir aquí": "Resta qui",
     "Cancelar creación": "Annulla creazione",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Segna i giorni con sanguinamento mestruale. Tocca di nuovo per rimuovere una data."
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Segna i giorni con sanguinamento mestruale. Tocca di nuovo per rimuovere una data.",
+    "Tu rutina": "La tua routine"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6847,7 +6853,8 @@
     "Vas a volver a la pantalla de inicio de sesión.": "Você voltará para a tela de login.",
     "Seguir aquí": "Ficar aqui",
     "Cancelar creación": "Cancelar criação",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Marque os dias com sangramento menstrual. Toque novamente para remover uma data."
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Marque os dias com sangramento menstrual. Toque novamente para remover uma data.",
+    "Tu rutina": "Sua rotina"
   },
   "en": {
     "Sexo": "Sex",
@@ -7346,6 +7353,7 @@
     "Lumbares tipo Superman": "Superman back extensions",
     "Lumbares cruzados": "Cross-body back extensions",
     "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Looking for a GPS signal… it can take a few seconds outdoors.",
-    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Mark days with menstrual bleeding. Tap again to remove a date."
+    "Marcá los días en los que tuviste sangrado menstrual. Tocá de nuevo para quitar una fecha.": "Mark days with menstrual bleeding. Tap again to remove a date.",
+    "Tu rutina": "Your routine"
   }
 }
