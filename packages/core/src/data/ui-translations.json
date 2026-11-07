@@ -971,7 +971,11 @@
     "Plancha lateral": "Gainage latéral",
     "Lumbares tipo Superman": "Extensions lombaires type Superman",
     "Lumbares cruzados": "Lombaires croisées",
-    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Recherche du signal GPS… cela peut prendre quelques secondes en extérieur."
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Recherche du signal GPS… cela peut prendre quelques secondes en extérieur.",
+    "¿Cancelar la creación de la cuenta?": "Annuler la création du compte ?",
+    "Vas a volver a la pantalla de inicio de sesión.": "Vous allez revenir à l'écran de connexion.",
+    "Seguir aquí": "Rester ici",
+    "Cancelar creación": "Annuler la création"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1945,7 +1949,11 @@
     "Plancha lateral": "侧平板支撑",
     "Lumbares tipo Superman": "超人式腰背伸展",
     "Lumbares cruzados": "交叉腰背伸展",
-    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "正在搜索 GPS 信号…在户外可能需要几秒钟。"
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "正在搜索 GPS 信号…在户外可能需要几秒钟。",
+    "¿Cancelar la creación de la cuenta?": "取消创建账户？",
+    "Vas a volver a la pantalla de inicio de sesión.": "你将返回登录界面。",
+    "Seguir aquí": "留在这里",
+    "Cancelar creación": "取消创建"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2919,7 +2927,11 @@
     "Plancha lateral": "साइड प्लैंक",
     "Lumbares tipo Superman": "सुपरमैन बैक एक्सटेंशन",
     "Lumbares cruzados": "क्रॉस बैक एक्सटेंशन",
-    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "GPS सिग्नल खोजा जा रहा है… खुली जगह में कुछ सेकंड लग सकते हैं।"
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "GPS सिग्नल खोजा जा रहा है… खुली जगह में कुछ सेकंड लग सकते हैं।",
+    "¿Cancelar la creación de la cuenta?": "खाता बनाना रद्द करें?",
+    "Vas a volver a la pantalla de inicio de sesión.": "आप साइन-इन स्क्रीन पर लौट जाएंगे।",
+    "Seguir aquí": "यहीं रहें",
+    "Cancelar creación": "बनाना रद्द करें"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3893,7 +3905,11 @@
     "Plancha lateral": "بلانك جانبي",
     "Lumbares tipo Superman": "تمديد الظهر على طريقة سوبرمان",
     "Lumbares cruzados": "تمديد الظهر المتقاطع",
-    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "جارٍ البحث عن إشارة GPS… قد يستغرق ذلك بضع ثوانٍ في الأماكن المفتوحة."
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "جارٍ البحث عن إشارة GPS… قد يستغرق ذلك بضع ثوانٍ في الأماكن المفتوحة.",
+    "¿Cancelar la creación de la cuenta?": "إلغاء إنشاء الحساب؟",
+    "Vas a volver a la pantalla de inicio de sesión.": "ستعود إلى شاشة تسجيل الدخول.",
+    "Seguir aquí": "البقاء هنا",
+    "Cancelar creación": "إلغاء الإنشاء"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4866,7 +4882,11 @@
     "Plancha lateral": "Seitlicher Unterarmstütz",
     "Lumbares tipo Superman": "Rückenstrecken im Superman-Stil",
     "Lumbares cruzados": "Gekreuzte Rückenstrecker",
-    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "GPS-Signal wird gesucht … im Freien kann das einige Sekunden dauern."
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "GPS-Signal wird gesucht … im Freien kann das einige Sekunden dauern.",
+    "¿Cancelar la creación de la cuenta?": "Kontoerstellung abbrechen?",
+    "Vas a volver a la pantalla de inicio de sesión.": "Du kehrst zum Anmeldebildschirm zurück.",
+    "Seguir aquí": "Hier bleiben",
+    "Cancelar creación": "Erstellung abbrechen"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5839,7 +5859,11 @@
     "Plancha lateral": "Plank laterale",
     "Lumbares tipo Superman": "Lombari tipo Superman",
     "Lumbares cruzados": "Lombari incrociati",
-    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Ricerca del segnale GPS… all'aperto può richiedere qualche secondo."
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Ricerca del segnale GPS… all'aperto può richiedere qualche secondo.",
+    "¿Cancelar la creación de la cuenta?": "Annullare la creazione dell'account?",
+    "Vas a volver a la pantalla de inicio de sesión.": "Tornerai alla schermata di accesso.",
+    "Seguir aquí": "Resta qui",
+    "Cancelar creación": "Annulla creazione"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6812,7 +6836,11 @@
     "Plancha lateral": "Prancha lateral",
     "Lumbares tipo Superman": "Lombares tipo Superman",
     "Lumbares cruzados": "Lombares cruzados",
-    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Procurando sinal de GPS… pode levar alguns segundos ao ar livre."
+    "Buscando señal GPS… puede tardar unos segundos al aire libre.": "Procurando sinal de GPS… pode levar alguns segundos ao ar livre.",
+    "¿Cancelar la creación de la cuenta?": "Cancelar a criação da conta?",
+    "Vas a volver a la pantalla de inicio de sesión.": "Você voltará para a tela de login.",
+    "Seguir aquí": "Ficar aqui",
+    "Cancelar creación": "Cancelar criação"
   },
   "en": {
     "Sexo": "Sex",

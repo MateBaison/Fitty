@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -22,6 +23,7 @@ import {
 import { translate } from "@fitty/core/data/translations";
 import { localDateKey } from "@fitty/core/domain/workouts";
 import { ChipGroup } from "@/components/chip";
+import { BackButton } from "@/components/back-button";
 import { Dropdown } from "@/components/dropdown";
 import {
   ProfileFields,
@@ -31,6 +33,8 @@ import {
 import { Notice } from "@/components/notice";
 import { Button, Card, Label, Screen, Title } from "@/components/ui";
 import { makeId } from "@/lib/id";
+import { queryClient, queryPersister } from "@/lib/query-client";
+import { supabase } from "@/lib/supabase";
 import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
 
@@ -222,12 +226,42 @@ export function Onboarding() {
       setBusy(false);
     }
   };
+  const cancel = () => {
+    if (step === "training") {
+      setStep("profile");
+      return;
+    }
+    Alert.alert(
+      t("¿Cancelar la creación de la cuenta?", "Cancel account setup?"),
+      t(
+        "Vas a volver a la pantalla de inicio de sesión.",
+        "You'll go back to the sign-in screen.",
+      ),
+      [
+        { text: t("Seguir aquí", "Stay here"), style: "cancel" },
+        {
+          text: t("Cancelar creación", "Cancel setup"),
+          style: "destructive",
+          onPress: () => {
+            void (async () => {
+              await supabase.auth.signOut();
+              queryClient.clear();
+              await queryPersister.removeClient();
+            })();
+          },
+        },
+      ],
+    );
+  };
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <Screen>
+        <View style={{ flexDirection: "row" }}>
+          <BackButton onPress={cancel} />
+        </View>
         <Title>
           {step === "profile"
             ? t("Tus datos", "Your details")
@@ -387,9 +421,6 @@ export function Onboarding() {
                 "Tengo una rutina: quiero armarla",
                 "I have a routine: I'll build it",
               )}
-            </Button>
-            <Button variant="ghost" onPress={() => setStep("profile")}>
-              {t("Volver", "Back")}
             </Button>
           </>
         )}

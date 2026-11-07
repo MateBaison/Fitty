@@ -11,7 +11,6 @@ import {
   type WeightGoalResult,
 } from "@fitty/core/domain/calculations/calculators";
 import { CombatPanel } from "@/app/(app)/combat";
-import { TrackingPanel } from "@/app/(app)/tracking";
 import { Button, Card, Field, Label, Screen } from "@/components/ui";
 import { OptionField } from "@/components/pickers";
 import { ClockControls } from "@/components/clock-controls";
@@ -763,7 +762,7 @@ function Result({
 export default function Tools() {
   const { t } = useAccount();
   const [group, setGroup] = useState<"clock" | "calculators">("clock");
-  const [tool, setTool] = useState<"stopwatch" | "timer" | "combat" | "tracking">("stopwatch");
+  const [tool, setTool] = useState<"stopwatch" | "timer" | "combat">("stopwatch");
   return (
     <Screen>
       <GridPills
@@ -782,7 +781,6 @@ export default function Tools() {
               ["stopwatch", t("Cronómetro", "Stopwatch")],
               ["timer", t("Temporizador", "Timer")],
               ["combat", t("Combate", "Combat")],
-              ["tracking", t("Recorrido GPS", "GPS route")],
             ]}
             value={tool}
             onChange={setTool}
@@ -790,7 +788,6 @@ export default function Tools() {
           {tool === "stopwatch" ? <Stopwatch /> : null}
           {tool === "timer" ? <Timer /> : null}
           {tool === "combat" ? <CombatPanel /> : null}
-          {tool === "tracking" ? <TrackingPanel /> : null}
         </>
       ) : (
         <Calculators />

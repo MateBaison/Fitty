@@ -341,14 +341,6 @@ export function OnboardingFlow() {
                     ))}
                   </select>
                 </label>
-                {goal === "Mejorar resistencia cardiovascular" && (
-                  <p className="onboarding-suggestion" role="status">
-                    {t(
-                      "La vista previa propone ejercicios de fuerza. Para correr o pedalear, podés usar el seguimiento de actividad de Fitty.",
-                      "The preview suggests strength exercises. Use Fitty activity tracking for running or cycling.",
-                    )}
-                  </p>
-                )}
                 <fieldset>
                   <legend>
                     {t(

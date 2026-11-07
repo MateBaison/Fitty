@@ -624,16 +624,6 @@ export function RoutinesHome() {
                 </select>
               </label>
             )}
-            {editor?.type === "new" &&
-              mode === "auto" &&
-              goal === "Mejorar resistencia cardiovascular" && (
-                <p className="onboarding-suggestion" role="status">
-                  {t(
-                    "La rutina automática propone ejercicios de fuerza. Para correr o pedalear, usá el seguimiento de actividad de Fitty.",
-                    "The automatic routine suggests strength exercises. Use Fitty activity tracking for running or cycling.",
-                  )}
-                </p>
-              )}
             {mode === "auto" ? (
               <>
                 <div className="automatic-muscle-picker">
