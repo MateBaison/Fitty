@@ -294,7 +294,9 @@ export default function Progress() {
   const muscles = Object.entries(counts).sort((a, b) => b[1] - a[1]);
   const max = Math.max(1, ...Object.values(counts));
   const duration = (minutes: number) =>
-    `${Math.floor(minutes / 60)} h ${Math.round(minutes % 60)} min`;
+    Math.floor(minutes / 60) > 0
+      ? `${Math.floor(minutes / 60)} h\n${Math.round(minutes % 60)} min`
+      : `${Math.round(minutes)} min`;
   const formatSet = (weight: number, quantity: number, kind: string) =>
     `${(weight * factor).toLocaleString(locale, { maximumFractionDigits: 1 })} ${unit} × ${quantity} ${kind === "seconds" ? "s" : t("Rep", "Reps")}`;
   const points: ChartPoint[] = history.flatMap((record) => {
@@ -330,7 +332,7 @@ export default function Progress() {
       key={label}
       style={{
         flex: 1,
-        minWidth: 100,
+        minWidth: 0,
         padding: space(3),
         borderRadius: 18,
         borderColor: colors.border,
@@ -339,8 +341,18 @@ export default function Progress() {
         gap: 2,
       }}
     >
-      <Text style={{ color: colors.muted, fontSize: 12 }}>{label}</Text>
       <Text
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
+        style={{ color: colors.muted, fontSize: 12 }}
+      >
+        {label}
+      </Text>
+      <Text
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
         style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}
       >
         {value}
@@ -596,7 +608,7 @@ export default function Progress() {
           <Card>
             {periodControls}
             <View
-              style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}
+              style={{ flexDirection: "row", gap: space(2) }}
             >
               {stat(t("Días entrenados", "Training days"), String(totals.days))}
               {stat(t("Entrenamientos", "Workouts"), String(totals.sessions))}
