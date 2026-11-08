@@ -15,18 +15,21 @@ export function Dropdown<T extends string | number>({
   value,
   onChange,
   placeholder,
+  inline,
 }: {
   label?: string;
   options: readonly { value: T; label: string }[];
   value: T | null;
   onChange: (value: T) => void;
   placeholder?: string;
+  /** Hide the label above the field (the caller shows it); the window title stays. */
+  inline?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const chosen = options.find((option) => option.value === value);
   return (
     <View style={{ gap: space(1.5) }}>
-      {label ? <Label muted>{label}</Label> : null}
+      {label && !inline ? <Label muted>{label}</Label> : null}
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}

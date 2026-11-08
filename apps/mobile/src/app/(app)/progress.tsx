@@ -425,9 +425,11 @@ export default function Progress() {
       ) : null}
       {tab !== "body" ? (
         <Card>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}>
-            <View style={{ flex: 1 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
+            <Label muted>{t("Período", "Period")}</Label>
+            <View style={{ width: 112 }}>
               <Dropdown
+                inline
                 label={t("Período", "Period")}
                 options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
                 value={period}
@@ -437,22 +439,30 @@ export default function Progress() {
                 }}
               />
             </View>
-            <View
-              style={{
-                flex: 1.2,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: space(1),
-              }}
-            >
-              <View style={{ width: 44 }}>
-                <Button variant="secondary" disabled={period === "all"} onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}>
-                  ‹
-                </Button>
-              </View>
+            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 4 }}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="‹"
+                disabled={period === "all"}
+                onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}
+                style={{
+                  width: 34,
+                  height: 44,
+                  borderRadius: 12,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.secondary,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                  opacity: period === "all" ? 0.35 : 1,
+                }}
+              >
+                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>‹</Text>
+              </Pressable>
               <Text
-                numberOfLines={2}
+                numberOfLines={1}
                 adjustsFontSizeToFit
+                minimumFontScale={0.7}
                 style={{
                   flex: 1,
                   textAlign: "center",
@@ -462,14 +472,28 @@ export default function Progress() {
                 }}
               >
                 {period === "all"
-                  ? t("Todo el historial", "Full history")
+                  ? t("Siempre", "Lifetime")
                   : range.start.toLocaleDateString(locale)}
               </Text>
-              <View style={{ width: 44 }}>
-                <Button variant="secondary" disabled={period === "all"} onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}>
-                  ›
-                </Button>
-              </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="›"
+                disabled={period === "all"}
+                onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}
+                style={{
+                  width: 34,
+                  height: 44,
+                  borderRadius: 12,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.secondary,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                  opacity: period === "all" ? 0.35 : 1,
+                }}
+              >
+                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>›</Text>
+              </Pressable>
             </View>
           </View>
         </Card>
