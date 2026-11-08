@@ -11,11 +11,14 @@ export function NumberInput({
   onCommit,
   decimal,
   accessibilityLabel,
+  plain,
 }: {
   value: number | null | undefined;
   onCommit: (value: number | null) => void;
   decimal?: boolean;
   accessibilityLabel: string;
+  /** No box around the field (used inside striped table rows). */
+  plain?: boolean;
 }) {
   const [text, setText] = useState(value == null ? "" : String(value));
   useEffect(() => setText(value == null ? "" : String(value)), [value]);
@@ -42,7 +45,11 @@ export function NumberInput({
       returnKeyType="done"
       selectTextOnFocus
       accessibilityLabel={accessibilityLabel}
-      style={[styles.input, { flex: 1, textAlign: "center", minWidth: 0 }]}
+      style={[
+        styles.input,
+        { flex: 1, textAlign: "center", minWidth: 0 },
+        plain && { borderWidth: 0, backgroundColor: "transparent" },
+      ]}
     />
   );
 }

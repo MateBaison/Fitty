@@ -133,15 +133,18 @@ export function Label({
   muted,
   style,
   numberOfLines,
+  adjustsFontSizeToFit,
 }: {
   children: ReactNode;
   muted?: boolean;
   style?: object;
   numberOfLines?: number;
+  adjustsFontSizeToFit?: boolean;
 }) {
   return (
     <Text
       numberOfLines={numberOfLines}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
       style={[styles.label, muted && styles.muted, style]}
     >
       {children}

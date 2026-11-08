@@ -35,6 +35,7 @@ import {
 } from "@fitty/core/domain/workouts";
 import { Chip } from "@/components/chip";
 import { ExercisePicker } from "@/components/exercise-picker";
+import { BackButton } from "@/components/back-button";
 import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
 import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
@@ -191,10 +192,37 @@ export default function Workout() {
           borderColor: "#2b6a8f",
           borderWidth: 1,
           backgroundColor: "#10283a",
-          padding: space(5),
+          paddingVertical: space(5),
+          paddingHorizontal: space(14),
           gap: space(2),
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
+        <View style={{ position: "absolute", top: space(3), left: space(3) }}>
+          <BackButton onPress={() => router.back()} />
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("Cancelar entrenamiento", "Cancel workout")}
+          hitSlop={8}
+          onPress={cancel}
+          style={{
+            position: "absolute",
+            top: space(3),
+            right: space(3),
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: colors.secondary,
+            borderColor: colors.border,
+            borderWidth: 1,
+          }}
+        >
+          <Text style={{ color: colors.destructive ?? "#ef4444", fontSize: 20, fontWeight: "800" }}>✕</Text>
+        </Pressable>
         <Text
           style={{
             color: colors.primary,
@@ -202,12 +230,20 @@ export default function Workout() {
             fontWeight: "800",
             letterSpacing: 1.2,
             textTransform: "uppercase",
+            textAlign: "center",
           }}
         >
           {day?.name ?? t("Entrenamiento", "Workout")} · {workout.index + 1}/
           {workout.entries.length}
         </Text>
-        <Text style={{ color: colors.foreground, fontSize: 26, fontWeight: "800" }}>
+        <Text
+          style={{
+            color: colors.foreground,
+            fontSize: 26,
+            fontWeight: "800",
+            textAlign: "center",
+          }}
+        >
           {routine?.name ?? t("Tu entrenamiento", "Your workout")}
         </Text>
       </View>
@@ -425,19 +461,19 @@ export default function Workout() {
                   </View>
                 </View>
                 <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
-                  <Label muted numberOfLines={1} style={{ width: 64, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
+                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ width: 64, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {t("Serie", "Set")}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ flex: 1.5, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
+                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ flex: 1.5, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {t("Anterior", "Previous")}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
+                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {unit}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
+                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")}
                   </Label>
-                  <Label muted numberOfLines={1} style={{ width: 44, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
+                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ width: 44, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
                     {t("Tipo", "Type")}
                   </Label>
                 </View>
@@ -454,6 +490,9 @@ export default function Workout() {
                         flexDirection: "row",
                         gap: 6,
                         alignItems: "center",
+                        paddingVertical: 4,
+                        borderRadius: 10,
+                        backgroundColor: number % 2 === 0 ? "#1b212b" : "#2b3340",
                       }}
                     >
                       <View
@@ -520,10 +559,6 @@ export default function Workout() {
                         style={{
                           flex: 1.5,
                           minHeight: 52,
-                          borderRadius: 14,
-                          borderColor: colors.border,
-                          borderWidth: 1,
-                          backgroundColor: colors.secondary,
                           alignItems: "center",
                           justifyContent: "center",
                         }}
@@ -565,6 +600,7 @@ export default function Workout() {
                         )}
                       </Pressable>
                       <NumberInput
+                        plain
                         decimal
                         value={set.kg}
                         accessibilityLabel={`${t("Peso", "Weight")} ${number + 1}`}
@@ -579,6 +615,7 @@ export default function Workout() {
                         }
                       />
                       <NumberInput
+                        plain
                         value={set[metric]}
                         accessibilityLabel={`${metric === "seconds" ? t("Segundos", "Seconds") : t("Repeticiones", "Repetitions")} ${number + 1}`}
                         onCommit={(value) =>
@@ -598,10 +635,6 @@ export default function Workout() {
                         style={{
                           width: 44,
                           minHeight: 52,
-                          borderRadius: 14,
-                          borderColor: colors.border,
-                          borderWidth: 1,
-                          backgroundColor: colors.secondary,
                           alignItems: "center",
                           justifyContent: "center",
                         }}
@@ -663,9 +696,6 @@ export default function Workout() {
       })}
       <Button onPress={() => setFinishing(true)}>
         {t("Finalizar entrenamiento", "Finish workout")}
-      </Button>
-      <Button variant="destructive" onPress={cancel}>
-        {t("Cancelar entrenamiento", "Cancel workout")}
       </Button>
       <Modal
         visible={finishing}

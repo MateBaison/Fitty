@@ -980,7 +980,10 @@
     "Tu rutina": "Ta routine",
     "Ver rutina": "Voir la routine",
     "Crear otra opción": "Créer une autre option",
-    "Cómo hacerlo": "Comment l'exécuter"
+    "Cómo hacerlo": "Comment l'exécuter",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "Avant l'entraînement, nous te demanderons comment tu te sens.",
+    "Exportar": "Exporter",
+    "Importar": "Importer"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1963,7 +1966,10 @@
     "Tu rutina": "你的计划",
     "Ver rutina": "查看计划",
     "Crear otra opción": "创建另一个方案",
-    "Cómo hacerlo": "如何做"
+    "Cómo hacerlo": "如何做",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "训练前我们会询问你的感受。",
+    "Exportar": "导出",
+    "Importar": "导入"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2946,7 +2952,10 @@
     "Tu rutina": "आपकी रूटीन",
     "Ver rutina": "रूटीन देखें",
     "Crear otra opción": "दूसरा विकल्प बनाएँ",
-    "Cómo hacerlo": "इसे कैसे करें"
+    "Cómo hacerlo": "इसे कैसे करें",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "कसरत से पहले हम पूछेंगे कि आप कैसा महसूस कर रहे हैं।",
+    "Exportar": "निर्यात",
+    "Importar": "आयात"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3929,7 +3938,10 @@
     "Tu rutina": "روتينك",
     "Ver rutina": "عرض الروتين",
     "Crear otra opción": "إنشاء خيار آخر",
-    "Cómo hacerlo": "طريقة التنفيذ"
+    "Cómo hacerlo": "طريقة التنفيذ",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "قبل التمرين سنسألك عن حالتك.",
+    "Exportar": "تصدير",
+    "Importar": "استيراد"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4911,7 +4923,10 @@
     "Tu rutina": "Deine Routine",
     "Ver rutina": "Routine ansehen",
     "Crear otra opción": "Weitere Option erstellen",
-    "Cómo hacerlo": "So geht's"
+    "Cómo hacerlo": "So geht's",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "Vor dem Training fragen wir dich, wie du dich fühlst.",
+    "Exportar": "Exportieren",
+    "Importar": "Importieren"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5893,7 +5908,10 @@
     "Tu rutina": "La tua routine",
     "Ver rutina": "Vedi routine",
     "Crear otra opción": "Crea un'altra opzione",
-    "Cómo hacerlo": "Come eseguirlo"
+    "Cómo hacerlo": "Come eseguirlo",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "Prima dell'allenamento ti chiederemo come ti senti.",
+    "Exportar": "Esporta",
+    "Importar": "Importa"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6875,7 +6893,10 @@
     "Tu rutina": "Sua rotina",
     "Ver rutina": "Ver rotina",
     "Crear otra opción": "Criar outra opção",
-    "Cómo hacerlo": "Como fazer"
+    "Cómo hacerlo": "Como fazer",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "Antes de treinar, vamos perguntar como você está se sentindo.",
+    "Exportar": "Exportar",
+    "Importar": "Importar"
   },
   "en": {
     "Sexo": "Sex",
@@ -7378,6 +7399,9 @@
     "Tu rutina": "Your routine",
     "Ver rutina": "See routine",
     "Crear otra opción": "Create another option",
-    "Cómo hacerlo": "How to do it"
+    "Cómo hacerlo": "How to do it",
+    "Antes de entrenar te preguntaremos cómo te sentís.": "Before training we'll ask how you feel.",
+    "Exportar": "Export",
+    "Importar": "Import"
   }
 }

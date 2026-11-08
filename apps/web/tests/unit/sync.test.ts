@@ -314,3 +314,45 @@ test("automatic cloud refresh waits for unsaved form drafts", async () => {
   expect(ctl.view.snapshot?.profile.name).toBe("Remote change");
   ctl.dispose();
 });
+test("an upload that reached the cloud but was never confirmed is not reported as a conflict", async () => {
+  const storage = store(),
+    initial = createDefaultSnapshot();
+  let cloud: Snapshot = initial;
+  const first = new SyncController(
+    id,
+    {
+      load: async () => cloud,
+      save: async (snapshot) => {
+        cloud = structuredClone(snapshot);
+        throw new Error("Connection lost before the answer arrived");
+      },
+    },
+    storage,
+    () => () => {},
+  );
+  await first.start();
+  first.edit((snapshot) => {
+    snapshot.profile.name = "Saved in the cloud";
+  });
+  await first.flush();
+  first.edit((snapshot) => {
+    snapshot.profile.name = "Edited afterwards";
+  });
+  first.dispose();
+  const saved: Snapshot[] = [];
+  const second = new SyncController(
+    id,
+    {
+      load: async () => cloud,
+      save: async (snapshot) => {
+        saved.push(snapshot);
+      },
+    },
+    storage,
+    () => () => {},
+  );
+  await second.start();
+  expect(second.view.status).not.toBe("conflict");
+  expect(saved.at(-1)?.profile.name).toBe("Edited afterwards");
+  second.dispose();
+});
