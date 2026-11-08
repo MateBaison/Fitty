@@ -425,20 +425,15 @@ export default function Progress() {
       ) : null}
       {tab !== "body" ? (
         <Card>
-          <Label muted>{t("Período", "Period")}</Label>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
-            {periods.map(([id, es, en]) => (
-              <Pill
-                key={id}
-                label={t(es, en)}
-                active={period === id}
-                onPress={() => {
-                  setPeriod(id);
-                  setAnchor(new Date());
-                }}
-              />
-            ))}
-          </View>
+          <Dropdown
+            label={t("Período", "Period")}
+            options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
+            value={period}
+            onChange={(id) => {
+              setPeriod(id);
+              setAnchor(new Date());
+            }}
+          />
           <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
             <View style={{ width: 48 }}>
               <Button variant="secondary" disabled={period === "all"} onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}>
