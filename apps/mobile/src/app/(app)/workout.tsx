@@ -103,7 +103,7 @@ function RestBanner({ end, onStop }: { end: number; onStop: () => void }) {
 
 /** Shared column sizes so every header sits exactly over its data. */
 const columns = {
-  set: { width: 80 },
+  set: { width: 72 },
   previous: { flex: 1.5, minWidth: 0 },
   load: { flex: 1, minWidth: 0 },
   amount: { flex: 1, minWidth: 0 },
@@ -543,8 +543,6 @@ export default function Workout() {
                             }}
                             hitSlop={6}
                             style={{
-                              position: "absolute",
-                              right: 0,
                               width: 30,
                               height: 26,
                               borderRadius: 8,
