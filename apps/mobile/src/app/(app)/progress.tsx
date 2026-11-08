@@ -718,7 +718,7 @@ export default function Progress() {
               onPress={() => setComparing((value) => !value)}
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text style={{ color: colors.foreground, fontWeight: "800" }}>
+              <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}>
                 {t("Comparar períodos", "Compare periods")}
               </Text>
               <Text style={{ color: colors.muted }}>{comparing ? "▲" : "▼"}</Text>
