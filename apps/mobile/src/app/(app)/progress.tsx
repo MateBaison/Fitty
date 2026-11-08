@@ -705,12 +705,6 @@ export default function Progress() {
               </View>
             ) : null}
           </Card>
-          <Label muted>
-            {t(
-              "Este período: cuánto entrenaste. Ejercicios: cómo cambiaron tus marcas. Cuerpo: tus medidas y fotos.",
-              "This period: how much you trained. Exercises: how your performances changed. Body: your measurements and photos.",
-            )}
-          </Label>
           <Card>
             <Pressable
               accessibilityRole="button"
