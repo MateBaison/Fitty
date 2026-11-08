@@ -34,15 +34,18 @@ export function ProgressChart({
   const values = points.map((point) => point.value);
   const low = Math.min(...values);
   const high = Math.max(...values);
-  // Whole-number axis in steady steps (1, 2, 5, 10, 25, 50…), like 5 kg for loads.
+  // Whole-number axis in steady steps (1, 2, 5, 10, 25, 50…), with room below
+  // and above the data so a flat line does not sit on the floor.
+  const room = Math.max((high - low) * 0.2, high * 0.15, 1);
   const steps = [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
+  const intervals = (candidate: number) =>
+    Math.ceil((high + room) / candidate) - Math.floor((low - room) / candidate);
   const step =
-    steps.find((candidate) => Math.ceil(high / candidate) - Math.floor(low / candidate) <= 8) ??
-    Math.ceil((high - low) / 8);
-  let minimum = Math.floor(low / step) * step;
-  let maximum = Math.ceil(high / step) * step;
+    steps.find((candidate) => intervals(candidate) <= 6) ??
+    Math.ceil((high - low + 2 * room) / 6);
+  let minimum = Math.max(0, Math.floor((low - room) / step) * step);
+  let maximum = Math.ceil((high + room) / step) * step;
   if (maximum === minimum) maximum = minimum + step;
-  if (minimum < 0) minimum = 0;
   const ticks: number[] = [];
   for (let tick = minimum; tick <= maximum; tick += step) ticks.push(tick);
   const first = points[0]!.date.getTime();
