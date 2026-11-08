@@ -127,8 +127,7 @@ function Comparison({
     [t("Volumen", "Volume"), (x) => `${number(x.volumeKg * factor)} ${unit}`],
   ];
   return (
-    <Card>
-      <Text style={heading}>{t("Comparar períodos", "Compare periods")}</Text>
+    <View style={{ gap: space(3) }}>
       <Label muted>
         {t(
           "Elegí dos rangos de fechas. Las cifras muestran lo registrado en cada uno; más cantidad no siempre significa mejor progreso.",
@@ -234,7 +233,7 @@ function Comparison({
           )}
         </Label>
       )}
-    </Card>
+    </View>
   );
 }
 
@@ -712,32 +711,26 @@ export default function Progress() {
               "This period: how much you trained. Exercises: how your performances changed. Body: your measurements and photos.",
             )}
           </Label>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ expanded: comparing }}
-            onPress={() => setComparing((value) => !value)}
-            style={{
-              padding: space(4),
-              borderRadius: 20,
-              borderColor: colors.border,
-              borderWidth: 1,
-              backgroundColor: colors.card,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ color: colors.foreground, fontWeight: "800" }}>
-              {t("Comparar períodos", "Compare periods")}
-            </Text>
-            <Text style={{ color: colors.muted }}>{comparing ? "▲" : "▼"}</Text>
-          </Pressable>
-          {comparing ? (
-            <Comparison
-              key={`${period}-${localDateKey(range.start)}`}
-              range={range}
-              period={period}
-            />
-          ) : null}
+          <Card>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ expanded: comparing }}
+              onPress={() => setComparing((value) => !value)}
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ color: colors.foreground, fontWeight: "800" }}>
+                {t("Comparar períodos", "Compare periods")}
+              </Text>
+              <Text style={{ color: colors.muted }}>{comparing ? "▲" : "▼"}</Text>
+            </Pressable>
+            {comparing ? (
+              <Comparison
+                key={`${period}-${localDateKey(range.start)}`}
+                range={range}
+                period={period}
+              />
+            ) : null}
+          </Card>
         </>
       ) : null}
       {tab === "exercises" ? (
