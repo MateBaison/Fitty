@@ -426,10 +426,8 @@ export default function Progress() {
       {tab !== "body" ? (
         <Card>
           <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
-            <Label muted>{t("Período", "Period")}</Label>
-            <View style={{ width: 112 }}>
+            <View style={{ flex: 1 }}>
               <Dropdown
-                inline
                 label={t("Período", "Period")}
                 options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
                 value={period}
@@ -439,7 +437,7 @@ export default function Progress() {
                 }}
               />
             </View>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 4 }}>
+            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 4, marginTop: 22 }}>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="‹"
