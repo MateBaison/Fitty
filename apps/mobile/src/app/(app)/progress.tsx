@@ -305,6 +305,79 @@ export default function Progress() {
       </Text>
     </View>
   );
+  const periodControls = (
+    <>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
+            <View style={{ flex: 1 }}>
+              <Dropdown
+                label={t("Período", "Period")}
+                options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
+                value={period}
+                onChange={(id) => {
+                  setPeriod(id);
+                  setAnchor(new Date());
+                }}
+              />
+            </View>
+            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 4, marginTop: 22 }}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="‹"
+                disabled={period === "all"}
+                onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}
+                style={{
+                  width: 34,
+                  height: 44,
+                  borderRadius: 12,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.secondary,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                  opacity: period === "all" ? 0.35 : 1,
+                }}
+              >
+                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>‹</Text>
+              </Pressable>
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
+                style={{
+                  flex: 1,
+                  textAlign: "center",
+                  color: colors.foreground,
+                  fontWeight: "800",
+                  fontSize: 14,
+                }}
+              >
+                {period === "all"
+                  ? t("Siempre", "Lifetime")
+                  : range.start.toLocaleDateString(locale)}
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="›"
+                disabled={period === "all"}
+                onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}
+                style={{
+                  width: 34,
+                  height: 44,
+                  borderRadius: 12,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.secondary,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                  opacity: period === "all" ? 0.35 : 1,
+                }}
+              >
+                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>›</Text>
+              </Pressable>
+            </View>
+          </View>
+    </>
+  );
   return (
     <Screen>
       <View
@@ -423,79 +496,7 @@ export default function Progress() {
           )}
         </Card>
       ) : null}
-      {tab !== "body" ? (
-        <Card>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
-            <View style={{ flex: 1 }}>
-              <Dropdown
-                label={t("Período", "Period")}
-                options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
-                value={period}
-                onChange={(id) => {
-                  setPeriod(id);
-                  setAnchor(new Date());
-                }}
-              />
-            </View>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 4, marginTop: 22 }}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="‹"
-                disabled={period === "all"}
-                onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}
-                style={{
-                  width: 34,
-                  height: 44,
-                  borderRadius: 12,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                  opacity: period === "all" ? 0.35 : 1,
-                }}
-              >
-                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>‹</Text>
-              </Pressable>
-              <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.7}
-                style={{
-                  flex: 1,
-                  textAlign: "center",
-                  color: colors.foreground,
-                  fontWeight: "800",
-                  fontSize: 14,
-                }}
-              >
-                {period === "all"
-                  ? t("Siempre", "Lifetime")
-                  : range.start.toLocaleDateString(locale)}
-              </Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="›"
-                disabled={period === "all"}
-                onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}
-                style={{
-                  width: 34,
-                  height: 44,
-                  borderRadius: 12,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                  opacity: period === "all" ? 0.35 : 1,
-                }}
-              >
-                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>›</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Card>
-      ) : null}
+      {tab === "summary" ? <Card>{periodControls}</Card> : null}
       {tab === "summary" ? (
         <>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}>
@@ -641,6 +642,7 @@ export default function Progress() {
             value={metric}
             onChange={setMetric}
           />
+          {periodControls}
           <View style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}>
             <Switch
               value={warmups}
