@@ -101,6 +101,15 @@ function RestBanner({ end, onStop }: { end: number; onStop: () => void }) {
   );
 }
 
+/** Shared column sizes so every header sits exactly over its data. */
+const columns = {
+  set: { width: 80 },
+  previous: { flex: 1.5, minWidth: 0 },
+  load: { flex: 1, minWidth: 0 },
+  amount: { flex: 1, minWidth: 0 },
+  type: { width: 44 },
+} as const;
+
 export default function Workout() {
   useKeepAwake();
   const snapshot = useSnapshot();
@@ -461,21 +470,26 @@ export default function Workout() {
                   </View>
                 </View>
                 <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
-                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ width: 64, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
-                    {t("Serie", "Set")}
-                  </Label>
-                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ flex: 1.5, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
-                    {t("Anterior", "Previous")}
-                  </Label>
-                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
-                    {unit}
-                  </Label>
-                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ flex: 1, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
-                    {metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")}
-                  </Label>
-                  <Label muted numberOfLines={1} adjustsFontSizeToFit style={{ width: 44, textAlign: "center", paddingHorizontal: 0, minWidth: 0 , includeFontPadding: false }}>
-                    {t("Tipo", "Type")}
-                  </Label>
+                  {(
+                    [
+                      [columns.set, t("Serie", "Set")],
+                      [columns.previous, t("Anterior", "Previous")],
+                      [columns.load, unit],
+                      [columns.amount, metric === "seconds" ? t("Seg", "Sec") : t("Rep", "Reps")],
+                      [columns.type, t("Tipo", "Type")],
+                    ] as const
+                  ).map(([column, label], position) => (
+                    <View key={position} style={[column, { alignItems: "center", justifyContent: "center" }]}>
+                      <Text
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.6}
+                        style={{ color: colors.muted, fontSize: 14, textAlign: "center", alignSelf: "stretch" }}
+                      >
+                        {label}
+                      </Text>
+                    </View>
+                  ))}
                 </View>
                 {entry.sets.map((set, number) => {
                   const old = previous[number];
@@ -497,7 +511,7 @@ export default function Workout() {
                     >
                       <View
                         style={{
-                          width: 64,
+                          ...columns.set,
                           flexDirection: "row",
                           alignItems: "center",
                           justifyContent: "center",
@@ -529,6 +543,8 @@ export default function Workout() {
                             }}
                             hitSlop={6}
                             style={{
+                              position: "absolute",
+                              right: 0,
                               width: 30,
                               height: 26,
                               borderRadius: 8,
@@ -557,7 +573,7 @@ export default function Workout() {
                         accessibilityLabel={`${t("Usar datos anteriores", "Use previous values")} ${number + 1}`}
                         disabled={!old}
                         style={{
-                          flex: 1.5,
+                          ...columns.previous,
                           minHeight: 52,
                           alignItems: "center",
                           justifyContent: "center",
@@ -599,6 +615,7 @@ export default function Workout() {
                           <Text style={{ color: colors.muted }}>—</Text>
                         )}
                       </Pressable>
+                      <View style={columns.load}>
                       <NumberInput
                         plain
                         decimal
@@ -614,6 +631,8 @@ export default function Workout() {
                           })
                         }
                       />
+                      </View>
+                      <View style={columns.amount}>
                       <NumberInput
                         plain
                         value={set[metric]}
@@ -628,12 +647,13 @@ export default function Workout() {
                           })
                         }
                       />
+                      </View>
                       <Pressable
                         accessibilityRole="button"
                         accessibilityLabel={`${t("Tipo de serie", "Set type")} ${number + 1}: ${type?.name ?? ""}`}
                         onPress={() => setTypeFor({ entry: index, set: number })}
                         style={{
-                          width: 44,
+                          ...columns.type,
                           minHeight: 52,
                           alignItems: "center",
                           justifyContent: "center",

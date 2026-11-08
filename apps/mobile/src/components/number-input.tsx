@@ -47,8 +47,15 @@ export function NumberInput({
       accessibilityLabel={accessibilityLabel}
       style={[
         styles.input,
-        { flex: 1, textAlign: "center", minWidth: 0 },
-        plain && { borderWidth: 0, backgroundColor: "transparent" },
+        plain
+          ? {
+              alignSelf: "stretch",
+              textAlign: "center",
+              minWidth: 0,
+              borderWidth: 0,
+              backgroundColor: "transparent",
+            }
+          : { flex: 1, textAlign: "center", minWidth: 0 },
       ]}
     />
   );
