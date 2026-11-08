@@ -598,6 +598,7 @@ export default function Progress() {
             <View
               style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}
             >
+              {stat(t("Días entrenados", "Training days"), String(totals.days))}
               {stat(t("Entrenamientos", "Workouts"), String(totals.sessions))}
               {stat(
                 t("Tiempo registrado", "Recorded time"),
@@ -605,7 +606,6 @@ export default function Progress() {
                   ? "—"
                   : duration(totals.minutes),
               )}
-              {stat(t("Días entrenados", "Training days"), String(totals.days))}
             </View>
             {!totals.sessions ? (
               <Label muted>
