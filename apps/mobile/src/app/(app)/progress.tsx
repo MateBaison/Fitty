@@ -118,7 +118,10 @@ function Comparison({
     [t("Días entrenados", "Training days"), (x) => number(x.days)],
     [
       t("Tiempo registrado", "Recorded time"),
-      (x) => (x.sessions > 0 && x.unknown === x.sessions ? "—" : `${number(x.minutes)} min`),
+      (x) =>
+        x.sessions > 0 && x.unknown === x.sessions
+          ? "—"
+          : `${number(x.minutes)} min`,
     ],
     [t("Series", "Sets"), (x) => number(x.sets)],
     [t("Volumen", "Volume"), (x) => `${number(x.volumeKg * factor)} ${unit}`],
@@ -135,7 +138,9 @@ function Comparison({
       {(["a", "b"] as const).map((key) => (
         <View key={key} style={{ gap: space(2) }}>
           <Text style={{ color: colors.foreground, fontWeight: "800" }}>
-            {key === "a" ? t("Período A", "Period A") : t("Período B", "Period B")}
+            {key === "a"
+              ? t("Período A", "Period A")
+              : t("Período B", "Period B")}
           </Text>
           <RangeField
             label={t("Fechas", "Dates")}
@@ -154,10 +159,24 @@ function Comparison({
             <Text style={{ flex: 1.4, color: colors.muted, fontSize: 12 }}>
               {t("Métrica", "Metric")}
             </Text>
-            <Text style={{ flex: 1, color: colors.muted, fontSize: 12, textAlign: "right" }}>
+            <Text
+              style={{
+                flex: 1,
+                color: colors.muted,
+                fontSize: 12,
+                textAlign: "right",
+              }}
+            >
               {t("Período A", "Period A")}
             </Text>
-            <Text style={{ flex: 1, color: colors.muted, fontSize: 12, textAlign: "right" }}>
+            <Text
+              style={{
+                flex: 1,
+                color: colors.muted,
+                fontSize: 12,
+                textAlign: "right",
+              }}
+            >
               {t("Período B", "Period B")}
             </Text>
           </View>
@@ -171,13 +190,31 @@ function Comparison({
                 backgroundColor: index % 2 ? "#13171f" : colors.secondary,
               }}
             >
-              <Text style={{ flex: 1.4, color: colors.foreground, fontWeight: "700" }}>
+              <Text
+                style={{
+                  flex: 1.4,
+                  color: colors.foreground,
+                  fontWeight: "700",
+                }}
+              >
                 {label}
               </Text>
-              <Text style={{ flex: 1, color: colors.foreground, textAlign: "right" }}>
+              <Text
+                style={{
+                  flex: 1,
+                  color: colors.foreground,
+                  textAlign: "right",
+                }}
+              >
                 {get(totals[0])}
               </Text>
-              <Text style={{ flex: 1, color: colors.foreground, textAlign: "right" }}>
+              <Text
+                style={{
+                  flex: 1,
+                  color: colors.foreground,
+                  textAlign: "right",
+                }}
+              >
                 {get(totals[1])}
               </Text>
             </View>
@@ -213,7 +250,9 @@ export default function Progress() {
   const [anchor, setAnchor] = useState(() => new Date());
   const [advance, setAdvance] = useState<"week" | "month" | "quarter">("month");
   const [selected, setSelected] = useState("");
-  const [metric, setMetric] = useState<"weight" | "reps" | "volume" | "seconds">("weight");
+  const [metric, setMetric] = useState<
+    "weight" | "reps" | "volume" | "seconds"
+  >("weight");
   const [warmups, setWarmups] = useState(false);
   const [picking, setPicking] = useState(false);
   const [comparing, setComparing] = useState(false);
@@ -229,7 +268,9 @@ export default function Progress() {
   );
   const recorded = catalog.filter((exercise) => histories.has(exercise.id));
   const selectedId = selected || recorded[0]?.id || "";
-  const selectedExercise = catalog.find((exercise) => exercise.id === selectedId);
+  const selectedExercise = catalog.find(
+    (exercise) => exercise.id === selectedId,
+  );
   const history = (histories.get(selectedId) ?? []).filter(
     (record) => record.date >= range.start && record.date < range.end,
   );
@@ -300,82 +341,117 @@ export default function Progress() {
       }}
     >
       <Text style={{ color: colors.muted, fontSize: 12 }}>{label}</Text>
-      <Text style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}>
+      <Text
+        style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}
+      >
         {value}
       </Text>
     </View>
   );
   const periodControls = (
     <>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
-            <View style={{ flex: 1 }}>
-              <Dropdown
-                label={t("Período", "Period")}
-                options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
-                value={period}
-                onChange={(id) => {
-                  setPeriod(id);
-                  setAnchor(new Date());
-                }}
-              />
-            </View>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 4, marginTop: 22 }}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="‹"
-                disabled={period === "all"}
-                onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}
-                style={{
-                  width: 34,
-                  height: 44,
-                  borderRadius: 12,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                  opacity: period === "all" ? 0.35 : 1,
-                }}
-              >
-                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>‹</Text>
-              </Pressable>
-              <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.7}
-                style={{
-                  flex: 1,
-                  textAlign: "center",
-                  color: colors.foreground,
-                  fontWeight: "800",
-                  fontSize: 14,
-                }}
-              >
-                {period === "all"
-                  ? t("Siempre", "Lifetime")
-                  : range.start.toLocaleDateString(locale)}
-              </Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="›"
-                disabled={period === "all"}
-                onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}
-                style={{
-                  width: 34,
-                  height: 44,
-                  borderRadius: 12,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.secondary,
-                  borderColor: colors.border,
-                  borderWidth: 1,
-                  opacity: period === "all" ? 0.35 : 1,
-                }}
-              >
-                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "800", marginTop: -2 }}>›</Text>
-              </Pressable>
-            </View>
-          </View>
+      <View
+        style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}
+      >
+        <View style={{ flex: 1 }}>
+          <Dropdown
+            label={t("Período", "Period")}
+            options={periods.map(([id, es, en]) => ({
+              value: id,
+              label: t(es, en),
+            }))}
+            value={period}
+            onChange={(id) => {
+              setPeriod(id);
+              setAnchor(new Date());
+            }}
+          />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 4,
+            marginTop: 22,
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="‹"
+            disabled={period === "all"}
+            onPress={() =>
+              setAnchor(shiftProgressDate(range.start, period, -1))
+            }
+            style={{
+              width: 34,
+              height: 44,
+              borderRadius: 12,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.secondary,
+              borderColor: colors.border,
+              borderWidth: 1,
+              opacity: period === "all" ? 0.35 : 1,
+            }}
+          >
+            <Text
+              style={{
+                color: colors.accent,
+                fontSize: 24,
+                fontWeight: "800",
+                marginTop: -2,
+              }}
+            >
+              ‹
+            </Text>
+          </Pressable>
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+            style={{
+              flex: 1,
+              textAlign: "center",
+              color: colors.foreground,
+              fontWeight: "800",
+              fontSize: 14,
+            }}
+          >
+            {period === "all"
+              ? t("Siempre", "Lifetime")
+              : range.start.toLocaleDateString(locale)}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="›"
+            disabled={period === "all"}
+            onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}
+            style={{
+              width: 34,
+              height: 44,
+              borderRadius: 12,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.secondary,
+              borderColor: colors.border,
+              borderWidth: 1,
+              opacity: period === "all" ? 0.35 : 1,
+            }}
+          >
+            <Text
+              style={{
+                color: colors.accent,
+                fontSize: 24,
+                fontWeight: "800",
+                marginTop: -2,
+              }}
+            >
+              ›
+            </Text>
+          </Pressable>
+        </View>
+      </View>
     </>
   );
   return (
@@ -393,56 +469,61 @@ export default function Progress() {
             router.canGoBack() ? router.back() : router.navigate("/")
           }
         />
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          padding: 6,
-          gap: 6,
-          borderRadius: 20,
-          borderColor: colors.border,
-          borderWidth: 1,
-          backgroundColor: colors.card,
-        }}
-      >
-        {(
-          [
-            ["summary", "Resumen", "Summary"],
-            ["exercises", "Ejercicios", "Exercises"],
-            ["body", "Cuerpo", "Body"],
-          ] as const
-        ).map(([id, es, en]) => (
-          <Pressable
-            key={id}
-            accessibilityRole="button"
-            accessibilityState={{ selected: tab === id }}
-            onPress={() => setTab(id)}
-            style={{
-              flex: 1,
-              minHeight: 48,
-              borderRadius: 14,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: tab === id ? colors.primary : "transparent",
-            }}
-          >
-            <Text
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            padding: 6,
+            gap: 6,
+            borderRadius: 20,
+            borderColor: colors.border,
+            borderWidth: 1,
+            backgroundColor: colors.card,
+          }}
+        >
+          {(
+            [
+              ["summary", "Resumen", "Summary"],
+              ["exercises", "Ejercicios", "Exercises"],
+              ["body", "Cuerpo", "Body"],
+            ] as const
+          ).map(([id, es, en]) => (
+            <Pressable
+              key={id}
+              accessibilityRole="button"
+              accessibilityState={{ selected: tab === id }}
+              onPress={() => setTab(id)}
               style={{
-                fontWeight: "800",
-                color: tab === id ? colors.primaryForeground : colors.foreground,
+                flex: 1,
+                minHeight: 48,
+                borderRadius: 14,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: tab === id ? colors.primary : "transparent",
               }}
             >
-              {t(es, en)}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+              <Text
+                style={{
+                  fontWeight: "800",
+                  color:
+                    tab === id ? colors.primaryForeground : colors.foreground,
+                }}
+              >
+                {t(es, en)}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
       {tab === "summary" ? (
         <Card>
-          <Text style={heading}>{t("Avances recientes", "Recent improvements")}</Text>
+          <Text style={heading}>
+            {t("Avances recientes", "Recent improvements")}
+          </Text>
           <Label muted>{t("Período de avances", "Improvement period")}</Label>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
+          <View
+            style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}
+          >
             {(
               [
                 ["week", "1 semana", "1 week"],
@@ -450,7 +531,12 @@ export default function Progress() {
                 ["quarter", "3 meses", "3 months"],
               ] as const
             ).map(([id, es, en]) => (
-              <Pill key={id} label={t(es, en)} active={advance === id} onPress={() => setAdvance(id)} />
+              <Pill
+                key={id}
+                label={t(es, en)}
+                active={advance === id}
+                onPress={() => setAdvance(id)}
+              />
             ))}
           </View>
           {advances.length ? (
@@ -474,14 +560,24 @@ export default function Progress() {
                 <Text style={{ color: colors.foreground, fontSize: 16 }}>
                   {translate(
                     locale,
-                    catalog.find((exercise) => exercise.id === item.id)?.name ?? item.id,
-                    catalog.find((exercise) => exercise.id === item.id)?.name ?? item.id,
+                    catalog.find((exercise) => exercise.id === item.id)?.name ??
+                      item.id,
+                    catalog.find((exercise) => exercise.id === item.id)?.name ??
+                      item.id,
                   )}
                 </Text>
                 <Text style={{ color: colors.primary, fontWeight: "800" }}>
-                  {formatSet(item.result.before.kg, item.result.before.value, item.result.before.metric)}
+                  {formatSet(
+                    item.result.before.kg,
+                    item.result.before.value,
+                    item.result.before.metric,
+                  )}
                   {" → "}
-                  {formatSet(item.result.after.kg, item.result.after.value, item.result.after.metric)}
+                  {formatSet(
+                    item.result.after.kg,
+                    item.result.after.value,
+                    item.result.after.metric,
+                  )}
                 </Text>
                 <Label muted>{item.date.toLocaleDateString(locale)}</Label>
               </Pressable>
@@ -496,49 +592,130 @@ export default function Progress() {
           )}
         </Card>
       ) : null}
-      {tab === "summary" ? <Card>{periodControls}</Card> : null}
       {tab === "summary" ? (
         <>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}>
-            {stat(t("Entrenamientos", "Workouts"), String(totals.sessions))}
-            {stat(
-              t("Tiempo registrado", "Recorded time"),
-              totals.sessions > 0 && totals.unknown === totals.sessions
-                ? "—"
-                : duration(totals.minutes),
-            )}
-            {stat(t("Días entrenados", "Training days"), String(totals.days))}
-          </View>
-          {!totals.sessions ? (
-            <Label muted>
-              {t(
-                "Todavía no hay entrenamientos en este período. Tu progreso va a aparecer después de guardar una sesión.",
-                "No workouts in this period yet. Your progress will appear after you save a session.",
+          <Card>
+            {periodControls}
+            <View
+              style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}
+            >
+              {stat(t("Entrenamientos", "Workouts"), String(totals.sessions))}
+              {stat(
+                t("Tiempo registrado", "Recorded time"),
+                totals.sessions > 0 && totals.unknown === totals.sessions
+                  ? "—"
+                  : duration(totals.minutes),
               )}
-            </Label>
-          ) : null}
+              {stat(t("Días entrenados", "Training days"), String(totals.days))}
+            </View>
+            {!totals.sessions ? (
+              <Label muted>
+                {t(
+                  "Todavía no hay entrenamientos en este período. Tu progreso va a aparecer después de guardar una sesión.",
+                  "No workouts in this period yet. Your progress will appear after you save a session.",
+                )}
+              </Label>
+            ) : null}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ expanded: details }}
+              onPress={() => setDetails((value) => !value)}
+              style={{
+                padding: space(4),
+                borderRadius: 16,
+                borderColor: colors.border,
+                borderWidth: 1,
+                backgroundColor: colors.secondary,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ color: colors.foreground, fontWeight: "800" }}>
+                {t("Ver detalle del entrenamiento", "View training details")}
+              </Text>
+              <Text style={{ color: colors.muted }}>{details ? "▲" : "▼"}</Text>
+            </Pressable>
+            {details ? (
+              <View style={{ gap: space(3) }}>
+                <Label>
+                  {t("Series", "Sets")}: {totals.sets} ·{" "}
+                  {t("Nuevos récords", "New records")}: {newRecords}
+                </Label>
+                <Text style={heading}>
+                  {t("Series por zona muscular", "Sets per muscle group")}
+                </Text>
+                {muscles.map(([group, count]) => (
+                  <View
+                    key={group}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: space(2),
+                    }}
+                  >
+                    <Text
+                      style={{
+                        width: 96,
+                        color: colors.foreground,
+                        fontSize: 13,
+                      }}
+                    >
+                      {translate(locale, group, group)}
+                    </Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        height: 10,
+                        borderRadius: 5,
+                        backgroundColor: colors.secondary,
+                      }}
+                    >
+                      <View
+                        style={{
+                          width: `${(count / max) * 100}%`,
+                          height: 10,
+                          borderRadius: 5,
+                          backgroundColor: colors.primary,
+                        }}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        width: 28,
+                        textAlign: "right",
+                        color: colors.foreground,
+                        fontWeight: "800",
+                      }}
+                    >
+                      {count}
+                    </Text>
+                  </View>
+                ))}
+                <Label muted>
+                  {t("Días entrenados", "Training days")}: {totals.days} ·{" "}
+                  {t("Volumen", "Volume")}:{" "}
+                  {Math.round(totals.volumeKg * factor).toLocaleString(locale)}{" "}
+                  {unit}
+                </Label>
+                <Label muted>
+                  {t(
+                    "Cada ejercicio cuenta para su zona principal. No mide intensidad, recuperación ni entrenamiento de músculos secundarios.",
+                    "Each exercise counts towards its main muscle group. This does not measure intensity, recovery or secondary muscle training.",
+                  )}
+                </Label>
+              </View>
+            ) : null}
+          </Card>
           <Label muted>
             {t(
               "Este período: cuánto entrenaste. Ejercicios: cómo cambiaron tus marcas. Cuerpo: tus medidas y fotos.",
               "This period: how much you trained. Exercises: how your performances changed. Body: your measurements and photos.",
             )}
           </Label>
-          <Button variant="secondary" onPress={() => setComparing((value) => !value)}>
-            {comparing
-              ? t("Cerrar comparación", "Close comparison")
-              : t("Comparar períodos", "Compare periods")}
-          </Button>
-          {comparing ? (
-            <Comparison
-              key={`${period}-${localDateKey(range.start)}`}
-              range={range}
-              period={period}
-            />
-          ) : null}
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ expanded: details }}
-            onPress={() => setDetails((value) => !value)}
+            accessibilityState={{ expanded: comparing }}
+            onPress={() => setComparing((value) => !value)}
             style={{
               padding: space(4),
               borderRadius: 20,
@@ -550,55 +727,24 @@ export default function Progress() {
             }}
           >
             <Text style={{ color: colors.foreground, fontWeight: "800" }}>
-              {t("Ver detalle del entrenamiento", "View training details")}
+              {t("Comparar períodos", "Compare periods")}
             </Text>
-            <Text style={{ color: colors.muted }}>{details ? "▲" : "▼"}</Text>
+            <Text style={{ color: colors.muted }}>{comparing ? "▲" : "▼"}</Text>
           </Pressable>
-          {details ? (
-            <Card>
-              <Label>
-                {t("Series", "Sets")}: {totals.sets} · {t("Nuevos récords", "New records")}: {newRecords}
-              </Label>
-              <Text style={heading}>
-                {t("Series por zona muscular", "Sets per muscle group")}
-              </Text>
-              {muscles.map(([group, count]) => (
-                <View key={group} style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
-                  <Text style={{ width: 96, color: colors.foreground, fontSize: 13 }}>
-                    {translate(locale, group, group)}
-                  </Text>
-                  <View style={{ flex: 1, height: 10, borderRadius: 5, backgroundColor: colors.secondary }}>
-                    <View
-                      style={{
-                        width: `${(count / max) * 100}%`,
-                        height: 10,
-                        borderRadius: 5,
-                        backgroundColor: colors.primary,
-                      }}
-                    />
-                  </View>
-                  <Text style={{ width: 28, textAlign: "right", color: colors.foreground, fontWeight: "800" }}>
-                    {count}
-                  </Text>
-                </View>
-              ))}
-              <Label muted>
-                {t("Días entrenados", "Training days")}: {totals.days} · {t("Volumen", "Volume")}:{" "}
-                {Math.round(totals.volumeKg * factor).toLocaleString(locale)} {unit}
-              </Label>
-              <Label muted>
-                {t(
-                  "Cada ejercicio cuenta para su zona principal. No mide intensidad, recuperación ni entrenamiento de músculos secundarios.",
-                  "Each exercise counts towards its main muscle group. This does not measure intensity, recovery or secondary muscle training.",
-                )}
-              </Label>
-            </Card>
+          {comparing ? (
+            <Comparison
+              key={`${period}-${localDateKey(range.start)}`}
+              range={range}
+              period={period}
+            />
           ) : null}
         </>
       ) : null}
       {tab === "exercises" ? (
         <Card>
-          <Text style={heading}>{t("Evolución por ejercicio", "Exercise progression")}</Text>
+          <Text style={heading}>
+            {t("Evolución por ejercicio", "Exercise progression")}
+          </Text>
           <Label muted>{t("Ejercicio", "Exercise")}</Label>
           <Pressable
             accessibilityRole="button"
@@ -618,13 +764,22 @@ export default function Progress() {
             {selectedExercise ? (
               <Image
                 source={`${env.apiUrl}${exerciseImage(selectedExercise, snapshot.profile.gender)}`}
-                style={{ width: 36, height: 36, borderRadius: 8, marginRight: space(3), backgroundColor: "#0d1016" }}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 8,
+                  marginRight: space(3),
+                  backgroundColor: "#0d1016",
+                }}
                 contentFit="cover"
                 cachePolicy="disk"
                 accessibilityIgnoresInvertColors
               />
             ) : null}
-            <Text style={{ flex: 1, color: colors.foreground, fontWeight: "800" }} numberOfLines={1}>
+            <Text
+              style={{ flex: 1, color: colors.foreground, fontWeight: "800" }}
+              numberOfLines={1}
+            >
               {selectedExercise
                 ? exerciseName(locale, selectedExercise.name)
                 : t("Sin ejercicios registrados", "No exercises recorded")}
@@ -634,7 +789,10 @@ export default function Progress() {
           <Dropdown
             label={t("Métrica", "Metric")}
             options={[
-              { value: "weight", label: `${t("Carga máxima", "Maximum load")} (${unit})` },
+              {
+                value: "weight",
+                label: `${t("Carga máxima", "Maximum load")} (${unit})`,
+              },
               { value: "reps", label: t("Repeticiones", "Repetitions") },
               { value: "volume", label: `${t("Volumen", "Volume")} (${unit})` },
               { value: "seconds", label: `${t("Tiempo", "Time")} (s)` },
@@ -657,26 +815,46 @@ export default function Progress() {
             }}
           >
             <View style={{ flex: 1, gap: 2 }}>
-              <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 15 }}>
+              <Text
+                style={{
+                  color: colors.foreground,
+                  fontWeight: "800",
+                  fontSize: 15,
+                }}
+              >
                 {t("Incluir calentamientos", "Include warm-ups")}
               </Text>
               <Label muted>
-                {t("Suma las series de calentamiento", "Counts warm-up sets too")}
+                {t(
+                  "Suma las series de calentamiento",
+                  "Counts warm-up sets too",
+                )}
               </Label>
             </View>
             <Switch
               value={warmups}
               onValueChange={setWarmups}
               trackColor={{ true: "#22c55e", false: colors.border }}
-              accessibilityLabel={t("Incluir calentamientos", "Include warm-ups")}
+              accessibilityLabel={t(
+                "Incluir calentamientos",
+                "Include warm-ups",
+              )}
             />
           </View>
           <ProgressChart
             key={`${selectedId}-${metric}-${period}-${anchor.getTime()}`}
             points={points}
-            unit={metric === "weight" || metric === "volume" ? unit : metric === "seconds" ? "s" : ""}
+            unit={
+              metric === "weight" || metric === "volume"
+                ? unit
+                : metric === "seconds"
+                  ? "s"
+                  : ""
+            }
           />
-          <Text style={heading}>{t("Récords personales", "Personal records")}</Text>
+          <Text style={heading}>
+            {t("Récords personales", "Personal records")}
+          </Text>
           <Label muted>
             {t(
               "Mejores marcas históricas logradas en el período elegido. No incluye calentamientos.",
@@ -704,10 +882,18 @@ export default function Progress() {
                       ? t("Mayor tiempo", "Longest hold")
                       : t("Más repeticiones", "Most repetitions")}
                 </Text>
-                <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800" }}>
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 18,
+                    fontWeight: "800",
+                  }}
+                >
                   {formatSet(record.weight, record.quantity, record.metric)}
                 </Text>
-                <Label muted>{new Date(record.date).toLocaleDateString(locale)}</Label>
+                <Label muted>
+                  {new Date(record.date).toLocaleDateString(locale)}
+                </Label>
               </View>
             ))
           ) : (
@@ -718,7 +904,9 @@ export default function Progress() {
               )}
             </Label>
           )}
-          <Text style={heading}>{t("Historial de entrenamientos", "Workout history")}</Text>
+          <Text style={heading}>
+            {t("Historial de entrenamientos", "Workout history")}
+          </Text>
           {[...history].reverse().map((record, index) => (
             <View
               key={index}
@@ -733,7 +921,9 @@ export default function Progress() {
                 {record.date.toLocaleDateString(locale)}
               </Text>
               <Label muted>
-                {record.sets.map((set) => formatSet(set.kg, set.value, set.metric)).join(" · ")}
+                {record.sets
+                  .map((set) => formatSet(set.kg, set.value, set.metric))
+                  .join(" · ")}
               </Label>
             </View>
           ))}
@@ -754,12 +944,25 @@ export default function Progress() {
         animationType="fade"
         onRequestClose={() => setPicking(false)}
       >
-        <View style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Cerrar"
             onPress={() => setPicking(false)}
-            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
           />
           <View style={{ maxHeight: "85%" }}>
             <Card>
@@ -771,7 +974,9 @@ export default function Progress() {
                   <Pressable
                     key={exercise.id}
                     accessibilityRole="button"
-                    accessibilityState={{ selected: exercise.id === selectedId }}
+                    accessibilityState={{
+                      selected: exercise.id === selectedId,
+                    }}
                     onPress={() => {
                       setSelected(exercise.id);
                       setPicking(false);
@@ -783,12 +988,19 @@ export default function Progress() {
                       padding: space(2),
                       borderRadius: 14,
                       backgroundColor:
-                        exercise.id === selectedId ? "#173a52" : colors.secondary,
+                        exercise.id === selectedId
+                          ? "#173a52"
+                          : colors.secondary,
                     }}
                   >
                     <Image
                       source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
-                      style={{ width: 56, height: 56, borderRadius: 12, backgroundColor: "#0d1016" }}
+                      style={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: 12,
+                        backgroundColor: "#0d1016",
+                      }}
                       contentFit="cover"
                       cachePolicy="disk"
                       accessibilityIgnoresInvertColors
@@ -806,7 +1018,9 @@ export default function Progress() {
                   </Pressable>
                 ))}
                 {!recorded.length ? (
-                  <Label muted>{t("Sin ejercicios registrados", "No exercises recorded")}</Label>
+                  <Label muted>
+                    {t("Sin ejercicios registrados", "No exercises recorded")}
+                  </Label>
                 ) : null}
               </DialogScroll>
             </Card>
