@@ -598,12 +598,7 @@ export default function Progress() {
       {tab === "exercises" ? (
         <Card>
           <Text style={heading}>{t("Evolución por ejercicio", "Exercise progression")}</Text>
-          <Label muted>
-            {t(
-              "Tus marcas, evolución e historial en un solo lugar.",
-              "Your bests, progression and history in one place.",
-            )}
-          </Label>
+          <Label muted>{t("Ejercicio", "Exercise")}</Label>
           <Pressable
             accessibilityRole="button"
             onPress={() => setPicking(true)}
