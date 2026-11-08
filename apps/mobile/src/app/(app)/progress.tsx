@@ -643,14 +643,33 @@ export default function Progress() {
             onChange={setMetric}
           />
           {periodControls}
-          <View style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: space(3),
+              padding: space(4),
+              borderRadius: 16,
+              borderColor: colors.border,
+              borderWidth: 1,
+              backgroundColor: colors.secondary,
+            }}
+          >
+            <View style={{ flex: 1, gap: 2 }}>
+              <Text style={{ color: colors.foreground, fontWeight: "800", fontSize: 15 }}>
+                {t("Incluir calentamientos", "Include warm-ups")}
+              </Text>
+              <Label muted>
+                {t("Suma las series de calentamiento", "Counts warm-up sets too")}
+              </Label>
+            </View>
             <Switch
               value={warmups}
               onValueChange={setWarmups}
               trackColor={{ true: "#22c55e", false: colors.border }}
               accessibilityLabel={t("Incluir calentamientos", "Include warm-ups")}
             />
-            <Label>{t("Incluir calentamientos", "Include warm-ups")}</Label>
           </View>
           <ProgressChart
             key={`${selectedId}-${metric}-${period}-${anchor.getTime()}`}

@@ -983,7 +983,8 @@
     "Cómo hacerlo": "Comment l'exécuter",
     "Antes de entrenar te preguntaremos cómo te sentís.": "Avant l'entraînement, nous te demanderons comment tu te sens.",
     "Exportar": "Exporter",
-    "Importar": "Importer"
+    "Importar": "Importer",
+    "Suma las series de calentamiento": "Inclut aussi les séries d'échauffement"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1969,7 +1970,8 @@
     "Cómo hacerlo": "如何做",
     "Antes de entrenar te preguntaremos cómo te sentís.": "训练前我们会询问你的感受。",
     "Exportar": "导出",
-    "Importar": "导入"
+    "Importar": "导入",
+    "Suma las series de calentamiento": "同时计入热身组"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2955,7 +2957,8 @@
     "Cómo hacerlo": "इसे कैसे करें",
     "Antes de entrenar te preguntaremos cómo te sentís.": "कसरत से पहले हम पूछेंगे कि आप कैसा महसूस कर रहे हैं।",
     "Exportar": "निर्यात",
-    "Importar": "आयात"
+    "Importar": "आयात",
+    "Suma las series de calentamiento": "वार्म-अप सेट भी गिने जाएंगे"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3941,7 +3944,8 @@
     "Cómo hacerlo": "طريقة التنفيذ",
     "Antes de entrenar te preguntaremos cómo te sentís.": "قبل التمرين سنسألك عن حالتك.",
     "Exportar": "تصدير",
-    "Importar": "استيراد"
+    "Importar": "استيراد",
+    "Suma las series de calentamiento": "يشمل مجموعات الإحماء أيضًا"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4926,7 +4930,8 @@
     "Cómo hacerlo": "So geht's",
     "Antes de entrenar te preguntaremos cómo te sentís.": "Vor dem Training fragen wir dich, wie du dich fühlst.",
     "Exportar": "Exportieren",
-    "Importar": "Importieren"
+    "Importar": "Importieren",
+    "Suma las series de calentamiento": "Zählt auch Aufwärmsätze mit"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5911,7 +5916,8 @@
     "Cómo hacerlo": "Come eseguirlo",
     "Antes de entrenar te preguntaremos cómo te sentís.": "Prima dell'allenamento ti chiederemo come ti senti.",
     "Exportar": "Esporta",
-    "Importar": "Importa"
+    "Importar": "Importa",
+    "Suma las series de calentamiento": "Include anche le serie di riscaldamento"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6896,7 +6902,8 @@
     "Cómo hacerlo": "Como fazer",
     "Antes de entrenar te preguntaremos cómo te sentís.": "Antes de treinar, vamos perguntar como você está se sentindo.",
     "Exportar": "Exportar",
-    "Importar": "Importar"
+    "Importar": "Importar",
+    "Suma las series de calentamiento": "Inclui também as séries de aquecimento"
   },
   "en": {
     "Sexo": "Sex",

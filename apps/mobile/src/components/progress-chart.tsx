@@ -24,6 +24,7 @@ export function ProgressChart({
   const { t } = useAccount();
   const locale = useSnapshot().settings.language ?? "es";
   const [active, setActive] = useState<number | null>(null);
+  const [width, setWidth] = useState(320);
   if (!points.length)
     return (
       <Label muted>
@@ -38,9 +39,17 @@ export function ProgressChart({
   const maximum = high + pad;
   const first = points[0]!.date.getTime();
   const span = Math.max(1, points[points.length - 1]!.date.getTime() - first);
+  const height = 260;
+  const left = 50;
+  const right = width - 18;
+  const top = 18;
+  const bottom = height - 38;
   const coordinates = points.map((point) => ({
-    x: 45 + ((point.date.getTime() - first) / span) * 420,
-    y: 180 - ((point.value - minimum) / (maximum - minimum)) * 145,
+    x:
+      points.length === 1
+        ? (left + right) / 2
+        : left + ((point.date.getTime() - first) / span) * (right - left),
+    y: bottom - ((point.value - minimum) / (maximum - minimum)) * (bottom - top),
   }));
   const index =
     active !== null && active < points.length ? active : points.length - 1;
@@ -58,21 +67,23 @@ export function ProgressChart({
           {chosen.detail ? ` · ${chosen.detail}` : ""}
         </Label>
       </View>
-      <Svg viewBox="0 0 500 220" width="100%" height={200}>
-        {[0, 0.5, 1].map((fraction) => (
+      <View onLayout={(event) => setWidth(Math.max(240, event.nativeEvent.layout.width))}>
+      <Svg viewBox={`0 0 ${width} ${height}`} width={width} height={height}>
+        {[0, 0.25, 0.5, 0.75, 1].map((fraction) => (
           <G key={fraction}>
             <Line
-              x1="45"
-              x2="465"
-              y1={35 + fraction * 145}
-              y2={35 + fraction * 145}
+              x1={left}
+              x2={right}
+              y1={top + fraction * (bottom - top)}
+              y2={top + fraction * (bottom - top)}
               stroke={colors.border}
             />
             <SvgText
-              x="3"
-              y={39 + fraction * 145}
+              x={left - 8}
+              y={top + 5 + fraction * (bottom - top)}
+              textAnchor="end"
               fill={colors.muted}
-              fontSize="12"
+              fontSize="13"
             >
               {(maximum - fraction * (maximum - minimum)).toLocaleString(locale, {
                 maximumFractionDigits: 1,
@@ -106,19 +117,20 @@ export function ProgressChart({
             onPress={() => setActive(i)}
           />
         ))}
-        <SvgText x="45" y="212" fill={colors.muted} fontSize="12">
+        <SvgText x={left} y={height - 10} fill={colors.muted} fontSize="13">
           {day(points[0]!.date)}
         </SvgText>
         <SvgText
-          x="465"
-          y="212"
+          x={right}
+          y={height - 10}
           textAnchor="end"
           fill={colors.muted}
-          fontSize="12"
+          fontSize="13"
         >
           {day(points[points.length - 1]!.date)}
         </SvgText>
       </Svg>
+      </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
         {points.map((point, i) => (
           <Pressable
