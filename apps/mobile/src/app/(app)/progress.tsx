@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
@@ -21,7 +22,10 @@ import {
   shiftProgressDate,
   type ProgressPeriod,
 } from "@fitty/core/domain/progress-period";
+import { exerciseImage } from "@fitty/core/data/exercises";
 import { catalogFor, localDateKey } from "@fitty/core/domain/workouts";
+import { Dropdown } from "@/components/dropdown";
+import { env } from "@/lib/env";
 import { BodyPanel } from "@/app/(app)/body";
 import { ProgressChart, type ChartPoint } from "@/components/progress-chart";
 import { BackButton } from "@/components/back-button";
@@ -589,6 +593,15 @@ export default function Progress() {
               borderWidth: 1,
             }}
           >
+            {selectedExercise ? (
+              <Image
+                source={`${env.apiUrl}${exerciseImage(selectedExercise, snapshot.profile.gender)}`}
+                style={{ width: 36, height: 36, borderRadius: 8, marginRight: space(3), backgroundColor: "#0d1016" }}
+                contentFit="cover"
+                cachePolicy="disk"
+                accessibilityIgnoresInvertColors
+              />
+            ) : null}
             <Text style={{ flex: 1, color: colors.foreground, fontWeight: "800" }} numberOfLines={1}>
               {selectedExercise
                 ? exerciseName(locale, selectedExercise.name)
@@ -596,19 +609,17 @@ export default function Progress() {
             </Text>
             <Text style={{ color: colors.accent }}>▾</Text>
           </Pressable>
-          <Label muted>{t("Métrica", "Metric")}</Label>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
-            {(
-              [
-                ["weight", `${t("Carga máxima", "Maximum load")} (${unit})`],
-                ["reps", t("Repeticiones", "Repetitions")],
-                ["volume", `${t("Volumen", "Volume")} (${unit})`],
-                ["seconds", `${t("Tiempo", "Time")} (s)`],
-              ] as const
-            ).map(([id, label]) => (
-              <Pill key={id} label={label} active={metric === id} onPress={() => setMetric(id)} />
-            ))}
-          </View>
+          <Dropdown
+            label={t("Métrica", "Metric")}
+            options={[
+              { value: "weight", label: `${t("Carga máxima", "Maximum load")} (${unit})` },
+              { value: "reps", label: t("Repeticiones", "Repetitions") },
+              { value: "volume", label: `${t("Volumen", "Volume")} (${unit})` },
+              { value: "seconds", label: `${t("Tiempo", "Time")} (s)` },
+            ]}
+            value={metric}
+            onChange={setMetric}
+          />
           <View style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}>
             <Switch
               value={warmups}
@@ -715,16 +726,42 @@ export default function Progress() {
               </Text>
               <DialogScroll contentContainerStyle={{ gap: space(2) }}>
                 {recorded.map((exercise) => (
-                  <Button
+                  <Pressable
                     key={exercise.id}
-                    variant={exercise.id === selectedId ? "primary" : "secondary"}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: exercise.id === selectedId }}
                     onPress={() => {
                       setSelected(exercise.id);
                       setPicking(false);
                     }}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: space(3),
+                      padding: space(2),
+                      borderRadius: 14,
+                      backgroundColor:
+                        exercise.id === selectedId ? "#173a52" : colors.secondary,
+                    }}
                   >
-                    {exerciseName(locale, exercise.name)}
-                  </Button>
+                    <Image
+                      source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                      style={{ width: 56, height: 56, borderRadius: 12, backgroundColor: "#0d1016" }}
+                      contentFit="cover"
+                      cachePolicy="disk"
+                      accessibilityIgnoresInvertColors
+                    />
+                    <Text
+                      style={{
+                        flex: 1,
+                        color: colors.foreground,
+                        fontSize: 15,
+                        fontWeight: exercise.id === selectedId ? "800" : "600",
+                      }}
+                    >
+                      {exerciseName(locale, exercise.name)}
+                    </Text>
+                  </Pressable>
                 ))}
                 {!recorded.length ? (
                   <Label muted>{t("Sin ejercicios registrados", "No exercises recorded")}</Label>

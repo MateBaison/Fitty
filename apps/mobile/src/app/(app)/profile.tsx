@@ -17,6 +17,8 @@ import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar"
 import { missingProfileFields } from "@fitty/core/domain/profile-validation";
 import { localDateKey } from "@fitty/core/domain/workouts";
 import { accountCacheKey } from "@fitty/core/storage/account-cache";
+import { BackButton } from "@/components/back-button";
+import { MenstrualDays } from "@/components/menstrual-days";
 import { Notice } from "@/components/notice";
 import { flags } from "@/components/language-menu";
 import { languageOptions } from "@/components/onboarding";
@@ -282,6 +284,11 @@ export default function Profile() {
   const changed =
     JSON.stringify(draft) !== JSON.stringify(profileDraft(snapshot.profile));
   const settings = snapshot.settings;
+  const prefsChanged =
+    prefs.weight !== (settings.weight ?? "kg") ||
+    prefs.height !== (settings.height ?? "cm") ||
+    prefs.distance !== (settings.distance ?? "km") ||
+    prefs.language !== (settings.language ?? "es");
   // Masculine profiles hide menstrual controls but keep saved dates and settings.
   const menstrualAllowed = menstrualCalendarAllowed({
     ...snapshot.profile,
@@ -514,10 +521,24 @@ export default function Profile() {
                 }
               />
             </View>
+            {snapshot.profile.menstrualCalendar?.enabled === true ? (
+              <MenstrualDays
+                dates={snapshot.profile.menstrualCalendar?.dates ?? []}
+                locale={settings.language ?? "es"}
+                onChange={(dates) =>
+                  void change((next) => {
+                    next.profile.menstrualCalendar = {
+                      ...next.profile.menstrualCalendar,
+                      dates,
+                    };
+                  })
+                }
+              />
+            ) : null}
             <Label muted>
               {t(
-                "Marcá los días en el calendario de Inicio. Antes de entrenar te preguntaremos cómo te sentís.",
-                "Mark days on the Home calendar. Before training we'll ask how you feel.",
+                "Antes de entrenar te preguntaremos cómo te sentís.",
+                "Before training we'll ask how you feel.",
               )}
             </Label>
           </>
@@ -570,6 +591,8 @@ export default function Profile() {
             "The backup includes your profile, history and photos. Store it privately.",
           )}
         </Label>
+        <View style={{ flexDirection: "row", gap: space(3) }}>
+          <View style={{ flex: 1 }}>
         <Button
           variant="secondary"
           onPress={() =>
@@ -580,11 +603,15 @@ export default function Profile() {
             })
           }
         >
-          {t("Exportar copia", "Export backup")}
+          {t("Exportar", "Export")}
         </Button>
+          </View>
+          <View style={{ flex: 1 }}>
         <Button variant="secondary" onPress={() => void importBackup()}>
-          {t("Importar copia", "Import backup")}
+          {t("Importar", "Import")}
         </Button>
+          </View>
+        </View>
       </Card>
       {view.status !== "synced" ? (
         <Card>
@@ -684,9 +711,14 @@ export default function Profile() {
                   </>
                 ) : (
                   <>
-                    <Text style={{ ...sectionTitle, textAlign: "center" }}>
-                      {t("Configuración", "Settings")}
-                    </Text>
+                    <View style={{ justifyContent: "center" }}>
+                      <View style={{ position: "absolute", left: 0, zIndex: 1 }}>
+                        <BackButton onPress={() => setSettingsOpen(false)} />
+                      </View>
+                      <Text style={{ ...sectionTitle, textAlign: "center" }}>
+                        {t("Configuración", "Settings")}
+                      </Text>
+                    </View>
                     <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}>
                       {(
                         [
@@ -732,12 +764,11 @@ export default function Profile() {
                       </View>
                     </View>
                     <DeleteAccount />
-                    <Button onPress={saveSettings}>
-                      {t("Guardar configuración", "Save settings")}
-                    </Button>
-                    <Button variant="secondary" onPress={() => setSettingsOpen(false)}>
-                      {t("Cerrar", "Close")}
-                    </Button>
+                    {prefsChanged ? (
+                      <Button onPress={saveSettings}>
+                        {t("Guardar cambios", "Save changes")}
+                      </Button>
+                    ) : null}
                   </>
                 )}
               </DialogScroll>

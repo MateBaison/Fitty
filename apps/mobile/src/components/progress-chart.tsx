@@ -95,6 +95,17 @@ export function ProgressChart({
             fill={colors.primary}
           />
         ))}
+        {/* Larger invisible targets so each point can be tapped. */}
+        {coordinates.map((point, i) => (
+          <Circle
+            key={`hit-${i}`}
+            cx={point.x}
+            cy={point.y}
+            r={16}
+            fill="transparent"
+            onPress={() => setActive(i)}
+          />
+        ))}
         <SvgText x="45" y="212" fill={colors.muted} fontSize="12">
           {day(points[0]!.date)}
         </SvgText>
