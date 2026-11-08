@@ -34,9 +34,17 @@ export function ProgressChart({
   const values = points.map((point) => point.value);
   const low = Math.min(...values);
   const high = Math.max(...values);
-  const pad = Math.max((high - low) * 0.15, high * 0.05, 1);
-  const minimum = Math.max(0, low - pad);
-  const maximum = high + pad;
+  // Whole-number axis in steady steps (1, 2, 5, 10, 25, 50…), like 5 kg for loads.
+  const steps = [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
+  const step =
+    steps.find((candidate) => Math.ceil(high / candidate) - Math.floor(low / candidate) <= 8) ??
+    Math.ceil((high - low) / 8);
+  let minimum = Math.floor(low / step) * step;
+  let maximum = Math.ceil(high / step) * step;
+  if (maximum === minimum) maximum = minimum + step;
+  if (minimum < 0) minimum = 0;
+  const ticks: number[] = [];
+  for (let tick = minimum; tick <= maximum; tick += step) ticks.push(tick);
   const first = points[0]!.date.getTime();
   const span = Math.max(1, points[points.length - 1]!.date.getTime() - first);
   const height = 260;
@@ -69,28 +77,23 @@ export function ProgressChart({
       </View>
       <View onLayout={(event) => setWidth(Math.max(240, event.nativeEvent.layout.width))}>
       <Svg viewBox={`0 0 ${width} ${height}`} width={width} height={height}>
-        {[0, 0.25, 0.5, 0.75, 1].map((fraction) => (
-          <G key={fraction}>
-            <Line
-              x1={left}
-              x2={right}
-              y1={top + fraction * (bottom - top)}
-              y2={top + fraction * (bottom - top)}
-              stroke={colors.border}
-            />
-            <SvgText
-              x={left - 8}
-              y={top + 5 + fraction * (bottom - top)}
-              textAnchor="end"
-              fill={colors.muted}
-              fontSize="13"
-            >
-              {(maximum - fraction * (maximum - minimum)).toLocaleString(locale, {
-                maximumFractionDigits: 1,
-              })}
-            </SvgText>
-          </G>
-        ))}
+        {ticks.map((tick) => {
+          const y = bottom - ((tick - minimum) / (maximum - minimum)) * (bottom - top);
+          return (
+            <G key={tick}>
+              <Line x1={left} x2={right} y1={y} y2={y} stroke={colors.border} />
+              <SvgText
+                x={left - 8}
+                y={y + 5}
+                textAnchor="end"
+                fill={colors.muted}
+                fontSize="13"
+              >
+                {tick.toLocaleString(locale)}
+              </SvgText>
+            </G>
+          );
+        })}
         <Polyline
           points={coordinates.map((point) => `${point.x},${point.y}`).join(" ")}
           fill="none"
