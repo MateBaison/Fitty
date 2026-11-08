@@ -425,42 +425,51 @@ export default function Progress() {
       ) : null}
       {tab !== "body" ? (
         <Card>
-          <Dropdown
-            label={t("Período", "Period")}
-            options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
-            value={period}
-            onChange={(id) => {
-              setPeriod(id);
-              setAnchor(new Date());
-            }}
-          />
-          <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
-            <View style={{ width: 48 }}>
-              <Button variant="secondary" disabled={period === "all"} onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}>
-                ‹
-              </Button>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}>
+            <View style={{ flex: 1 }}>
+              <Dropdown
+                label={t("Período", "Period")}
+                options={periods.map(([id, es, en]) => ({ value: id, label: t(es, en) }))}
+                value={period}
+                onChange={(id) => {
+                  setPeriod(id);
+                  setAnchor(new Date());
+                }}
+              />
             </View>
-            <Text
+            <View
               style={{
-                flex: 1,
-                textAlign: "center",
-                color: colors.foreground,
-                fontWeight: "800",
+                flex: 1.2,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: space(1),
               }}
             >
-              {period === "all"
-                ? t("Todo el historial", "Full history")
-                : range.start.toLocaleDateString(locale)}
-            </Text>
-            <View style={{ width: 48 }}>
-              <Button variant="secondary" disabled={period === "all"} onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}>
-                ›
-              </Button>
-            </View>
-            <View style={{ width: 84 }}>
-              <Button variant="secondary" onPress={() => setAnchor(new Date())}>
-                {t("Hoy", "Today")}
-              </Button>
+              <View style={{ width: 44 }}>
+                <Button variant="secondary" disabled={period === "all"} onPress={() => setAnchor(shiftProgressDate(range.start, period, -1))}>
+                  ‹
+                </Button>
+              </View>
+              <Text
+                numberOfLines={2}
+                adjustsFontSizeToFit
+                style={{
+                  flex: 1,
+                  textAlign: "center",
+                  color: colors.foreground,
+                  fontWeight: "800",
+                  fontSize: 14,
+                }}
+              >
+                {period === "all"
+                  ? t("Todo el historial", "Full history")
+                  : range.start.toLocaleDateString(locale)}
+              </Text>
+              <View style={{ width: 44 }}>
+                <Button variant="secondary" disabled={period === "all"} onPress={() => setAnchor(shiftProgressDate(range.start, period, 1))}>
+                  ›
+                </Button>
+              </View>
             </View>
           </View>
         </Card>
