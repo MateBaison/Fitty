@@ -10,7 +10,7 @@ export const terms: Record<string, Policy> = {
         title: "Tu cuenta",
         body: [
           "Necesitás una cuenta para usar Fitty. Sos responsable de la actividad de tu cuenta y de mantener seguro tu acceso.",
-          "Debés tener al menos 14 años. Si sos menor de edad según la ley de tu país, necesitás el permiso de tu madre, padre o tutor.",
+          "Debés tener al menos 16 años. Si sos menor de edad según la ley de tu país, necesitás el permiso de tu madre, padre o tutor.",
         ],
       },
       {
@@ -78,7 +78,7 @@ export const terms: Record<string, Policy> = {
         title: "Your account",
         body: [
           "You need an account to use Fitty. You are responsible for the activity on your account and for keeping your access secure.",
-          "You must be at least 14 years old. If you are a minor under the law of your country, you need permission from your parent or guardian.",
+          "You must be at least 16 years old. If you are a minor under the law of your country, you need permission from your parent or guardian.",
         ],
       },
       {
@@ -146,7 +146,7 @@ export const terms: Record<string, Policy> = {
         title: "Ton compte",
         body: [
           "Un compte est nécessaire pour utiliser Fitty. Tu es responsable de l'activité de ton compte et de la sécurité de ton accès.",
-          "Tu dois avoir au moins 14 ans. Si tu es mineur selon la loi de ton pays, tu as besoin de l'autorisation de ton parent ou tuteur.",
+          "Tu dois avoir au moins 16 ans. Si tu es mineur selon la loi de ton pays, tu as besoin de l'autorisation de ton parent ou tuteur.",
         ],
       },
       {
@@ -214,7 +214,7 @@ export const terms: Record<string, Policy> = {
         title: "你的账户",
         body: [
           "使用 Fitty 需要账户。你需对账户活动负责,并保管好自己的登录信息。",
-          "你必须年满 14 岁。如果按你所在国家的法律你是未成年人,则需要父母或监护人的许可。",
+          "你必须年满 16 岁。如果按你所在国家的法律你是未成年人,则需要父母或监护人的许可。",
         ],
       },
       {
@@ -282,7 +282,7 @@ export const terms: Record<string, Policy> = {
         title: "आपका खाता",
         body: [
           "Fitty का उपयोग करने के लिए खाता चाहिए। अपने खाते की गतिविधि और अपनी पहुँच को सुरक्षित रखने की ज़िम्मेदारी आपकी है।",
-          "आपकी उम्र कम से कम 14 वर्ष होनी चाहिए। यदि आपके देश के कानून के अनुसार आप नाबालिग हैं, तो माता-पिता या अभिभावक की अनुमति ज़रूरी है।",
+          "आपकी उम्र कम से कम 16 वर्ष होनी चाहिए। यदि आपके देश के कानून के अनुसार आप नाबालिग हैं, तो माता-पिता या अभिभावक की अनुमति ज़रूरी है।",
         ],
       },
       {
@@ -350,7 +350,7 @@ export const terms: Record<string, Policy> = {
         title: "حسابك",
         body: [
           "تحتاج إلى حساب لاستخدام Fitty. أنت مسؤول عن نشاط حسابك وعن حماية وصولك.",
-          "يجب ألا يقل عمرك عن 14 عامًا. إذا كنت قاصرًا وفق قانون بلدك فتحتاج إلى إذن من والديك أو وليّ أمرك.",
+          "يجب ألا يقل عمرك عن 16 عامًا. إذا كنت قاصرًا وفق قانون بلدك فتحتاج إلى إذن من والديك أو وليّ أمرك.",
         ],
       },
       {
@@ -418,7 +418,7 @@ export const terms: Record<string, Policy> = {
         title: "Dein Konto",
         body: [
           "Für Fitty brauchst du ein Konto. Du bist für die Aktivität deines Kontos und für die Sicherheit deines Zugangs verantwortlich.",
-          "Du musst mindestens 14 Jahre alt sein. Bist du nach dem Recht deines Landes minderjährig, brauchst du die Erlaubnis deiner Eltern oder Erziehungsberechtigten.",
+          "Du musst mindestens 16 Jahre alt sein. Bist du nach dem Recht deines Landes minderjährig, brauchst du die Erlaubnis deiner Eltern oder Erziehungsberechtigten.",
         ],
       },
       {
@@ -486,7 +486,7 @@ export const terms: Record<string, Policy> = {
         title: "Il tuo account",
         body: [
           "Per usare Fitty serve un account. Sei responsabile dell'attività del tuo account e della sicurezza del tuo accesso.",
-          "Devi avere almeno 14 anni. Se sei minorenne secondo la legge del tuo paese, ti serve il permesso di un genitore o tutore.",
+          "Devi avere almeno 16 anni. Se sei minorenne secondo la legge del tuo paese, ti serve il permesso di un genitore o tutore.",
         ],
       },
       {
@@ -554,7 +554,7 @@ export const terms: Record<string, Policy> = {
         title: "Sua conta",
         body: [
           "Você precisa de uma conta para usar o Fitty. Você é responsável pela atividade da sua conta e pela segurança do seu acesso.",
-          "Você deve ter pelo menos 14 anos. Se for menor de idade pela lei do seu país, precisa da permissão de seus pais ou responsável.",
+          "Você deve ter pelo menos 16 anos. Se for menor de idade pela lei do seu país, precisa da permissão de seus pais ou responsável.",
         ],
       },
       {

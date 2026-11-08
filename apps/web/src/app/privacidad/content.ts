@@ -73,7 +73,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "Menores",
         body: [
-          "Fitty no está dirigida a menores de 14 años y no recopilamos datos de ellos de forma intencional. Si creés que un menor se registró, escribinos para eliminar la cuenta.",
+          "Fitty no está dirigida a menores de 16 años y no recopilamos datos de ellos de forma intencional. Si creés que un menor se registró, escribinos para eliminar la cuenta.",
         ],
       },
       {
@@ -151,7 +151,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "Children",
         body: [
-          "Fitty is not directed to children under 14 and we do not knowingly collect their data. If you believe a child signed up, write to us and we will delete the account.",
+          "Fitty is not directed to children under 16 and we do not knowingly collect their data. If you believe a child signed up, write to us and we will delete the account.",
         ],
       },
       {
@@ -229,7 +229,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "Mineurs",
         body: [
-          "Fitty ne s'adresse pas aux moins de 14 ans et nous ne collectons pas sciemment leurs données. Si tu penses qu'un mineur s'est inscrit, écris-nous et nous supprimerons le compte.",
+          "Fitty ne s'adresse pas aux moins de 16 ans et nous ne collectons pas sciemment leurs données. Si tu penses qu'un mineur s'est inscrit, écris-nous et nous supprimerons le compte.",
         ],
       },
       {
@@ -307,7 +307,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "未成年人",
         body: [
-          "Fitty 不面向 14 岁以下的儿童,我们也不会有意收集其数据。如果你认为有未成年人注册,请联系我们,我们将删除该账户。",
+          "Fitty 不面向 16 岁以下的儿童,我们也不会有意收集其数据。如果你认为有未成年人注册,请联系我们,我们将删除该账户。",
         ],
       },
       {
@@ -385,7 +385,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "नाबालिग",
         body: [
-          "Fitty 14 वर्ष से कम उम्र के बच्चों के लिए नहीं है और हम जानबूझकर उनका डेटा एकत्र नहीं करते। यदि आपको लगता है कि किसी नाबालिग ने साइन अप किया है, तो हमें लिखें और हम खाता हटा देंगे।",
+          "Fitty 16 वर्ष से कम उम्र के बच्चों के लिए नहीं है और हम जानबूझकर उनका डेटा एकत्र नहीं करते। यदि आपको लगता है कि किसी नाबालिग ने साइन अप किया है, तो हमें लिखें और हम खाता हटा देंगे।",
         ],
       },
       {
@@ -463,7 +463,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "القاصرون",
         body: [
-          "Fitty غير موجّه للأطفال دون 14 عامًا ولا نجمع بياناتهم عن قصد. إذا كنت تعتقد أن قاصرًا سجّل، فراسلنا وسنحذف الحساب.",
+          "Fitty غير موجّه للأطفال دون 16 عامًا ولا نجمع بياناتهم عن قصد. إذا كنت تعتقد أن قاصرًا سجّل، فراسلنا وسنحذف الحساب.",
         ],
       },
       {
@@ -541,7 +541,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "Minderjährige",
         body: [
-          "Fitty richtet sich nicht an Kinder unter 14 Jahren und wir erheben ihre Daten nicht wissentlich. Wenn du glaubst, dass sich ein Minderjähriger registriert hat, schreib uns und wir löschen das Konto.",
+          "Fitty richtet sich nicht an Kinder unter 16 Jahren und wir erheben ihre Daten nicht wissentlich. Wenn du glaubst, dass sich ein Minderjähriger registriert hat, schreib uns und wir löschen das Konto.",
         ],
       },
       {
@@ -619,7 +619,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "Minori",
         body: [
-          "Fitty non è rivolta a minori di 14 anni e non raccogliamo consapevolmente i loro dati. Se pensi che un minore si sia registrato, scrivici e cancelleremo l'account.",
+          "Fitty non è rivolta a minori di 16 anni e non raccogliamo consapevolmente i loro dati. Se pensi che un minore si sia registrato, scrivici e cancelleremo l'account.",
         ],
       },
       {
@@ -697,7 +697,7 @@ export const policies: Record<string, Policy> = {
       {
         title: "Menores",
         body: [
-          "O Fitty não se destina a menores de 14 anos e não coletamos dados deles de forma intencional. Se você acredita que um menor se cadastrou, escreva para nós e excluiremos a conta.",
+          "O Fitty não se destina a menores de 16 anos e não coletamos dados deles de forma intencional. Se você acredita que um menor se cadastrou, escreva para nós e excluiremos a conta.",
         ],
       },
       {

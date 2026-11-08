@@ -10,7 +10,7 @@
     "backgroundColor": "#090b10",
     "ios": {
       "bundleIdentifier": "uy.fitty.app",
-      "supportsTablet": true,
+      "supportsTablet": false,
       "usesAppleSignIn": true,
       "config": {
         "usesNonExemptEncryption": false
