@@ -593,6 +593,7 @@ export default function Workout() {
                             <Text
                               numberOfLines={1}
                               adjustsFontSizeToFit
+                              minimumFontScale={0.6}
                               style={{
                                 color: colors.foreground,
                                 fontWeight: "800",
@@ -602,7 +603,16 @@ export default function Workout() {
                             >
                               {old.kg} {unit}
                             </Text>
-                            <Text style={{ color: colors.muted, fontSize: 11 }}>
+                            <Text
+                              numberOfLines={1}
+                              adjustsFontSizeToFit
+                              minimumFontScale={0.7}
+                              style={{
+                                color: colors.muted,
+                                fontSize: 11,
+                                paddingHorizontal: 4,
+                              }}
+                            >
                               × {old.value}{" "}
                               {metric === "seconds"
                                 ? t("seg", "sec")

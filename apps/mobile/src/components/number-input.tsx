@@ -44,6 +44,7 @@ export function NumberInput({
       keyboardType={decimal ? "decimal-pad" : "number-pad"}
       returnKeyType="done"
       selectTextOnFocus
+      numberOfLines={1}
       accessibilityLabel={accessibilityLabel}
       style={[
         styles.input,
@@ -52,6 +53,7 @@ export function NumberInput({
               alignSelf: "stretch",
               textAlign: "center",
               minWidth: 0,
+              paddingHorizontal: 4,
               borderWidth: 0,
               backgroundColor: "transparent",
             }
