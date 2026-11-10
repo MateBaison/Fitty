@@ -984,7 +984,13 @@
     "Antes de entrenar te preguntaremos cómo te sentís.": "Avant l'entraînement, nous te demanderons comment tu te sens.",
     "Exportar": "Exporter",
     "Importar": "Importer",
-    "Suma las series de calentamiento": "Inclut aussi les séries d'échauffement"
+    "Suma las series de calentamiento": "Inclut aussi les séries d'échauffement",
+    "Personalizado": "Personnalisé",
+    "Día personalizado": "Jour personnalisé",
+    "No se pudo guardar.": "Enregistrement impossible.",
+    "Elegí una rutina o un día personalizado.": "Choisis une routine ou un jour personnalisé.",
+    "Elegí el día de la rutina.": "Choisis le jour de la routine.",
+    "Todavía no agregaste ejercicios.": "Tu n'as pas encore ajouté d'exercices."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -1971,7 +1977,13 @@
     "Antes de entrenar te preguntaremos cómo te sentís.": "训练前我们会询问你的感受。",
     "Exportar": "导出",
     "Importar": "导入",
-    "Suma las series de calentamiento": "同时计入热身组"
+    "Suma las series de calentamiento": "同时计入热身组",
+    "Personalizado": "自定义",
+    "Día personalizado": "自定义训练日",
+    "No se pudo guardar.": "无法保存。",
+    "Elegí una rutina o un día personalizado.": "选择一个计划或自定义训练日。",
+    "Elegí el día de la rutina.": "选择计划中的训练日。",
+    "Todavía no agregaste ejercicios.": "你还没有添加动作。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -2958,7 +2970,13 @@
     "Antes de entrenar te preguntaremos cómo te sentís.": "कसरत से पहले हम पूछेंगे कि आप कैसा महसूस कर रहे हैं।",
     "Exportar": "निर्यात",
     "Importar": "आयात",
-    "Suma las series de calentamiento": "वार्म-अप सेट भी गिने जाएंगे"
+    "Suma las series de calentamiento": "वार्म-अप सेट भी गिने जाएंगे",
+    "Personalizado": "कस्टम",
+    "Día personalizado": "कस्टम दिन",
+    "No se pudo guardar.": "सहेजा नहीं जा सका।",
+    "Elegí una rutina o un día personalizado.": "कोई रूटीन या कस्टम दिन चुनें।",
+    "Elegí el día de la rutina.": "रूटीन का दिन चुनें।",
+    "Todavía no agregaste ejercicios.": "आपने अभी तक कोई व्यायाम नहीं जोड़ा।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -3945,7 +3963,13 @@
     "Antes de entrenar te preguntaremos cómo te sentís.": "قبل التمرين سنسألك عن حالتك.",
     "Exportar": "تصدير",
     "Importar": "استيراد",
-    "Suma las series de calentamiento": "يشمل مجموعات الإحماء أيضًا"
+    "Suma las series de calentamiento": "يشمل مجموعات الإحماء أيضًا",
+    "Personalizado": "مخصص",
+    "Día personalizado": "يوم مخصص",
+    "No se pudo guardar.": "تعذر الحفظ.",
+    "Elegí una rutina o un día personalizado.": "اختر روتينًا أو يومًا مخصصًا.",
+    "Elegí el día de la rutina.": "اختر يوم الروتين.",
+    "Todavía no agregaste ejercicios.": "لم تضف أي تمارين بعد."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -4931,7 +4955,13 @@
     "Antes de entrenar te preguntaremos cómo te sentís.": "Vor dem Training fragen wir dich, wie du dich fühlst.",
     "Exportar": "Exportieren",
     "Importar": "Importieren",
-    "Suma las series de calentamiento": "Zählt auch Aufwärmsätze mit"
+    "Suma las series de calentamiento": "Zählt auch Aufwärmsätze mit",
+    "Personalizado": "Individuell",
+    "Día personalizado": "Individueller Tag",
+    "No se pudo guardar.": "Speichern nicht möglich.",
+    "Elegí una rutina o un día personalizado.": "Wähle eine Routine oder einen individuellen Tag.",
+    "Elegí el día de la rutina.": "Wähle den Tag der Routine.",
+    "Todavía no agregaste ejercicios.": "Du hast noch keine Übungen hinzugefügt."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -5917,7 +5947,13 @@
     "Antes de entrenar te preguntaremos cómo te sentís.": "Prima dell'allenamento ti chiederemo come ti senti.",
     "Exportar": "Esporta",
     "Importar": "Importa",
-    "Suma las series de calentamiento": "Include anche le serie di riscaldamento"
+    "Suma las series de calentamiento": "Include anche le serie di riscaldamento",
+    "Personalizado": "Personalizzato",
+    "Día personalizado": "Giorno personalizzato",
+    "No se pudo guardar.": "Impossibile salvare.",
+    "Elegí una rutina o un día personalizado.": "Scegli una routine o un giorno personalizzato.",
+    "Elegí el día de la rutina.": "Scegli il giorno della routine.",
+    "Todavía no agregaste ejercicios.": "Non hai ancora aggiunto esercizi."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -6903,7 +6939,13 @@
     "Antes de entrenar te preguntaremos cómo te sentís.": "Antes de treinar, vamos perguntar como você está se sentindo.",
     "Exportar": "Exportar",
     "Importar": "Importar",
-    "Suma las series de calentamiento": "Inclui também as séries de aquecimento"
+    "Suma las series de calentamiento": "Inclui também as séries de aquecimento",
+    "Personalizado": "Personalizado",
+    "Día personalizado": "Dia personalizado",
+    "No se pudo guardar.": "Não foi possível salvar.",
+    "Elegí una rutina o un día personalizado.": "Escolha uma rotina ou um dia personalizado.",
+    "Elegí el día de la rutina.": "Escolha o dia da rotina.",
+    "Todavía no agregaste ejercicios.": "Você ainda não adicionou exercícios."
   },
   "en": {
     "Sexo": "Sex",

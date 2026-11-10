@@ -531,7 +531,8 @@ export function DaySheet({
       <ManualSession
         date={day ?? localDateKey(new Date())}
         visible={logging}
-        onClose={() => {
+        onClose={() => setLogging(false)}
+        onSaved={() => {
           setLogging(false);
           onClose();
         }}
