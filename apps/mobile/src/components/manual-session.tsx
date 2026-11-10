@@ -7,7 +7,6 @@ import {
   Modal,
   Pressable,
   ScrollView,
-  Switch,
   Text,
   View,
 } from "react-native";
@@ -84,7 +83,6 @@ export function ManualSession({
   const [entries, setEntries] = useState<Entry[]>([]);
   const [comment, setComment] = useState("");
   const [adding, setAdding] = useState(false);
-  const [replacing, setReplacing] = useState<number | null>(null);
   const [openList, setOpenList] = useState<number[]>([0]);
   const [imageFor, setImageFor] = useState<ReturnType<typeof findExercise> | null>(null);
   const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(
@@ -376,9 +374,6 @@ export function ManualSession({
               {dateLabel}
             </Label>
           </View>
-          <Button variant="secondary" onPress={() => setAdding(true)}>
-            {t("Agregar ejercicios", "Add exercises")}
-          </Button>
           {!entries.length ? (
             <Label muted>
               {t(
@@ -452,45 +447,57 @@ export function ManualSession({
                 </Pressable>
                 {expanded ? (
                   <>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}>
-                  <View style={{ flex: 1 }}>
-                    <Button variant="secondary" onPress={() => setReplacing(index)}>
-                      {t("Reemplazar\nejercicio", "Replace\nexercise")}
-                    </Button>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: space(2),
-                      borderRadius: 16,
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                      paddingHorizontal: space(2.5),
-                      height: 52,
-                    }}
-                  >
-                    <Text style={{ color: colors.muted, fontSize: 13 }}>{t("Rep", "Reps")}</Text>
-                    <View style={{ height: 52, justifyContent: "center" }}>
-                      <Switch
-                        accessibilityLabel={t("Registrar por tiempo", "Track by time")}
-                        value={metric === "seconds"}
-                        trackColor={{ true: colors.primary, false: colors.border }}
-                        onValueChange={(checked) => {
-                          const next = checked ? "seconds" : "reps";
-                          edit(index, (draft) => switchEntryMetric(draft, metric, next));
-                          change((draft) => {
-                            draft.settings.exerciseMetrics = {
-                              ...draft.settings.exerciseMetrics,
-                              [entry.id]: next,
-                            };
-                          });
+                <View
+                  style={{
+                    flexDirection: "row",
+                    padding: 4,
+                    gap: 4,
+                    borderRadius: 16,
+                    borderColor: colors.border,
+                    borderWidth: 1,
+                    backgroundColor: colors.secondary,
+                  }}
+                >
+                  {(
+                    [
+                      ["reps", t("Repeticiones", "Repetitions")],
+                      ["seconds", t("Tiempo", "Time")],
+                    ] as const
+                  ).map(([id, label]) => (
+                    <Pressable
+                      key={id}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: metric === id }}
+                      onPress={() => {
+                        if (metric === id) return;
+                        edit(index, (draft) => switchEntryMetric(draft, metric, id));
+                        change((draft) => {
+                          draft.settings.exerciseMetrics = {
+                            ...draft.settings.exerciseMetrics,
+                            [entry.id]: id,
+                          };
+                        });
+                      }}
+                      style={{
+                        flex: 1,
+                        minHeight: 44,
+                        borderRadius: 12,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: metric === id ? colors.primary : "transparent",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontWeight: "800",
+                          color:
+                            metric === id ? colors.primaryForeground : colors.foreground,
                         }}
-                      />
-                    </View>
-                    <Text style={{ color: colors.muted, fontSize: 13 }}>{t("Temp", "Time")}</Text>
-                  </View>
+                      >
+                        {label}
+                      </Text>
+                    </Pressable>
+                  ))}
                 </View>
                 <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
                   {(
@@ -734,6 +741,9 @@ export function ManualSession({
               multiline
             />
           ) : null}
+          <Button variant="secondary" onPress={() => setAdding(true)}>
+            {t("Agregar ejercicios", "Add exercises")}
+          </Button>
           <Button disabled={!entries.length} onPress={save}>
             {t("Guardar entrenamiento", "Save workout")}
           </Button>
@@ -772,20 +782,6 @@ export function ManualSession({
             ...ids.map((_, position) => entries.length + position),
           ]);
           setEntries((current) => [...current, ...ids.map(makeEntry)]);
-        }}
-      />
-      <ExercisePicker
-        single
-        title={t("Reemplazar ejercicio", "Replace exercise")}
-        visible={replacing !== null}
-        onClose={() => setReplacing(null)}
-        onPick={([id]) => {
-          if (replacing !== null && id)
-            setEntries((current) =>
-              current.map((item, position) =>
-                position === replacing ? makeEntry(id) : item,
-              ),
-            );
         }}
       />
       <Modal
