@@ -727,15 +727,17 @@ function Result({
         borderColor: tone ? resultTones[tone].border : colors.border,
         borderWidth: 1,
         backgroundColor: tone ? resultTones[tone].bg : colors.secondary,
-        gap: 2,
+        gap: compact ? 0 : 2,
       }}
     >
-      <Text
-        numberOfLines={compact ? 2 : undefined}
-        style={{ color: colors.muted, fontSize: 13, minHeight: compact ? 34 : undefined, textAlign: compact ? "center" : "left" }}
-      >
-        {label}
-      </Text>
+      <View style={{ minHeight: compact ? 34 : undefined, justifyContent: "flex-end" }}>
+        <Text
+          numberOfLines={compact ? 2 : undefined}
+          style={{ color: colors.muted, fontSize: 13, textAlign: compact ? "center" : "left" }}
+        >
+          {label}
+        </Text>
+      </View>
       <Text
         numberOfLines={1}
         adjustsFontSizeToFit
