@@ -1,7 +1,9 @@
+import { Image } from "expo-image";
 import { useState } from "react";
 import { exerciseName } from "@/lib/exercise-name";
 import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { exerciseImage } from "@fitty/core/data/exercises";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import {
   addDropSegment,
@@ -27,6 +29,7 @@ import {
   Label,
   styles,
 } from "@/components/ui";
+import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -375,15 +378,34 @@ export function ManualSession({
             const previous = previousSets(snapshot, entry.id, metric, before);
             return (
               <Card key={`${entry.id}-${index}`}>
-                <Text
-                  style={{
-                    color: colors.foreground,
-                    fontWeight: "800",
-                    fontSize: 17,
-                  }}
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
                 >
-                  {exercise ? exerciseName(language, exercise.name) : entry.id}
-                </Text>
+                  {exercise ? (
+                    <Image
+                      source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                      style={{
+                        width: 64,
+                        height: 64,
+                        borderRadius: 14,
+                        backgroundColor: "#0d1016",
+                      }}
+                      contentFit="cover"
+                      cachePolicy="disk"
+                      accessibilityIgnoresInvertColors
+                    />
+                  ) : null}
+                  <Text
+                    style={{
+                      flex: 1,
+                      color: colors.foreground,
+                      fontWeight: "800",
+                      fontSize: 17,
+                    }}
+                  >
+                    {exercise ? exerciseName(language, exercise.name) : entry.id}
+                  </Text>
+                </View>
                 <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
                   {(
                     [
