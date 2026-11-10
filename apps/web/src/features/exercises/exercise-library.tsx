@@ -105,7 +105,7 @@ export function ExerciseLibrary() {
             aria-label={t("Filtrar por equipo", "Filter by equipment")}
             onClick={() => setFiltering(true)}
           >
-            {equipment === "Todos" ? t("Todo", "All") : equipment}
+            {equipment === "Todos" ? t("Todo", "All") : t(equipment, equipment)}
           </button>
         </div>
       </section>
@@ -125,7 +125,7 @@ export function ExerciseLibrary() {
                 setFiltering(false);
               }}
             >
-              {filter === "Todos" ? t("Todo", "All") : filter}
+              {filter === "Todos" ? t("Todo", "All") : t(filter, filter)}
             </button>
           ))}
         </div>
@@ -180,7 +180,7 @@ export function ExerciseLibrary() {
             <ExerciseVisual exercise={exercise} />
             <h2>{short(exercise.name)}</h2>
             <p>
-              {exercise.group} · {exercise.equipment}
+              {t(exercise.group, exercise.group)} · {t(exercise.equipment, exercise.equipment)}
             </p>
           </button>
         ))}

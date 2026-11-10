@@ -43,7 +43,7 @@ export function ExerciseDetails({
       open={exercise !== null}
       onClose={onClose}
       title={exercise?.name ?? ""}
-      description={exercise ? `${exercise.group} · ${exercise.equipment}` : ""}
+      description={exercise ? `${t(exercise.group, exercise.group)} · ${t(exercise.equipment, exercise.equipment)}` : ""}
     >
       {exercise && (
         <>
@@ -51,7 +51,7 @@ export function ExerciseDetails({
           <h3 className="font-bold">{t("Técnica", "Technique")}</h3>
           <ol className="list-decimal space-y-3 pl-5 text-muted-foreground">
             {exercise.steps.map((step, index) => (
-              <li key={index}>{step}</li>
+              <li key={index}>{t(step, step)}</li>
             ))}
           </ol>
           <div className="flex justify-center gap-3">
