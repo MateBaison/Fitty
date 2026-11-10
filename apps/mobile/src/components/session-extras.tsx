@@ -4,17 +4,9 @@ import { Field, Label } from "@/components/ui";
 import { PhotoStrip } from "@/components/photo-strip";
 import { ResizableInput } from "@/components/resizable-input";
 import { useAccount, useSnapshot } from "@/state/account";
+import { trainingColors } from "@/lib/training-colors";
 import { colors, space } from "@/theme";
 
-const trainingColors = [
-  { value: "#ff5538", es: "Rojo", en: "Red" },
-  { value: "#fb923c", es: "Naranja", en: "Orange" },
-  { value: "#facc15", es: "Amarillo", en: "Yellow" },
-  { value: "#4ade80", es: "Verde", en: "Green" },
-  { value: "#38bdf8", es: "Azul", en: "Blue" },
-  { value: "#a78bfa", es: "Violeta", en: "Purple" },
-  { value: "#f472b6", es: "Rosa", en: "Pink" },
-] as const;
 
 const ratings = [
   ["very_bad", "😣", "Muy mal", "Very badly"],

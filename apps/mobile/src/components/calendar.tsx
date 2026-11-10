@@ -3,6 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { color, localDateKey } from "@fitty/core/domain/workouts";
 import { useAccount, useSnapshot } from "@/state/account";
+import { nearestTrainingColor } from "@/lib/training-colors";
 import { colors, space } from "@/theme";
 
 const navStyle = {
@@ -37,7 +38,7 @@ export function Calendar({
   for (const session of snapshot.sessions)
     if (Number.isFinite(Date.parse(session.date))) {
       const key = localDateKey(session.date);
-      byDay.set(key, [...(byDay.get(key) ?? []), color(session.color)]);
+      byDay.set(key, [...(byDay.get(key) ?? []), nearestTrainingColor(color(session.color))]);
     }
   const offset = (month.getDay() + 6) % 7;
   const length = new Date(

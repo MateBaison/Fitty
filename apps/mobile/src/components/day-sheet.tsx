@@ -37,6 +37,7 @@ import { SessionEditor } from "@/components/session-editor";
 import { WorkoutPoster } from "@/components/workout-poster";
 import { Button, Card, Label, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
+import { nearestTrainingColor } from "@/lib/training-colors";
 import { colors, space } from "@/theme";
 
 /** Instagram glyph drawn as vectors, since system symbols have no brand logos. */
@@ -283,7 +284,7 @@ export function DaySheet({
                   borderColor: colors.border,
                   borderWidth: 1,
                   borderLeftWidth: 4,
-                  borderLeftColor: session.color ?? colors.primary,
+                  borderLeftColor: session.color ? nearestTrainingColor(session.color) : colors.primary,
                   backgroundColor: colors.secondary,
                   padding: space(3),
                   gap: 2,

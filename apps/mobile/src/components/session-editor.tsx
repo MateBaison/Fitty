@@ -16,6 +16,7 @@ import { SetTypeDialog } from "@/components/set-type-dialog";
 import { SessionExtras } from "@/components/session-extras";
 import { Button, Card, Field, Label, DialogScroll } from "@/components/ui";
 import { useAccount, useSnapshot } from "@/state/account";
+import { nearestTrainingColor } from "@/lib/training-colors";
 import { colors, space } from "@/theme";
 
 /** Edits a saved workout: names, every set, notes, color, comment and photos. */
@@ -37,6 +38,7 @@ export function SessionEditor({
     extras: Extras;
   } | null>(null);
   const [resizing, setResizing] = useState(false);
+  const [error, setError] = useState("");
   const [open, setOpen] = useState<number[]>([0]);
   const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(null);
   // Load the draft whenever a different session is opened.
@@ -56,7 +58,9 @@ export function SessionEditor({
           note: exercise.note ?? "",
           tracking: exercise.performedSets?.some((set) => Number(set.seconds) > 0)
             ? "seconds"
-            : metricFor(snapshot, exercise.id),
+            : exercise.performedSets?.some((set) => Number(set.reps) > 0)
+              ? "reps"
+              : metricFor(snapshot, exercise.id),
           sets: exercise.performedSets?.length
             ? exercise.performedSets.map((set) => ({
                 ...set,
@@ -64,7 +68,8 @@ export function SessionEditor({
                   factor === 1
                     ? (set.kg ?? 0)
                     : Math.round((Number(set.kg) || 0) * factor * 10) / 10,
-                entered: true,
+                entered:
+                  Number(set.seconds) > 0 || Number(set.reps) > 0,
               }))
             : [blankSet(metricFor(snapshot, exercise.id))],
         })) ?? [],
@@ -72,7 +77,7 @@ export function SessionEditor({
         ...(session.rating
           ? { rating: session.rating as NonNullable<Extras["rating"]> }
           : {}),
-        color: sessionColor(session.color),
+        color: nearestTrainingColor(sessionColor(session.color)),
         comment: session.comment ?? "",
         photos: session.photos ?? [],
         bodyWeightStartKg: session.bodyWeightStartKg ?? null,
@@ -81,6 +86,7 @@ export function SessionEditor({
     });
   }
   const close = () => {
+    setError("");
     setState(null);
     onClose();
   };
@@ -120,8 +126,8 @@ export function SessionEditor({
         notify(t("Entrenamiento actualizado", "Workout updated"));
         close();
       }
-    } catch (error) {
-      notify(error instanceof Error ? error.message : String(error));
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : String(failure));
     }
   };
   const setEntry = (index: number, edit: (entry: Entry) => void) =>
@@ -196,6 +202,11 @@ export function SessionEditor({
                 </>
               ) : null}
             </DialogScroll>
+            {error ? (
+              <Text style={{ color: colors.destructive ?? "#ef4444", fontWeight: "700" }}>
+                {error}
+              </Text>
+            ) : null}
             <Button onPress={save}>{t("Guardar cambios", "Save changes")}</Button>
             <Button variant="secondary" onPress={close}>
               {t("Cancelar", "Cancel")}
