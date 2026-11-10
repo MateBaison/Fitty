@@ -728,9 +728,10 @@ function Result({
         borderWidth: 1,
         backgroundColor: tone ? resultTones[tone].bg : colors.secondary,
         gap: compact ? 0 : 2,
+        ...(compact ? { flex: 1, justifyContent: "center" as const } : {}),
       }}
     >
-      <View style={{ minHeight: compact ? 34 : undefined, justifyContent: "flex-end" }}>
+      <View>
         <Text
           numberOfLines={compact ? 2 : undefined}
           style={{ color: colors.muted, fontSize: 13, textAlign: compact ? "center" : "left" }}
@@ -760,7 +761,7 @@ function Result({
   ) : (
     body
   );
-  return compact ? <View style={{ flex: 1, minWidth: 0 }}>{wrapped}</View> : wrapped;
+  return compact ? <View style={{ flex: 1, minWidth: 0, flexDirection: "column" }}>{wrapped}</View> : wrapped;
 }
 
 export default function Tools() {
