@@ -564,8 +564,14 @@ function Calculators() {
         ) : null}
         {section === "macros" ? (
           <>
-            <Field label={t("Objetivo diario (kcal)", "Daily target (kcal)")} value={calories} onChangeText={setCalories} keyboardType="number-pad" />
-            <Field label={t("Comidas por día", "Meals per day")} value={meals} onChangeText={setMeals} keyboardType="number-pad" />
+            <View style={{ flexDirection: "row", gap: space(3) }}>
+              <View style={{ flex: 1 }}>
+                <Field label={t("Objetivo diario (kcal)", "Daily target (kcal)")} value={calories} onChangeText={setCalories} keyboardType="number-pad" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Field label={t("Comidas por día", "Meals per day")} value={meals} onChangeText={setMeals} keyboardType="number-pad" />
+              </View>
+            </View>
             <OptionField
               label={t("Distribución", "Distribution")}
               options={splits.map(([value, es, en]) => [value, t(es, en)] as const)}
