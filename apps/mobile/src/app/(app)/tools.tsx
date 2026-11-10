@@ -732,7 +732,7 @@ function Result({
     >
       <Text
         numberOfLines={compact ? 2 : undefined}
-        style={{ color: colors.muted, fontSize: 13, minHeight: compact ? 34 : undefined }}
+        style={{ color: colors.muted, fontSize: 13, minHeight: compact ? 34 : undefined, textAlign: compact ? "center" : "left" }}
       >
         {label}
       </Text>
@@ -740,7 +740,7 @@ function Result({
         numberOfLines={1}
         adjustsFontSizeToFit
         minimumFontScale={0.7}
-        style={{ color: tone ? resultTones[tone].value : colors.foreground, fontSize: 22, fontWeight: "800" }}
+        style={{ color: tone ? resultTones[tone].value : colors.foreground, fontSize: 22, fontWeight: "800", textAlign: compact ? "center" : "left" }}
       >
         {value}
       </Text>
