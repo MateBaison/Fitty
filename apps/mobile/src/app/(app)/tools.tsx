@@ -77,32 +77,6 @@ function Pill({
   );
 }
 
-function Pills<T extends string>({
-  options,
-  value,
-  onChange,
-  small,
-}: {
-  options: readonly (readonly [T, string])[];
-  value: T;
-  onChange: (value: T) => void;
-  small?: boolean;
-}) {
-  return (
-    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
-      {options.map(([key, label]) => (
-        <Pill
-          key={key}
-          label={label}
-          active={value === key}
-          small={small}
-          onPress={() => onChange(key)}
-        />
-      ))}
-    </View>
-  );
-}
-
 /** Equal-width options in a grid (two per row), so the names line up neatly. */
 function GridPills<T extends string>({
   options,
@@ -592,12 +566,11 @@ function Calculators() {
           <>
             <Field label={t("Objetivo diario (kcal)", "Daily target (kcal)")} value={calories} onChangeText={setCalories} keyboardType="number-pad" />
             <Field label={t("Comidas por día", "Meals per day")} value={meals} onChangeText={setMeals} keyboardType="number-pad" />
-            <Label muted>{t("Distribución", "Distribution")}</Label>
-            <Pills
-              small
+            <OptionField
+              label={t("Distribución", "Distribution")}
               options={splits.map(([value, es, en]) => [value, t(es, en)] as const)}
               value={split}
-              onChange={setSplit}
+              onChange={(value) => setSplit(value as typeof split)}
             />
           </>
         ) : null}
