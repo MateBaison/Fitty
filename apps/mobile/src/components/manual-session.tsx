@@ -1,10 +1,20 @@
 import { Image } from "expo-image";
+import { SymbolView } from "expo-symbols";
 import { useState } from "react";
 import { exerciseName } from "@/lib/exercise-name";
-import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Alert,
+  Modal,
+  Pressable,
+  ScrollView,
+  Switch,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
+import { translate } from "@fitty/core/data/translations";
 import {
   addDropSegment,
   blankSet,
@@ -15,6 +25,7 @@ import {
   metricFor,
   previousSets,
   setNumber,
+  switchEntryMetric,
   type Entry,
 } from "@fitty/core/domain/workouts";
 import { BackButton } from "@/components/back-button";
@@ -73,6 +84,9 @@ export function ManualSession({
   const [entries, setEntries] = useState<Entry[]>([]);
   const [comment, setComment] = useState("");
   const [adding, setAdding] = useState(false);
+  const [replacing, setReplacing] = useState<number | null>(null);
+  const [openList, setOpenList] = useState<number[]>([0]);
+  const [imageFor, setImageFor] = useState<ReturnType<typeof findExercise> | null>(null);
   const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(
     null,
   );
@@ -95,6 +109,7 @@ export function ManualSession({
     setEntries([]);
     setComment("");
     setTypeFor(null);
+    setOpenList([0]);
   };
   const leave = () => {
     reset();
@@ -376,35 +391,106 @@ export function ManualSession({
             const exercise = findExercise(snapshot, entry.id);
             const metric = metricFor(snapshot, entry.id, entry);
             const previous = previousSets(snapshot, entry.id, metric, before);
+            const expanded = openList.includes(index);
             return (
               <Card key={`${entry.id}-${index}`}>
-                <View
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityState={{ expanded }}
+                  onPress={() =>
+                    setOpenList((list) =>
+                      expanded
+                        ? list.filter((number) => number !== index)
+                        : [...new Set([...list, index])],
+                    )
+                  }
                   style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
                 >
                   {exercise ? (
-                    <Image
-                      source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
-                      style={{
-                        width: 64,
-                        height: 64,
-                        borderRadius: 14,
-                        backgroundColor: "#0d1016",
-                      }}
-                      contentFit="cover"
-                      cachePolicy="disk"
-                      accessibilityIgnoresInvertColors
-                    />
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={`${t("Ampliar", "Enlarge")} ${exercise.name}`}
+                      onPress={() => setImageFor(exercise)}
+                    >
+                      <Image
+                        source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                        style={{
+                          width: 64,
+                          height: 64,
+                          borderRadius: 14,
+                          backgroundColor: "#0d1016",
+                        }}
+                        contentFit="cover"
+                        cachePolicy="disk"
+                        accessibilityIgnoresInvertColors
+                      />
+                    </Pressable>
                   ) : null}
-                  <Text
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <Text
+                      style={{
+                        color: colors.foreground,
+                        fontWeight: "800",
+                        fontSize: 17,
+                      }}
+                    >
+                      {exercise ? exerciseName(language, exercise.name) : entry.id}
+                    </Text>
+                    <Label muted>
+                      {entry.sets.length} {t("series", "sets")}
+                    </Label>
+                  </View>
+                  <SymbolView
+                    name={
+                      expanded
+                        ? { ios: "chevron.up", android: "expand_less" }
+                        : { ios: "chevron.down", android: "expand_more" }
+                    }
+                    tintColor={colors.muted}
+                    size={16}
+                  />
+                </Pressable>
+                {expanded ? (
+                  <>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}>
+                  <View style={{ flex: 1 }}>
+                    <Button variant="secondary" onPress={() => setReplacing(index)}>
+                      {t("Reemplazar\nejercicio", "Replace\nexercise")}
+                    </Button>
+                  </View>
+                  <View
                     style={{
-                      flex: 1,
-                      color: colors.foreground,
-                      fontWeight: "800",
-                      fontSize: 17,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: space(2),
+                      borderRadius: 16,
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                      paddingHorizontal: space(2.5),
+                      height: 52,
                     }}
                   >
-                    {exercise ? exerciseName(language, exercise.name) : entry.id}
-                  </Text>
+                    <Text style={{ color: colors.muted, fontSize: 13 }}>{t("Rep", "Reps")}</Text>
+                    <View style={{ height: 52, justifyContent: "center" }}>
+                      <Switch
+                        accessibilityLabel={t("Registrar por tiempo", "Track by time")}
+                        value={metric === "seconds"}
+                        trackColor={{ true: colors.primary, false: colors.border }}
+                        onValueChange={(checked) => {
+                          const next = checked ? "seconds" : "reps";
+                          edit(index, (draft) => switchEntryMetric(draft, metric, next));
+                          change((draft) => {
+                            draft.settings.exerciseMetrics = {
+                              ...draft.settings.exerciseMetrics,
+                              [entry.id]: next,
+                            };
+                          });
+                        }}
+                      />
+                    </View>
+                    <Text style={{ color: colors.muted, fontSize: 13 }}>{t("Temp", "Time")}</Text>
+                  </View>
                 </View>
                 <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
                   {(
@@ -608,16 +694,34 @@ export function ManualSession({
                     </Button>
                   </View>
                 </View>
+                <Field
+                  label={t("Nota de este ejercicio", "Note for this exercise")}
+                  defaultValue={entry.note ?? ""}
+                  maxLength={500}
+                  multiline
+                  onEndEditing={(event) => {
+                    const note = event.nativeEvent.text.trim();
+                    if (note !== (entry.note ?? ""))
+                      edit(index, (draft) => void (draft.note = note));
+                  }}
+                />
                 <Button
-                  variant="ghost"
-                  onPress={() =>
+                  variant="destructive"
+                  onPress={() => {
                     setEntries((current) =>
                       current.filter((_, position) => position !== index),
-                    )
-                  }
+                    );
+                    setOpenList((list) =>
+                      list
+                        .filter((number) => number !== index)
+                        .map((number) => (number > index ? number - 1 : number)),
+                    );
+                  }}
                 >
                   {t("Quitar ejercicio", "Remove exercise")}
                 </Button>
+                  </>
+                ) : null}
               </Card>
             );
           })}
@@ -662,10 +766,91 @@ export function ManualSession({
       <ExercisePicker
         visible={adding}
         onClose={() => setAdding(false)}
-        onPick={(ids) =>
-          setEntries((current) => [...current, ...ids.map(makeEntry)])
-        }
+        onPick={(ids) => {
+          setOpenList((list) => [
+            ...list,
+            ...ids.map((_, position) => entries.length + position),
+          ]);
+          setEntries((current) => [...current, ...ids.map(makeEntry)]);
+        }}
       />
+      <ExercisePicker
+        single
+        title={t("Reemplazar ejercicio", "Replace exercise")}
+        visible={replacing !== null}
+        onClose={() => setReplacing(null)}
+        onPick={([id]) => {
+          if (replacing !== null && id)
+            setEntries((current) =>
+              current.map((item, position) =>
+                position === replacing ? makeEntry(id) : item,
+              ),
+            );
+        }}
+      />
+      <Modal
+        visible={imageFor !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setImageFor(null)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("Cerrar", "Close")}
+            onPress={() => setImageFor(null)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "90%" }}>
+            <Card style={{ padding: 0, overflow: "hidden" }}>
+              <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
+                {imageFor ? (
+                  <Image
+                    source={`${env.apiUrl}${exerciseImage(imageFor, snapshot.profile.gender)}`}
+                    style={{
+                      width: "100%",
+                      aspectRatio: 3 / 2,
+                      backgroundColor: "#0d1016",
+                    }}
+                    contentFit="contain"
+                    cachePolicy="disk"
+                    accessibilityIgnoresInvertColors
+                  />
+                ) : null}
+                <View style={{ padding: space(4), gap: space(3) }}>
+                  <Text style={{ color: colors.foreground, fontSize: 20, fontWeight: "800" }}>
+                    {imageFor ? exerciseName(language, imageFor.name) : ""}
+                  </Text>
+                  {imageFor ? (
+                    <Label muted>
+                      {translate(language, imageFor.group, imageFor.group)} ·{" "}
+                      {translate(language, imageFor.equipment, imageFor.equipment)}
+                    </Label>
+                  ) : null}
+                  <Text style={{ color: colors.foreground, fontSize: 17, fontWeight: "800" }}>
+                    {t("Técnica", "Technique")}
+                  </Text>
+                  {imageFor?.steps.map((step, number) => (
+                    <Label key={number} muted>
+                      {number + 1}. {translate(language, step, step)}
+                    </Label>
+                  ))}
+                  <Button variant="secondary" onPress={() => setImageFor(null)}>
+                    {t("Cerrar", "Close")}
+                  </Button>
+                </View>
+              </DialogScroll>
+            </Card>
+          </View>
+        </View>
+      </Modal>
     </Modal>
   );
 }
