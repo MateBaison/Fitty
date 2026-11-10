@@ -193,6 +193,19 @@ export function ManualSession({
   const selectedSet = typeFor
     ? entries[typeFor.entry]?.sets[typeFor.set]
     : undefined;
+  const header = (title: string, onBack: () => void) => (
+    <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
+      <BackButton onPress={onBack} />
+      <Text
+        accessibilityRole="header"
+        numberOfLines={2}
+        style={{ ...heading, flex: 1, textAlign: "center" }}
+      >
+        {title}
+      </Text>
+      <View style={{ width: 44 }} />
+    </View>
+  );
   const dialog = (children: React.ReactNode) => (
     <Modal visible transparent animationType="fade" onRequestClose={leave}>
       <View
@@ -219,13 +232,11 @@ export function ManualSession({
   if (step === "start")
     return dialog(
       <>
-        <Text accessibilityRole="header" style={heading}>
-          {t("Agregar entrenamiento", "Add workout")}
-        </Text>
-        <Label muted style={{ textTransform: "capitalize" }}>
+        {header(t("Agregar entrenamiento", "Add workout"), leave)}
+        <Label muted style={{ textTransform: "capitalize", textAlign: "center" }}>
           {dateLabel}
         </Label>
-        <Label muted>
+        <Label muted style={{ textAlign: "center" }}>
           {t(
             "Elegí una rutina o un día personalizado.",
             "Choose a routine or a custom day.",
@@ -245,18 +256,13 @@ export function ManualSession({
             {t("Día personalizado", "Custom day")}
           </Button>
         </DialogScroll>
-        <Button variant="secondary" onPress={leave}>
-          {t("Cancelar", "Cancel")}
-        </Button>
       </>,
     );
   if (step === "day")
     return dialog(
       <>
-        <Text accessibilityRole="header" style={heading}>
-          {routine?.name}
-        </Text>
-        <Label muted>
+        {header(routine?.name ?? "", back)}
+        <Label muted style={{ textAlign: "center" }}>
           {t("Elegí el día de la rutina.", "Choose the routine day.")}
         </Label>
         <DialogScroll contentContainerStyle={{ gap: space(2) }}>
@@ -271,12 +277,6 @@ export function ManualSession({
             </Button>
           ))}
         </DialogScroll>
-        <Button variant="secondary" onPress={back}>
-          {t("Volver", "Back")}
-        </Button>
-        <Button variant="ghost" onPress={leave}>
-          {t("Cancelar", "Cancel")}
-        </Button>
       </>,
     );
   return (
@@ -610,9 +610,6 @@ export function ManualSession({
           ) : null}
           <Button disabled={!entries.length} onPress={save}>
             {t("Guardar entrenamiento", "Save workout")}
-          </Button>
-          <Button variant="secondary" onPress={back}>
-            {t("Volver", "Back")}
           </Button>
         </ScrollView>
       </SafeAreaView>
