@@ -26,10 +26,12 @@ import {
   setNumber,
   switchEntryMetric,
   type Entry,
+  type Extras,
 } from "@fitty/core/domain/workouts";
 import { BackButton } from "@/components/back-button";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { NumberInput } from "@/components/number-input";
+import { SessionExtras } from "@/components/session-extras";
 import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
 import {
   Button,
@@ -81,7 +83,9 @@ export function ManualSession({
   const [rid, setRid] = useState<string | null>(null);
   const [did, setDid] = useState<string | null>(null);
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [comment, setComment] = useState("");
+  const [extras, setExtras] = useState<Extras>(emptyExtras);
+  const [finishing, setFinishing] = useState(false);
+  const [resizingComment, setResizingComment] = useState(false);
   const [adding, setAdding] = useState(false);
   const [openList, setOpenList] = useState<number[]>([0]);
   const [imageFor, setImageFor] = useState<ReturnType<typeof findExercise> | null>(null);
@@ -105,7 +109,8 @@ export function ManualSession({
     setRid(null);
     setDid(null);
     setEntries([]);
-    setComment("");
+    setExtras(emptyExtras);
+    setFinishing(false);
     setTypeFor(null);
     setOpenList([0]);
   };
@@ -147,7 +152,7 @@ export function ManualSession({
     }
   };
   const cancel = () => {
-    if (!entries.length && !comment.trim()) return leave();
+    if (!entries.length && !extras.comment.trim()) return leave();
     Alert.alert(
       t("Cancelar entrenamiento", "Cancel workout"),
       t("No se guardará este entrenamiento.", "This workout won't be saved."),
@@ -175,7 +180,7 @@ export function ManualSession({
                 day: day?.name ?? t("Día personalizado", "Custom day"),
               },
               new Date(`${date}T12:00:00`).toISOString(),
-              { ...emptyExtras, comment: comment.trim() },
+              { ...extras, comment: extras.comment.trim() },
               true,
             ),
           );
@@ -732,23 +737,62 @@ export function ManualSession({
               </Card>
             );
           })}
-          {entries.length ? (
-            <Field
-              label={t("Comentario (opcional)", "Comment (optional)")}
-              value={comment}
-              onChangeText={setComment}
-              maxLength={2000}
-              multiline
-            />
-          ) : null}
           <Button variant="secondary" onPress={() => setAdding(true)}>
             {t("Agregar ejercicios", "Add exercises")}
           </Button>
-          <Button disabled={!entries.length} onPress={save}>
+          <Button disabled={!entries.length} onPress={() => setFinishing(true)}>
             {t("Guardar entrenamiento", "Save workout")}
           </Button>
         </ScrollView>
       </SafeAreaView>
+      <Modal
+        visible={finishing}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setFinishing(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            padding: space(4),
+            backgroundColor: "#000a",
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t("Volver", "Back")}
+            onPress={() => setFinishing(false)}
+            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+          />
+          <View style={{ maxHeight: "90%" }}>
+            <Card>
+              {header(t("Guardar entrenamiento", "Save workout"), () =>
+                setFinishing(false),
+              )}
+              <DialogScroll
+                style={{ maxHeight: 460 }}
+                keyboardShouldPersistTaps="handled"
+                scrollEnabled={!resizingComment}
+              >
+                <SessionExtras
+                  value={extras}
+                  onChange={setExtras}
+                  onResizing={setResizingComment}
+                />
+              </DialogScroll>
+              <Button
+                onPress={() => {
+                  setFinishing(false);
+                  save();
+                }}
+              >
+                {t("Guardar entrenamiento", "Save workout")}
+              </Button>
+            </Card>
+          </View>
+        </View>
+      </Modal>
       <SetTypeDialog
         visible={typeFor !== null}
         current={selectedSet?.type ?? "normal"}
