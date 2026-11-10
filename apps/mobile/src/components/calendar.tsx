@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useRef, useState } from "react";
+import { PanResponder, Pressable, Text, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { color, localDateKey } from "@fitty/core/domain/workouts";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -55,6 +55,19 @@ export function Calendar({
   ];
   const shift = (delta: number) =>
     setMonth(new Date(month.getFullYear(), month.getMonth() + delta, 1));
+  // Swipe sideways over the calendar to change month (left = next).
+  const shiftRef = useRef(shift);
+  shiftRef.current = shift;
+  const swipe = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) =>
+        Math.abs(gesture.dx) > 12 && Math.abs(gesture.dx) > Math.abs(gesture.dy) * 1.5,
+      onPanResponderRelease: (_, gesture) => {
+        if (Math.abs(gesture.dx) > 50)
+          shiftRef.current(gesture.dx < 0 ? 1 : -1);
+      },
+    }),
+  ).current;
   const today = localDateKey(new Date());
   // Masculine profiles never show menstrual borders, even with saved dates.
   const menstrual = new Set(
@@ -63,7 +76,7 @@ export function Calendar({
       : [],
   );
   return (
-    <View style={{ gap: space(2) }}>
+    <View style={{ gap: space(2) }} {...swipe.panHandlers}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Pressable
           accessibilityRole="button"
