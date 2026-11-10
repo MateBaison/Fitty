@@ -610,16 +610,25 @@ function Calculators() {
         ) : null}
         {section === "macros" && macros ? (
           <View style={{ gap: space(2) }}>
-            <Result tone="carbs" label={t("Carbohidratos", "Carbohydrates")} value={`${macros.daily.carbs} g`} />
-            <Result tone="protein" label={t("Proteínas", "Protein")} value={`${macros.daily.protein} g`} />
-            <Result tone="fat" label={t("Grasas", "Fat")} value={`${macros.daily.fat} g`} />
+            <View style={{ flexDirection: "row", gap: space(2) }}>
+              <Result compact tone="daily" label={t("Calorías", "Calories")} value={`${Math.round(Number(calories))} kcal`} />
+              <Result compact tone="carbs" label={t("Carbohidratos", "Carbohydrates")} value={`${macros.daily.carbs} g`} />
+            </View>
+            <View style={{ flexDirection: "row", gap: space(2) }}>
+              <Result compact tone="protein" label={t("Proteínas", "Protein")} value={`${macros.daily.protein} g`} />
+              <Result compact tone="fat" label={t("Grasas", "Fat")} value={`${macros.daily.fat} g`} />
+            </View>
             <Label muted>
               {t("Por comida", "Per meal")} · {meals} {t("comidas", "meals")}
             </Label>
-            <Result tone="daily" label={t("Calorías por comida", "Calories per meal")} value={`${macros.perMeal.calories} kcal`} />
-            <Result tone="carbs" label={t("Carbohidratos por comida", "Carbs per meal")} value={`${macros.perMeal.carbs} g`} />
-            <Result tone="protein" label={t("Proteínas por comida", "Protein per meal")} value={`${macros.perMeal.protein} g`} />
-            <Result tone="fat" label={t("Grasas por comida", "Fat per meal")} value={`${macros.perMeal.fat} g`} />
+            <View style={{ flexDirection: "row", gap: space(2) }}>
+              <Result compact tone="daily" label={t("Calorías por comida", "Calories per meal")} value={`${macros.perMeal.calories} kcal`} />
+              <Result compact tone="carbs" label={t("Carbohidratos por comida", "Carbs per meal")} value={`${macros.perMeal.carbs} g`} />
+            </View>
+            <View style={{ flexDirection: "row", gap: space(2) }}>
+              <Result compact tone="protein" label={t("Proteínas por comida", "Protein per meal")} value={`${macros.perMeal.protein} g`} />
+              <Result compact tone="fat" label={t("Grasas por comida", "Fat per meal")} value={`${macros.perMeal.fat} g`} />
+            </View>
           </View>
         ) : null}
         {section === "maximum" && maximum !== null ? (
@@ -700,11 +709,14 @@ function Result({
   value,
   onUse,
   tone,
+  compact,
 }: {
   label: string;
   value: string;
   onUse?: () => void;
   tone?: keyof typeof resultTones;
+  /** Fills half a row (used in two-column grids). */
+  compact?: boolean;
 }) {
   const { t } = useAccount();
   const body = (
@@ -718,8 +730,18 @@ function Result({
         gap: 2,
       }}
     >
-      <Text style={{ color: colors.muted, fontSize: 13 }}>{label}</Text>
-      <Text style={{ color: tone ? resultTones[tone].value : colors.foreground, fontSize: 22, fontWeight: "800" }}>
+      <Text
+        numberOfLines={compact ? 2 : undefined}
+        style={{ color: colors.muted, fontSize: 13, minHeight: compact ? 34 : undefined }}
+      >
+        {label}
+      </Text>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.7}
+        style={{ color: tone ? resultTones[tone].value : colors.foreground, fontSize: 22, fontWeight: "800" }}
+      >
         {value}
       </Text>
       {onUse ? (
@@ -729,13 +751,14 @@ function Result({
       ) : null}
     </View>
   );
-  return onUse ? (
+  const wrapped = onUse ? (
     <Pressable accessibilityRole="button" onPress={onUse}>
       {body}
     </Pressable>
   ) : (
     body
   );
+  return compact ? <View style={{ flex: 1, minWidth: 0 }}>{wrapped}</View> : wrapped;
 }
 
 export default function Tools() {
