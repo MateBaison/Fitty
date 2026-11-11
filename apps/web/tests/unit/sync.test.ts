@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 import { createDefaultSnapshot } from "@fitty/core/domain/legacy/read-snapshot";
 import { SyncController } from "@fitty/core/sync/sync-controller";
+import { RemoteStateChanged } from "@fitty/core/sync/state-repository";
 import { fingerprint } from "@fitty/core/storage/fingerprint";
 import {
   accountCacheKey,
@@ -355,4 +356,45 @@ test("an upload that reached the cloud but was never confirmed is not reported a
   expect(second.view.status).not.toBe("conflict");
   expect(saved.at(-1)?.profile.name).toBe("Edited afterwards");
   second.dispose();
+});
+test("two uploads in a row that lost their answers are not reported as a conflict", async () => {
+  // iOS can freeze the app while an upload is in flight: the cloud gets it, the
+  // app never hears back, and the next upload is rejected as stale.
+  const storage = store();
+  let cloud: Snapshot = createDefaultSnapshot(),
+    cloudRevision = 1,
+    clientRevision = 1,
+    lostAnswers = 1;
+  const ctl = new SyncController(
+    id,
+    {
+      load: async () => {
+        clientRevision = cloudRevision;
+        return structuredClone(cloud);
+      },
+      save: async (snapshot) => {
+        if (clientRevision !== cloudRevision)
+          throw new RemoteStateChanged("stale");
+        cloud = structuredClone(snapshot);
+        cloudRevision++;
+        if (lostAnswers-- > 0) throw new Error("Connection lost");
+        clientRevision = cloudRevision;
+      },
+    },
+    storage,
+    () => () => {},
+  );
+  await ctl.start();
+  ctl.edit((snapshot) => {
+    snapshot.profile.name = "First";
+  });
+  await ctl.flush();
+  ctl.edit((snapshot) => {
+    snapshot.profile.name = "Second";
+  });
+  await ctl.flush();
+  expect(ctl.view.status).not.toBe("conflict");
+  expect(cloud.profile.name).toBe("Second");
+  expect(ctl.view.status).toBe("synced");
+  ctl.dispose();
 });

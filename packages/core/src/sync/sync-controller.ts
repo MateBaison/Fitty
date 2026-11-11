@@ -24,8 +24,9 @@ export type SyncView = {
 const metaSchema = z.object({
   pending: z.boolean(),
   base: z.string().nullable(),
-  // Fingerprint of the last upload that may have reached the cloud without us hearing back.
-  sent: z.string().nullable().optional(),
+  // Fingerprints of recent uploads that may have reached the cloud without us hearing
+  // back. Older versions stored a single string.
+  sent: z.union([z.string(), z.array(z.string())]).nullable().optional(),
 });
 const encoded = fingerprint;
 // Exactly one controller owns full-snapshot uploads for one verified user.
@@ -38,7 +39,7 @@ export class SyncController {
   private key: string;
   private metaKey: string;
   private base: string | null = null;
-  private sent: string | null = null;
+  private sent: string[] = [];
   private pending = false;
   private ready = false;
   private cloudReady = false;
@@ -186,11 +187,12 @@ export class SyncController {
       );
       this.pending = meta.success && meta.data.pending;
       this.base = meta.success ? meta.data.base : null;
-      this.sent = meta.success ? (meta.data.sent ?? null) : null;
+      const sent = meta.success ? meta.data.sent : null;
+      this.sent = typeof sent === "string" ? [sent] : (sent ?? []);
     } catch {
       this.pending = false;
       this.base = null;
-      this.sent = null;
+      this.sent = [];
     }
     let raw: unknown | null;
     try {
@@ -230,7 +232,7 @@ export class SyncController {
         this.local &&
         encoded(this.local) !== cloudEncoded &&
         (this.pending
-          ? this.base !== cloudEncoded && this.sent !== cloudEncoded
+          ? this.base !== cloudEncoded && !this.sent.includes(cloudEncoded)
           : this.base !== encoded(this.local))
       ) {
         try {
@@ -369,7 +371,8 @@ export class SyncController {
     // Remember what we are sending: if the app stops before the answer arrives,
     // the next start recognises that copy in the cloud as our own, not a conflict.
     try {
-      this.sent = encoded(captured);
+      // Keep earlier unconfirmed uploads too: the cloud may hold any of them.
+      this.sent = [...this.sent, encoded(captured)].slice(-8);
       this.persist(this.view.snapshot);
     } catch {
       /* The upload itself still protects the data; only the marker is lost. */
@@ -379,7 +382,7 @@ export class SyncController {
         await this.repo.save(captured, this.abort.signal);
         if (this.disposed) return false;
         this.base = encoded(captured);
-        this.sent = null;
+        this.sent = [];
         this.pending = this.generation !== revision;
         if (this.view.snapshot) this.persist(this.view.snapshot);
         this.emit(
