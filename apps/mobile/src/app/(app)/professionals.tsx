@@ -1,5 +1,5 @@
-import { Linking } from "react-native";
 import { Button, Card, Label, Screen } from "@/components/ui";
+import { openWebPage } from "@/lib/open-link";
 import { useAccount } from "@/state/account";
 
 export default function Professionals() {
@@ -20,7 +20,7 @@ export default function Professionals() {
           )}
         </Label>
         <Button
-          onPress={() => void Linking.openURL("https://fitty.uy/professionals")}
+          onPress={() => void openWebPage("https://fitty.uy/professionals")}
         >
           {t("Abrir en fitty.uy", "Open on fitty.uy")}
         </Button>

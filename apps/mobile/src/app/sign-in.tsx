@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
+import { openWebPage } from "@/lib/open-link";
 import { useState } from "react";
 import {
   Image,
   KeyboardAvoidingView,
-  Linking,
   Platform,
   Text,
   View,
@@ -182,9 +182,7 @@ export default function SignIn() {
             <Text
               accessibilityRole="link"
               onPress={() =>
-                void Linking.openURL(
-                  `https://fitty.uy/privacidad?lang=${language}`,
-                )
+                void openWebPage(`https://fitty.uy/privacidad?lang=${language}`)
               }
               style={{ color: colors.accent, textDecorationLine: "underline" }}
             >
@@ -195,9 +193,7 @@ export default function SignIn() {
             <Text
               accessibilityRole="link"
               onPress={() =>
-                void Linking.openURL(
-                  `https://fitty.uy/terminos?lang=${language}`,
-                )
+                void openWebPage(`https://fitty.uy/terminos?lang=${language}`)
               }
               style={{ color: colors.accent, textDecorationLine: "underline" }}
             >

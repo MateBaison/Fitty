@@ -1,8 +1,8 @@
 import { Image } from "expo-image";
+import { openWebPage } from "@/lib/open-link";
 import { useState } from "react";
 import {
   Alert,
-  Linking,
   Modal,
   Pressable,
   ScrollView,
@@ -626,7 +626,7 @@ export default function Profile() {
       <Button
         variant="secondary"
         onPress={() =>
-          void Linking.openURL(
+          void openWebPage(
             `https://fitty.uy/terminos?lang=${settings.language ?? "es"}`,
           )
         }
@@ -638,7 +638,7 @@ export default function Profile() {
           <Button
             variant="secondary"
             onPress={() =>
-              void Linking.openURL(
+              void openWebPage(
                 `https://fitty.uy/privacidad?lang=${settings.language ?? "es"}`,
               )
             }
