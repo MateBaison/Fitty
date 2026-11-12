@@ -109,6 +109,7 @@ export default function SignIn() {
                   {t("Te enviamos un código a", "We sent a code to")} {sentTo}.
                 </Label>
                 <Field
+                  center
                   label={t("Código", "Code")}
                   value={code}
                   onChangeText={setCode}
@@ -137,6 +138,7 @@ export default function SignIn() {
             ) : (
               <>
                 <Field
+                  center
                   label={t("Correo electrónico", "Email")}
                   value={email}
                   onChangeText={setEmail}

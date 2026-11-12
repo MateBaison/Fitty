@@ -219,6 +219,7 @@ export function Field({
   label,
   icon,
   locked,
+  center,
   ...props
 }: TextInputProps & {
   label: string;
@@ -226,10 +227,14 @@ export function Field({
   icon?: SymbolViewProps["name"];
   /** Read-only look: dimmer box and text. */
   locked?: boolean;
+  /** Centers the label and the typed text, as in the sign-in form. */
+  center?: boolean;
 }) {
   return (
     <View style={{ gap: space(1.5) }}>
-      <Label muted>{label}</Label>
+      <Label muted style={center ? { textAlign: "center" } : undefined}>
+        {label}
+      </Label>
       <View>
         <TextInput
           placeholderTextColor={colors.muted}
@@ -237,6 +242,7 @@ export function Field({
           style={[
             styles.input,
             icon ? { paddingRight: space(11) } : null,
+            center ? { textAlign: "center" } : null,
             locked
               ? {
                   backgroundColor: "#12151c",
