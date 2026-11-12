@@ -496,10 +496,6 @@ main > h1 {
 .login-panel form label [data-slot="input"] {
   text-align: center;
 }
-.app-header.app-header-login {
-  justify-content: flex-end;
-  margin-bottom: 0;
-}
 .login-isotype {
   display: block;
   width: 72px;

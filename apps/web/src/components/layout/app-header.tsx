@@ -14,7 +14,6 @@ export function AppHeader({
 }) {
   const pathname = usePathname();
   const welcome = ["/", "/login", "/onboarding"].includes(pathname);
-  const loginPage = pathname === "/login";
   const showDate = !welcome;
   const section = [
     { path: "/professionals", es: "Profesionales", en: "Professionals" },
@@ -38,10 +37,9 @@ export function AppHeader({
         "app-header",
         section && "app-header-section",
         welcome && "app-header-welcome",
-        loginPage && "app-header-login",
       )}
     >
-      {!loginPage && <Link
+      <Link
         href="/home"
         className="brand"
         aria-label={`FITTY — ${translate(language, "Volver al inicio", "Go home")}`}
@@ -57,7 +55,7 @@ export function AppHeader({
           </span>
           <small>GYM TRACKER</small>
         </span>
-      </Link>}
+      </Link>
       <div className="header-actions">
         {showDate && (
           <div
