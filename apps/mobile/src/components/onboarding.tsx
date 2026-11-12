@@ -22,6 +22,10 @@ import {
 } from "@fitty/core/domain/training-setup";
 import { translate } from "@fitty/core/data/translations";
 import { localDateKey } from "@fitty/core/domain/workouts";
+import {
+  defaultRoutine,
+  dropUntouchedDefaultRoutine,
+} from "@fitty/core/domain/onboarding-routine";
 import { ChipGroup } from "@/components/chip";
 import { BackButton } from "@/components/back-button";
 import { Dropdown } from "@/components/dropdown";
@@ -42,9 +46,9 @@ import { useAccount, useSnapshot } from "@/state/account";
 import { useSession } from "@/state/session";
 
 export const goals = [
-  ["Fuerza e hipertrofia", "Strength and hypertrophy"],
   ["Baja grasa corporal", "Lose body fat"],
   ["Ganar masa corporal", "Gain body mass"],
+  ["Fuerza e hipertrofia", "Strength and hypertrophy"],
   ["Mejorar resistencia cardiovascular", "Improve cardiovascular endurance"],
 ] as const;
 const experiences = [
@@ -181,6 +185,7 @@ export function Onboarding() {
   // Refs update immediately, so a fast double tap cannot add two routines.
   const reviewRef = useRef<string | null>(null);
   const savingRef = useRef(false);
+  const droppedDefault = useRef(false);
   const [mode, setMode] = useState<"custom" | "auto">("custom");
   const [menstrual, setMenstrual] = useState(false);
   const [periodDates, setPeriodDates] = useState<string[]>([]);
@@ -199,6 +204,8 @@ export function Onboarding() {
     const previous = reviewRef.current;
     change((draft) => {
       draft.routines = draft.routines.filter((item) => item.id !== previous);
+      // The starter "Rutina principal" would otherwise sit next to the suggestion.
+      if (dropUntouchedDefaultRoutine(draft)) droppedDefault.current = true;
       draft.routines.push(routine);
       draft.selected = routine.id;
     });
@@ -267,8 +274,12 @@ export function Onboarding() {
       const id = reviewRef.current;
       change((draft) => {
         draft.routines = draft.routines.filter((item) => item.id !== id);
+        const starter = defaultRoutine();
+        if (droppedDefault.current && starter && !draft.routines.length)
+          draft.routines.push(starter);
         draft.selected = draft.routines[0]?.id ?? null;
       });
+      droppedDefault.current = false;
       reviewRef.current = null;
       setReviewId(null);
       setStep("training");
@@ -441,7 +452,7 @@ export function Onboarding() {
           <>
             <RoutinesSection embedded />
             <Button variant="secondary" onPress={showRoutine}>
-              {t("Crear otra opción", "Create another option")}
+              {t("Regenerar", "Regenerate")}
             </Button>
             <Button loading={busy} onPress={() => void save("auto")}>
               {t("Continuar", "Continue")}

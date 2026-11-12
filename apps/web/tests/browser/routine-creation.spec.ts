@@ -114,10 +114,29 @@ test("custom goals, automatic routines, editable days and independent sharing co
   await page.keyboard.press("Escape");
   await page.goto(link);
   await expect(page.getByRole("dialog")).toBeVisible();
+  // Free accounts keep at most three routines: the fourth is refused.
   await page
     .getByRole("button", { name: "Agregar a mis rutinas", exact: true })
     .click();
-  await expect(page.locator(".routine-card")).toHaveCount(4);
+  await expect(page.locator(".routine-card")).toHaveCount(3);
+  await page.keyboard.press("Escape");
+  await page.locator(".routine-card").first().locator("summary").first().click();
+  await page
+    .locator(".routine-card")
+    .first()
+    .getByRole("button", { name: "Eliminar rutina", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Eliminar rutina", exact: true })
+    .click();
+  await expect(page.locator(".routine-card")).toHaveCount(2);
+  await page.goto(link);
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Agregar a mis rutinas", exact: true })
+    .click();
+  await expect(page.locator(".routine-card")).toHaveCount(3);
   const routines = await page.evaluate(
     () =>
       JSON.parse(
@@ -126,9 +145,9 @@ test("custom goals, automatic routines, editable days and independent sharing co
         ) ?? "{}",
       ).routines,
   );
-  expect(routines[1].goal).toBe("Ganar masa corporal");
-  expect(routines[2].id).not.toBe(routines[3].id);
-  expect(routines[2].days[0].id).not.toBe(routines[3].days[0].id);
+  expect(routines[0].goal).toBe("Ganar masa corporal");
+  expect(routines[1].id).not.toBe(routines[2].id);
+  expect(routines[1].days[0].id).not.toBe(routines[2].days[0].id);
 });
 
 test("routine activation slides, supports keyboard and persists an inactive selection", async ({

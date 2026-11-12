@@ -73,13 +73,9 @@ const deleteWords: Record<string, string> = {
 export function deleteConfirmationWord(language: string): string {
   return deleteWords[localeFor(language)] ?? "ELIMINAR";
 }
-/** True when the typed text is the confirmation word (ignoring case and edge spaces). */
+/** True only for the exact confirmation word, as it was before localization. */
 export function isDeleteConfirmation(language: string, typed: string): boolean {
-  const locale = localeFor(language);
-  return (
-    typed.trim().toLocaleUpperCase(locale) ===
-    deleteConfirmationWord(language).toLocaleUpperCase(locale)
-  );
+  return typed === deleteConfirmationWord(language);
 }
 /** "Type ELIMINAR to unlock the button" with the word replaced for the language. */
 export function deleteConfirmationLabel(language: string): string {

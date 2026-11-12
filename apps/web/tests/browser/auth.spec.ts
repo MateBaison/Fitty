@@ -62,7 +62,7 @@ test("new accounts complete onboarding before protected app access", async ({
     .selectOption({ label: "Uruguay" });
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
+    page.getByRole("heading", { name: "Tu rutina", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: /^Crear una rutina sugerida/ })

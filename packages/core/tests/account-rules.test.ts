@@ -19,9 +19,10 @@ test("the delete confirmation word follows the language of the account", () => {
   expect(deleteConfirmationWord("en")).toBe("DELETE");
   expect(deleteConfirmationWord("de")).toBe("LÖSCHEN");
   expect(deleteConfirmationWord("unknown")).toBe("ELIMINAR");
-  expect(isDeleteConfirmation("en", " delete ")).toBe(true);
+  expect(isDeleteConfirmation("en", "DELETE")).toBe(true);
+  expect(isDeleteConfirmation("en", "delete")).toBe(false);
   expect(isDeleteConfirmation("en", "ELIMINAR")).toBe(false);
-  expect(isDeleteConfirmation("pt", "excluir")).toBe(true);
+  expect(isDeleteConfirmation("pt", "EXCLUIR")).toBe(true);
   for (const language of languages) {
     expect(deleteConfirmationLabel(language)).toContain(
       deleteConfirmationWord(language),
@@ -41,4 +42,20 @@ test("automatic routines are named in the chosen language, muscles included", ()
   expect(names).toContain("Automatic routine");
   expect(names).toContain("Day 1");
   expect(names).not.toMatch(/Pectorales|Espalda|Día/);
+});
+
+test("choosing a suggested routine replaces only the untouched starter routine", async () => {
+  const { createDefaultSnapshot } = await import("../src/domain/legacy/read-snapshot");
+  const { dropUntouchedDefaultRoutine } = await import(
+    "../src/domain/onboarding-routine"
+  );
+  const fresh = createDefaultSnapshot();
+  expect(fresh.routines).toHaveLength(1);
+  expect(dropUntouchedDefaultRoutine(fresh)).toBe(true);
+  expect(fresh.routines).toHaveLength(0);
+  expect(fresh.selected).toBeNull();
+  const edited = createDefaultSnapshot();
+  edited.routines[0]!.name = "Mine";
+  expect(dropUntouchedDefaultRoutine(edited)).toBe(false);
+  expect(edited.routines).toHaveLength(1);
 });

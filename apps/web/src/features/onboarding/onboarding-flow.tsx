@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Pencil, Trash2 } from "lucide-react";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { signOut } from "@/lib/supabase/auth-actions";
+import { dropUntouchedDefaultRoutine } from "@fitty/core/domain/onboarding-routine";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
@@ -87,6 +88,23 @@ export function OnboardingFlow() {
     };
   };
   const [leaving, setLeaving] = useState(false);
+  const [removingDay, setRemovingDay] = useState(false);
+  const addPreviewDay = () =>
+    setPreviewRoutine((current) =>
+      current
+        ? {
+            ...current,
+            days: [
+              ...current.days,
+              {
+                id: crypto.randomUUID(),
+                name: `${t("Día", "Day")} ${current.days.length + 1}`,
+                items: [],
+              },
+            ],
+          }
+        : current,
+    );
   const goBack = () => {
     if (step === "profile") setLeaving(true);
     else if (previewRoutine) {
@@ -130,6 +148,7 @@ export function OnboardingFlow() {
             };
           if (preferredLanguage) draft.settings.language = preferredLanguage;
             if (routine && !draft.routines.some((item) => item.id === routine.id)) {
+              dropUntouchedDefaultRoutine(draft);
               draft.routines.push(routine);
               draft.selected = routine.id;
             }
@@ -174,9 +193,7 @@ export function OnboardingFlow() {
         <h1 className="mb-0 text-center text-2xl font-bold">
           {step === "profile"
             ? t("Crear tu perfil", "Create your profile")
-            : previewRoutine
-              ? t("Revisá tu rutina", "Review your routine")
-              : t("¿Cómo querés empezar?", "How would you like to start?")}
+            : t("Tu rutina", "Your routine")}
         </h1>
       </div>
       <AppDialog
@@ -452,20 +469,6 @@ export function OnboardingFlow() {
           </fieldset>
           {mode === "auto" && configuring && previewRoutine && (
             <div className="onboarding-preview space-y-4">
-              <div>
-                <p className="eyebrow">
-                  {t("Vista previa editable", "Editable preview")}
-                </p>
-                <h2 className="text-xl font-bold">
-                  {t("Tu rutina sugerida", "Your suggested routine")}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {t(
-                    "Podés quitar o agregar ejercicios, volver a cambiar tus datos o generar otra propuesta.",
-                    "Remove or add exercises, go back to change your details, or generate another suggestion.",
-                  )}
-                </p>
-              </div>
               {goal === "Mejorar resistencia cardiovascular" && (
                 <p className="onboarding-suggestion" role="status">
                   {t(
@@ -474,6 +477,19 @@ export function OnboardingFlow() {
                   )}
                 </p>
               )}
+              <details
+                key={previewRoutine.id}
+                className="panel onboarding-routine"
+                open
+              >
+                <summary className="onboarding-routine-summary">
+                  <span className="onboarding-routine-name">
+                    {previewRoutine.name}
+                  </span>
+                  <span className="onboarding-routine-count">
+                    ({previewRoutine.days.length})
+                  </span>
+                </summary>
               {previewRoutine.days.map((day) => {
                 const dayGroups = [...new Set(
                   day.items
@@ -622,19 +638,28 @@ export function OnboardingFlow() {
                   </details>
                 );
               })}
+                <div className="onboarding-day-actions">
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    disabled={busy || pending || !previewRoutine.days.length}
+                    onClick={() => setRemovingDay(true)}
+                  >
+                    {t("Quitar día", "Remove day")}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={busy || pending}
+                    onClick={addPreviewDay}
+                  >
+                    {t("Agregar día", "Add day")}
+                  </Button>
+                </div>
+              </details>
             </div>
           )}
           <div className={`onboarding-actions ${previewRoutine ? "has-preview" : ""}`}>
-            <Button
-              type="button"
-              variant="secondary"
-              disabled={busy || pending}
-              onClick={goBack}
-            >
-              {previewRoutine
-                ? t("Atrás", "Back")
-                : t("Volver", "Back")}
-            </Button>
             {previewRoutine && (
               <Button type="button" variant="secondary" disabled={busy || pending} onClick={showRoutinePreview}>
                 {t("Regenerar", "Regenerate")}
@@ -663,6 +688,33 @@ export function OnboardingFlow() {
           </div>
         </form>
       )}
+      <AppDialog
+        open={removingDay}
+        onClose={() => setRemovingDay(false)}
+        centered
+        title={t("Quitar día", "Remove day")}
+        description={t("Elegí el día que querés quitar.", "Choose the day you want to remove.")}
+      >
+        <div className="flex flex-col gap-2">
+          {previewRoutine?.days.map((day) => (
+            <Button
+              key={day.id}
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                setPreviewRoutine((current) =>
+                  current
+                    ? { ...current, days: current.days.filter((item) => item.id !== day.id) }
+                    : current,
+                );
+                setRemovingDay(false);
+              }}
+            >
+              {day.name}
+            </Button>
+          ))}
+        </div>
+      </AppDialog>
       <ExerciseDetails
         exercise={previewImageExercise}
         onClose={() => setPreviewImageExercise(null)}

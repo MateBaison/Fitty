@@ -417,6 +417,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
             </Pressable>
             {expanded ? (
               <>
+                {embedded ? null : (
                 <View
                   style={{
                     flexDirection: "row",
@@ -487,6 +488,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                     }
                   />
                 </View>
+                )}
                 <ReorderList
                   items={routine.days}
                   keyOf={(day) => day.id}

@@ -1086,7 +1086,8 @@
     "No encontramos esta página": "Nous n'avons pas trouvé cette page",
     "No pudimos cargar Fitty": "Nous n'avons pas pu charger Fitty",
     "Recargá la página para volver a intentarlo.": "Rechargez la page pour réessayer.",
-    "Cargando": "Chargement"
+    "Cargando": "Chargement",
+    "Elegí el día que querés quitar.": "Choisissez le jour à supprimer."
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -2175,7 +2176,8 @@
     "No encontramos esta página": "找不到此页面",
     "No pudimos cargar Fitty": "无法加载 Fitty",
     "Recargá la página para volver a intentarlo.": "请刷新页面后重试。",
-    "Cargando": "加载中"
+    "Cargando": "加载中",
+    "Elegí el día que querés quitar.": "请选择要删除的训练日。"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -3264,7 +3266,8 @@
     "No encontramos esta página": "हमें यह पेज नहीं मिला",
     "No pudimos cargar Fitty": "हम Fitty लोड नहीं कर सके",
     "Recargá la página para volver a intentarlo.": "फिर से कोशिश करने के लिए पेज रीलोड करें।",
-    "Cargando": "लोड हो रहा है"
+    "Cargando": "लोड हो रहा है",
+    "Elegí el día que querés quitar.": "जिस दिन को हटाना है उसे चुनें।"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -4353,7 +4356,8 @@
     "No encontramos esta página": "لم نعثر على هذه الصفحة",
     "No pudimos cargar Fitty": "تعذّر تحميل Fitty",
     "Recargá la página para volver a intentarlo.": "أعد تحميل الصفحة للمحاولة مرة أخرى.",
-    "Cargando": "جارٍ التحميل"
+    "Cargando": "جارٍ التحميل",
+    "Elegí el día que querés quitar.": "اختر اليوم الذي تريد حذفه."
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -5440,7 +5444,8 @@
     "No encontramos esta página": "Wir haben diese Seite nicht gefunden",
     "No pudimos cargar Fitty": "Wir konnten Fitty nicht laden",
     "Recargá la página para volver a intentarlo.": "Lade die Seite neu, um es erneut zu versuchen.",
-    "Cargando": "Wird geladen"
+    "Cargando": "Wird geladen",
+    "Elegí el día que querés quitar.": "Wähle den Tag, den du entfernen möchtest."
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -6527,7 +6532,8 @@
     "No encontramos esta página": "Non abbiamo trovato questa pagina",
     "No pudimos cargar Fitty": "Non siamo riusciti a caricare Fitty",
     "Recargá la página para volver a intentarlo.": "Ricarica la pagina per riprovare.",
-    "Cargando": "Caricamento"
+    "Cargando": "Caricamento",
+    "Elegí el día que querés quitar.": "Scegli il giorno che vuoi rimuovere."
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -7614,7 +7620,8 @@
     "No encontramos esta página": "Não encontramos esta página",
     "No pudimos cargar Fitty": "Não conseguimos carregar o Fitty",
     "Recargá la página para volver a intentarlo.": "Recarregue a página para tentar novamente.",
-    "Cargando": "Carregando"
+    "Cargando": "Carregando",
+    "Elegí el día que querés quitar.": "Escolha o dia que você quer remover."
   },
   "en": {
     "Sexo": "Sex",

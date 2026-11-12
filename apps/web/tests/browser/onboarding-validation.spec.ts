@@ -35,7 +35,7 @@ test("onboarding shows missing fields and allows a complete profile without a ph
     .selectOption("undisclosed");
   await page.getByRole("button", { name: "Continuar", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
+    page.getByRole("heading", { name: "Tu rutina", exact: true }),
   ).toBeVisible();
   const custom = page.getByRole("button", {
     name: /^Armar mi rutina después/,
@@ -64,10 +64,10 @@ test("onboarding shows missing fields and allows a complete profile without a ph
   await expect(
     page.getByRole("button", { name: "Ver vista previa", exact: true }),
   ).toBeEnabled();
-  await page.locator(".onboarding-actions").getByRole("button", { name: "Volver", exact: true }).click();
+  await page.getByRole("button", { name: "Volver", exact: true }).click();
   await custom.click();
   await expect(
-    page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),
+    page.getByRole("heading", { name: "Tu rutina", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Entrar a Fitty", exact: true })
