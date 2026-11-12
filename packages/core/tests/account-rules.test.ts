@@ -83,3 +83,16 @@ test("regenerating leaves only the latest automatic routine", async () => {
   expect(snapshot.routines).toHaveLength(1);
   expect(snapshot.selected).toBe(snapshot.routines[0]!.id);
 });
+
+test("reset confirmation word follows the language", async () => {
+  const { resetConfirmationWord, isResetConfirmation, resetConfirmationLabel } =
+    await import("../src/data/translations");
+  expect(resetConfirmationWord("es")).toBe("REINICIAR");
+  expect(resetConfirmationWord("en")).toBe("RESET");
+  expect(isResetConfirmation("en", "RESET")).toBe(true);
+  expect(isResetConfirmation("en", "REINICIAR")).toBe(false);
+  expect(resetConfirmationLabel("en")).toBe("Type RESET to confirm");
+  expect(resetConfirmationLabel("de")).toContain("ZURÜCKSETZEN");
+  for (const lang of ["fr", "zh", "hi", "ar", "de", "it", "pt"])
+    expect(resetConfirmationLabel(lang)).not.toContain("REINICIAR");
+});

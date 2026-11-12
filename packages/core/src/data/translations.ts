@@ -85,3 +85,30 @@ export function deleteConfirmationLabel(language: string): string {
     "Type ELIMINAR to unlock the button",
   ).replace("ELIMINAR", deleteConfirmationWord(language));
 }
+
+const resetWords: Record<string, string> = {
+  es: "REINICIAR",
+  en: "RESET",
+  fr: "RÉINITIALISER",
+  zh: "重置",
+  hi: "रीसेट",
+  ar: "إعادة",
+  de: "ZURÜCKSETZEN",
+  it: "RIPRISTINA",
+  pt: "REDEFINIR",
+};
+/** The word a person types to confirm resetting their account, in their language. */
+export function resetConfirmationWord(language: string): string {
+  return resetWords[localeFor(language)] ?? "REINICIAR";
+}
+export function isResetConfirmation(language: string, typed: string): boolean {
+  return typed === resetConfirmationWord(language);
+}
+/** "Type REINICIAR to confirm" with the word replaced for the language. */
+export function resetConfirmationLabel(language: string): string {
+  return translate(
+    language,
+    "Escribí REINICIAR para confirmar",
+    "Type REINICIAR to confirm",
+  ).replace("REINICIAR", resetConfirmationWord(language));
+}

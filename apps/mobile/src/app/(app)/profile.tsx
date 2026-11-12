@@ -16,6 +16,10 @@ import { readSnapshotJson } from "@fitty/core/domain/legacy/read-snapshot";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
 import { missingProfileFields } from "@fitty/core/domain/profile-validation";
 import { localDateKey } from "@fitty/core/domain/workouts";
+import {
+  isResetConfirmation,
+  resetConfirmationLabel,
+} from "@fitty/core/data/translations";
 import { accountCacheKey } from "@fitty/core/storage/account-cache";
 import { BackButton } from "@/components/back-button";
 import { MenstrualDays } from "@/components/menstrual-days";
@@ -147,7 +151,7 @@ function ResetAccount() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   const apply = async () => {
-    if (busy || confirmation !== "REINICIAR" || !session) return;
+    if (busy || !isResetConfirmation(snapshot.settings.language ?? "es", confirmation) || !session) return;
     setBusy(true);
     setError(false);
     try {
@@ -208,7 +212,7 @@ function ResetAccount() {
                 )}
               </Label>
               <Label>
-                {t("Escribí REINICIAR para confirmar", "Type REINICIAR to confirm")}
+                {resetConfirmationLabel(snapshot.settings.language ?? "es")}
               </Label>
               <TextField value={confirmation} onChange={setConfirmation} disabled={busy} />
               {error ? (
@@ -229,7 +233,7 @@ function ResetAccount() {
                   <Button
                     variant="destructive"
                     loading={busy}
-                    disabled={confirmation !== "REINICIAR" || view.status !== "synced"}
+                    disabled={!isResetConfirmation(snapshot.settings.language ?? "es", confirmation) || view.status !== "synced"}
                     onPress={() => void apply()}
                   >
                     {t("Confirmar reinicio", "Confirm reset")}

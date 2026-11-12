@@ -6,11 +6,16 @@ import { AppDialog } from "@/components/ui/app-dialog";
 import { Input } from "@/components/ui/input";
 import { useApp } from "@/state/app-provider";
 import { restartAccount } from "@fitty/core/domain/account-reset";
+import {
+  isResetConfirmation,
+  resetConfirmationLabel,
+} from "@fitty/core/data/translations";
 import { accountCacheKey } from "@fitty/core/storage/account-cache";
 
 // Temporary testing control; remove this component and its AccountPanel entry after testing.
 export function ResetAccount() {
   const { t, snapshot, user, change, flush, status, holdRefresh } = useApp();
+  const language = snapshot.settings.language ?? "es";
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false);
@@ -44,7 +49,7 @@ export function ResetAccount() {
           className="flex flex-col gap-4"
           onSubmit={async (event) => {
             event.preventDefault();
-            if (busy || confirmation !== "REINICIAR") return;
+            if (busy || !isResetConfirmation(language, confirmation)) return;
             setBusy(true);
             setError(false);
             const release = holdRefresh();
@@ -70,7 +75,7 @@ export function ResetAccount() {
           }}
         >
           <label htmlFor="reset-confirmation">
-            {t("Escribí REINICIAR para confirmar", "Type REINICIAR to confirm")}
+            {resetConfirmationLabel(language)}
           </label>
           <Input
             id="reset-confirmation"
@@ -101,7 +106,7 @@ export function ResetAccount() {
               variant="destructive"
               disabled={
                 busy ||
-                confirmation !== "REINICIAR" ||
+                !isResetConfirmation(language, confirmation) ||
                 (!applied && status !== "synced")
               }
             >
