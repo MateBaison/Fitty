@@ -17,7 +17,8 @@ export function dropUntouchedDefaultRoutine(draft: Snapshot): boolean {
   const index = draft.routines.findIndex(
     (routine) =>
       routine.id === original.id &&
-      fingerprint(routine) === fingerprint(original),
+      (routine.name === original.name ||
+        fingerprint(routine) === fingerprint(original)),
   );
   if (index < 0) return false;
   draft.routines.splice(index, 1);

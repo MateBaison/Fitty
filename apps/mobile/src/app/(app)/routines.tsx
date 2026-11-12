@@ -350,7 +350,11 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
           </Button>
         </Card>
       ) : null}
-      {snapshot.routines.map((routine) => {
+      {(embedded
+        ? // Account setup shows only the suggested routine, never anything else.
+          snapshot.routines.filter((item) => item.id === snapshot.selected)
+        : snapshot.routines
+      ).map((routine) => {
         const active = snapshot.selected === routine.id;
         const expanded = open === routine.id;
         return (
