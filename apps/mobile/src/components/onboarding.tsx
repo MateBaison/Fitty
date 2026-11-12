@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -178,6 +178,9 @@ export function Onboarding() {
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
   const [reviewId, setReviewId] = useState<string | null>(null);
+  // Refs update immediately, so a fast double tap cannot add two routines.
+  const reviewRef = useRef<string | null>(null);
+  const savingRef = useRef(false);
   const [mode, setMode] = useState<"custom" | "auto">("custom");
   const [menstrual, setMenstrual] = useState(false);
   const [periodDates, setPeriodDates] = useState<string[]>([]);
@@ -193,16 +196,18 @@ export function Onboarding() {
   const showRoutine = () => {
     const routine = proposal(variation);
     setVariation((current) => current + 1);
-    const previous = reviewId;
+    const previous = reviewRef.current;
     change((draft) => {
       draft.routines = draft.routines.filter((item) => item.id !== previous);
       draft.routines.push(routine);
       draft.selected = routine.id;
     });
+    reviewRef.current = routine.id;
     setReviewId(routine.id);
   };
   const save = async (mode: "auto" | "custom") => {
-    if (busy) return;
+    if (busy || savingRef.current) return;
+    savingRef.current = true;
     setBusy(true);
     try {
       const routine =
@@ -238,7 +243,7 @@ export function Onboarding() {
             ? { trainingExperience: experience, trainingGoal: goal }
             : {}),
         };
-        if (routine) {
+        if (routine && !draft.routines.some((item) => item.id === routine.id)) {
           draft.routines.push(routine);
           draft.selected = routine.id;
         }
@@ -253,16 +258,18 @@ export function Onboarding() {
     } catch (error) {
       notify(error instanceof Error ? error.message : String(error));
     } finally {
+      savingRef.current = false;
       setBusy(false);
     }
   };
   const cancel = () => {
     if (step === "review") {
-      const id = reviewId;
+      const id = reviewRef.current;
       change((draft) => {
         draft.routines = draft.routines.filter((item) => item.id !== id);
         draft.selected = draft.routines[0]?.id ?? null;
       });
+      reviewRef.current = null;
       setReviewId(null);
       setStep("training");
       return;

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Switch, View } from "react-native";
 import { accountCacheKey } from "@fitty/core/storage/account-cache";
+import {
+  deleteConfirmationLabel,
+  isDeleteConfirmation,
+} from "@fitty/core/data/translations";
 import { Button, Card, Field, Label } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
 import { useAccount } from "@/state/account";
@@ -9,7 +13,8 @@ import { space } from "@/theme";
 
 /** Same safeguards as the web: acknowledgement, account email and the phrase ELIMINAR. */
 export function DeleteAccount() {
-  const { t } = useAccount();
+  const { t, view } = useAccount();
+  const language = view.snapshot?.settings.language ?? "es";
   const { session } = useSession();
   const user = session?.user;
   const [open, setOpen] = useState(false);
@@ -21,7 +26,7 @@ export function DeleteAccount() {
   if (!user?.email) return null;
   const ready =
     acknowledged &&
-    confirmation === "ELIMINAR" &&
+    isDeleteConfirmation(language, confirmation) &&
     email.trim().toLowerCase() === user.email.toLowerCase();
   const close = () => {
     setOpen(false);
@@ -37,7 +42,7 @@ export function DeleteAccount() {
     // The Edge Function verifies the bearer token itself and derives the account.
     const result = await supabase.functions
       .invoke("delete-account", {
-        body: { confirmation, email: user.email, acknowledged },
+        body: { confirmation: "ELIMINAR", email: user.email, acknowledged },
       })
       .catch(() => null);
     if (!result || result.error || result.data?.deleted !== true) {
@@ -99,10 +104,7 @@ export function DeleteAccount() {
         onChangeText={setEmail}
       />
       <Field
-        label={t(
-          "Escribí ELIMINAR para desbloquear el botón",
-          "Type ELIMINAR to unlock the button",
-        )}
+        label={deleteConfirmationLabel(language)}
         value={confirmation}
         editable={!busy}
         autoCapitalize="characters"

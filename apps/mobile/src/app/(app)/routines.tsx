@@ -10,6 +10,10 @@ import {
   type MuscleGroup,
 } from "@fitty/core/domain/schemas/exercise";
 import { encodeRoutine } from "@fitty/core/domain/sharing";
+import {
+  canAddRoutine,
+  routineLimitMessage,
+} from "@fitty/core/domain/routine-limits";
 import { findExercise, type CatalogExercise } from "@fitty/core/domain/workouts";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
@@ -140,6 +144,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                 { makeId, language: draft.settings.language ?? "es" },
               )
             : { id: makeId(), name: name.trim(), goal, days: [] };
+        if (!canAddRoutine(draft)) return;
         draft.routines.push(routine);
         draft.selected = routine.id;
         setOpen(routine.id);
@@ -233,7 +238,14 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
         <Title>{t("Mis rutinas", "My routines")}</Title>
         {!creating ? (
           <View style={{ minWidth: 112 }}>
-            <Button variant="secondary" onPress={() => setCreating(true)}>
+            <Button
+              variant="secondary"
+              onPress={() =>
+                canAddRoutine(snapshot)
+                  ? setCreating(true)
+                  : notify(t(routineLimitMessage.es, routineLimitMessage.en))
+              }
+            >
               {t("+ Nueva", "+ New")}
             </Button>
           </View>

@@ -103,12 +103,6 @@ export default function SignIn() {
           />
           <Card>
             <Title center>{t("Iniciar sesión", "Sign in")}</Title>
-            <Label muted style={{ textAlign: "center" }}>
-              {t(
-                "Tu entrenamiento, tus rutinas y tu progreso.",
-                "Your training, your routines and your progress.",
-              )}
-            </Label>
             {sentTo ? (
               <>
                 <Label>

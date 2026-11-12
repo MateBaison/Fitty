@@ -397,7 +397,7 @@ export function CalendarPanel({
                   <img
                     key={index}
                     src={photo}
-                    alt="Foto del entrenamiento"
+                    alt={t("Foto del entrenamiento", "Workout photo")}
                     className="h-24 w-24 rounded-xl object-cover"
                   />
                 ))}
@@ -691,7 +691,7 @@ export function CalendarPanel({
                   !names.day.trim() ||
                   (chosenRoutine && !chosenDay)))
             )
-              return notify("Elegí una fecha válida y agregá ejercicios.");
+              return notify(t("Elegí una fecha válida y agregá ejercicios.", "Choose a valid date and add exercises."));
             const editValue = editing;
             if (
               change((draft) => {
@@ -737,7 +737,7 @@ export function CalendarPanel({
             ) {
               setSelectedDate(editValue.date);
               setEditing(null);
-              notify("Entrenamiento guardado");
+              notify(t("Entrenamiento guardado", "Workout saved"));
             }
           }}
         >

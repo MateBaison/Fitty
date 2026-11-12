@@ -166,7 +166,7 @@ export function PersonalForm({
           {safePhoto(draft.photo) ? (
             <img
               src={draft.photo}
-              alt="Foto de perfil"
+              alt={t("Foto de perfil", "Profile photo")}
               className="profile-avatar"
             />
           ) : (

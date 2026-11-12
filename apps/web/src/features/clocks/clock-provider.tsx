@@ -154,7 +154,7 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
             void audio.current
               .unlock()
               .catch(() =>
-                notify("El sonido no está disponible en este navegador."),
+                notify(t("El sonido no está disponible en este navegador.", "Sound is not available in this browser.")),
               );
           }
           setTimer((previous) =>
@@ -199,7 +199,7 @@ export function ClockProvider({ children }: { children: React.ReactNode }) {
               setNow(Date.now());
             }
           } catch {
-            notify("Revisá los valores del reloj de combate.");
+            notify(t("Revisá los valores del reloj de combate.", "Check the combat clock values."));
           }
         },
         toggleCombat: () => {

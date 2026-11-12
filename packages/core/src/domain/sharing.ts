@@ -1,3 +1,4 @@
+import { canAddRoutine, routineLimitMessage } from "./routine-limits";
 import { z } from "zod";
 import { exercises } from "../data/exercises";
 import {
@@ -97,6 +98,7 @@ export function decodeRoutine(token: string) {
   return parsed;
 }
 export function importRoutine(snapshot: Snapshot, token: string): void {
+  if (!canAddRoutine(snapshot)) throw new Error(routineLimitMessage.es);
   const shared = decodeRoutine(token),
     mapping = new Map(
       shared.customExercises.map((exercise) => [

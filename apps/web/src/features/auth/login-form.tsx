@@ -136,9 +136,6 @@ export function LoginForm() {
           {t("Continuar con Apple", "Continue with Apple")}
         </Button>
       </form>
-      <p className="text-center text-sm text-muted-foreground">
-        {t("Tu cuenta guarda rutinas y entrenamientos en la nube. Nunca compartas el código recibido.", "Your account saves routines and workouts in the cloud. Never share your verification code.")}
-      </p>
     </div>
   );
 }

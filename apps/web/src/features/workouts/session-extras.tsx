@@ -168,7 +168,7 @@ export function SessionExtras({
           event.target.value = "";
           if (!files.length) return;
           if (files.length + value.photos.length > 3) {
-            notify("Podés guardar hasta 3 fotos.");
+            notify(t("Podés guardar hasta 3 fotos.", "You can save up to 3 photos."));
             return;
           }
           setBusy(true);
@@ -194,7 +194,7 @@ export function SessionExtras({
             {safePhoto(photo) && (
               <img
                 src={photo}
-                alt="Foto del entrenamiento"
+                alt={t("Foto del entrenamiento", "Workout photo")}
                 className="h-24 w-24 rounded-xl object-cover"
               />
             )}

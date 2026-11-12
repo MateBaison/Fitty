@@ -57,3 +57,35 @@ export function privacyNotice(language: string): {
     after: sentence.slice(index + link.length),
   };
 }
+
+const deleteWords: Record<string, string> = {
+  es: "ELIMINAR",
+  en: "DELETE",
+  fr: "SUPPRIMER",
+  zh: "删除",
+  hi: "हटाएं",
+  ar: "حذف",
+  de: "LÖSCHEN",
+  it: "ELIMINA",
+  pt: "EXCLUIR",
+};
+/** The word a person types to confirm deleting their account, in their language. */
+export function deleteConfirmationWord(language: string): string {
+  return deleteWords[localeFor(language)] ?? "ELIMINAR";
+}
+/** True when the typed text is the confirmation word (ignoring case and edge spaces). */
+export function isDeleteConfirmation(language: string, typed: string): boolean {
+  const locale = localeFor(language);
+  return (
+    typed.trim().toLocaleUpperCase(locale) ===
+    deleteConfirmationWord(language).toLocaleUpperCase(locale)
+  );
+}
+/** "Type ELIMINAR to unlock the button" with the word replaced for the language. */
+export function deleteConfirmationLabel(language: string): string {
+  return translate(
+    language,
+    "Escribí ELIMINAR para desbloquear el botón",
+    "Type ELIMINAR to unlock the button",
+  ).replace("ELIMINAR", deleteConfirmationWord(language));
+}

@@ -32,7 +32,7 @@ export function ProfilePhotoEditor({
         if (active) setImage(next);
       })
       .catch(() => {
-        if (active) setError("No se pudo preparar la foto.");
+        if (active) setError(t("No se pudo preparar la foto.", "The photo could not be prepared."));
       });
     return () => {
       active = false;
@@ -42,7 +42,7 @@ export function ProfilePhotoEditor({
     if (!image || !canvas.current) return;
     const ctx = canvas.current.getContext("2d");
     if (!ctx) {
-      setError("Este navegador no permite recortar la imagen.");
+      setError(t("Este navegador no permite recortar la imagen.", "This browser cannot crop the image."));
       return;
     }
     const side = Math.min(image.naturalWidth, image.naturalHeight) / zoom;

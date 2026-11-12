@@ -113,7 +113,7 @@ export function ProfileScreen() {
             event.target.value = "";
             if (!file) return;
             if (file.size > 25 * 1024 * 1024)
-              return notify("La copia supera 25 MB.");
+              return notify(t("La copia supera 25 MB.", "The backup is larger than 25 MB."));
             const read = readSnapshotJson(await file.text());
             if (!read.ok)
               return notify(
@@ -144,7 +144,7 @@ export function ProfileScreen() {
                 Object.assign(draft, read.snapshot);
               })
             )
-              notify("Copia importada; sincronizando…");
+              notify(t("Copia importada; sincronizando…", "Backup imported; syncing…"));
           }}
         />
       </section>
@@ -195,7 +195,7 @@ export function ProfileScreen() {
               })
             ) {
               setSettings(false);
-              notify("Configuración guardada");
+              notify(t("Configuración guardada", "Settings saved"));
             }
           }}
         >

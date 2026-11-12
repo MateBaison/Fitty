@@ -1,7 +1,7 @@
 "use client";
 
 import { useExerciseName } from "@/state/exercise-name";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/state/app-provider";
 import type { Routine, Snapshot } from "@fitty/core/domain/schemas/snapshot";
@@ -39,6 +39,9 @@ export function OnboardingFlow() {
   const [pickingForDayId, setPickingForDayId] = useState<string | null>(null);
   const [variation, setVariation] = useState(0);
   const [busy, setBusy] = useState(false);
+  // State updates are asynchronous: a second tap before the re-render would
+  // otherwise add the routine twice.
+  const saving = useRef(false);
   const [pending, setPending] = useState(
     snapshot.profile.onboardingComplete === true,
   );
@@ -47,6 +50,16 @@ export function OnboardingFlow() {
     step === "profile"
       ? t("Tus datos", "Your details")
       : t("Tu rutina", "Your routine");
+  // The language picked on the sign-in page wins over the not-yet-updated account.
+  const chosenLanguage = () => {
+    try {
+      const stored = localStorage.getItem("fitty-language");
+      if (stored) return localeFor(stored);
+    } catch {
+      /* Fall back to the account language. */
+    }
+    return snapshot.settings.language ?? "es";
+  };
   const makeRoutineProposal = (nextVariation: number) => {
     const routine = createGuidedRoutine(
       {
@@ -59,7 +72,7 @@ export function OnboardingFlow() {
       },
       {
         makeId: () => crypto.randomUUID(),
-        language: snapshot.settings.language ?? "es",
+        language: chosenLanguage(),
       },
     );
     // The muscle groups of each day are already listed under its name.
@@ -77,7 +90,8 @@ export function OnboardingFlow() {
     window.scrollTo(0, 0);
   };
   const save = async (selectedMode = mode) => {
-    if (busy) return;
+    if (busy || saving.current) return;
+    saving.current = true;
     setBusy(true);
     try {
       if (!pending) {
@@ -104,7 +118,7 @@ export function OnboardingFlow() {
                 : {}),
             };
           if (preferredLanguage) draft.settings.language = preferredLanguage;
-            if (routine) {
+            if (routine && !draft.routines.some((item) => item.id === routine.id)) {
               draft.routines.push(routine);
               draft.selected = routine.id;
             }
@@ -128,6 +142,7 @@ export function OnboardingFlow() {
         t("Revisá los datos de tu rutina.", "Check your routine details."),
       );
     } finally {
+      saving.current = false;
       setBusy(false);
     }
   };

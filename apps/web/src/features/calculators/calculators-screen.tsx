@@ -383,7 +383,7 @@ export function CalculatorsScreen() {
         {section === "maximum" && maximum !== null && (
           <Result
             color="gain"
-            label="1RM estimado · fórmula de Epley"
+            label={t("1RM estimado · fórmula de Epley", "Estimated 1RM · Epley formula")}
             value={`${maximum.toFixed(1)} ${units.weight ?? "kg"}`}
           />
         )}

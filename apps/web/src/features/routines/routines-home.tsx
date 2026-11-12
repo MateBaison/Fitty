@@ -28,6 +28,10 @@ import { muscleImages } from "@fitty/core/data/exercises";
 import { ChevronDown } from "lucide-react";
 import { muscleGroups, type MuscleGroup } from "@fitty/core/domain/schemas/exercise";
 import { decodeRoutine, encodeRoutine, importRoutine } from "@fitty/core/domain/sharing";
+import {
+  canAddRoutine,
+  routineLimitMessage,
+} from "@fitty/core/domain/routine-limits";
 import { INCOMING_ROUTINE_KEY } from "@fitty/core/storage/account-cache";
 import { CalendarPanel } from "@/features/calendar/calendar-panel";
 import { ReadinessDialog } from "@/features/workouts/readiness-dialog";
@@ -79,7 +83,7 @@ export function RoutinesHome() {
       setIncoming(token);
     } catch {
       sessionStorage.removeItem(INCOMING_ROUTINE_KEY);
-      notify("El enlace de rutina no es válido.");
+      notify(t("El enlace de rutina no es válido.", "The routine link is not valid."));
     }
   }, [notify]);
   const start = (rid: string, did: string) => {
@@ -275,7 +279,14 @@ export function RoutinesHome() {
       )}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-bold">{t("Mis rutinas", "My routines")}</h2>
-        <Button variant="secondary" onClick={() => openEditor({ type: "new" })}>
+        <Button
+          variant="secondary"
+          onClick={() =>
+            canAddRoutine(snapshot)
+              ? openEditor({ type: "new" })
+              : notify(t(routineLimitMessage.es, routineLimitMessage.en))
+          }
+        >
           ＋ {t("Nueva", "New")}
         </Button>
       </div>
@@ -294,7 +305,7 @@ export function RoutinesHome() {
                   variant="ghost"
                   size="icon-xl"
                   className="routine-icon-control"
-                  aria-label={`Renombrar ${routine.name}`}
+                  aria-label={`${t("Renombrar", "Rename")} ${routine.name}`}
                   title={t("Cambiar nombre", "Rename")}
                   onClick={(event) => {
                     event.preventDefault();
@@ -531,10 +542,10 @@ export function RoutinesHome() {
           editor?.type === "rename-day"
             ? t("Cambiar nombre del día", "Rename workout day")
             : editor?.type === "rename"
-              ? "Renombrar rutina"
+              ? t("Renombrar rutina", "Rename routine")
               : editor?.type === "day"
-                ? "Agregar día"
-                : "Nueva rutina"
+                ? t("Agregar día", "Add day")
+                : t("Nueva rutina", "New routine")
         }
       >
         {editor?.type === "new" && mode === "choose" ? (
@@ -554,7 +565,7 @@ export function RoutinesHome() {
               const editing = editor;
               if (!editing) return;
               if (mode !== "auto" && !name.trim())
-                return notify("Escribí un nombre.");
+                return notify(t("Escribí un nombre.", "Enter a name."));
               if (
                 change((draft) => {
                   if (editing.type === "rename") {
@@ -591,8 +602,10 @@ export function RoutinesHome() {
                             goal,
                             days: [],
                           };
-                    draft.routines.push(routine);
-                    draft.selected = routine.id;
+                    if (canAddRoutine(draft)) {
+                      draft.routines.push(routine);
+                      draft.selected = routine.id;
+                    }
                   }
                 })
               ) {
@@ -804,7 +817,7 @@ export function RoutinesHome() {
       <AppDialog
         open={!!share}
         onClose={() => setShare("")}
-        title="Compartir rutina"
+        title={t("Compartir rutina", "Share routine")}
         description="Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas."
       >
         <Input
@@ -816,9 +829,9 @@ export function RoutinesHome() {
           onClick={async () => {
             try {
               await navigator.clipboard.writeText(share);
-              notify("Enlace copiado");
+              notify(t("Enlace copiado", "Link copied"));
             } catch {
-              notify("Seleccioná el enlace para copiarlo manualmente.");
+              notify(t("Seleccioná el enlace para copiarlo manualmente.", "Select the link to copy it manually."));
             }
           }}
         >
@@ -853,10 +866,17 @@ export function RoutinesHome() {
         </p>
         <Button
           onClick={() => {
+            if (!canAddRoutine(snapshot))
+              return notify(t(routineLimitMessage.es, routineLimitMessage.en));
             if (change((draft) => importRoutine(draft, incoming))) {
               setIncoming("");
               sessionStorage.removeItem(INCOMING_ROUTINE_KEY);
-              notify("Rutina agregada a tu cuenta");
+              notify(
+                t(
+                  "Rutina agregada a tu cuenta",
+                  "Routine added to your account",
+                ),
+              );
             }
           }}
         >

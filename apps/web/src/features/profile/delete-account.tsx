@@ -7,9 +7,14 @@ import { Input } from "@/components/ui/input";
 import { deleteAccount } from "@/lib/supabase/auth-actions";
 import { browserClient } from "@/lib/supabase/browser";
 import { accountCacheKey } from "@fitty/core/storage/account-cache";
+import {
+  deleteConfirmationLabel,
+  isDeleteConfirmation,
+} from "@fitty/core/data/translations";
 
 export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
-  const { user, t, disposeDeletedAccount } = useApp();
+  const { user, t, snapshot, disposeDeletedAccount } = useApp();
+  const language = snapshot.settings.language ?? "es";
   const [unlocked, setUnlocked] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
   const [confirmation, setConfirmation] = useState("");
@@ -39,15 +44,17 @@ export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
             if (
               busy ||
               !acknowledged ||
-              confirmation !== "ELIMINAR" ||
+              !isDeleteConfirmation(language, confirmation) ||
               email !== user.email
             )
               return;
             setBusy(true);
             setError(false);
             try {
+              // The server contract keeps one fixed confirmation value; the
+              // localized word was already checked above.
               const result = await deleteAccount({
-                confirmation,
+                confirmation: "ELIMINAR",
                 email,
                 acknowledged,
               });
@@ -105,10 +112,7 @@ export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
             />
           </label>
           <label className="block">
-            {t(
-              "Escribí ELIMINAR para desbloquear el botón",
-              "Type ELIMINAR to unlock the button",
-            )}
+            {deleteConfirmationLabel(language)}
             <Input
               autoComplete="off"
               value={confirmation}
@@ -148,7 +152,7 @@ export function DeleteAccount({ saveAction }: { saveAction: ReactNode }) {
                 busy ||
                 !acknowledged ||
                 email !== user.email ||
-                confirmation !== "ELIMINAR"
+                !isDeleteConfirmation(language, confirmation)
               }
             >
               <ShieldCheck aria-hidden="true" />

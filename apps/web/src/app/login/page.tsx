@@ -11,7 +11,14 @@ export default async function LoginPage() {
   return (
     <div className="app-shell">
       <AppHeader accountAction={<PublicLanguagePicker />} />
-      <main className="hero-panel login-panel mt-8">
+      <img
+        src="/assets/brand/fitty-isotype.png"
+        alt="Fitty"
+        width={72}
+        height={72}
+        className="login-isotype"
+      />
+      <main className="hero-panel login-panel">
         <PublicLanguageHeading />
         {configured() ? (
           <LoginForm />
@@ -21,10 +28,10 @@ export default async function LoginPage() {
             el acceso. No se ha conectado ninguna cuenta.
           </p>
         )}
-        <p className="mt-6 text-center text-sm">
-          <PrivacyLink />
-        </p>
       </main>
+      <p className="login-legal">
+        <PrivacyLink />
+      </p>
     </div>
   );
 }

@@ -56,7 +56,7 @@ export function LinkedApps() {
         );
       else {
         await load();
-        notify("Cambios guardados");
+        notify(t("Cambios guardados", "Changes saved"));
       }
     } catch {
       // A successful link redirects the browser to the provider.

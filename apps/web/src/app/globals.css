@@ -496,6 +496,24 @@ main > h1 {
 .login-panel form label [data-slot="input"] {
   text-align: center;
 }
+.app-header.app-header-login {
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+.login-isotype {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin: 8px auto 14px;
+  object-fit: contain;
+}
+.login-legal {
+  width: min(100%, 440px);
+  margin: 18px auto 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
 .public-language-picker {
   display: inline-flex;
   align-items: center;

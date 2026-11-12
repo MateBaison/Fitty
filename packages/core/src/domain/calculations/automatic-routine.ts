@@ -180,7 +180,7 @@ export function buildAutomaticRoutine(
     });
     return {
       id: `${rid}-d${index + 1}`,
-      name: `${translate(options.language, "Día", "Day")} ${index + 1} · ${muscles.join(" + ")}`,
+      name: `${translate(options.language, "Día", "Day")} ${index + 1} · ${muscles.map((group) => translate(options.language, group, group)).join(" + ")}`,
       items,
     };
   });
