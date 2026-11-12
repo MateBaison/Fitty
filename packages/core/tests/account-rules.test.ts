@@ -59,3 +59,27 @@ test("choosing a suggested routine replaces only the untouched starter routine",
   expect(dropUntouchedDefaultRoutine(edited)).toBe(false);
   expect(edited.routines).toHaveLength(1);
 });
+
+test("regenerating leaves only the latest automatic routine", async () => {
+  const { createDefaultSnapshot } = await import("../src/domain/legacy/read-snapshot");
+  const { dropAutomaticRoutines, dropUntouchedDefaultRoutine } = await import(
+    "../src/domain/onboarding-routine"
+  );
+  const { createGuidedRoutine } = await import("../src/domain/training-setup");
+  let n = 0;
+  const make = (variation: number) =>
+    createGuidedRoutine(
+      { mode: "auto", experience: "beginner", days: 2, goal: "Fuerza e hipertrofia", groups: ["Pectorales", "Espalda"], variation },
+      { makeId: () => `id${++n}`, language: "es" },
+    );
+  const snapshot = createDefaultSnapshot();
+  for (let i = 0; i < 4; i++) {
+    dropAutomaticRoutines(snapshot);
+    dropUntouchedDefaultRoutine(snapshot);
+    const routine = make(i);
+    snapshot.routines.push(routine);
+    snapshot.selected = routine.id;
+  }
+  expect(snapshot.routines).toHaveLength(1);
+  expect(snapshot.selected).toBe(snapshot.routines[0]!.id);
+});

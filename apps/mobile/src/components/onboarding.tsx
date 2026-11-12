@@ -24,6 +24,7 @@ import { translate } from "@fitty/core/data/translations";
 import { localDateKey } from "@fitty/core/domain/workouts";
 import {
   defaultRoutine,
+  dropAutomaticRoutines,
   dropUntouchedDefaultRoutine,
 } from "@fitty/core/domain/onboarding-routine";
 import { ChipGroup } from "@/components/chip";
@@ -204,6 +205,8 @@ export function Onboarding() {
     const previous = reviewRef.current;
     change((draft) => {
       draft.routines = draft.routines.filter((item) => item.id !== previous);
+      // Regenerating replaces every earlier suggestion, never adds to them.
+      dropAutomaticRoutines(draft);
       // The starter "Rutina principal" would otherwise sit next to the suggestion.
       if (dropUntouchedDefaultRoutine(draft)) droppedDefault.current = true;
       draft.routines.push(routine);
