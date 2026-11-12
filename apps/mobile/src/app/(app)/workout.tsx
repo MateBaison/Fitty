@@ -34,6 +34,12 @@ import {
   type Extras,
 } from "@fitty/core/domain/workouts";
 import { Chip } from "@/components/chip";
+import { ExerciseMenu } from "@/components/exercise-menu";
+import {
+  changeWeightUnit,
+  leaveSuperset,
+  removeWorkoutEntry,
+} from "@fitty/core/domain/workout-entry-actions";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { BackButton } from "@/components/back-button";
 import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
@@ -121,6 +127,7 @@ export default function Workout() {
     null,
   );
   const [replacing, setReplacing] = useState<number | null>(null);
+  const [menuFor, setMenuFor] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [resizingComment, setResizingComment] = useState(false);
@@ -257,24 +264,15 @@ export default function Workout() {
         </Text>
       </View>
       <Notice />
-      <View style={{ flexDirection: "row", gap: space(3) }}>
-        <View style={{ flex: 1 }}>
-          <Button variant="secondary" onPress={() => setAdding(true)}>
-            {t("Agregar ejercicios", "Add exercises")}
-          </Button>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button
-            variant="secondary"
-            onPress={() => {
-              setMembers([]);
-              setSupersetOpen(true);
-            }}
-          >
-            {t("Superseries", "Supersets")}
-          </Button>
-        </View>
-      </View>
+      <Button
+        variant="secondary"
+        onPress={() => {
+          setMembers([]);
+          setSupersetOpen(true);
+        }}
+      >
+        {t("Superseries", "Supersets")}
+      </Button>
       <Card>
         <View
           style={{
@@ -397,6 +395,28 @@ export default function Workout() {
                   {entry.sets.length} {t("series", "sets")}
                 </Label>
               </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t("Ajustes del ejercicio", "Exercise settings")}
+                hitSlop={6}
+                onPress={() => setMenuFor(index)}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 12,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: colors.secondary,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                }}
+              >
+                <SymbolView
+                  name={{ ios: "gearshape", android: "settings" }}
+                  tintColor={colors.foreground}
+                  size={18}
+                />
+              </Pressable>
               <SymbolView
                 name={
                   expanded
@@ -409,66 +429,6 @@ export default function Workout() {
             </Pressable>
             {expanded ? (
               <>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: space(3),
-                  }}
-                >
-                  <View style={{ flex: 1 }}>
-                    <Button
-                      variant="secondary"
-                      onPress={() => setReplacing(index)}
-                    >
-                      {t("Reemplazar\nejercicio", "Replace\nexercise")}
-                    </Button>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: space(2),
-                      borderRadius: 16,
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                      paddingHorizontal: space(2.5),
-                      height: 52,
-                    }}
-                  >
-                    <Text style={{ color: colors.muted, fontSize: 13 }}>
-                      {t("Rep", "Reps")}
-                    </Text>
-                    <View style={{ height: 52, justifyContent: "center" }}>
-                      <Switch
-                        accessibilityLabel={t(
-                          "Registrar por tiempo",
-                          "Track by time",
-                        )}
-                        value={metric === "seconds"}
-                        trackColor={{
-                          true: colors.primary,
-                          false: colors.border,
-                        }}
-                        onValueChange={(checked) => {
-                          const next = checked ? "seconds" : "reps";
-                          change((draft) => {
-                            const target = draft.workout?.entries[index];
-                            if (target) switchEntryMetric(target, metric, next);
-                            draft.settings.exerciseMetrics = {
-                              ...draft.settings.exerciseMetrics,
-                              [entry.id]: next,
-                            };
-                          });
-                        }}
-                      />
-                    </View>
-                    <Text style={{ color: colors.muted, fontSize: 13 }}>
-                      {t("Temp", "Time")}
-                    </Text>
-                  </View>
-                </View>
                 <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
                   {(
                     [
@@ -722,6 +682,11 @@ export default function Workout() {
           </Card>
         );
       })}
+      <Card>
+        <Button variant="secondary" onPress={() => setAdding(true)}>
+          {t("Agregar ejercicios", "Add exercises")}
+        </Button>
+      </Card>
       <Button onPress={() => setFinishing(true)}>
         {t("Finalizar entrenamiento", "Finish workout")}
       </Button>
@@ -965,6 +930,61 @@ export default function Workout() {
           </View>
         </View>
       </Modal>
+      {menuFor !== null && workout.entries[menuFor] ? (
+        (() => {
+          const index = menuFor;
+          const entry = workout.entries[index]!;
+          const exercise = findExercise(snapshot, entry.id);
+          const metric = metricFor(snapshot, entry.id, entry);
+          return (
+            <ExerciseMenu
+              visible
+              onClose={() => setMenuFor(null)}
+              name={exercise ? exerciseName(language, exercise.name) : entry.id}
+              metric={metric}
+              unit={unit}
+              inSuperset={Boolean(entry.superset)}
+              onMetric={(next) => {
+                if (next === metric) return;
+                change((draft) => {
+                  const target = draft.workout?.entries[index];
+                  if (target) switchEntryMetric(target, metric, next);
+                  draft.settings.exerciseMetrics = {
+                    ...draft.settings.exerciseMetrics,
+                    [entry.id]: next,
+                  };
+                });
+              }}
+              onUnit={(next) => change((draft) => changeWeightUnit(draft, next))}
+              onReplace={() => setReplacing(index)}
+              onDetails={() => exercise && setImageFor(exercise)}
+              onSuperset={() => {
+                setMembers([index]);
+                setSupersetOpen(true);
+              }}
+              onLeaveSuperset={() => change((draft) => leaveSuperset(draft, index))}
+              onRemove={() =>
+                Alert.alert(
+                  t(
+                    "¿Quitar este ejercicio del entrenamiento?",
+                    "Remove this exercise from the workout?",
+                  ),
+                  undefined,
+                  [
+                    { text: t("Cancelar", "Cancel"), style: "cancel" },
+                    {
+                      text: t("Quitar", "Remove"),
+                      style: "destructive",
+                      onPress: () =>
+                        change((draft) => removeWorkoutEntry(draft, index)),
+                    },
+                  ],
+                )
+              }
+            />
+          );
+        })()
+      ) : null}
       <ExercisePicker
         visible={adding}
         onClose={() => setAdding(false)}

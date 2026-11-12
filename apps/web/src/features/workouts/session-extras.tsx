@@ -168,7 +168,9 @@ export function SessionExtras({
           event.target.value = "";
           if (!files.length) return;
           if (files.length + value.photos.length > 3) {
-            notify(t("Podés guardar hasta 3 fotos.", "You can save up to 3 photos."));
+            notify(
+              t("Podés guardar hasta 3 fotos.", "You can save up to 3 photos."),
+            );
             return;
           }
           setBusy(true);

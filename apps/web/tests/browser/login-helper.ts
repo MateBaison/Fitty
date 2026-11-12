@@ -26,3 +26,24 @@ export async function openHomeSection(
     .getByRole("link", { name: label, exact: true })
     .click();
 }
+
+/** Opens the gear menu of one exercise of the workout in progress. */
+export async function openExerciseMenu(
+  page: import("@playwright/test").Page,
+  index = 0,
+) {
+  await page
+    .locator(`[data-workout-entry="${index}"]`)
+    .getByRole("button", { name: "Ajustes del ejercicio", exact: true })
+    .click();
+}
+/** Switches an exercise between "Repeticiones" and "Tiempo" from its gear menu. */
+export async function trackBy(
+  page: import("@playwright/test").Page,
+  label: "Repeticiones" | "Tiempo",
+  index = 0,
+) {
+  await openExerciseMenu(page, index);
+  await page.getByRole("menuitemradio", { name: label, exact: true }).click();
+  await page.keyboard.press("Escape");
+}

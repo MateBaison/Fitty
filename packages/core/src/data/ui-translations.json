@@ -1087,7 +1087,15 @@
     "No pudimos cargar Fitty": "Nous n'avons pas pu charger Fitty",
     "Recargá la página para volver a intentarlo.": "Rechargez la page pour réessayer.",
     "Cargando": "Chargement",
-    "Elegí el día que querés quitar.": "Choisissez le jour à supprimer."
+    "Elegí el día que querés quitar.": "Choisissez le jour à supprimer.",
+    "Ajustes del ejercicio": "Réglages de l’exercice",
+    "Medir por": "Mesurer en",
+    "Unidad de peso": "Unité de poids",
+    "Se aplica a toda la cuenta": "S’applique à tout le compte",
+    "Quitar de la superserie": "Retirer de la supersérie",
+    "Ver detalles del ejercicio": "Voir les détails de l’exercice",
+    "Quitar del entrenamiento": "Retirer de la séance",
+    "¿Quitar este ejercicio del entrenamiento?": "Retirer cet exercice de la séance ?"
   },
   "zh": {
     "Activar rutina": "启用计划",
@@ -2177,7 +2185,15 @@
     "No pudimos cargar Fitty": "无法加载 Fitty",
     "Recargá la página para volver a intentarlo.": "请刷新页面后重试。",
     "Cargando": "加载中",
-    "Elegí el día que querés quitar.": "请选择要删除的训练日。"
+    "Elegí el día que querés quitar.": "请选择要删除的训练日。",
+    "Ajustes del ejercicio": "动作设置",
+    "Medir por": "记录方式",
+    "Unidad de peso": "重量单位",
+    "Se aplica a toda la cuenta": "适用于整个账户",
+    "Quitar de la superserie": "从超级组中移除",
+    "Ver detalles del ejercicio": "查看动作详情",
+    "Quitar del entrenamiento": "从训练中移除",
+    "¿Quitar este ejercicio del entrenamiento?": "要从训练中移除此动作吗？"
   },
   "hi": {
     "Activar rutina": "दिनचर्या सक्रिय करें",
@@ -3267,7 +3283,15 @@
     "No pudimos cargar Fitty": "हम Fitty लोड नहीं कर सके",
     "Recargá la página para volver a intentarlo.": "फिर से कोशिश करने के लिए पेज रीलोड करें।",
     "Cargando": "लोड हो रहा है",
-    "Elegí el día que querés quitar.": "जिस दिन को हटाना है उसे चुनें।"
+    "Elegí el día que querés quitar.": "जिस दिन को हटाना है उसे चुनें।",
+    "Ajustes del ejercicio": "व्यायाम सेटिंग",
+    "Medir por": "इसके अनुसार दर्ज करें",
+    "Unidad de peso": "वज़न इकाई",
+    "Se aplica a toda la cuenta": "पूरे खाते पर लागू होता है",
+    "Quitar de la superserie": "सुपरसेट से हटाएँ",
+    "Ver detalles del ejercicio": "व्यायाम का विवरण देखें",
+    "Quitar del entrenamiento": "वर्कआउट से हटाएँ",
+    "¿Quitar este ejercicio del entrenamiento?": "इस व्यायाम को वर्कआउट से हटाएँ?"
   },
   "ar": {
     "Activar rutina": "تفعيل الروتين",
@@ -4357,7 +4381,15 @@
     "No pudimos cargar Fitty": "تعذّر تحميل Fitty",
     "Recargá la página para volver a intentarlo.": "أعد تحميل الصفحة للمحاولة مرة أخرى.",
     "Cargando": "جارٍ التحميل",
-    "Elegí el día que querés quitar.": "اختر اليوم الذي تريد حذفه."
+    "Elegí el día que querés quitar.": "اختر اليوم الذي تريد حذفه.",
+    "Ajustes del ejercicio": "إعدادات التمرين",
+    "Medir por": "القياس حسب",
+    "Unidad de peso": "وحدة الوزن",
+    "Se aplica a toda la cuenta": "ينطبق على الحساب بالكامل",
+    "Quitar de la superserie": "إزالة من المجموعة المتتالية",
+    "Ver detalles del ejercicio": "عرض تفاصيل التمرين",
+    "Quitar del entrenamiento": "إزالة من الجلسة",
+    "¿Quitar este ejercicio del entrenamiento?": "هل تريد إزالة هذا التمرين من الجلسة؟"
   },
   "de": {
     "Activar rutina": "Trainingsplan aktivieren",
@@ -5445,7 +5477,15 @@
     "No pudimos cargar Fitty": "Wir konnten Fitty nicht laden",
     "Recargá la página para volver a intentarlo.": "Lade die Seite neu, um es erneut zu versuchen.",
     "Cargando": "Wird geladen",
-    "Elegí el día que querés quitar.": "Wähle den Tag, den du entfernen möchtest."
+    "Elegí el día que querés quitar.": "Wähle den Tag, den du entfernen möchtest.",
+    "Ajustes del ejercicio": "Übungseinstellungen",
+    "Medir por": "Erfassen nach",
+    "Unidad de peso": "Gewichtseinheit",
+    "Se aplica a toda la cuenta": "Gilt für das ganze Konto",
+    "Quitar de la superserie": "Aus Supersatz entfernen",
+    "Ver detalles del ejercicio": "Übungsdetails ansehen",
+    "Quitar del entrenamiento": "Aus dem Training entfernen",
+    "¿Quitar este ejercicio del entrenamiento?": "Diese Übung aus dem Training entfernen?"
   },
   "it": {
     "Activar rutina": "Attiva routine",
@@ -6533,7 +6573,15 @@
     "No pudimos cargar Fitty": "Non siamo riusciti a caricare Fitty",
     "Recargá la página para volver a intentarlo.": "Ricarica la pagina per riprovare.",
     "Cargando": "Caricamento",
-    "Elegí el día que querés quitar.": "Scegli il giorno che vuoi rimuovere."
+    "Elegí el día que querés quitar.": "Scegli il giorno che vuoi rimuovere.",
+    "Ajustes del ejercicio": "Impostazioni esercizio",
+    "Medir por": "Misura per",
+    "Unidad de peso": "Unità di peso",
+    "Se aplica a toda la cuenta": "Vale per tutto l’account",
+    "Quitar de la superserie": "Rimuovi dalla superserie",
+    "Ver detalles del ejercicio": "Vedi dettagli esercizio",
+    "Quitar del entrenamiento": "Rimuovi dall’allenamento",
+    "¿Quitar este ejercicio del entrenamiento?": "Rimuovere questo esercizio dall’allenamento?"
   },
   "pt": {
     "Activar rutina": "Ativar rotina",
@@ -7621,7 +7669,15 @@
     "No pudimos cargar Fitty": "Não conseguimos carregar o Fitty",
     "Recargá la página para volver a intentarlo.": "Recarregue a página para tentar novamente.",
     "Cargando": "Carregando",
-    "Elegí el día que querés quitar.": "Escolha o dia que você quer remover."
+    "Elegí el día que querés quitar.": "Escolha o dia que você quer remover.",
+    "Ajustes del ejercicio": "Configurações do exercício",
+    "Medir por": "Medir por",
+    "Unidad de peso": "Unidade de peso",
+    "Se aplica a toda la cuenta": "Aplica-se a toda a conta",
+    "Quitar de la superserie": "Remover da supersérie",
+    "Ver detalles del ejercicio": "Ver detalhes do exercício",
+    "Quitar del entrenamiento": "Remover do treino",
+    "¿Quitar este ejercicio del entrenamiento?": "Remover este exercício do treino?"
   },
   "en": {
     "Sexo": "Sex",

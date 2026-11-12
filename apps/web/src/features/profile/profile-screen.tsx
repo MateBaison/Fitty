@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useId, useRef, useState } from "react";
 import { languages } from "@fitty/core/data/translations";
+import { changeWeightUnit } from "@fitty/core/domain/workout-entry-actions";
 import { useApp } from "@/state/app-provider";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { AppDialog } from "@/components/ui/app-dialog";
@@ -166,19 +167,7 @@ export function ProfileScreen() {
               language = String(form.get("language"));
             if (
               change((draft) => {
-                if (weight !== draft.settings.weight) {
-                  const factor = weight === "lb" ? 2.20462 : 1 / 2.20462;
-                  draft.profile.weight =
-                    Math.round(
-                      Number(draft.profile.weight ?? 75) * factor * 10,
-                    ) / 10;
-                  draft.workout?.entries.forEach((entry) =>
-                    entry.sets.forEach((set) => {
-                      if (set.kg != null)
-                        set.kg = Math.round(set.kg * factor * 10) / 10;
-                    }),
-                  );
-                }
+                changeWeightUnit(draft, weight);
                 if (height !== draft.settings.height)
                   draft.profile.height =
                     Math.round(

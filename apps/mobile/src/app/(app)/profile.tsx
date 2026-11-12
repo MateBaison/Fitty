@@ -11,6 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { changeWeightUnit } from "@fitty/core/domain/workout-entry-actions";
 import { restartAccount } from "@fitty/core/domain/account-reset";
 import { readSnapshotJson } from "@fitty/core/domain/legacy/read-snapshot";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
@@ -382,16 +383,7 @@ export default function Profile() {
     const { weight, height, distance, language } = prefs;
     if (
       change((draft) => {
-        if (weight !== (draft.settings.weight ?? "kg")) {
-          const factor = weight === "lb" ? 2.20462 : 1 / 2.20462;
-          draft.profile.weight =
-            Math.round(Number(draft.profile.weight ?? 75) * factor * 10) / 10;
-          draft.workout?.entries.forEach((entry) =>
-            entry.sets.forEach((set) => {
-              if (set.kg != null) set.kg = Math.round(set.kg * factor * 10) / 10;
-            }),
-          );
-        }
+        changeWeightUnit(draft, weight);
         if (height !== (draft.settings.height ?? "cm"))
           draft.profile.height =
             Math.round(

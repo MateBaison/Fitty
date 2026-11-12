@@ -7,7 +7,11 @@ import {
   matchesEquipment,
   type EquipmentFilter,
 } from "@fitty/core/data/exercises";
-import { catalogFor, findExercise, type Entry } from "@fitty/core/domain/workouts";
+import {
+  catalogFor,
+  findExercise,
+  type Entry,
+} from "@fitty/core/domain/workouts";
 import { replacementPlan } from "@fitty/core/domain/exercise-replacement";
 import { useApp } from "@/state/app-provider";
 export function ReplacementDialog({

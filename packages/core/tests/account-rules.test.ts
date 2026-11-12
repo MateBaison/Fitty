@@ -1,3 +1,4 @@
+import type { Snapshot } from "../src/domain/schemas/snapshot";
 import { expect, test } from "vitest";
 import {
   deleteConfirmationLabel,
@@ -95,4 +96,39 @@ test("reset confirmation word follows the language", async () => {
   expect(resetConfirmationLabel("de")).toContain("ZURÜCKSETZEN");
   for (const lang of ["fr", "zh", "hi", "ar", "de", "it", "pt"])
     expect(resetConfirmationLabel(lang)).not.toContain("REINICIAR");
+});
+
+test("workout entry actions keep indexes, supersets and units consistent", async () => {
+  const { createDefaultSnapshot } = await import("../src/domain/legacy/read-snapshot");
+  const { removeWorkoutEntry, leaveSuperset, changeWeightUnit } = await import(
+    "../src/domain/workout-entry-actions"
+  );
+  const snapshot = createDefaultSnapshot();
+  const set = () => ({ kg: 100, reps: 5, entered: true, done: true });
+  snapshot.workout = {
+    rid: "r",
+    did: "d",
+    started: 1,
+    index: 2,
+    openExercises: [0, 2],
+    entries: [
+      { id: "a", sets: [set()] },
+      { id: "b", sets: [set()], superset: "s" },
+      { id: "c", sets: [set()], superset: "s" },
+    ],
+  } as unknown as Snapshot["workout"];
+  leaveSuperset(snapshot, 1);
+  expect(snapshot.workout!.entries.every((entry) => !entry.superset)).toBe(true);
+  snapshot.workout!.entries[1]!.superset = "s";
+  snapshot.workout!.entries[2]!.superset = "s";
+  removeWorkoutEntry(snapshot, 1);
+  expect(snapshot.workout!.entries.map((entry) => entry.id)).toEqual(["a", "c"]);
+  expect(snapshot.workout!.entries[1]!.superset).toBeUndefined();
+  expect(snapshot.workout!.index).toBe(1);
+  expect(snapshot.workout!.openExercises).toEqual([0, 1]);
+  changeWeightUnit(snapshot, "lb");
+  expect(snapshot.settings.weight).toBe("lb");
+  expect(snapshot.workout!.entries[0]!.sets[0]!.kg).toBe(220.5);
+  changeWeightUnit(snapshot, "kg");
+  expect(snapshot.workout!.entries[0]!.sets[0]!.kg).toBe(100);
 });

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { chooseZone } from "./zones";
-import { login, openHomeSection } from "./login-helper";
+import { login, openExerciseMenu, openHomeSection, trackBy } from "./login-helper";
 import { readFile } from "node:fs/promises";
 test.beforeEach(async ({ page }) => {
   await page.request.get("http://127.0.0.1:54329/__reset");
@@ -743,9 +743,9 @@ test("exercise replacement preserves logged sets and filters same-zone equipment
     .click();
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("20");
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("12");
+  await openExerciseMenu(page);
   await page
-    .getByRole("button", { name: "Reemplazar ejercicio", exact: true })
-    .first()
+    .getByRole("menuitem", { name: "Reemplazar ejercicio", exact: true })
     .click();
   const dialog = page.getByRole("dialog", {
     name: "Reemplazar ejercicio",

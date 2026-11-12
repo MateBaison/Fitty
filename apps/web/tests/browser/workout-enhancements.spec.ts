@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login, openHomeSection } from "./login-helper";
+import { login, openExerciseMenu, openHomeSection, trackBy } from "./login-helper";
 test("compact workout controls, grouped drops, remembered metric and record source", async ({
   page,
 }, info) => {
@@ -18,9 +18,7 @@ test("compact workout controls, grouped drops, remembered metric and record sour
     .click();
   await expect(page).toHaveURL(/\/workout$/);
   const first = page.locator('[data-workout-entry="0"]');
-  await first
-    .getByRole("switch", { name: "Registrar por tiempo", exact: true })
-    .check();
+  await trackBy(page, "Tiempo");
   await expect(
     page.getByLabel("Segundos 1 serie 1", { exact: true }),
   ).toBeVisible();
@@ -28,14 +26,7 @@ test("compact workout controls, grouped drops, remembered metric and record sour
   await expect(
     page.getByLabel("Segundos 1 serie 1", { exact: true }),
   ).toBeVisible();
-  await first
-    .getByRole("switch", { name: "Registrar por tiempo", exact: true })
-    .uncheck();
-  const replace = await first
-    .getByRole("button", { name: "Reemplazar ejercicio" })
-    .boundingBox();
-  const tracking = await first.locator(".metric-switch-control").boundingBox();
-  expect(Math.abs(replace!.y - tracking!.y)).toBeLessThan(2);
+  await trackBy(page, "Repeticiones");
   await page.getByRole("switch", { name: "Descanso entre series" }).check();
   await page
     .getByRole("button", { name: "Iniciar descanso 1 serie 1", exact: true })

@@ -4,7 +4,7 @@ import { useExerciseName } from "@/state/exercise-name";
 import { useState } from "react";
 import { Switch } from "@base-ui/react/switch";
 import { useRouter } from "next/navigation";
-import { Timer } from "lucide-react";
+import { ChevronLeft, Timer, X } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import {
@@ -26,6 +26,11 @@ import { SessionExtras, emptyExtras } from "./session-extras";
 import { useRuntime } from "@/state/runtime-provider";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
 import { ReplacementDialog } from "./replacement-dialog";
+import { ExerciseMenu } from "./exercise-menu";
+import {
+  leaveSuperset,
+  removeWorkoutEntry,
+} from "@fitty/core/domain/workout-entry-actions";
 import { replaceWorkoutExercise } from "@fitty/core/domain/exercise-replacement";
 export function WorkoutScreen() {
   const [picking, setPicking] = useState(false);
@@ -117,6 +122,18 @@ export function WorkoutScreen() {
         }
       }
     });
+  const cancelWorkout = async () => {
+    if (
+      (await ask(t("¿Cancelar este entrenamiento?", "Cancel this workout?"), {
+        confirmLabel: t("Cancelar entrenamiento", "Cancel workout"),
+        destructive: true,
+      })) &&
+      change((draft) => {
+        draft.workout = null;
+      })
+    )
+      router.push("/home");
+  };
   const renderEntry = (entry: Entry, index: number) => {
     const exercise = findExercise(snapshot, entry.id),
       opened = workout.openExercises?.includes(index) ?? index === 0;
@@ -126,15 +143,7 @@ export function WorkoutScreen() {
           entry={entry}
           index={index}
           started={workout.started}
-          toolbar={
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setReplacement(index)}
-            >
-              {t("Reemplazar ejercicio", "Replace exercise")}
-            </Button>
-          }
+          externalMetric
           onRest={
             enabled
               ? () => setRestEnd(Date.now() + restSeconds * 1000)
@@ -183,6 +192,34 @@ export function WorkoutScreen() {
               {countSetGroups(entry.sets)} {t("series", "sets")}
             </small>
           </span>
+          <ExerciseMenu
+            entry={entry}
+            onChange={(edit) => editEntry(index, edit)}
+            onReplace={() => setReplacement(index)}
+            onSuperset={() => {
+              setMembers([index]);
+              setSupersetOpen(true);
+            }}
+            onLeaveSuperset={() =>
+              change((draft) => leaveSuperset(draft, index))
+            }
+            onDetails={() => exercise && setImage(exercise)}
+            onRemove={async () => {
+              if (
+                await ask(
+                  t(
+                    "¿Quitar este ejercicio del entrenamiento?",
+                    "Remove this exercise from the workout?",
+                  ),
+                  {
+                    confirmLabel: t("Quitar", "Remove"),
+                    destructive: true,
+                  },
+                )
+              )
+                change((draft) => removeWorkoutEntry(draft, index));
+            }}
+          />
           <span>⌄</span>
         </summary>
         <div className="pt-3">{content}</div>
@@ -212,34 +249,31 @@ export function WorkoutScreen() {
         />
       )}
       <div className="workout-banner">
+        <button
+          type="button"
+          className="workout-banner-button workout-banner-back"
+          aria-label={t("Volver", "Back")}
+          onClick={() =>
+            window.history.length > 1 ? router.back() : router.push("/home")
+          }
+        >
+          <ChevronLeft aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="workout-banner-button workout-banner-cancel"
+          aria-label={t("Cancelar entrenamiento", "Cancel workout")}
+          onClick={cancelWorkout}
+        >
+          <X aria-hidden="true" />
+        </button>
         <span className="eyebrow">
           {day?.name ?? t("Entrenamiento", "Workout")} · {workout.index + 1}/
           {workout.entries.length}
         </span>
-        <h1>{t("Tu entrenamiento", "Your workout")}</h1>
+        <h1>{routine?.name ?? t("Tu entrenamiento", "Your workout")}</h1>
       </div>
       <div className="workout-toolbar">
-        <Button variant="secondary" onClick={() => setPicking(true)}>
-          {t("Agregar ejercicios", "Add exercises")}
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={() =>
-            change((draft) => {
-              if (!draft.workout) return;
-              const allOpen =
-                draft.workout.openExercises?.length ===
-                draft.workout.entries.length;
-              draft.workout.openExercises = allOpen
-                ? []
-                : draft.workout.entries.map((_, index) => index);
-            })
-          }
-        >
-          {workout.openExercises?.length === workout.entries.length
-            ? t("Cerrar todos", "Collapse all")
-            : t("Desplegar todos", "Expand all")}
-        </Button>
         <Button
           variant="secondary"
           onClick={() => {
@@ -366,29 +400,17 @@ export function WorkoutScreen() {
           </section>,
         ];
       })}
+      <section className="panel">
+        <Button
+          variant="secondary"
+          className="w-full"
+          onClick={() => setPicking(true)}
+        >
+          {t("Agregar ejercicios", "Add exercises")}
+        </Button>
+      </section>
       <Button className="mt-3 w-full" onClick={() => setFinish(true)}>
         {t("Finalizar entrenamiento", "Finish workout")}
-      </Button>
-      <Button
-        variant="destructive-solid"
-        className="mt-3 w-full"
-        onClick={async () => {
-          if (
-            (await ask(
-              t("¿Cancelar este entrenamiento?", "Cancel this workout?"),
-              {
-                confirmLabel: t("Cancelar entrenamiento", "Cancel workout"),
-                destructive: true,
-              },
-            )) &&
-            change((draft) => {
-              draft.workout = null;
-            })
-          )
-            router.push("/home");
-        }}
-      >
-        {t("Cancelar entrenamiento", "Cancel workout")}
       </Button>
       {confirmDialog}
       <ExerciseDetails exercise={image} onClose={() => setImage(null)} />

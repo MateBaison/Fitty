@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login, openHomeSection } from "./login-helper";
+import { login, openExerciseMenu, openHomeSection, trackBy } from "./login-helper";
 test("metric switch keeps recorded values, weekly summary has volume, routine goal, lifetime and daily details", async ({
   page,
 }, info) => {
@@ -16,27 +16,22 @@ test("metric switch keeps recorded values, weekly summary has volume, routine go
   await page
     .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
-  const entry = page.locator('[data-workout-entry="0"]');
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("40");
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("10");
-  const metric = entry.getByRole("switch", {
-    name: "Registrar por tiempo",
-    exact: true,
-  });
-  await metric.check();
+  await trackBy(page, "Tiempo");
   await page.getByLabel("Segundos 1 serie 1", { exact: true }).fill("30");
-  await metric.uncheck();
+  await trackBy(page, "Repeticiones");
   await expect(
     page.getByLabel("Repeticiones 1 serie 1", { exact: true }),
   ).toHaveValue("10");
   await expect(page.getByLabel("Peso 1 serie 1", { exact: true })).toHaveValue(
     "40",
   );
-  await metric.check();
+  await trackBy(page, "Tiempo");
   await expect(
     page.getByLabel("Segundos 1 serie 1", { exact: true }),
   ).toHaveValue("30");
-  await metric.uncheck();
+  await trackBy(page, "Repeticiones");
   await page
     .getByRole("button", { name: "Finalizar entrenamiento", exact: true })
     .click();
