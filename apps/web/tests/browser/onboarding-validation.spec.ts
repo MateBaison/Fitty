@@ -64,7 +64,7 @@ test("onboarding shows missing fields and allows a complete profile without a ph
   await expect(
     page.getByRole("button", { name: "Ver vista previa", exact: true }),
   ).toBeEnabled();
-  await page.getByRole("button", { name: "Volver", exact: true }).click();
+  await page.locator(".onboarding-actions").getByRole("button", { name: "Volver", exact: true }).click();
   await custom.click();
   await expect(
     page.getByRole("heading", { name: "¿Cómo querés empezar?", exact: true }),

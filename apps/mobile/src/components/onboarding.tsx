@@ -316,7 +316,7 @@ export function Onboarding() {
           </View>
           <Title center>
             {step === "profile"
-              ? t("Tus datos", "Your details")
+              ? t("Crear tu perfil", "Create your profile")
               : t("Tu rutina", "Your routine")}
           </Title>
         </View>

@@ -3,7 +3,7 @@ import type { Snapshot } from "@fitty/core/domain/schemas/snapshot";
 import { menstrualCalendarAllowed } from "@fitty/core/domain/menstrual-calendar";
 import { localeFor } from "@fitty/core/data/translations";
 import { useEffect, useRef, useState } from "react";
-import { Lock, Pencil, Ruler, Scale } from "lucide-react";
+import { Lock, Pencil, Ruler, Weight } from "lucide-react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/state/app-provider";
@@ -356,7 +356,7 @@ export function PersonalForm({
                   </option>
                 ))}
             </select>
-            <Scale aria-hidden="true" />
+            <Weight aria-hidden="true" />
           </span>
         </label>
         <label>

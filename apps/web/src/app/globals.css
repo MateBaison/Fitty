@@ -496,6 +496,28 @@ main > h1 {
 .login-panel form label [data-slot="input"] {
   text-align: center;
 }
+.onboarding-title-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin: -8px 0 20px;
+}
+.onboarding-title-row h1 {
+  margin: 0;
+  padding-inline: 52px;
+}
+.onboarding-back {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: var(--primary);
+}
 .login-isotype {
   display: block;
   width: 72px;

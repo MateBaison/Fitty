@@ -26,7 +26,7 @@ test("manual first use retains personal details and starts without a routine", a
   await expect(
     page.getByRole("button", { name: /^Armar mi rutina después/ }),
   ).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("button", { name: "Volver", exact: true }).click();
+  await page.locator(".onboarding-actions").getByRole("button", { name: "Volver", exact: true }).click();
   await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue(
     "Manual user",
   );

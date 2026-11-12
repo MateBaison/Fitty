@@ -14,7 +14,9 @@ import {
 } from "@fitty/core/domain/training-setup";
 import { PersonalForm } from "@/features/profile/personal-form";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { ChevronLeft, Pencil, Trash2 } from "lucide-react";
+import { AppDialog } from "@/components/ui/app-dialog";
+import { signOut } from "@/lib/supabase/auth-actions";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
@@ -84,6 +86,15 @@ export function OnboardingFlow() {
       })),
     };
   };
+  const [leaving, setLeaving] = useState(false);
+  const goBack = () => {
+    if (step === "profile") setLeaving(true);
+    else if (previewRoutine) {
+      setPreviewRoutine(null);
+      window.scrollTo(0, 0);
+    } else if (configuring) setConfiguring(false);
+    else setStep("profile");
+  };
   const showRoutinePreview = () => {
     setPreviewRoutine(makeRoutineProposal(variation));
     setVariation((current) => current + 1);
@@ -148,13 +159,47 @@ export function OnboardingFlow() {
   };
   return (
     <>
-      <h1 className="-translate-y-2 mb-5 text-center text-2xl font-bold">
-        {step === "profile"
-          ? t("Crear tu perfil", "Create your profile")
-          : previewRoutine
-            ? t("Revisá tu rutina", "Review your routine")
-            : t("¿Cómo querés empezar?", "How would you like to start?")}
-      </h1>
+      <div className="onboarding-title-row">
+        <Button
+          type="button"
+          variant="secondary"
+          size="icon-xl"
+          className="onboarding-back"
+          aria-label={t("Volver", "Back")}
+          disabled={busy || pending}
+          onClick={goBack}
+        >
+          <ChevronLeft aria-hidden="true" />
+        </Button>
+        <h1 className="mb-0 text-center text-2xl font-bold">
+          {step === "profile"
+            ? t("Crear tu perfil", "Create your profile")
+            : previewRoutine
+              ? t("Revisá tu rutina", "Review your routine")
+              : t("¿Cómo querés empezar?", "How would you like to start?")}
+        </h1>
+      </div>
+      <AppDialog
+        open={leaving}
+        onClose={() => setLeaving(false)}
+        centered
+        title={t("¿Cancelar la creación de la cuenta?", "Cancel account setup?")}
+        description={t(
+          "Vas a volver a la pantalla de inicio de sesión.",
+          "You'll go back to the sign-in screen.",
+        )}
+      >
+        <div className="flex flex-wrap justify-center gap-3">
+          <Button variant="secondary" onClick={() => setLeaving(false)}>
+            {t("Seguir aquí", "Stay here")}
+          </Button>
+          <form action={() => void signOut()}>
+            <Button type="submit" variant="destructive-solid">
+              {t("Cancelar creación", "Cancel setup")}
+            </Button>
+          </form>
+        </div>
+      </AppDialog>
       <div className="onboarding-progress">
         <div
           className="onboarding-progress-track"
@@ -584,13 +629,7 @@ export function OnboardingFlow() {
               type="button"
               variant="secondary"
               disabled={busy || pending}
-              onClick={() => {
-                if (previewRoutine) {
-                  setPreviewRoutine(null);
-                  window.scrollTo(0, 0);
-                } else if (configuring) setConfiguring(false);
-                else setStep("profile");
-              }}
+              onClick={goBack}
             >
               {previewRoutine
                 ? t("Atrás", "Back")
