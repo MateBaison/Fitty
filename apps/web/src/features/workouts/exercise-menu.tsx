@@ -107,6 +107,22 @@ export function ExerciseMenu({
               {t("Quitar de la superserie", "Remove from superset")}
             </button>
           )}
+          <button
+            type="button"
+            className="exercise-menu-item"
+            onClick={run(onReplace)}
+          >
+            <Repeat aria-hidden="true" />
+            {t("Reemplazar ejercicio", "Replace exercise")}
+          </button>
+          <button
+            type="button"
+            className="exercise-menu-item"
+            onClick={run(onDetails)}
+          >
+            <Info aria-hidden="true" />
+            {t("Ver detalles del ejercicio", "View exercise details")}
+          </button>
           <div className="exercise-menu-grid">
             <SwitchCard
               title={t("Medir por", "Track by")}
@@ -139,22 +155,6 @@ export function ExerciseMenu({
             {t("Unidad de peso", "Weight unit")}:{" "}
             {t("Se aplica a toda la cuenta", "Applies to the whole account")}
           </p>
-          <button
-            type="button"
-            className="exercise-menu-item"
-            onClick={run(onReplace)}
-          >
-            <Repeat aria-hidden="true" />
-            {t("Reemplazar ejercicio", "Replace exercise")}
-          </button>
-          <button
-            type="button"
-            className="exercise-menu-item"
-            onClick={run(onDetails)}
-          >
-            <Info aria-hidden="true" />
-            {t("Ver detalles del ejercicio", "View exercise details")}
-          </button>
           <button
             type="button"
             className="exercise-menu-item exercise-menu-danger"

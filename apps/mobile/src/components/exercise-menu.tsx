@@ -69,10 +69,11 @@ export function ExerciseMenu({
                 style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
               >
                 <BackButton onPress={onClose} />
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, alignItems: "center", paddingRight: 56 }}>
                   <Text
                     accessibilityRole="header"
                     style={{
+                      textAlign: "center",
                       color: colors.foreground,
                       fontSize: 20,
                       fontWeight: "800",
@@ -80,7 +81,7 @@ export function ExerciseMenu({
                   >
                     {t("Ajustes del ejercicio", "Exercise settings")}
                   </Text>
-                  <Label muted>{name}</Label>
+                  <Label muted style={{ textAlign: "center" }}>{name}</Label>
                 </View>
               </View>
               <Button variant="secondary" onPress={run(onSuperset)}>
@@ -91,6 +92,12 @@ export function ExerciseMenu({
                   {t("Quitar de la superserie", "Remove from superset")}
                 </Button>
               ) : null}
+              <Button variant="secondary" onPress={run(onReplace)}>
+                {t("Reemplazar ejercicio", "Replace exercise")}
+              </Button>
+              <Button variant="secondary" onPress={run(onDetails)}>
+                {t("Ver detalles del ejercicio", "View exercise details")}
+              </Button>
               <View style={{ flexDirection: "row", gap: space(3) }}>
                 <SwitchCard
                   title={t("Medir por", "Track by")}
@@ -107,15 +114,9 @@ export function ExerciseMenu({
                   onChange={(next) => onUnit(next ? "lb" : "kg")}
                 />
               </View>
-              <Label muted>
+              <Label muted style={{ textAlign: "center" }}>
                 {t("Unidad de peso", "Weight unit")}: {t("Se aplica a toda la cuenta", "Applies to the whole account")}
               </Label>
-              <Button variant="secondary" onPress={run(onReplace)}>
-                {t("Reemplazar ejercicio", "Replace exercise")}
-              </Button>
-              <Button variant="secondary" onPress={run(onDetails)}>
-                {t("Ver detalles del ejercicio", "View exercise details")}
-              </Button>
               <Button variant="destructive" onPress={run(onRemove)}>
                 {t("Quitar del entrenamiento", "Remove from workout")}
               </Button>

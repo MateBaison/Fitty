@@ -1045,6 +1045,7 @@ label input[type="checkbox"] {
   color: var(--muted-foreground);
 }
 .exercise-menu-hint {
+  text-align: center;
   font-size: 0.75rem;
   color: var(--muted-foreground);
 }
