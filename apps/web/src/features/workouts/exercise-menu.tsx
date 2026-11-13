@@ -87,6 +87,7 @@ export function ExerciseMenu({
         onClose={() => setOpen(false)}
         title={t("Ajustes del ejercicio", "Exercise settings")}
         centered
+        backLabel={t("Volver", "Back")}
       >
         <div className="exercise-menu-body">
           <button
