@@ -51,9 +51,12 @@ test("workout banner, bottom add button and per-exercise settings menu", async (
     "Quitar del entrenamiento",
   ])
     await expect(
-      page.getByRole("menuitem", { name, exact: true }),
+      page.getByRole("button", { name, exact: true }),
     ).toBeVisible();
-  await page.getByRole("menuitemradio", { name: "lb", exact: true }).click();
+  await expect(
+    page.getByRole("dialog", { name: "Ajustes del ejercicio" }),
+  ).toBeVisible();
+  await page.getByRole("switch", { name: "Unidad de peso", exact: true }).click();
   await page.keyboard.press("Escape");
   await expect(page.getByLabel("Peso 1 serie 1", { exact: true })).toHaveValue(
     "220.5",
@@ -62,7 +65,7 @@ test("workout banner, bottom add button and per-exercise settings menu", async (
   const before = await page.locator("[data-workout-entry]").count();
   await openExerciseMenu(page);
   await page
-    .getByRole("menuitem", { name: "Quitar del entrenamiento" })
+    .getByRole("button", { name: "Quitar del entrenamiento", exact: true })
     .click();
   await page
     .getByRole("dialog", { name: "Confirmar" })

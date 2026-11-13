@@ -273,17 +273,6 @@ export function WorkoutScreen() {
         </span>
         <h1>{routine?.name ?? t("Tu entrenamiento", "Your workout")}</h1>
       </div>
-      <div className="workout-toolbar">
-        <Button
-          variant="secondary"
-          onClick={() => {
-            setSupersetOpen(true);
-            setMembers([]);
-          }}
-        >
-          {t("Superseries", "Supersets")}
-        </Button>
-      </div>
       <section className="panel">
         <div className="workout-rest-controls">
           <span id="workout-rest-label">{t("Descanso", "Rest")}</span>
@@ -400,15 +389,13 @@ export function WorkoutScreen() {
           </section>,
         ];
       })}
-      <section className="panel">
-        <Button
-          variant="secondary"
-          className="w-full"
-          onClick={() => setPicking(true)}
-        >
-          {t("Agregar ejercicios", "Add exercises")}
-        </Button>
-      </section>
+      <Button
+        variant="secondary"
+        className="mt-3 w-full"
+        onClick={() => setPicking(true)}
+      >
+        {t("Agregar ejercicios", "Add exercises")}
+      </Button>
       <Button className="mt-3 w-full" onClick={() => setFinish(true)}>
         {t("Finalizar entrenamiento", "Finish workout")}
       </Button>

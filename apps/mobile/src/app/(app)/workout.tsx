@@ -264,15 +264,6 @@ export default function Workout() {
         </Text>
       </View>
       <Notice />
-      <Button
-        variant="secondary"
-        onPress={() => {
-          setMembers([]);
-          setSupersetOpen(true);
-        }}
-      >
-        {t("Superseries", "Supersets")}
-      </Button>
       <Card>
         <View
           style={{
@@ -682,11 +673,9 @@ export default function Workout() {
           </Card>
         );
       })}
-      <Card>
-        <Button variant="secondary" onPress={() => setAdding(true)}>
-          {t("Agregar ejercicios", "Add exercises")}
-        </Button>
-      </Card>
+      <Button variant="secondary" onPress={() => setAdding(true)}>
+        {t("Agregar ejercicios", "Add exercises")}
+      </Button>
       <Button onPress={() => setFinishing(true)}>
         {t("Finalizar entrenamiento", "Finish workout")}
       </Button>

@@ -44,6 +44,8 @@ export async function trackBy(
   index = 0,
 ) {
   await openExerciseMenu(page, index);
-  await page.getByRole("menuitemradio", { name: label, exact: true }).click();
+  const toggle = page.getByRole("switch", { name: "Medir por", exact: true });
+  if (((await toggle.getAttribute("aria-checked")) === "true") !== (label === "Tiempo"))
+    await toggle.click();
   await page.keyboard.press("Escape");
 }

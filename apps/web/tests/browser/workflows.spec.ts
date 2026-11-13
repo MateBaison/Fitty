@@ -745,7 +745,7 @@ test("exercise replacement preserves logged sets and filters same-zone equipment
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("12");
   await openExerciseMenu(page);
   await page
-    .getByRole("menuitem", { name: "Reemplazar ejercicio", exact: true })
+    .getByRole("button", { name: "Reemplazar ejercicio", exact: true })
     .click();
   const dialog = page.getByRole("dialog", {
     name: "Reemplazar ejercicio",
@@ -914,7 +914,9 @@ test("weekly summary and translated screens fit a narrow viewport", async ({
     .first()
     .click();
   await expect(
-    page.getByRole("button", { name: "Supersets", exact: true }),
+    page
+      .getByRole("button", { name: "Exercise settings", exact: true })
+      .first(),
   ).toBeVisible();
   await page.screenshot({
     path: "artifacts/workout-narrow-english.png",
