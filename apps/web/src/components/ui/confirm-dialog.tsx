@@ -38,9 +38,10 @@ export function useConfirm() {
       open={request !== null}
       onClose={() => settle(false)}
       title={t("Confirmar", "Confirm")}
+      centered
     >
-      <p>{request?.message}</p>
-      <div className="mt-4 flex flex-wrap justify-end gap-3">
+      <p className="text-center">{request?.message}</p>
+      <div className="mt-4 flex flex-wrap justify-center gap-3">
         <Button type="button" variant="secondary" onClick={() => settle(false)}>
           {t("Volver", "Back")}
         </Button>
