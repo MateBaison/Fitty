@@ -154,8 +154,13 @@ function SwitchCard({
         backgroundColor: colors.secondary,
       }}
     >
-      <Label muted>{title}</Label>
+      <View style={{ minHeight: 40, justifyContent: "center", alignSelf: "stretch" }}>
+        <Label muted style={{ textAlign: "center" }}>
+          {title}
+        </Label>
+      </View>
       <Switch
+        style={{ alignSelf: "center" }}
         accessibilityLabel={`${title}: ${value ? on : off}`}
         value={value}
         onValueChange={onChange}
