@@ -20,7 +20,9 @@ test("cancel workout asks in an in-app dialog even when the browser blocks confi
   await page
     .getByRole("button", { name: "Cancelar entrenamiento", exact: true })
     .click();
-  const dialog = page.getByRole("dialog", { name: "Confirmar" });
+  const dialog = page.getByRole("dialog", {
+    name: "¿Cancelar este entrenamiento?",
+  });
   await expect(dialog).toContainText("¿Cancelar este entrenamiento?");
   await dialog.getByRole("button", { name: "Volver", exact: true }).click();
   await expect(dialog).toHaveCount(0);

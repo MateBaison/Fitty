@@ -172,7 +172,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
     .getByRole("button", { name: "Pegar entrenamientos copiados", exact: true })
     .click();
   await page
-    .getByRole("dialog", { name: "Confirmar" })
+    .getByRole("dialog")
     .getByRole("button", { name: "Pegar", exact: true })
     .click();
   await expect(page.locator(".calendar-workout")).toHaveCount(1);

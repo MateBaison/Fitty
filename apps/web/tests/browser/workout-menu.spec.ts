@@ -68,7 +68,7 @@ test("workout banner, bottom add button and per-exercise settings menu", async (
     .getByRole("button", { name: "Quitar del entrenamiento", exact: true })
     .click();
   await page
-    .getByRole("dialog", { name: "Confirmar" })
+    .getByRole("dialog")
     .getByRole("button", { name: "Quitar", exact: true })
     .click();
   await expect(page.locator("[data-workout-entry]")).toHaveCount(before - 1);

@@ -37,11 +37,10 @@ export function useConfirm() {
     <AppDialog
       open={request !== null}
       onClose={() => settle(false)}
-      title={t("Confirmar", "Confirm")}
+      title={request?.message ?? t("Confirmar", "Confirm")}
       centered
     >
-      <p className="text-center">{request?.message}</p>
-      <div className="mt-4 flex flex-wrap justify-center gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
         <Button type="button" variant="secondary" onClick={() => settle(false)}>
           {t("Volver", "Back")}
         </Button>

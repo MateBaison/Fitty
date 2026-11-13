@@ -72,7 +72,7 @@ export function AppDialog({
             <DialogTitle className="text-xl font-bold">{title}</DialogTitle>
             {titleAction}
           </div>
-          <DialogDescription>{description}</DialogDescription>
+          {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         {children}
       </DialogContent>
