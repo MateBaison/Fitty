@@ -24,9 +24,12 @@ async function chosenLanguage(requested: unknown) {
 export async function LegalPage({
   documents,
   searchParams,
+  contactOnTop = false,
 }: {
   documents: Record<string, Policy>;
   searchParams: Promise<{ lang?: string | string[] }>;
+  /** Support page: the email address must be visible without scrolling. */
+  contactOnTop?: boolean;
 }) {
   const { lang } = await searchParams;
   const language = await chosenLanguage(Array.isArray(lang) ? lang[0] : lang);
@@ -46,6 +49,13 @@ export async function LegalPage({
         <h1 className="text-3xl font-bold">{page.heading}</h1>
         <p className="text-sm text-muted-foreground">{page.updated}</p>
         <p>{page.intro}</p>
+        {contactOnTop && (
+          <p>
+            <a href={`mailto:${contact}`} className="primary-link" dir="ltr">
+              {contact}
+            </a>
+          </p>
+        )}
       </header>
       {page.sections.map((section) => (
         <section key={section.title} className="space-y-2">

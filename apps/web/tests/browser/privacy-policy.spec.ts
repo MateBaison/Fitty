@@ -59,3 +59,24 @@ test("terms and conditions open in the language of the app", async ({
   await page.goto("/robots.txt");
   await expect(page.locator("body")).toContainText("Disallow: /api/");
 });
+
+test("support page is public and shows how to get in touch", async ({
+  page,
+}) => {
+  await page.request.get("http://127.0.0.1:54329/__reset");
+  await page.goto("/soporte?lang=en");
+  await expect(
+    page.getByRole("heading", { name: "Support", level: 1 }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "soporte@fitty.uy" }).first(),
+  ).toHaveAttribute("href", "mailto:soporte@fitty.uy");
+  await expect(
+    page.getByRole("heading", { name: "Deleting your account" }),
+  ).toBeVisible();
+  await page.goto("/soporte?lang=es");
+  await expect(
+    page.getByRole("heading", { name: "Soporte", level: 1 }),
+  ).toBeVisible();
+  await expect(page).toHaveURL(/\/soporte/);
+});
