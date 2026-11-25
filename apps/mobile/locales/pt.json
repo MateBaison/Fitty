@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "O Fitty usa a câmera para fotos de perfil, treinos e progresso corporal.",
+    "NSPhotoLibraryUsageDescription": "O Fitty usa suas fotos no seu perfil, nos treinos e no progresso corporal.",
+    "NSPhotoLibraryAddUsageDescription": "O Fitty salva imagens de treinos na sua galeria quando você escolhe salvá-las."
+  }
+}

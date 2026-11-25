@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "Fitty प्रोफ़ाइल, वर्कआउट और शरीर की प्रगति की फ़ोटो के लिए कैमरे का उपयोग करता है।",
+    "NSPhotoLibraryUsageDescription": "Fitty आपकी प्रोफ़ाइल, वर्कआउट और शरीर की प्रगति के लिए आपकी फ़ोटो का उपयोग करता है।",
+    "NSPhotoLibraryAddUsageDescription": "जब आप सहेजना चुनते हैं, तो Fitty वर्कआउट की तस्वीरें आपकी फ़ोटो लाइब्रेरी में सहेजता है।"
+  }
+}

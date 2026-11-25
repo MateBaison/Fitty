@@ -2,6 +2,12 @@
 
 The profile Settings control has an explicit safety acknowledgement, the account email and the exact phrase `ELIMINAR`. These are accident-prevention confirmations, not a CAPTCHA or proof of fresh identity. The Next.js action checks request origin and verifies the user with Supabase before forwarding the confirmation to `delete-account`.
 
+## Sign in with Apple revocation
+
+Apple requires revoking Sign in with Apple access on account deletion (TN3194). On iOS, accounts with an Apple identity confirm with Apple before deleting; the app sends the one-time `appleAuthorizationCode`, and the function (`apple.ts`) exchanges it, checks that it belongs to the same Apple user, deletes the account and then revokes the token. Cancelling the Apple sheet deletes nothing. Apple failures never block a deletion. Deletions from Android or the web do not revoke; older app builds that send no code keep working.
+
+The function reads the `APPLE_APP_CLIENT_SECRET` secret (a client secret for `uy.fitty.app`), which the "Renew Apple sign-in secret" GitHub workflow creates monthly from the existing Apple key. To enable: run that workflow once, then deploy both `index.ts` and `apple.ts`. Without the secret the function deletes accounts and skips revocation.
+
 ## Hosted setup
 
 Deploy `supabase/functions/delete-account/index.ts` as the Supabase Edge Function named `delete-account` in project `pebgpdnaihnfjtbrjbto`. The runtime uses Supabase's built-in `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; do not copy this key into Next.js, public environment variables or the browser. The function verifies the bearer token with Auth, derives the account ID itself, and checks all confirmations again. It accepts no target user ID.

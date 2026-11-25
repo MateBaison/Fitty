@@ -29,7 +29,8 @@ Before App Store submission, consider native Sign in with Apple (`expo-apple-aut
 ## Limits
 
 - Account snapshots travel through a Vercel Function, which rejects request bodies above 4.5 MB; very photo-heavy accounts get a clear "too large" error on mobile until photos move to storage.
-- GPS routes record only while the app is in the foreground.
+- Route tracking (GPS) is not part of the app: its screen and the location libraries were removed so the build asks for no location permission. Saved `trackingSessions` stay in account data. Restore it from git history (before November 2026's removal commit) when the feature returns.
+- Permission prompts follow the phone's language; their texts are in `apps/mobile/locales/`.
 
 ## Test and store builds (EAS)
 

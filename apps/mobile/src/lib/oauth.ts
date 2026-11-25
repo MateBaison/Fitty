@@ -95,3 +95,23 @@ export async function signInWithApple() {
   if (error) return signInWithProvider("apple");
   return true;
 }
+
+/**
+ * Apple asks apps to revoke "Sign in with Apple" access when an account is
+ * deleted. Confirming with Apple returns a one-time code that the
+ * delete-account function exchanges and revokes. Only iOS can ask for it;
+ * `code` is null when it is unavailable, and deletion goes on without it.
+ */
+export async function appleDeletionCode() {
+  const none = { cancelled: false, code: null };
+  if (Platform.OS !== "ios" || !(await AppleAuthentication.isAvailableAsync()))
+    return none;
+  try {
+    const credential = await AppleAuthentication.signInAsync();
+    return { cancelled: false, code: credential.authorizationCode };
+  } catch (error) {
+    return (error as { code?: string }).code === "ERR_REQUEST_CANCELED"
+      ? { cancelled: true, code: null }
+      : none;
+  }
+}

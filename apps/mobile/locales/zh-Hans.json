@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "Fitty 使用相机拍摄头像、训练和身体变化照片。",
+    "NSPhotoLibraryUsageDescription": "Fitty 使用您的照片作为头像，并记录训练和身体变化。",
+    "NSPhotoLibraryAddUsageDescription": "当您选择保存时，Fitty 会将训练图片保存到您的照片图库。"
+  }
+}

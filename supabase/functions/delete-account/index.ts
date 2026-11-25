@@ -1,5 +1,6 @@
 // Runs only in Supabase Edge Functions; admin credentials never reach Next.js or the browser.
 import { createClient } from "npm:@supabase/supabase-js@2.117.2";
+import { appleRefreshToken, appleSubject, revokeAppleToken } from "./apple.ts";
 Deno.serve(async (request: Request) => {
   const reply = (body: unknown, status = 200) =>
     new Response(JSON.stringify(body), {
@@ -36,9 +37,25 @@ Deno.serve(async (request: Request) => {
     input?.acknowledged !== true
   )
     return reply({ error: "confirmation" }, 400);
+  // The code is single-use and expires in minutes: exchange it now, but revoke
+  // only after the account is really gone. Deletion never depends on Apple.
+  const clientSecret = Deno.env.get("APPLE_APP_CLIENT_SECRET");
+  const apple = clientSecret
+    ? {
+        clientId: Deno.env.get("APPLE_APP_CLIENT_ID") ?? "uy.fitty.app",
+        clientSecret,
+      }
+    : null;
+  const subject = appleSubject(user.identities);
+  const appleToken =
+    apple && subject
+      ? await appleRefreshToken(apple, input.appleAuthorizationCode, subject)
+      : null;
   // auth.users deletion cascades to Fitty_State and auth sessions. A database/storage
   // failure must leave the account intact: never delete the snapshot in a separate call.
   const result = await admin.auth.admin.deleteUser(user.id);
   if (result.error) return reply({ error: "deletion_failed" }, 409);
-  return reply({ deleted: true });
+  const appleRevoked =
+    apple && appleToken ? await revokeAppleToken(apple, appleToken) : false;
+  return reply({ deleted: true, ...(subject && { appleRevoked }) });
 });

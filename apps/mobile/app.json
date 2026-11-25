@@ -16,10 +16,8 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "LSApplicationQueriesSchemes": [
-          "instagram-stories",
-          "instagram"
-        ]
+        "LSApplicationQueriesSchemes": ["instagram-stories", "instagram"],
+        "NSPhotoLibraryAddUsageDescription": "Fitty saves workout images to your photo library when you choose to save them."
       }
     },
     "android": {
@@ -29,11 +27,7 @@
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false,
-      "permissions": [
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION"
-      ]
+      "predictiveBackGestureEnabled": false
     },
     "plugins": [
       "expo-router",
@@ -50,27 +44,25 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Fitty usa tus fotos para tu perfil, tus entrenamientos y tu progreso corporal.",
-          "cameraPermission": "Fitty usa la cámara para fotos de perfil, entrenamientos y progreso corporal.",
+          "photosPermission": "Fitty uses your photos for your profile, workouts and body progress.",
+          "cameraPermission": "Fitty uses the camera for your profile, workout and body progress photos.",
           "microphonePermission": false
-        }
-      ],
-      [
-        "expo-location",
-        {
-          "locationWhenInUsePermission": "Fitty usa tu ubicación para registrar el recorrido mientras corrés o pedaleás.",
-          "isIosBackgroundLocationEnabled": false,
-          "isAndroidBackgroundLocationEnabled": false,
-          "isAndroidForegroundServiceEnabled": false
         }
       ],
       [
         "expo-audio",
         {
-          "microphonePermission": false
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": false
         }
       ],
-      "expo-secure-store",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": false
+        }
+      ],
       "@sentry/react-native"
     ],
     "experiments": {
@@ -87,6 +79,17 @@
         "projectId": "e7a6e769-0b13-442c-8090-31feee14c645"
       }
     },
-    "owner": "fittyapp"
+    "owner": "fittyapp",
+    "locales": {
+      "es": "./locales/es.json",
+      "en": "./locales/en.json",
+      "fr": "./locales/fr.json",
+      "zh-Hans": "./locales/zh-Hans.json",
+      "hi": "./locales/hi.json",
+      "ar": "./locales/ar.json",
+      "de": "./locales/de.json",
+      "it": "./locales/it.json",
+      "pt": "./locales/pt.json"
+    }
   }
 }

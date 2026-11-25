@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "يستخدم Fitty الكاميرا لصور الملف الشخصي والتمارين وتقدّم الجسم.",
+    "NSPhotoLibraryUsageDescription": "يستخدم Fitty صورك لملفك الشخصي وتمارينك وتقدّم جسمك.",
+    "NSPhotoLibraryAddUsageDescription": "يحفظ Fitty صور التمارين في مكتبة صورك عندما تختار حفظها."
+  }
+}

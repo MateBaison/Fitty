@@ -6,6 +6,7 @@ import {
   isDeleteConfirmation,
 } from "@fitty/core/data/translations";
 import { Button, Card, Field, Label } from "@/components/ui";
+import { appleDeletionCode } from "@/lib/oauth";
 import { supabase } from "@/lib/supabase";
 import { useAccount } from "@/state/account";
 import { useSession } from "@/state/session";
@@ -23,6 +24,7 @@ export function DeleteAccount() {
   const [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [appleCancelled, setAppleCancelled] = useState(false);
   if (!user?.email) return null;
   const ready =
     acknowledged &&
@@ -34,15 +36,31 @@ export function DeleteAccount() {
     setEmail("");
     setConfirmation("");
     setFailed(false);
+    setAppleCancelled(false);
   };
   const remove = async () => {
     if (busy || !ready || !user.email) return;
     setBusy(true);
     setFailed(false);
+    setAppleCancelled(false);
+    const usesApple = user.identities?.some((item) => item.provider === "apple");
+    const apple = usesApple
+      ? await appleDeletionCode().catch(() => null)
+      : null;
+    if (apple?.cancelled) {
+      setAppleCancelled(true);
+      setBusy(false);
+      return;
+    }
     // The Edge Function verifies the bearer token itself and derives the account.
     const result = await supabase.functions
       .invoke("delete-account", {
-        body: { confirmation: "ELIMINAR", email: user.email, acknowledged },
+        body: {
+          confirmation: "ELIMINAR",
+          email: user.email,
+          acknowledged,
+          appleAuthorizationCode: apple?.code ?? undefined,
+        },
       })
       .catch(() => null);
     if (!result || result.error || result.data?.deleted !== true) {
@@ -116,6 +134,14 @@ export function DeleteAccount() {
           {t(
             "No se pudo eliminar la cuenta. No se confirmó ningún borrado. Reintentá más tarde.",
             "The account could not be deleted. No deletion was confirmed. Try again later.",
+          )}
+        </Label>
+      ) : null}
+      {appleCancelled ? (
+        <Label>
+          {t(
+            "No se confirmó con Apple, así que tu cuenta no se eliminó.",
+            "Apple confirmation was cancelled, so your account was not deleted.",
           )}
         </Label>
       ) : null}

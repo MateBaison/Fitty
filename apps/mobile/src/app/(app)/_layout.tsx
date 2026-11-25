@@ -78,7 +78,6 @@ function AccountGate() {
           <Tabs.Screen name="workout" />
           <Tabs.Screen name="routines" />
           <Tabs.Screen name="body" />
-          <Tabs.Screen name="tracking" />
           <Tabs.Screen name="combat" />
         </Tabs>
       </SafeAreaInsetsContext.Provider>

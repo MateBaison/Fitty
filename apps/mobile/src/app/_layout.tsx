@@ -1,5 +1,4 @@
 import "@/lib/polyfills";
-import "@/lib/tracking-feed";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import * as Sentry from "@sentry/react-native";
 import { Stack } from "expo-router";

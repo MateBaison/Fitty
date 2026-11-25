@@ -20,7 +20,7 @@ const destinations: {
     es: "Herramientas",
     en: "Tools",
     icon: { ios: "timer", android: "timer" },
-    match: ["/tools", "/tracking", "/combat"],
+    match: ["/tools", "/combat"],
   },
   {
     href: "/professionals",

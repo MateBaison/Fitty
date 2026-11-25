@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "Fitty verwendet die Kamera für Profil-, Trainings- und Fortschrittsfotos.",
+    "NSPhotoLibraryUsageDescription": "Fitty verwendet deine Fotos für dein Profil, deine Trainings und deinen körperlichen Fortschritt.",
+    "NSPhotoLibraryAddUsageDescription": "Fitty speichert Trainingsbilder in deiner Fotomediathek, wenn du das auswählst."
+  }
+}

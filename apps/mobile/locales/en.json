@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "NSCameraUsageDescription": "Fitty uses the camera for your profile, workout and body progress photos.",
+    "NSPhotoLibraryUsageDescription": "Fitty uses your photos for your profile, workouts and body progress.",
+    "NSPhotoLibraryAddUsageDescription": "Fitty saves workout images to your photo library when you choose to save them."
+  }
+}
