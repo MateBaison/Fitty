@@ -9,6 +9,24 @@
         "dev"
       ],
       "port": 3000
+    },
+    {
+      "name": "mobile",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "APP_VARIANT=development",
+        "pnpm",
+        "--filter",
+        "@fitty/mobile",
+        "exec",
+        "expo",
+        "start",
+        "--dev-client",
+        "--port",
+        "8081",
+        "--lan"
+      ],
+      "port": 8081
     }
   ]
 }
