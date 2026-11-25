@@ -26,7 +26,7 @@ export function AccountPanel() {
       )}
       <ResetAccount />
       <a
-        href={`/terminos?lang=${snapshot.settings.language ?? "es"}`}
+        href={`/terms?lang=${snapshot.settings.language ?? "es"}`}
         target="_blank"
         rel="noopener noreferrer"
         data-slot="button"
@@ -36,7 +36,7 @@ export function AccountPanel() {
       </a>
       <div className="grid grid-cols-2 gap-3">
         <a
-          href={`/privacidad?lang=${snapshot.settings.language ?? "es"}`}
+          href={`/privacy?lang=${snapshot.settings.language ?? "es"}`}
           target="_blank"
           rel="noopener noreferrer"
           data-slot="button"

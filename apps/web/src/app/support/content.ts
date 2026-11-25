@@ -1,4 +1,4 @@
-import type { Policy } from "../privacidad/content";
+import type { Policy } from "../privacy/content";
 
 export const support: Record<string, Policy> = {
   es: {
@@ -39,8 +39,8 @@ export const support: Record<string, Policy> = {
       {
         title: "Privacidad y términos",
         body: [
-          "Política de privacidad: fitty.uy/privacidad",
-          "Términos y condiciones: fitty.uy/terminos",
+          "Política de privacidad: fitty.uy/privacy",
+          "Términos y condiciones: fitty.uy/terms",
         ],
       },
     ],
@@ -83,8 +83,8 @@ export const support: Record<string, Policy> = {
       {
         title: "Privacy and terms",
         body: [
-          "Privacy policy: fitty.uy/privacidad",
-          "Terms and conditions: fitty.uy/terminos",
+          "Privacy policy: fitty.uy/privacy",
+          "Terms and conditions: fitty.uy/terms",
         ],
       },
     ],
@@ -127,8 +127,8 @@ export const support: Record<string, Policy> = {
       {
         title: "Confidentialité et conditions",
         body: [
-          "Politique de confidentialité : fitty.uy/privacidad",
-          "Conditions générales : fitty.uy/terminos",
+          "Politique de confidentialité : fitty.uy/privacy",
+          "Conditions générales : fitty.uy/terms",
         ],
       },
     ],
@@ -171,8 +171,8 @@ export const support: Record<string, Policy> = {
       {
         title: "隐私与条款",
         body: [
-          "隐私政策：fitty.uy/privacidad",
-          "条款与条件：fitty.uy/terminos",
+          "隐私政策：fitty.uy/privacy",
+          "条款与条件：fitty.uy/terms",
         ],
       },
     ],
@@ -215,8 +215,8 @@ export const support: Record<string, Policy> = {
       {
         title: "गोपनीयता और शर्तें",
         body: [
-          "गोपनीयता नीति: fitty.uy/privacidad",
-          "नियम और शर्तें: fitty.uy/terminos",
+          "गोपनीयता नीति: fitty.uy/privacy",
+          "नियम और शर्तें: fitty.uy/terms",
         ],
       },
     ],
@@ -259,8 +259,8 @@ export const support: Record<string, Policy> = {
       {
         title: "الخصوصية والشروط",
         body: [
-          "سياسة الخصوصية: fitty.uy/privacidad",
-          "الشروط والأحكام: fitty.uy/terminos",
+          "سياسة الخصوصية: fitty.uy/privacy",
+          "الشروط والأحكام: fitty.uy/terms",
         ],
       },
     ],
@@ -303,8 +303,8 @@ export const support: Record<string, Policy> = {
       {
         title: "Datenschutz und Bedingungen",
         body: [
-          "Datenschutzerklärung: fitty.uy/privacidad",
-          "Nutzungsbedingungen: fitty.uy/terminos",
+          "Datenschutzerklärung: fitty.uy/privacy",
+          "Nutzungsbedingungen: fitty.uy/terms",
         ],
       },
     ],
@@ -347,8 +347,8 @@ export const support: Record<string, Policy> = {
       {
         title: "Privacy e termini",
         body: [
-          "Informativa sulla privacy: fitty.uy/privacidad",
-          "Termini e condizioni: fitty.uy/terminos",
+          "Informativa sulla privacy: fitty.uy/privacy",
+          "Termini e condizioni: fitty.uy/terms",
         ],
       },
     ],
@@ -391,8 +391,8 @@ export const support: Record<string, Policy> = {
       {
         title: "Privacidade e termos",
         body: [
-          "Política de privacidade: fitty.uy/privacidad",
-          "Termos e condições: fitty.uy/terminos",
+          "Política de privacidade: fitty.uy/privacy",
+          "Termos e condições: fitty.uy/terms",
         ],
       },
     ],

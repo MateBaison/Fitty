@@ -28,14 +28,25 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    // The previous production domain now forwards to the Fitty domain.
     return [
+      // The previous production domain now forwards to the Fitty domain.
       {
         source: "/:path*",
         has: [{ type: "host", value: "hercules-navy.vercel.app" }],
         destination: "https://fitty.uy/:path*",
         permanent: true,
       },
+      // Public pages used to have Spanish addresses. Published app builds and
+      // the store listings still link to them.
+      ...[
+        ["/soporte", "/support"],
+        ["/privacidad", "/privacy"],
+        ["/terminos", "/terms"],
+      ].map(([source, destination]) => ({
+        source: source!,
+        destination: destination!,
+        permanent: true,
+      })),
     ];
   },
 };

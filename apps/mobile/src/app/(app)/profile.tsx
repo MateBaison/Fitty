@@ -623,7 +623,7 @@ export default function Profile() {
         variant="secondary"
         onPress={() =>
           void openWebPage(
-            `https://fitty.uy/terminos?lang=${settings.language ?? "es"}`,
+            `https://fitty.uy/terms?lang=${settings.language ?? "es"}`,
           )
         }
       >
@@ -635,7 +635,7 @@ export default function Profile() {
             variant="secondary"
             onPress={() =>
               void openWebPage(
-                `https://fitty.uy/privacidad?lang=${settings.language ?? "es"}`,
+                `https://fitty.uy/privacy?lang=${settings.language ?? "es"}`,
               )
             }
           >

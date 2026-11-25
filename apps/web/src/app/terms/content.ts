@@ -1,4 +1,4 @@
-import type { Policy } from "../privacidad/content";
+import type { Policy } from "../privacy/content";
 export const terms: Record<string, Policy> = {
   es: {
     heading: "Términos y condiciones",

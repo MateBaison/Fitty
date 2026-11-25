@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 import { languages, textDirection } from "@fitty/core/data/translations";
-import type { Policy } from "./privacidad/content";
+import type { Policy } from "./privacy/content";
 
 const contact = "soporte@fitty.uy";
 const pick = (value: unknown) =>

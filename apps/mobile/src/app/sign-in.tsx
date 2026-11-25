@@ -178,7 +178,7 @@ export default function SignIn() {
             <Text
               accessibilityRole="link"
               onPress={() =>
-                void openWebPage(`https://fitty.uy/privacidad?lang=${language}`)
+                void openWebPage(`https://fitty.uy/privacy?lang=${language}`)
               }
               style={{ color: colors.accent, textDecorationLine: "underline" }}
             >
@@ -189,7 +189,7 @@ export default function SignIn() {
             <Text
               accessibilityRole="link"
               onPress={() =>
-                void openWebPage(`https://fitty.uy/terminos?lang=${language}`)
+                void openWebPage(`https://fitty.uy/terms?lang=${language}`)
               }
               style={{ color: colors.accent, textDecorationLine: "underline" }}
             >
