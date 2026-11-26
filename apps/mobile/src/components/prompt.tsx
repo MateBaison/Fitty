@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { Button, Card, Field, Title } from "@/components/ui";
+import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
 /** Small modal with one text field (Alert.prompt is iOS-only). */
@@ -31,6 +32,7 @@ export function TextPrompt({
   onSubmit: (value: string) => void;
   onClose: () => void;
 }) {
+  const { t } = useAccount();
   const [value, setValue] = useState(initial);
   useEffect(() => {
     if (visible) setValue(initial);
@@ -54,7 +56,7 @@ export function TextPrompt({
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={onClose}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />

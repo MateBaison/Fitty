@@ -693,7 +693,7 @@ export default function Workout() {
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setFinishing(false)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />
@@ -773,7 +773,7 @@ export default function Workout() {
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setSupersetOpen(false)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />
@@ -858,7 +858,7 @@ export default function Workout() {
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setImageFor(null)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />

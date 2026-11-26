@@ -73,10 +73,10 @@ test("support retries preserve draft and identity and success confirms only a su
     confirmation.getByText("Te responderemos por correo.", { exact: true }),
   ).toBeVisible();
   await expect(confirmation.getByRole("textbox")).toHaveCount(0);
-  const close = confirmation.getByRole("button", {
-    name: "Cerrar",
-    exact: true,
-  });
+  // The corner button is also called "Cerrar"; this is the main one.
+  const close = confirmation
+    .getByRole("button", { name: "Cerrar", exact: true })
+    .and(page.locator('[data-slot="button"]'));
   await expect(close).toBeFocused();
   await page.screenshot({
     path: `artifacts/support-confirmation-${test.info().project.name}.png`,

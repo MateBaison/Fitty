@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { PanResponder, Text, TextInput, View } from "react-native";
 import { Label, styles } from "@/components/ui";
+import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
 /** Multi-line box that can be made taller or shorter by dragging its bottom-right corner. */
@@ -17,6 +18,7 @@ export function ResizableInput({
   onResizing: (resizing: boolean) => void;
   initialHeight?: number;
 }) {
+  const { t } = useAccount();
   const [height, setHeight] = useState(initialHeight);
   const start = useRef(initialHeight);
   const latest = useRef(onResizing);
@@ -57,7 +59,7 @@ export function ResizableInput({
         <View
           {...pan.panHandlers}
           accessibilityRole="adjustable"
-          accessibilityLabel="Redimensionar"
+          accessibilityLabel={t("Redimensionar", "Resize")}
           style={{
             position: "absolute",
             right: 2,

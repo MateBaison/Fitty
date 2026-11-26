@@ -1,6 +1,6 @@
 import type { Session } from "@supabase/supabase-js";
 import { createContext, use, useEffect, useState, type ReactNode } from "react";
-import { supabase } from "@/lib/supabase";
+import { savedSession, supabase } from "@/lib/supabase";
 
 type SessionState = { session: Session | null; loading: boolean };
 const SessionContext = createContext<SessionState>({
@@ -14,12 +14,20 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     loading: true,
   });
   useEffect(() => {
-    void supabase.auth
-      .getSession()
-      .then(({ data }) => setState({ session: data.session, loading: false }));
-    const { data } = supabase.auth.onAuthStateChange((_event, session) =>
-      setState({ session, loading: false }),
-    );
+    const open = (session: Session | null) =>
+      setState({ session, loading: false });
+    // Without a connection Supabase cannot renew an expired token and reports no
+    // session although nobody signed out, so the saved one opens the app.
+    void savedSession().then((saved) => {
+      if (saved)
+        setState((state) =>
+          state.loading ? { session: saved, loading: false } : state,
+        );
+    });
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session || event === "SIGNED_OUT") open(session);
+      else void savedSession().then(open);
+    });
     return () => data.subscription.unsubscribe();
   }, []);
   return <SessionContext value={state}>{children}</SessionContext>;

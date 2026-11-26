@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { Button, Card, Label } from "@/components/ui";
 import { queryClient, queryPersister } from "@/lib/query-client";
-import { supabase } from "@/lib/supabase";
+import { savedSession, supabase } from "@/lib/supabase";
 import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
 /** Asks before signing out and, like the web, warns when changes are not confirmed in the cloud. */
 export function SignOut() {
-  const { flush, t } = useAccount();
+  const { flush, notify, t } = useAccount();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -33,7 +33,19 @@ export function SignOut() {
           return;
         }
       }
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      // Offline with an expired token, Supabase keeps the session.
+      if (error && (await savedSession())) {
+        setOpen(false);
+        setPending(false);
+        notify(
+          t(
+            "Necesitás conexión a internet para cerrar sesión.",
+            "You need an internet connection to sign out.",
+          ),
+        );
+        return;
+      }
       queryClient.clear();
       await queryPersister.removeClient();
     } finally {
@@ -51,17 +63,25 @@ export function SignOut() {
         animationType="fade"
         onRequestClose={close}
       >
-        <View style={{
+        <View
+          style={{
             flex: 1,
             justifyContent: "center",
             padding: space(4),
             backgroundColor: "#000a",
-          }}>
+          }}
+        >
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={close}
-            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
           />
           <View>
             <Card style={{ borderColor: colors.border }}>

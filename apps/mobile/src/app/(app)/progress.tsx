@@ -953,7 +953,7 @@ export default function Progress() {
         >
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setPicking(false)}
             style={{
               position: "absolute",

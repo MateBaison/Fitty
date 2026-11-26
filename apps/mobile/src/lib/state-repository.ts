@@ -1,3 +1,4 @@
+import NetInfo from "@react-native-community/netinfo";
 import { MutationObserver, type QueryClient } from "@tanstack/react-query";
 import {
   ApiError,
@@ -5,10 +6,24 @@ import {
   type SaveStateRequest,
 } from "@fitty/core/api/v1";
 import type { Snapshot } from "@fitty/core/domain/schemas/snapshot";
+import { accountCacheKey } from "@fitty/core/storage/account-cache";
 import {
   RemoteStateChanged,
   type StateRepository,
 } from "@fitty/core/sync/state-repository";
+
+// The longest a weak connection may delay opening the copy saved on the phone.
+const SAVED_COPY_WAIT = 8000;
+
+function within<T>(promise: Promise<T>, ms: number, expire: () => void) {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error("timeout"));
+      expire();
+    }, ms);
+    void promise.then(resolve, reject).finally(() => clearTimeout(timer));
+  });
+}
 
 export const stateKeys = {
   all: (userId: string) => ["account", userId, "state"] as const,
@@ -27,6 +42,7 @@ export function queryStateRepository(
   userId: string,
 ): StateRepository {
   let revision: string | null | undefined;
+  let opening = true;
   const save = new MutationObserver(queryClient, {
     mutationKey: [...stateKeys.all(userId), "save"],
     mutationFn: (input: SaveStateRequest) => api.saveState(input),
@@ -42,12 +58,27 @@ export function queryStateRepository(
       return updatedAt !== revision;
     },
     async load() {
-      const state = await queryClient.fetchQuery({
-        queryKey: stateKeys.all(userId),
+      // Only the first read keeps the user waiting; later ones run behind the open copy.
+      const bounded =
+        opening && localStorage.getItem(accountCacheKey(userId)) !== null;
+      opening = false;
+      // Without a connection, fail at once so the saved copy opens.
+      if ((await NetInfo.fetch()).isConnected === false)
+        throw new Error("offline");
+      const queryKey = stateKeys.all(userId);
+      const read = queryClient.fetchQuery({
+        queryKey,
         queryFn: ({ signal }) => api.getState(signal),
         staleTime: 0,
         gcTime: 0, // The snapshot is cached by SyncController, not the query cache.
+        networkMode: "always", // A paused query would wait for the network forever.
+        ...(bounded && { retry: false }),
       });
+      const state = await (bounded
+        ? within(read, SAVED_COPY_WAIT, () => {
+            void queryClient.cancelQueries({ queryKey, exact: true });
+          })
+        : read);
       revision = state.updatedAt;
       return state.payload;
     },

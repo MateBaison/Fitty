@@ -1,4 +1,5 @@
 import { AppProvider } from "@/state/app-provider";
+import { LocalizedText } from "@/components/localized-text";
 import { verifiedUser, accountSummary } from "@/lib/supabase/account-reader";
 import { configured } from "@/lib/env";
 import { redirect } from "next/navigation";
@@ -16,7 +17,7 @@ export default async function ApplicationLayout({
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
-        Saltar al contenido
+        <LocalizedText es="Saltar al contenido" en="Skip to content" />
       </a>
       <AppProvider
         key={user.id}

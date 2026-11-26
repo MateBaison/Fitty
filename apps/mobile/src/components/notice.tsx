@@ -3,7 +3,7 @@ import { useAccount } from "@/state/account";
 import { colors, radius, space } from "@/theme";
 
 export function Notice() {
-  const { notice } = useAccount();
+  const { notice, t } = useAccount();
   if (!notice) return null;
   return (
     <View
@@ -14,7 +14,7 @@ export function Notice() {
         padding: space(3),
       }}
     >
-      <Text style={{ color: colors.foreground }}>{notice}</Text>
+      <Text style={{ color: colors.foreground }}>{t(notice, notice)}</Text>
     </View>
   );
 }

@@ -305,7 +305,7 @@ export function AppProvider({
         {children}
         {notice && (
           <div className="save-toast" role="status">
-            {notice}
+            {t(notice, notice)}
           </div>
         )}
       </RuntimeProvider>

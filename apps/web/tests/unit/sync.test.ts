@@ -398,3 +398,60 @@ test("two uploads in a row that lost their answers are not reported as a conflic
   expect(ctl.view.status).toBe("synced");
   ctl.dispose();
 });
+
+test("edits made while an offline copy retries the cloud are kept and uploaded", async () => {
+  const storage = store(),
+    initial = createDefaultSnapshot(),
+    writes: Snapshot[] = [];
+  storage.setItem(accountCacheKey(id), JSON.stringify(initial));
+  let online = false;
+  let answer: () => void = () => {};
+  const ctl = new SyncController(
+    id,
+    {
+      load: () =>
+        new Promise((accept, reject) => {
+          answer = () =>
+            online ? accept(initial) : reject(new Error("Offline"));
+        }),
+      save: async (snapshot) => {
+        writes.push(snapshot);
+      },
+    },
+    storage,
+    () => () => {},
+  );
+  // A first sync so the device copy has a known base in the cloud.
+  online = true;
+  let run = ctl.start();
+  answer();
+  await run;
+  online = false;
+  run = ctl.start();
+  answer();
+  await run;
+  // Second attempt on a weak connection: still editable, and the edit survives.
+  run = ctl.refresh().then(() => ctl.start());
+  await Promise.resolve();
+  ctl.edit((snapshot) => {
+    snapshot.profile.name = "Typed while retrying";
+  });
+  await new Promise((accept) => setTimeout(accept, 0));
+  answer();
+  await run;
+  expect(ctl.view.status).toBe("offline");
+  expect(ctl.view.snapshot?.profile.name).toBe("Typed while retrying");
+  expect(ctl.waitingForCloud).toBe(true);
+  online = true;
+  run = ctl.start();
+  ctl.edit((snapshot) => {
+    snapshot.profile.weight = "70";
+  });
+  answer();
+  await run;
+  expect(ctl.view.status).toBe("synced");
+  expect(writes.at(-1)?.profile.name).toBe("Typed while retrying");
+  expect(writes.at(-1)?.profile.weight).toBe("70");
+  expect(ctl.waitingForCloud).toBe(false);
+  ctl.dispose();
+});

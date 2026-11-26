@@ -63,7 +63,7 @@ export function SignOutButton({
       >
         {error && (
           <p role="alert" className="text-center">
-            {error}
+            {t(error, error)}
           </p>
         )}
         <div className="flex flex-wrap justify-center gap-3">

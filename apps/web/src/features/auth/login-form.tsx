@@ -102,7 +102,7 @@ export function LoginForm() {
         )}
         {error && (
           <p role="alert" className="text-red-300">
-            {error}
+            {t(error, error)}
           </p>
         )}
         <Button type="submit" disabled={busy} className="w-full">

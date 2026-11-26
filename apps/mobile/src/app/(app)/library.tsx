@@ -63,7 +63,7 @@ export default function Library() {
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setSelected(null)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />
@@ -225,7 +225,7 @@ export default function Library() {
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setAdding(null)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />

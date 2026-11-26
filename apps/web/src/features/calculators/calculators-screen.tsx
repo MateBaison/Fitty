@@ -87,7 +87,10 @@ export function CalculatorsScreen() {
         );
     } catch {
       setError(
-        "Revisá los valores: edad 18–100, peso 25–400 kg, altura 100–250 cm; macros 1000–6000 kcal y 1–8 comidas; 1RM 1–10 repeticiones.",
+        t(
+          "Revisá los valores: edad 18–100, peso 25–400 kg, altura 100–250 cm; macros 1000–6000 kcal y 1–8 comidas; 1RM 1–10 repeticiones.",
+          "Check the values: age 18–100, weight 25–400 kg, height 100–250 cm; macros 1000–6000 kcal and 1–8 meals; 1RM 1–10 reps.",
+        ),
       );
     }
   };

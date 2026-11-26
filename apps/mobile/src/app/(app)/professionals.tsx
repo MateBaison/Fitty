@@ -1,5 +1,4 @@
-import { Button, Card, Label, Screen } from "@/components/ui";
-import { openWebPage } from "@/lib/open-link";
+import { Card, Label, Screen } from "@/components/ui";
 import { useAccount } from "@/state/account";
 
 export default function Professionals() {
@@ -9,21 +8,16 @@ export default function Professionals() {
       <Card>
         <Label>
           {t(
-            "Encontrá entrenadores y profesionales cerca tuyo.",
-            "Find trainers and professionals near you.",
+            "Próximamente, profesionales en Fitty",
+            "Professionals are coming to Fitty",
           )}
         </Label>
         <Label muted>
           {t(
-            "Por ahora el directorio está disponible en fitty.uy.",
-            "For now the directory is available at fitty.uy.",
+            "Todavía no hay profesionales publicados. Las postulaciones aún no están habilitadas.",
+            "No professionals are listed yet. Applications are not open yet.",
           )}
         </Label>
-        <Button
-          onPress={() => void openWebPage("https://fitty.uy/professionals")}
-        >
-          {t("Abrir en fitty.uy", "Open on fitty.uy")}
-        </Button>
       </Card>
     </Screen>
   );

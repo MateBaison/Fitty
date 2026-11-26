@@ -374,7 +374,7 @@ export function ExerciseBrowser({
         >
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setFiltering(false)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />
@@ -438,7 +438,7 @@ export function ExerciseBrowser({
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Cerrar"
+            accessibilityLabel={t("Cerrar", "Close")}
             onPress={() => setZoning(false)}
             style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
           />

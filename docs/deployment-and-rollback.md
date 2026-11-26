@@ -26,8 +26,6 @@ Do not replace that with the app callback; Google → Supabase and Supabase → 
 
 Keep the existing email provider/template containing `{{ .Token }}`; this app verifies email OTP codes. Email delivery/rate limits and Google consent configuration are managed in Supabase/Google, not guaranteed by the local build.
 
-The temporary legacy fragment-session bridge is **off by default**. Only enable `LEGACY_AUTH_COMPAT_UNTIL` with an explicit future ISO timestamp if an authorized transition requires it; remove it after the bounded window. It verifies the session remotely and removes URL fragments before sending tokens.
-
 ## Required real integration/release gate
 
 - Verify a real new email account, onboarding, sign-out and session restoration.

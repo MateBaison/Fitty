@@ -179,7 +179,7 @@ export function SupportForm({
       <View style={{ flex: 1, justifyContent: "center", padding: space(4), backgroundColor: "#000a" }}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Cerrar"
+          accessibilityLabel={t("Cerrar", "Close")}
           onPress={close}
           style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
         />

@@ -12,7 +12,7 @@ import { AppState } from "react-native";
 import { onlineManager } from "@tanstack/react-query";
 import { translate } from "@fitty/core/data/translations";
 import type { Snapshot } from "@fitty/core/domain/schemas/snapshot";
-import { takePendingLanguage } from "@/lib/language";
+import { storedLanguage, takePendingLanguage } from "@/lib/language";
 import { adoptPreviousAccountCache } from "@fitty/core/storage/account-cache";
 import {
   SyncController,
@@ -63,12 +63,18 @@ export function AccountProvider({
     controller.current = sync;
     const unsubscribe = sync.subscribe(setView);
     void sync.start();
-    // Same cadence as the web app: refresh on focus and every 30 s while visible.
+    // After working from the phone's copy, read the cloud again; otherwise look for
+    // changes. Same cadence as the web app: on focus and every 30 s while visible.
+    const resume = () => {
+      if (sync.waitingForCloud || sync.view.status === "offline")
+        void sync.start();
+      else void sync.refresh();
+    };
     const interval = setInterval(() => {
-      if (AppState.currentState === "active") void sync.refresh();
+      if (AppState.currentState === "active") resume();
     }, 30000);
     const appState = AppState.addEventListener("change", (state) => {
-      if (state === "active") void sync.refresh();
+      if (state === "active") resume();
     });
     const online = onlineManager.subscribe((isOnline) => {
       if (isOnline) void sync.start();
@@ -98,7 +104,11 @@ export function AccountProvider({
     return () => clearTimeout(timer);
   }, [notice]);
   const language =
-    view.snapshot?.settings.language ?? controller.current?.language ?? "es";
+    view.snapshot?.settings.language ??
+    // Before the account is read, use the language picked on the sign-in screen.
+    (view.status === "loading" || view.status === "error"
+      ? storedLanguage()
+      : (controller.current?.language ?? "es"));
   const t = useCallback(
     (spanish: string, english: string) => translate(language, spanish, english),
     [language],
@@ -115,7 +125,8 @@ export function AccountProvider({
   return (
     <AccountContext
       value={{
-        view,
+        // Sync messages are written in Spanish; screens show them translated.
+        view: { ...view, message: t(view.message, view.message) },
         change,
         flush: () => controller.current?.flush() ?? Promise.resolve(false),
         resolve: (choice) => controller.current?.resolve(choice),

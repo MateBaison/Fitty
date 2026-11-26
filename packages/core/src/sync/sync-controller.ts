@@ -26,7 +26,10 @@ const metaSchema = z.object({
   base: z.string().nullable(),
   // Fingerprints of recent uploads that may have reached the cloud without us hearing
   // back. Older versions stored a single string.
-  sent: z.union([z.string(), z.array(z.string())]).nullable().optional(),
+  sent: z
+    .union([z.string(), z.array(z.string())])
+    .nullable()
+    .optional(),
 });
 const encoded = fingerprint;
 // Exactly one controller owns full-snapshot uploads for one verified user.
@@ -80,6 +83,10 @@ export class SyncController {
   }
   get hasCloud() {
     return this.cloud !== null;
+  }
+  /** True while the device copy is open but the cloud could not be read yet. */
+  get waitingForCloud() {
+    return this.ready && !this.cloudReady;
   }
   private emit(snapshot: Snapshot | null, status: SyncStatus, message: string) {
     if (this.disposed) return;
@@ -151,7 +158,13 @@ export class SyncController {
     if (this.disposed) return;
     const attempt = ++this.loadAttempt;
     this.cancelTimer?.();
-    this.ready = false;
+    // A copy that is open with unconfirmed or offline work stays editable while the
+    // cloud is read again, so retrying on a weak connection never blocks typing.
+    const open =
+      this.ready &&
+      this.view.snapshot !== null &&
+      this.view.status !== "synced";
+    this.ready = open;
     this.cloudReady = false;
     const cached = readCache(this.storage, this.key);
     try {
@@ -199,6 +212,8 @@ export class SyncController {
       raw = await this.repo.load(this.abort.signal);
     } catch {
       if (this.disposed || attempt !== this.loadAttempt) return;
+      // Keep the edits made while the cloud was being read.
+      if (open) this.local = this.view.snapshot;
       if (this.local) {
         this.ready = true;
         this.emit(
@@ -215,6 +230,10 @@ export class SyncController {
       return;
     }
     if (this.disposed || attempt !== this.loadAttempt) return;
+    if (open) {
+      this.local = this.view.snapshot;
+      this.ready = false;
+    }
     this.cloudReady = true;
     if (raw !== null) {
       const read = readSnapshot(raw);

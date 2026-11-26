@@ -170,7 +170,9 @@ export default function SignIn() {
               </>
             )}
             {error ? (
-              <Label style={{ color: colors.destructive }}>{error}</Label>
+              <Label style={{ color: colors.destructive }}>
+                {t(error, error)}
+              </Label>
             ) : null}
           </Card>
           <Label muted style={{ textAlign: "center" }}>

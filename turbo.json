@@ -5,7 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "env": ["NEXT_PUBLIC_*", "FITTY_TEST_BUILD"],
-      "passThroughEnv": ["VERCEL_*", "RESEND_API_KEY", "LEGACY_AUTH_COMPAT_UNTIL"],
+      "passThroughEnv": ["VERCEL_*", "RESEND_API_KEY"],
       "outputs": [".next/**", "!.next/cache/**", ".next-test/**", "!.next-test/cache/**"]
     },
     "dev": {
