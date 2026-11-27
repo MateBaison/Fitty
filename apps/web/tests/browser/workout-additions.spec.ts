@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login } from "./login-helper";
+import { login, chooseFromTile } from "./login-helper";
 test("add an extra exercise to an active routine workout and retain it after reload", async ({
   page,
 }) => {
@@ -8,9 +8,7 @@ test("add an extra exercise to an active routine workout and retain it after rel
   await page
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: /Pecho y tríceps/ })
-    .click();
+  await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
   await expect(page).toHaveURL(/\/workout$/);
   const before = await page.locator("[data-workout-entry]").count();
   await expect(
@@ -37,9 +35,7 @@ test("add an extra exercise to an active routine workout and retain it after rel
   await page
     .getByRole("textbox", { name: "Nombre", exact: true })
     .fill("Remo personal de prueba");
-  await page
-    .getByLabel("Grupo muscular", { exact: true })
-    .selectOption("Espalda");
+  await chooseFromTile(page, "Grupo muscular", "Espalda");
   await page
     .getByRole("button", { name: "Guardar ejercicio", exact: true })
     .click();

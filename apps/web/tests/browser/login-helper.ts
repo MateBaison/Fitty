@@ -45,7 +45,18 @@ export async function trackBy(
 ) {
   await openExerciseMenu(page, index);
   const toggle = page.getByRole("switch", { name: "Medir por", exact: true });
-  if (((await toggle.getAttribute("aria-checked")) === "true") !== (label === "Tiempo"))
+  if (
+    ((await toggle.getAttribute("aria-checked")) === "true") !==
+    (label === "Tiempo")
+  )
     await toggle.click();
   await page.keyboard.press("Escape");
+}
+
+/** Picks an option in the floating list that a tile of the exercise form opens. */
+export async function chooseFromTile(page: Page, tile: string, option: string) {
+  await page.getByRole("button", { name: new RegExp(`^${tile}`) }).click();
+  const menu = page.getByRole("dialog", { name: tile, exact: true });
+  await menu.getByRole("button", { name: option, exact: true }).click();
+  await expect(menu).toHaveCount(0);
 }

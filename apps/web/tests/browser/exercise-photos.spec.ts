@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login } from "./login-helper";
+import { chooseFromTile, login } from "./login-helper";
 
 const picture = (name: string) => ({
   name,
@@ -27,17 +27,13 @@ test("a new exercise keeps up to three reference photos", async ({
   await page
     .getByRole("button", { name: "Crear ejercicio", exact: false })
     .click();
-  const dialog = page.getByRole("dialog");
+  const dialog = page.getByRole("dialog", { name: "Crear ejercicio" });
   await dialog
     .getByRole("textbox", { name: "Nombre", exact: true })
     .fill("Máquina con fotos");
-  await dialog
-    .getByLabel("Grupo muscular", { exact: true })
-    .selectOption("Espalda");
+  await chooseFromTile(page, "Grupo muscular", "Espalda");
   const steps = dialog.locator("textarea");
-  await dialog
-    .getByLabel("Registrar por", { exact: true })
-    .selectOption("seconds");
+  await chooseFromTile(page, "Registrar por", "Tiempo");
   await expect(dialog.locator(".exercise-tiles")).toContainText("Tiempo");
   await steps.fill("Sentate con la espalda recta");
   // One line sits in a single-row box with equal space above and below.
@@ -48,7 +44,7 @@ test("a new exercise keeps up to three reference photos", async ({
     .setInputFiles(["a.png", "b.png", "c.png", "d.png"].map(picture));
   await expect(photos).toHaveCount(3);
   // The photos tile is the add button; it locks at the limit.
-  const add = dialog.locator("button.exercise-tile");
+  const add = dialog.locator("button.exercise-tile", { hasText: "Fotos" });
   await expect(add).toBeDisabled();
   await expect(add).toContainText("3 / 3");
   await dialog.getByRole("button", { name: "Quitar foto 3" }).click();

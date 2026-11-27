@@ -1,13 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import {
-  Camera,
-  Dumbbell,
-  PersonStanding,
-  Timer,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { Camera, Dumbbell, PersonStanding, Timer, X } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { photosFit } from "@fitty/core/domain/exercise-photos";
 import {
@@ -20,47 +13,9 @@ import {
 } from "@fitty/core/domain/schemas/exercise";
 import { equipmentFilters } from "@fitty/core/data/exercises";
 import { compressedPhoto } from "@/lib/browser/photos";
+import { ChoiceTile } from "./choice-tile";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-/** A square choice whose native menu opens when the tile is pressed. */
-function SelectTile({
-  icon: Icon,
-  name,
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  icon: LucideIcon;
-  name: string;
-  label: string;
-  value: string;
-  options: readonly { value: string; label: string }[];
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div className="exercise-tile">
-      <Icon aria-hidden="true" />
-      <span aria-hidden="true">{label}</span>
-      <strong aria-hidden="true">
-        {options.find((option) => option.value === value)?.label}
-      </strong>
-      <select
-        name={name}
-        aria-label={label}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
 
 const equipment = equipmentFilters.filter((item) => item !== "Todos");
 
@@ -71,9 +26,9 @@ export function CustomExerciseForm({
 }) {
   const { snapshot, change, notify, t } = useApp();
   const photoInput = useRef<HTMLInputElement>(null);
-  const [group, setGroup] = useState<string>(muscleGroups[0]);
+  const [group, setGroup] = useState<MuscleGroup>(muscleGroups[0]);
   const [gear, setGear] = useState<string>(equipment[0]!);
-  const [tracking, setTracking] = useState("reps");
+  const [tracking, setTracking] = useState<"reps" | "seconds">("reps");
   const [photos, setPhotos] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [lines, setLines] = useState(1);
@@ -93,9 +48,9 @@ export function CustomExerciseForm({
           parsed = customExerciseFormSchema.safeParse({
             id: "custom-" + crypto.randomUUID(),
             name: String(form.get("name") ?? ""),
-            group: form.get("group"),
-            equipment: form.get("equipment"),
-            tracking: form.get("tracking"),
+            group,
+            equipment: gear,
+            tracking,
             steps: String(form.get("steps") ?? "")
               .split("\n")
               .filter((line) => line.trim()),
@@ -122,14 +77,13 @@ export function CustomExerciseForm({
         }
       }}
     >
-      <label className="block">
+      <label className="grid gap-1.5">
         {t("Nombre", "Name")}
         <Input name="name" required maxLength={100} />
       </label>
       <div className="exercise-tiles">
-        <SelectTile
+        <ChoiceTile
           icon={PersonStanding}
-          name="group"
           label={t("Grupo muscular", "Muscle group")}
           value={group}
           onChange={setGroup}
@@ -138,9 +92,8 @@ export function CustomExerciseForm({
             label: t(muscle, muscle),
           }))}
         />
-        <SelectTile
+        <ChoiceTile
           icon={Dumbbell}
-          name="equipment"
           label={t("Equipamiento", "Equipment")}
           value={gear}
           onChange={setGear}
@@ -149,9 +102,8 @@ export function CustomExerciseForm({
             label: t(item, item),
           }))}
         />
-        <SelectTile
+        <ChoiceTile
           icon={Timer}
-          name="tracking"
           label={t("Registrar por", "Track by")}
           value={tracking}
           onChange={setTracking}

@@ -37,6 +37,8 @@ export function Tile({
         // Grows to the row's height without collapsing taller content.
         flexGrow: 1,
         minHeight: 108,
+        alignItems: "center",
+        justifyContent: "center",
         gap: space(1.5),
         padding: space(3.5),
         borderRadius: radius,
@@ -47,12 +49,17 @@ export function Tile({
       })}
     >
       <SymbolView name={icon} tintColor={colors.primary} size={22} />
-      <Label muted numberOfLines={2}>
+      <Label muted numberOfLines={2} style={{ textAlign: "center" }}>
         {label}
       </Label>
       <Text
         numberOfLines={2}
-        style={{ color: colors.foreground, fontSize: 16, fontWeight: "800" }}
+        style={{
+          color: colors.foreground,
+          fontSize: 16,
+          fontWeight: "800",
+          textAlign: "center",
+        }}
       >
         {value}
       </Text>
