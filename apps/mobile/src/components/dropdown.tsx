@@ -1,3 +1,4 @@
+import type { SymbolViewProps } from "expo-symbols";
 import { useState } from "react";
 import {
   Keyboard,
@@ -7,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { Tile } from "@/components/tile";
 import { Card, Label, styles } from "@/components/ui";
 import { colors, space } from "@/theme";
 
@@ -23,6 +25,7 @@ export function Dropdown<T extends string | number>({
   onChange,
   placeholder,
   inline,
+  tile,
 }: {
   label?: string;
   options: readonly { value: T; label: string }[];
@@ -31,41 +34,54 @@ export function Dropdown<T extends string | number>({
   placeholder?: string;
   /** Hide the label above the field (the caller shows it); the window title stays. */
   inline?: boolean;
+  /** Show the field as a tile with this symbol instead of a line. */
+  tile?: SymbolViewProps["name"];
 }) {
   const [open, setOpen] = useState(false);
   const chosen = options.find((option) => option.value === value);
+  const show = () => {
+    Keyboard.dismiss();
+    setOpen(true);
+  };
   return (
-    <View style={{ gap: space(1.5) }}>
-      {label && !inline ? <Label muted>{label}</Label> : null}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-        onPress={() => {
-          Keyboard.dismiss();
-          setOpen(true);
-        }}
-        style={[
-          styles.input,
-          {
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: space(2),
-          },
-        ]}
-      >
-        <Text
-          numberOfLines={1}
-          style={{
-            flex: 1,
-            color: chosen ? colors.foreground : colors.muted,
-            fontSize: 16,
-          }}
+    <View style={tile ? { flex: 1 } : { gap: space(1.5) }}>
+      {label && !inline && !tile ? <Label muted>{label}</Label> : null}
+      {tile ? (
+        <Tile
+          icon={tile}
+          label={label ?? ""}
+          value={chosen?.label ?? placeholder ?? ""}
+          expanded={open}
+          onPress={show}
+        />
+      ) : (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ expanded: open }}
+          onPress={show}
+          style={[
+            styles.input,
+            {
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: space(2),
+            },
+          ]}
         >
-          {chosen?.label ?? placeholder ?? ""}
-        </Text>
-        <Text style={{ color: colors.accent }}>▾</Text>
-      </Pressable>
+          <Text
+            numberOfLines={1}
+            style={{
+              flex: 1,
+              color: chosen ? colors.foreground : colors.muted,
+              fontSize: 16,
+            }}
+          >
+            {chosen?.label ?? placeholder ?? ""}
+          </Text>
+          <Text style={{ color: colors.accent }}>▾</Text>
+        </Pressable>
+      )}
       <Modal
         transparent
         visible={open}

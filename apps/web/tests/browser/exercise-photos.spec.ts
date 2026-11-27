@@ -35,6 +35,10 @@ test("a new exercise keeps up to three reference photos", async ({
     .getByLabel("Grupo muscular", { exact: true })
     .selectOption("Espalda");
   const steps = dialog.locator("textarea");
+  await dialog
+    .getByLabel("Registrar por", { exact: true })
+    .selectOption("seconds");
+  await expect(dialog.locator(".exercise-tiles")).toContainText("Tiempo");
   await steps.fill("Sentate con la espalda recta");
   // One line sits in a single-row box with equal space above and below.
   expect((await steps.boundingBox())!.height).toBeLessThanOrEqual(52);
@@ -43,11 +47,14 @@ test("a new exercise keeps up to three reference photos", async ({
     .getByLabel("Fotos del ejercicio", { exact: true })
     .setInputFiles(["a.png", "b.png", "c.png", "d.png"].map(picture));
   await expect(photos).toHaveCount(3);
-  const add = dialog.getByRole("button", { name: "+ Agregar foto" });
-  await expect(add).toHaveCount(0);
+  // The photos tile is the add button; it locks at the limit.
+  const add = dialog.locator("button.exercise-tile");
+  await expect(add).toBeDisabled();
+  await expect(add).toContainText("3 / 3");
   await dialog.getByRole("button", { name: "Quitar foto 3" }).click();
   await expect(photos).toHaveCount(2);
-  await expect(add).toBeVisible();
+  await expect(add).toBeEnabled();
+  await expect(page.getByTestId("launch-splash")).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath("form.png") });
   await dialog
     .getByRole("button", { name: "Guardar ejercicio", exact: true })

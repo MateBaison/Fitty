@@ -1,6 +1,13 @@
 "use client";
 import { useRef, useState } from "react";
-import { X } from "lucide-react";
+import {
+  Camera,
+  Dumbbell,
+  PersonStanding,
+  Timer,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { photosFit } from "@fitty/core/domain/exercise-photos";
 import {
@@ -16,6 +23,47 @@ import { compressedPhoto } from "@/lib/browser/photos";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+/** A square choice whose native menu opens when the tile is pressed. */
+function SelectTile({
+  icon: Icon,
+  name,
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  icon: LucideIcon;
+  name: string;
+  label: string;
+  value: string;
+  options: readonly { value: string; label: string }[];
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="exercise-tile">
+      <Icon aria-hidden="true" />
+      <span aria-hidden="true">{label}</span>
+      <strong aria-hidden="true">
+        {options.find((option) => option.value === value)?.label}
+      </strong>
+      <select
+        name={name}
+        aria-label={label}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+const equipment = equipmentFilters.filter((item) => item !== "Todos");
+
 export function CustomExerciseForm({
   onCreated,
 }: {
@@ -23,6 +71,9 @@ export function CustomExerciseForm({
 }) {
   const { snapshot, change, notify, t } = useApp();
   const photoInput = useRef<HTMLInputElement>(null);
+  const [group, setGroup] = useState<string>(muscleGroups[0]);
+  const [gear, setGear] = useState<string>(equipment[0]!);
+  const [tracking, setTracking] = useState("reps");
   const [photos, setPhotos] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [lines, setLines] = useState(1);
@@ -75,40 +126,113 @@ export function CustomExerciseForm({
         {t("Nombre", "Name")}
         <Input name="name" required maxLength={100} />
       </label>
-      <label className="block">
-        {t("Grupo muscular", "Muscle group")}
-        <select name="group" aria-label={t("Grupo muscular", "Muscle group")}>
-          {muscleGroups.map((muscle) => (
-            <option key={muscle} value={muscle}>
-              {t(muscle, muscle)}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="block">
-        {t("Equipamiento", "Equipment")}
-        <select name="equipment" aria-label={t("Equipamiento", "Equipment")}>
-          {equipmentFilters
-            .filter((item) => item !== "Todos")
-            .map((item) => (
-              <option key={item} value={item}>
-                {t(item, item)}
-              </option>
-            ))}
-        </select>
-      </label>
-      <label className="block">
-        {t("Cómo registrar las series", "How to track sets")}
-        <select
+      <div className="exercise-tiles">
+        <SelectTile
+          icon={PersonStanding}
+          name="group"
+          label={t("Grupo muscular", "Muscle group")}
+          value={group}
+          onChange={setGroup}
+          options={muscleGroups.map((muscle) => ({
+            value: muscle,
+            label: t(muscle, muscle),
+          }))}
+        />
+        <SelectTile
+          icon={Dumbbell}
+          name="equipment"
+          label={t("Equipamiento", "Equipment")}
+          value={gear}
+          onChange={setGear}
+          options={equipment.map((item) => ({
+            value: item,
+            label: t(item, item),
+          }))}
+        />
+        <SelectTile
+          icon={Timer}
           name="tracking"
-          aria-label={t("Cómo registrar las series", "How to track sets")}
+          label={t("Registrar por", "Track by")}
+          value={tracking}
+          onChange={setTracking}
+          options={[
+            { value: "reps", label: t("Repeticiones", "Repetitions") },
+            { value: "seconds", label: t("Tiempo", "Time") },
+          ]}
+        />
+        <button
+          type="button"
+          className="exercise-tile"
+          disabled={busy || photos.length >= MAX_EXERCISE_PHOTOS}
+          onClick={() => photoInput.current?.click()}
         >
-          <option value="reps">{t("Repeticiones", "Repetitions")}</option>
-          <option value="seconds">
-            {t("Tiempo (segundos)", "Time (seconds)")}
-          </option>
-        </select>
-      </label>
+          <Camera aria-hidden="true" />
+          <span>{t("Fotos", "Photos")}</span>
+          <strong>
+            {photos.length
+              ? `${photos.length} / ${MAX_EXERCISE_PHOTOS}`
+              : t("Agregar foto", "Add photo")}
+          </strong>
+        </button>
+      </div>
+      {photos.length > 0 && (
+        <div className="exercise-photo-list">
+          {photos.map((photo, index) => (
+            <div key={index} className="exercise-photo-item">
+              <img src={photo} alt={`${t("Foto", "Photo")} ${index + 1}`} />
+              <button
+                type="button"
+                aria-label={`${t("Quitar foto", "Remove photo")} ${index + 1}`}
+                onClick={() => {
+                  setError("");
+                  setPhotos((current) =>
+                    current.filter((_, position) => position !== index),
+                  );
+                }}
+              >
+                <X aria-hidden="true" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <input
+        ref={photoInput}
+        className="sr-only"
+        type="file"
+        accept="image/*"
+        multiple
+        tabIndex={-1}
+        aria-label={t("Fotos del ejercicio", "Exercise photos")}
+        onChange={async (event) => {
+          const files = Array.from(event.target.files ?? []).slice(
+            0,
+            MAX_EXERCISE_PHOTOS - photos.length,
+          );
+          event.target.value = "";
+          if (!files.length) return;
+          setBusy(true);
+          setError("");
+          try {
+            // Reference photos are smaller than other photos: they stay in the account.
+            const added = await Promise.all(
+              files.map((file) => compressedPhoto(file, 800, 0.65)),
+            );
+            const next = [...photos, ...added];
+            if (!photosFit(snapshot, next)) setError(full());
+            else setPhotos(next);
+          } catch {
+            setError(
+              t(
+                "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.",
+                "The photo could not be loaded. Choose an image under 8 MB.",
+              ),
+            );
+          } finally {
+            setBusy(false);
+          }
+        }}
+      />
       <label className="block">
         {t("Instrucciones (opcional)", "Instructions (optional)")}
         <textarea
@@ -125,78 +249,6 @@ export function CustomExerciseForm({
           }
         />
       </label>
-      <fieldset className="space-y-2">
-        <legend>{t("Fotos (hasta 3)", "Photos (up to 3)")}</legend>
-        {photos.length > 0 && (
-          <div className="exercise-photo-list">
-            {photos.map((photo, index) => (
-              <div key={index} className="exercise-photo-item">
-                <img src={photo} alt={`${t("Foto", "Photo")} ${index + 1}`} />
-                <button
-                  type="button"
-                  aria-label={`${t("Quitar foto", "Remove photo")} ${index + 1}`}
-                  onClick={() => {
-                    setError("");
-                    setPhotos((current) =>
-                      current.filter((_, position) => position !== index),
-                    );
-                  }}
-                >
-                  <X aria-hidden="true" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-        {photos.length < MAX_EXERCISE_PHOTOS && (
-          <Button
-            type="button"
-            variant="secondary"
-            className="w-full"
-            disabled={busy}
-            onClick={() => photoInput.current?.click()}
-          >
-            {t("+ Agregar foto", "+ Add photo")}
-          </Button>
-        )}
-        <input
-          ref={photoInput}
-          className="sr-only"
-          type="file"
-          accept="image/*"
-          multiple
-          tabIndex={-1}
-          aria-label={t("Fotos del ejercicio", "Exercise photos")}
-          onChange={async (event) => {
-            const files = Array.from(event.target.files ?? []).slice(
-              0,
-              MAX_EXERCISE_PHOTOS - photos.length,
-            );
-            event.target.value = "";
-            if (!files.length) return;
-            setBusy(true);
-            setError("");
-            try {
-              // Reference photos are smaller than other photos: they stay in the account.
-              const added = await Promise.all(
-                files.map((file) => compressedPhoto(file, 800, 0.65)),
-              );
-              const next = [...photos, ...added];
-              if (!photosFit(snapshot, next)) setError(full());
-              else setPhotos(next);
-            } catch {
-              setError(
-                t(
-                  "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.",
-                  "The photo could not be loaded. Choose an image under 8 MB.",
-                ),
-              );
-            } finally {
-              setBusy(false);
-            }
-          }}
-        />
-      </fieldset>
       {error && (
         <p role="alert" className="text-sm text-destructive">
           {error}

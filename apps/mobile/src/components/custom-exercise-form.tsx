@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Alert,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -17,7 +18,8 @@ import {
 } from "@fitty/core/domain/schemas/snapshot";
 import { Dropdown } from "@/components/dropdown";
 import { PhotoStrip } from "@/components/photo-strip";
-import { Button, Field, Label, styles, Title } from "@/components/ui";
+import { Tile, TileRow } from "@/components/tile";
+import { Button, Field, styles, Title } from "@/components/ui";
 import { makeId } from "@/lib/id";
 import { pickPhoto } from "@/lib/photos";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -84,6 +86,11 @@ export function CustomExerciseForm({
       );
       return null;
     }
+  };
+  const changePhotos = (next: string[]) => {
+    if (next.length > photos.length && !photosFit(snapshot, next))
+      return full();
+    setPhotos(next);
   };
   const addPhoto = () =>
     new Promise<string | null>((resolve) => {
@@ -163,30 +170,64 @@ export function CustomExerciseForm({
               onChangeText={setName}
               maxLength={100}
             />
-            <Dropdown
-              label={t("Grupo muscular", "Muscle group")}
-              options={options(muscleGroups)}
-              value={group}
-              onChange={setGroup}
-            />
-            <Dropdown
-              label={t("Equipamiento", "Equipment")}
-              options={options(equipment)}
-              value={gear}
-              onChange={setGear}
-            />
-            <Dropdown
-              label={t("Registrar por", "Track by")}
-              options={[
-                {
-                  value: "reps" as const,
-                  label: t("Repeticiones", "Repetitions"),
-                },
-                { value: "seconds" as const, label: t("Tiempo", "Time") },
-              ]}
-              value={tracking}
-              onChange={setTracking}
-            />
+            <TileRow>
+              <Dropdown
+                tile={{
+                  ios: "figure.strengthtraining.traditional",
+                  android: "accessibility_new",
+                }}
+                label={t("Grupo muscular", "Muscle group")}
+                options={options(muscleGroups)}
+                value={group}
+                onChange={setGroup}
+              />
+              <Dropdown
+                tile={{ ios: "dumbbell", android: "fitness_center" }}
+                label={t("Equipamiento", "Equipment")}
+                options={options(equipment)}
+                value={gear}
+                onChange={setGear}
+              />
+            </TileRow>
+            <TileRow>
+              <Dropdown
+                tile={{ ios: "stopwatch", android: "timer" }}
+                label={t("Registrar por", "Track by")}
+                options={[
+                  {
+                    value: "reps" as const,
+                    label: t("Repeticiones", "Repetitions"),
+                  },
+                  { value: "seconds" as const, label: t("Tiempo", "Time") },
+                ]}
+                value={tracking}
+                onChange={setTracking}
+              />
+              <View style={{ flex: 1 }}>
+                <Tile
+                  icon={{ ios: "camera", android: "photo_camera" }}
+                  label={t("Fotos", "Photos")}
+                  value={
+                    photos.length
+                      ? `${photos.length} / ${MAX_EXERCISE_PHOTOS}`
+                      : t("Agregar foto", "Add photo")
+                  }
+                  disabled={photos.length >= MAX_EXERCISE_PHOTOS}
+                  onPress={async () => {
+                    Keyboard.dismiss();
+                    const photo = await addPhoto();
+                    if (photo) changePhotos([...photos, photo]);
+                  }}
+                />
+              </View>
+            </TileRow>
+            {photos.length ? (
+              <PhotoStrip
+                photos={photos}
+                onChange={changePhotos}
+                addButton={false}
+              />
+            ) : null}
             <Field
               label={t(
                 "Instrucciones (una por línea)",
@@ -196,17 +237,6 @@ export function CustomExerciseForm({
               onChangeText={setSteps}
               multiline
               maxLength={5000}
-            />
-            <Label muted>{t("Fotos (hasta 3)", "Photos (up to 3)")}</Label>
-            <PhotoStrip
-              photos={photos}
-              max={MAX_EXERCISE_PHOTOS}
-              pick={addPhoto}
-              onChange={(next) => {
-                if (next.length > photos.length && !photosFit(snapshot, next))
-                  return full();
-                setPhotos(next);
-              }}
             />
             <Button disabled={!name.trim()} onPress={save}>
               {t("Guardar ejercicio", "Save exercise")}

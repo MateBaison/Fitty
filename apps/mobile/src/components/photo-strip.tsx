@@ -11,12 +11,15 @@ export function PhotoStrip({
   onChange,
   max = 3,
   pick = pickPhoto,
+  addButton = true,
 }: {
   photos: string[];
   onChange: (photos: string[]) => void;
   max?: number;
   /** Replaces the default library picker; resolves null when nothing was added. */
   pick?: () => Promise<string | null>;
+  /** False when the caller offers its own way to add photos. */
+  addButton?: boolean;
 }) {
   const { notify, t } = useAccount();
   return (
@@ -61,7 +64,7 @@ export function PhotoStrip({
           </View>
         ))}
       </View>
-      {photos.length < max ? (
+      {addButton && photos.length < max ? (
         <Button
           variant="secondary"
           onPress={async () => {
