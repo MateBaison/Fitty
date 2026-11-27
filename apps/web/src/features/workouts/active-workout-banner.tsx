@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Timer } from "lucide-react";
+import { Play, Timer, X } from "lucide-react";
 import { timeFormat } from "@fitty/core/domain/combat";
+import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useApp } from "@/state/app-provider";
 
 /**
@@ -18,7 +20,8 @@ export function ActiveWorkoutBanner({
   routine?: string;
   started: number;
 }) {
-  const { t } = useApp();
+  const { change, t } = useApp();
+  const [ask, confirmDialog] = useConfirm();
   const banner = useRef<HTMLDivElement>(null);
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
@@ -37,6 +40,17 @@ export function ActiveWorkoutBanner({
     observer.observe(header, { box: "border-box" });
     return () => observer.disconnect();
   }, []);
+  const cancel = async () => {
+    if (
+      await ask(t("¿Cancelar este entrenamiento?", "Cancel this workout?"), {
+        confirmLabel: t("Cancelar entrenamiento", "Cancel workout"),
+        destructive: true,
+      })
+    )
+      change((draft) => {
+        draft.workout = null;
+      });
+  };
   return (
     <div ref={banner} className="active-workout-sticky">
       <section className="active-workout hero-panel">
@@ -58,11 +72,28 @@ export function ActiveWorkoutBanner({
               ? timeFormat((now - started) / 1000)
               : "--:--"}
           </span>
-          <Link href="/workout" className="primary-link">
-            {t("Continuar", "Continue")}
-          </Link>
+          <div className="active-workout-buttons">
+            <Button
+              variant="destructive-solid"
+              className="active-workout-button"
+              aria-label={t("Cancelar entrenamiento", "Cancel workout")}
+              title={t("Cancelar entrenamiento", "Cancel workout")}
+              onClick={cancel}
+            >
+              <X aria-hidden="true" />
+            </Button>
+            <Link
+              href="/workout"
+              className="primary-link active-workout-button"
+              aria-label={t("Continuar", "Continue")}
+              title={t("Continuar", "Continue")}
+            >
+              <Play aria-hidden="true" fill="currentColor" />
+            </Link>
+          </div>
         </div>
       </section>
+      {confirmDialog}
     </div>
   );
 }

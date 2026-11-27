@@ -240,6 +240,46 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
   expect(png.readUInt32BE(16)).toBe(1080);
   expect(png.readUInt32BE(20)).toBe(1920);
 });
+test("the workout in progress can be continued or cancelled from home", async ({
+  page,
+}, info) => {
+  if (info.project.name === "mobile")
+    await page.setViewportSize({ width: 320, height: 844 });
+  await page
+    .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
+    .click();
+  await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
+  await expect(page).toHaveURL(/\/workout$/);
+  await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();
+  const banner = page.locator(".active-workout");
+  await expect(
+    banner.getByRole("link", { name: "Continuar", exact: true }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: `artifacts/active-workout-buttons-${info.project.name}.png`,
+  });
+  const cancel = banner.getByRole("button", {
+    name: "Cancelar entrenamiento",
+    exact: true,
+  });
+  await cancel.click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("button", { name: "Volver", exact: true }).click();
+  await expect(banner).toHaveCount(1);
+  await cancel.click();
+  await dialog
+    .getByRole("button", { name: "Cancelar entrenamiento", exact: true })
+    .click();
+  await expect(banner).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Iniciar entrenamiento", exact: true }),
+  ).toBeVisible();
+});
 test("personal record highlights appear while logging and remain in the calendar", async ({
   page,
 }, info) => {

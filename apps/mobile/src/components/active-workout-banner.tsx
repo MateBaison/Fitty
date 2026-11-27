@@ -1,10 +1,43 @@
-import { SymbolView } from "expo-symbols";
+import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 import { timeFormat } from "@fitty/core/domain/combat";
-import { Button, Label } from "@/components/ui";
+import { Label } from "@/components/ui";
 import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
+
+function RoundButton({
+  label,
+  icon,
+  color,
+  tint,
+  onPress,
+}: {
+  label: string;
+  icon: SymbolViewProps["name"];
+  color: string;
+  tint: string;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => ({
+        width: 52,
+        height: 48,
+        borderRadius: 15,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: color,
+        opacity: pressed ? 0.6 : 1,
+      })}
+    >
+      <SymbolView name={icon} tintColor={tint} size={20} weight="bold" />
+    </Pressable>
+  );
+}
 
 /**
  * The workout in progress at the top of the home screen, counting the time since
@@ -21,7 +54,7 @@ export function ActiveWorkoutBanner({
   started: number;
   onContinue: () => void;
 }) {
-  const { t } = useAccount();
+  const { change, t } = useAccount();
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
@@ -30,6 +63,19 @@ export function ActiveWorkoutBanner({
   const elapsed = Number.isFinite(started)
     ? timeFormat((now - started) / 1000)
     : "--:--";
+  const cancel = () =>
+    Alert.alert(
+      t("Cancelar entrenamiento", "Cancel workout"),
+      t("No se guardará este entrenamiento.", "This workout won't be saved."),
+      [
+        { text: t("Volver", "Back"), style: "cancel" },
+        {
+          text: t("Cancelar entrenamiento", "Cancel workout"),
+          style: "destructive",
+          onPress: () => void change((draft) => void (draft.workout = null)),
+        },
+      ],
+    );
   return (
     <View
       style={{
@@ -67,7 +113,7 @@ export function ActiveWorkoutBanner({
         </Text>
         <Label muted>{routine}</Label>
       </View>
-      <View style={{ minWidth: 112, gap: space(2) }}>
+      <View style={{ alignItems: "center", gap: space(2) }}>
         <View
           accessible
           accessibilityRole="timer"
@@ -95,7 +141,22 @@ export function ActiveWorkoutBanner({
             {elapsed}
           </Text>
         </View>
-        <Button onPress={onContinue}>{t("Continuar", "Continue")}</Button>
+        <View style={{ flexDirection: "row", gap: space(2) }}>
+          <RoundButton
+            label={t("Cancelar entrenamiento", "Cancel workout")}
+            icon={{ ios: "xmark", android: "close" }}
+            color={colors.destructive}
+            tint="#ffffff"
+            onPress={cancel}
+          />
+          <RoundButton
+            label={t("Continuar", "Continue")}
+            icon={{ ios: "play.fill", android: "play_arrow" }}
+            color={colors.primary}
+            tint={colors.primaryForeground}
+            onPress={onContinue}
+          />
+        </View>
       </View>
     </View>
   );
