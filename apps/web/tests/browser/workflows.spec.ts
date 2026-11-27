@@ -80,6 +80,20 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
     .click();
   await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();
   await expect(page.locator(".active-workout")).toHaveCount(1);
+  await expect(page.getByRole("timer")).toHaveText(/^\d{2}:\d{2}$/);
+  // Scrolled to the bottom, the workout in progress stays under the header.
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
+  await expect
+    .poll(async () => {
+      const header = await page.locator(".app-header").boundingBox();
+      const banner = await page.locator(".active-workout").boundingBox();
+      return Math.round(banner!.y - header!.y - header!.height);
+    })
+    .toBe(8);
+  await page.screenshot({
+    path: `artifacts/active-workout-${info.project.name}.png`,
+  });
   await page.getByRole("link", { name: "Continuar", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Omitir descanso", exact: true }),

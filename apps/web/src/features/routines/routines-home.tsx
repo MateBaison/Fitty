@@ -37,6 +37,7 @@ import { copyField } from "@/lib/browser/clipboard";
 import { replaceRoutineExercise } from "@fitty/core/domain/routine-day";
 import { CalendarPanel } from "@/features/calendar/calendar-panel";
 import { ReadinessDialog } from "@/features/workouts/readiness-dialog";
+import { ActiveWorkoutBanner } from "@/features/workouts/active-workout-banner";
 
 type Editor = {
   type: "new" | "rename" | "day" | "rename-day";
@@ -266,20 +267,11 @@ export function RoutinesHome() {
         />
       )}
       {workout ? (
-        <section className="active-workout hero-panel mb-5">
-          <div className="active-workout-details">
-            <span className="eyebrow">
-              ● {t("Entrenamiento en curso", "Workout in progress")}
-            </span>
-            <h2 className="my-2 text-2xl font-bold">
-              {activeDay?.name ?? "Entrenamiento"}
-            </h2>
-            <p>{activeRoutine?.name}</p>
-          </div>
-          <Link href="/workout" className="primary-link">
-            {t("Continuar", "Continue")}
-          </Link>
-        </section>
+        <ActiveWorkoutBanner
+          day={activeDay?.name ?? "Entrenamiento"}
+          routine={activeRoutine?.name}
+          started={workout.started}
+        />
       ) : (
         <Button className="mb-5 w-full" onClick={() => setQuick(true)}>
           {t("Iniciar entrenamiento", "Start workout")}

@@ -44,18 +44,24 @@ export function Screen({
   children,
   scroll = true,
   glow = true,
+  pinned,
 }: {
   children: ReactNode;
   scroll?: boolean;
   glow?: boolean;
+  /** Stays at the top of the screen while the rest scrolls. */
+  pinned?: ReactNode;
 }) {
   // Read from the context so screens under the app header (which owns the top inset) get no extra gap.
   const insets = useSafeAreaInsets();
   const [locked, setLocked] = useState(false);
   const barSpace = use(BottomSpace);
-  const content = barSpace
-    ? [styles.content, { paddingBottom: barSpace + space(4) }]
-    : styles.content;
+  const content = [
+    styles.content,
+    barSpace ? { paddingBottom: barSpace + space(4) } : null,
+    // The pinned block already leaves half of the gap above the content.
+    pinned ? { paddingTop: space(2) } : null,
+  ];
   return (
     <View
       style={[
@@ -68,6 +74,17 @@ export function Screen({
       ]}
     >
       {glow ? <Glow /> : null}
+      {pinned ? (
+        <View
+          style={{
+            paddingHorizontal: space(4),
+            paddingTop: space(4),
+            paddingBottom: space(2),
+          }}
+        >
+          {pinned}
+        </View>
+      ) : null}
       {scroll ? (
         <ScrollView
  showsVerticalScrollIndicator={false}

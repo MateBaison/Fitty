@@ -8,6 +8,7 @@ import {
   startWorkout,
   type Session,
 } from "@fitty/core/domain/workouts";
+import { ActiveWorkoutBanner } from "@/components/active-workout-banner";
 import { Calendar } from "@/components/calendar";
 import { DaySheet } from "@/components/day-sheet";
 import { Notice } from "@/components/notice";
@@ -77,52 +78,20 @@ export default function Home() {
     (item) => item.id === snapshot.workout?.did,
   );
   return (
-    <Screen>
+    <Screen
+      pinned={
+        snapshot.workout ? (
+          <ActiveWorkoutBanner
+            day={activeDay?.name ?? t("Entrenamiento", "Workout")}
+            routine={activeRoutine?.name}
+            started={snapshot.workout.started}
+            onContinue={() => router.navigate("/workout")}
+          />
+        ) : null
+      }
+    >
       <Notice />
-      {snapshot.workout ? (
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: space(3),
-            borderRadius: 24,
-            borderColor: "#2b6a8f",
-            borderStartWidth: 4,
-            borderStartColor: colors.primary,
-            borderWidth: 1,
-            backgroundColor: "#10283a",
-            padding: space(4),
-          }}
-        >
-          <View style={{ flex: 1, gap: 4 }}>
-            <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.7}
-              style={{
-                color: colors.primary,
-                fontSize: 11,
-                fontWeight: "800",
-                letterSpacing: 1,
-                textTransform: "uppercase",
-              }}
-            >
-              ● {t("Entrenamiento en curso", "Workout in progress")}
-            </Text>
-            <Text
-              style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}
-            >
-              {activeDay?.name ?? t("Entrenamiento", "Workout")}
-            </Text>
-            <Label muted>{activeRoutine?.name}</Label>
-          </View>
-          <View style={{ minWidth: 112 }}>
-            <Button onPress={() => router.navigate("/workout")}>
-              {t("Continuar", "Continue")}
-            </Button>
-          </View>
-        </View>
-      ) : (
+      {snapshot.workout ? null : (
         <Button onPress={() => setPicking(true)}>
           {t("Iniciar entrenamiento", "Start workout")}
         </Button>

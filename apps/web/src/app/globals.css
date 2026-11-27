@@ -1070,6 +1070,35 @@ label input[type="checkbox"] {
   color: var(--muted-foreground);
   cursor: grab;
 }
+/* Stays under the header (its height is set as `top`) while the page scrolls. */
+.active-workout-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  margin: -8px 0 12px;
+  padding: 8px 0;
+  background: var(--background);
+}
+.active-workout-actions {
+  display: grid;
+  justify-items: stretch;
+  gap: 8px;
+}
+.active-workout-time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+.active-workout-time svg {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+}
 .active-workout {
   border-left: 4px solid var(--primary);
   display: grid;
@@ -4225,6 +4254,11 @@ input[type="range"] {
 @media (max-width: 480px) {
   .active-workout {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .active-workout-actions {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
   }
 }
 .filter-list {

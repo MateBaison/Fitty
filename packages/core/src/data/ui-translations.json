@@ -1,5 +1,6 @@
 {
   "fr": {
+    "Tiempo transcurrido": "Temps écoulé",
     "Más opciones": "Plus d’options",
     "Agregar a superserie": "Ajouter à une supersérie",
     "Eliminar ejercicio": "Supprimer l’exercice",
@@ -1174,6 +1175,7 @@
     "Foto de": "Photo de"
   },
   "zh": {
+    "Tiempo transcurrido": "已用时间",
     "Más opciones": "更多选项",
     "Agregar a superserie": "加入超级组",
     "Eliminar ejercicio": "删除练习",
@@ -2348,6 +2350,7 @@
     "Foto de": "照片："
   },
   "hi": {
+    "Tiempo transcurrido": "बीता हुआ समय",
     "Más opciones": "और विकल्प",
     "Agregar a superserie": "सुपरसेट में जोड़ें",
     "Eliminar ejercicio": "व्यायाम हटाएँ",
@@ -3522,6 +3525,7 @@
     "Foto de": "फ़ोटो:"
   },
   "ar": {
+    "Tiempo transcurrido": "الوقت المنقضي",
     "Más opciones": "خيارات أخرى",
     "Agregar a superserie": "إضافة إلى مجموعة متتالية",
     "Eliminar ejercicio": "حذف التمرين",
@@ -4696,6 +4700,7 @@
     "Foto de": "صورة"
   },
   "de": {
+    "Tiempo transcurrido": "Verstrichene Zeit",
     "Más opciones": "Weitere Optionen",
     "Agregar a superserie": "Zum Supersatz hinzufügen",
     "Eliminar ejercicio": "Übung löschen",
@@ -5868,6 +5873,7 @@
     "Foto de": "Foto von"
   },
   "it": {
+    "Tiempo transcurrido": "Tempo trascorso",
     "Más opciones": "Altre opzioni",
     "Agregar a superserie": "Aggiungi a una superserie",
     "Eliminar ejercicio": "Elimina esercizio",
@@ -7040,6 +7046,7 @@
     "Foto de": "Foto di"
   },
   "pt": {
+    "Tiempo transcurrido": "Tempo decorrido",
     "Más opciones": "Mais opções",
     "Agregar a superserie": "Adicionar à supersérie",
     "Eliminar ejercicio": "Excluir exercício",
@@ -8212,6 +8219,7 @@
     "Foto de": "Foto de"
   },
   "en": {
+    "Tiempo transcurrido": "Elapsed time",
     "Más opciones": "More options",
     "Agregar a superserie": "Add to superset",
     "Eliminar ejercicio": "Delete exercise",
