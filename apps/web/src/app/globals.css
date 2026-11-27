@@ -419,18 +419,23 @@ main > h1 {
   color: var(--muted-foreground);
   margin-top: 4px;
 }
+/* A floating island: rounded, detached from the edges, over the content. */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
+  /* Same distance as in the app: close to an iPhone's home line. */
+  bottom: max(12px, calc(env(safe-area-inset-bottom) - 10px));
   left: 50%;
   transform: translateX(-50%);
   z-index: 30;
-  width: min(720px, 100%);
+  width: min(520px, calc(100% - 32px));
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  background: color-mix(in srgb, var(--card) 96%, transparent);
-  border-top: 1px solid var(--border);
-  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 6px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 36px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
   backdrop-filter: blur(20px);
 }
 .bottom-nav a {
@@ -440,16 +445,39 @@ main > h1 {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border-radius: 16px;
+  position: relative;
+  border-radius: 29px;
   font-size: 0.65rem;
   font-weight: 750;
   color: var(--muted-foreground);
+  transition: color 360ms ease;
 }
 .bottom-nav a[aria-current="page"] {
-  background: color-mix(in srgb, var(--primary) 22%, transparent);
   color: var(--primary);
-  box-shadow: inset 0 0 0 1px
-    color-mix(in srgb, var(--primary) 35%, transparent);
+}
+/* As wide as one of the four columns; --active says which one it covers. */
+.bottom-nav-indicator {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  inset-inline-start: 6px;
+  width: calc((100% - 24px) / 4);
+  border-radius: 29px;
+  /* The app's highlight colors; the light theme has its own below. */
+  background: #173a52;
+  box-shadow: inset 0 0 0 1px #2b6a8f;
+  transform: translateX(calc(var(--active) * (100% + 4px)));
+  transition: transform 420ms cubic-bezier(0.3, 1.2, 0.45, 1);
+  pointer-events: none;
+}
+[dir="rtl"] .bottom-nav-indicator {
+  transform: translateX(calc(var(--active) * (-100% - 4px)));
+}
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav a,
+  .bottom-nav-indicator {
+    transition: none;
+  }
 }
 .bottom-nav a[aria-current="page"] svg {
   stroke-width: 2.5;
@@ -750,7 +778,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .save-toast {
   position: fixed;
   z-index: 100;
-  bottom: 100px;
+  bottom: calc(100px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
   padding: 12px 18px;
@@ -1504,22 +1532,9 @@ strong {
   grid-column: 1;
   grid-row: 1;
 }
-.bottom-nav::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  clip-path: inset(0 -100vmax);
-  z-index: -1;
-  pointer-events: none;
-}
 .app-header-section::before {
   background: var(--background);
   border-bottom: 1px solid var(--border);
-}
-.bottom-nav::before {
-  background: color-mix(in srgb, var(--card) 96%, transparent);
-  box-shadow: 0 0 0 100vmax color-mix(in srgb, var(--card) 96%, transparent);
-  border-top: 1px solid var(--border);
 }
 .app-header-section .header-actions {
   grid-column: 3;
@@ -1967,6 +1982,14 @@ input[type="range"] {
   background:
     radial-gradient(circle at 90% -5%, #d5efff 0, transparent 28rem),
     var(--background);
+}
+[data-theme="light"] .bottom-nav {
+  box-shadow: 0 10px 28px rgb(30 45 70 / 0.18);
+}
+[data-theme="light"] .bottom-nav-indicator {
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--primary) 35%, transparent);
 }
 [data-theme="light"] .bottom-nav a[aria-current="page"] {
   color: var(--accent-foreground);
@@ -3143,9 +3166,6 @@ input[type="range"] {
   }
 }
 
-.bottom-nav {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
 .professionals-screen {
   display: grid;
   gap: 20px;
@@ -4067,9 +4087,7 @@ input[type="range"] {
   opacity: 0.3;
 }
 .app-header-section,
-.app-header-section::before,
-.bottom-nav,
-.bottom-nav::before {
+.app-header-section::before {
   border-top: 0;
   border-bottom: 0;
 }

@@ -78,8 +78,11 @@ export function ExerciseBrowser({
   selectedIds,
   onCreate,
   leading,
+  bottomSpace = 0,
 }: {
   leading?: React.ReactNode;
+  /** Room left after the last row for a bar floating over the list. */
+  bottomSpace?: number;
   onPress: (exercise: CatalogExercise, list: CatalogExercise[]) => void;
   selectedIds?: readonly string[];
   onCreate?: () => void;
@@ -125,7 +128,10 @@ export function ExerciseBrowser({
         numColumns={2}
         columnWrapperStyle={{ gap: space(3) }}
         keyExtractor={(exercise) => exercise.id}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          bottomSpace ? { paddingBottom: bottomSpace + space(4) } : null,
+        ]}
         keyboardShouldPersistTaps="handled"
         ListHeaderComponent={
           <View style={{ gap: space(3) }}>

@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppHeader } from "@/components/app-header";
 import { BottomNav } from "@/components/bottom-nav";
+import { BAR_HEIGHT, barOffset, BottomSpace } from "@/components/bottom-space";
 import { Onboarding } from "@/components/onboarding";
 import { Button, Card, Label, Loading, Screen, Title } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
@@ -62,24 +63,26 @@ function AccountGate() {
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <AppHeader />
       <SafeAreaInsetsContext.Provider value={{ ...insets, top: 0 }}>
-        <Tabs
-          tabBar={() => <BottomNav />}
-          screenOptions={{
-            headerShown: false,
-            sceneStyle: { backgroundColor: colors.background },
-          }}
-        >
-          <Tabs.Screen name="index" />
-          <Tabs.Screen name="professionals" />
-          <Tabs.Screen name="tools" />
-          <Tabs.Screen name="profile" />
-          <Tabs.Screen name="library" />
-          <Tabs.Screen name="progress" />
-          <Tabs.Screen name="workout" />
-          <Tabs.Screen name="routines" />
-          <Tabs.Screen name="body" />
-          <Tabs.Screen name="combat" />
-        </Tabs>
+        <BottomSpace value={BAR_HEIGHT + barOffset(insets.bottom)}>
+          <Tabs
+            tabBar={() => <BottomNav />}
+            screenOptions={{
+              headerShown: false,
+              sceneStyle: { backgroundColor: colors.background },
+            }}
+          >
+            <Tabs.Screen name="index" />
+            <Tabs.Screen name="professionals" />
+            <Tabs.Screen name="tools" />
+            <Tabs.Screen name="profile" />
+            <Tabs.Screen name="library" />
+            <Tabs.Screen name="progress" />
+            <Tabs.Screen name="workout" />
+            <Tabs.Screen name="routines" />
+            <Tabs.Screen name="body" />
+            <Tabs.Screen name="combat" />
+          </Tabs>
+        </BottomSpace>
       </SafeAreaInsetsContext.Provider>
     </View>
   );

@@ -1,4 +1,4 @@
-import { createContext, useState, type ReactNode } from "react";
+import { createContext, use, useState, type ReactNode } from "react";
 import {
   useWindowDimensions,
   type ScrollViewProps,
@@ -15,6 +15,7 @@ import {
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
+import { BottomSpace } from "@/components/bottom-space";
 import { useInputAlign } from "@/lib/direction";
 import { colors, radius, space } from "@/theme";
 
@@ -51,6 +52,10 @@ export function Screen({
   // Read from the context so screens under the app header (which owns the top inset) get no extra gap.
   const insets = useSafeAreaInsets();
   const [locked, setLocked] = useState(false);
+  const barSpace = use(BottomSpace);
+  const content = barSpace
+    ? [styles.content, { paddingBottom: barSpace + space(4) }]
+    : styles.content;
   return (
     <View
       style={[
@@ -67,7 +72,7 @@ export function Screen({
         <ScrollView
  showsVerticalScrollIndicator={false}
           style={glow ? { backgroundColor: "transparent" } : undefined}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={content}
           keyboardShouldPersistTaps="handled"
           scrollEnabled={!locked}
         >
@@ -76,7 +81,7 @@ export function Screen({
           </ScrollLockContext.Provider>
         </ScrollView>
       ) : (
-        <View style={[styles.content, { flex: 1 }]}>{children}</View>
+        <View style={[content, { flex: 1 }]}>{children}</View>
       )}
     </View>
   );

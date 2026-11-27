@@ -1,13 +1,14 @@
 import { ExerciseGallery } from "@/components/exercise-gallery";
 import { Chevron } from "@/lib/direction";
 import { exerciseName } from "@/lib/exercise-name";
-import { useState } from "react";
+import { use, useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { translate } from "@fitty/core/data/translations";
 import { type CatalogExercise } from "@fitty/core/domain/workouts";
 import { useRouter } from "expo-router";
 import { BackButton } from "@/components/back-button";
+import { BottomSpace } from "@/components/bottom-space";
 import { CustomExerciseForm } from "@/components/custom-exercise-form";
 import { ExerciseBrowser } from "@/components/exercise-browser";
 import { Notice } from "@/components/notice";
@@ -20,6 +21,7 @@ export default function Library() {
   const { t, change, notify } = useAccount();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const barSpace = use(BottomSpace);
   const language = snapshot.settings.language ?? "es";
   const [selected, setSelected] = useState<CatalogExercise | null>(null);
   const [list, setList] = useState<CatalogExercise[]>([]);
@@ -41,6 +43,7 @@ export default function Library() {
       <Glow />
       <Notice />
       <ExerciseBrowser
+        bottomSpace={barSpace}
         leading={<BackButton onPress={() => (router.canGoBack() ? router.back() : router.navigate("/"))} />}
         onPress={(exercise, shown) => {
           setList(shown);

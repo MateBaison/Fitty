@@ -12,22 +12,30 @@ const destinations = [
 export function BottomNav() {
   const pathname = usePathname();
   const { t } = useApp();
+  const active = destinations.findIndex(
+    ({ href }) =>
+      pathname === href ||
+      (href === "/home" &&
+        ["/workout", "/library", "/progress"].includes(pathname)),
+  );
   return (
     <nav
       className="bottom-nav"
       aria-label={t("Navegación principal", "Main navigation")}
     >
-      {destinations.map(({ href, label, icon: Icon }) => (
+      {active >= 0 && (
+        // One highlight for the whole bar, so it can slide between sections.
+        <span
+          className="bottom-nav-indicator"
+          aria-hidden="true"
+          style={{ "--active": active } as React.CSSProperties}
+        />
+      )}
+      {destinations.map(({ href, label, icon: Icon }, index) => (
         <Link
           key={href}
           href={href}
-          aria-current={
-            pathname === href ||
-            (href === "/home" &&
-              ["/workout", "/library", "/progress"].includes(pathname))
-              ? "page"
-              : undefined
-          }
+          aria-current={index === active ? "page" : undefined}
         >
           <Icon size={21} aria-hidden="true" />
           <span>{t(label, label)}</span>
