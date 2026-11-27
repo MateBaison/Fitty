@@ -20,19 +20,26 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
-import { GripVertical, Trash2 } from "lucide-react";
+import { GripVertical } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { findExercise } from "@fitty/core/domain/workouts";
+import { removeRoutineExercise } from "@fitty/core/domain/routine-day";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
-import { Button } from "@/components/ui/button";
+import { ExerciseOptions } from "./exercise-options";
 function SortableItem({
   id,
   exerciseId,
+  canSuperset,
+  replace,
+  superset,
   remove,
 }: {
   id: string;
   exerciseId: string;
+  canSuperset: boolean;
+  replace: () => void;
+  superset: () => void;
   remove: () => void;
 }) {
   const short = useExerciseName();
@@ -72,14 +79,13 @@ function SortableItem({
         </button>
       )}
       <span className="min-w-0 flex-1">{short(exercise?.name ?? exerciseId)}</span>
-      <Button
-        variant="destructive-solid"
-        className="exercise-remove"
-        aria-label={`Quitar ${exercise?.name ?? exerciseId}`}
-        onClick={remove}
-      >
-        <Trash2 aria-hidden="true" />
-      </Button>
+      <ExerciseOptions
+        name={short(exercise?.name ?? exerciseId)}
+        canSuperset={canSuperset}
+        onReplace={replace}
+        onSuperset={superset}
+        onRemove={remove}
+      />
       <ExerciseDetails
         exercise={enlarged ? (exercise ?? null) : null}
         onClose={() => setEnlarged(false)}
@@ -87,7 +93,17 @@ function SortableItem({
     </div>
   );
 }
-export function SortableExercises({ rid, did }: { rid: string; did: string }) {
+export function SortableExercises({
+  rid,
+  did,
+  onReplace,
+  onSuperset,
+}: {
+  rid: string;
+  did: string;
+  onReplace: (index: number) => void;
+  onSuperset: (exerciseId: string) => void;
+}) {
   const { snapshot, change } = useApp(),
     day = snapshot.routines
       .find((routine) => routine.id === rid)
@@ -134,16 +150,15 @@ export function SortableExercises({ rid, did }: { rid: string; did: string }) {
             key={ids[index]}
             id={ids[index] ?? ""}
             exerciseId={id}
+            canSuperset={new Set(day.items).size > 1}
+            replace={() => onReplace(index)}
+            superset={() => onSuperset(id)}
             remove={() =>
               change((draft) => {
                 const target = draft.routines
                   .find((routine) => routine.id === rid)
                   ?.days.find((day) => day.id === did);
-                if (!target) return;
-                target.items.splice(index, 1);
-                target.supersets = target.supersets
-                  ?.map((group) => group.filter((item) => item !== id))
-                  .filter((group) => group.length >= 2);
+                if (target) removeRoutineExercise(target, index);
               })
             }
           />

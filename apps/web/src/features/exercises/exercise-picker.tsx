@@ -15,9 +15,12 @@ import { ExerciseVisual } from "./exercise-visual";
 export function ExercisePicker({
   onClose,
   onPick,
+  single,
 }: {
   onClose: () => void;
   onPick: (ids: string[]) => void;
+  /** Choose one exercise right away, to change the one of a routine day. */
+  single?: boolean;
 }) {
   const short = useExerciseName();
   const { snapshot, change, t } = useApp();
@@ -58,11 +61,19 @@ export function ExercisePicker({
     <AppDialog
       open
       onClose={onClose}
-      title={t("Agregar ejercicios", "Add exercises")}
-      description={t(
-        "Elegí uno o varios ejercicios; podés ver sus imágenes antes de agregarlos.",
-        "Choose one or more exercises and review their images before adding them.",
-      )}
+      title={
+        single
+          ? t("Cambiar ejercicio", "Change exercise")
+          : t("Agregar ejercicios", "Add exercises")
+      }
+      description={
+        single
+          ? ""
+          : t(
+              "Elegí uno o varios ejercicios; podés ver sus imágenes antes de agregarlos.",
+              "Choose one or more exercises and review their images before adding them.",
+            )
+      }
     >
       <div className="exercise-picker-actions">
         {group && (
@@ -142,19 +153,28 @@ export function ExercisePicker({
                     }
                   />
                 </Button>
-                <input
-                  type="checkbox"
-                  aria-label={`Seleccionar ${exercise.name}`}
-                  checked={selected.includes(exercise.id)}
-                  className="exercise-picker-checkbox"
-                  onChange={() =>
-                    setSelected((previous) =>
-                      previous.includes(exercise.id)
-                        ? previous.filter((id) => id !== exercise.id)
-                        : [...previous, exercise.id],
-                    )
-                  }
-                />
+                {single ? (
+                  <Button
+                    aria-label={`${t("Elegir", "Choose")} ${exercise.name}`}
+                    onClick={() => onPick([exercise.id])}
+                  >
+                    {t("Elegir", "Choose")}
+                  </Button>
+                ) : (
+                  <input
+                    type="checkbox"
+                    aria-label={`Seleccionar ${exercise.name}`}
+                    checked={selected.includes(exercise.id)}
+                    className="exercise-picker-checkbox"
+                    onChange={() =>
+                      setSelected((previous) =>
+                        previous.includes(exercise.id)
+                          ? previous.filter((id) => id !== exercise.id)
+                          : [...previous, exercise.id],
+                      )
+                    }
+                  />
+                )}
               </div>
             )) : (
               <p className="exercise-picker-empty" role="status">
@@ -164,16 +184,21 @@ export function ExercisePicker({
           </div>
         </>
       )}
-      <div className="exercise-picker-confirm">
-        <span aria-live="polite">
-          {selected.length
-            ? `${selected.length} ${t("seleccionados", "selected")}`
-            : t("Elegí ejercicios para continuar", "Select exercises to continue")}
-        </span>
-        <Button disabled={!selected.length} onClick={() => onPick(selected)}>
-          {t("Agregar seleccionados", "Add selected")} ({selected.length})
-        </Button>
-      </div>
+      {!single && (
+        <div className="exercise-picker-confirm">
+          <span aria-live="polite">
+            {selected.length
+              ? `${selected.length} ${t("seleccionados", "selected")}`
+              : t(
+                  "Elegí ejercicios para continuar",
+                  "Select exercises to continue",
+                )}
+          </span>
+          <Button disabled={!selected.length} onClick={() => onPick(selected)}>
+            {t("Agregar seleccionados", "Add selected")} ({selected.length})
+          </Button>
+        </div>
+      )}
     </AppDialog>
   );
 }

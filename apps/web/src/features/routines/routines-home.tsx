@@ -3,7 +3,7 @@
 import { useExerciseName } from "@/state/exercise-name";
 import { ExerciseVisual } from "@/features/exercises/exercise-visual";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Switch } from "@base-ui/react/switch";
@@ -33,6 +33,8 @@ import {
   routineLimitMessage,
 } from "@fitty/core/domain/routine-limits";
 import { INCOMING_ROUTINE_KEY } from "@fitty/core/storage/account-cache";
+import { copyField } from "@/lib/browser/clipboard";
+import { replaceRoutineExercise } from "@fitty/core/domain/routine-day";
 import { CalendarPanel } from "@/features/calendar/calendar-panel";
 import { ReadinessDialog } from "@/features/workouts/readiness-dialog";
 
@@ -62,10 +64,16 @@ export function RoutinesHome() {
     [members, setMembers] = useState<string[]>([]),
     [share, setShare] = useState(""),
     [incoming, setIncoming] = useState("");
+  const shareField = useRef<HTMLInputElement>(null);
   const selected =
       snapshot.routines.find((routine) => routine.id === snapshot.selected) ??
       snapshot.routines[0],
     workout = snapshot.workout;
+  const [replacing, setReplacing] = useState<{
+    rid: string;
+    did: string;
+    index: number;
+  } | null>(null);
   const [removingDay, setRemovingDay] = useState<{
     rid: string;
     did?: string;
@@ -416,7 +424,22 @@ export function RoutinesHome() {
                   </Button>
                 }
               >
-                <SortableExercises rid={routine.id} did={day.id} />
+                <SortableExercises
+                  rid={routine.id}
+                  did={day.id}
+                  onReplace={(index) =>
+                    setReplacing({ rid: routine.id, did: day.id, index })
+                  }
+                  onSuperset={(exerciseId) => {
+                    setSuperset({ rid: routine.id, did: day.id });
+                    // Its superset to edit it, or the exercise already marked.
+                    setMembers(
+                      day.supersets?.find((group) =>
+                        group.includes(exerciseId),
+                      ) ?? [exerciseId],
+                    );
+                  }}
+                />
                 <div className="my-3 flex flex-wrap justify-center gap-2">
                   <Button
                     variant="secondary"
@@ -741,6 +764,24 @@ export function RoutinesHome() {
           }}
         />
       )}
+      {replacing && (
+        <ExercisePicker
+          single
+          onClose={() => setReplacing(null)}
+          onPick={([id]) => {
+            if (
+              id &&
+              change((draft) => {
+                const day = draft.routines
+                  .find((item) => item.id === replacing.rid)
+                  ?.days.find((item) => item.id === replacing.did);
+                if (day) replaceRoutineExercise(day, replacing.index, id);
+              })
+            )
+              setReplacing(null);
+          }}
+        />
+      )}
       <AppDialog
         open={superset !== null}
         onClose={() => setSuperset(null)}
@@ -823,21 +864,29 @@ export function RoutinesHome() {
         open={!!share}
         onClose={() => setShare("")}
         title={t("Compartir rutina", "Share routine")}
-        description="Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas."
+        description={t(
+          "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.",
+          "An editable copy is shared; not your profile, history, weights or private notes.",
+        )}
       >
         <Input
+          ref={shareField}
           aria-label={t("Enlace de rutina", "Routine link")}
           readOnly
           value={share}
         />
         <Button
           onClick={async () => {
-            try {
-              await navigator.clipboard.writeText(share);
+            const field = shareField.current;
+            if (field && (await copyField(field)))
               notify(t("Enlace copiado", "Link copied"));
-            } catch {
-              notify(t("Seleccioná el enlace para copiarlo manualmente.", "Select the link to copy it manually."));
-            }
+            else
+              notify(
+                t(
+                  "Seleccioná el enlace para copiarlo manualmente.",
+                  "Select the link to copy it manually.",
+                ),
+              );
           }}
         >
           {t("Copiar enlace", "Copy link")}

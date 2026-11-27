@@ -6,7 +6,7 @@ import { exerciseName } from "@/lib/exercise-name";
 import { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
-import { Alert, Modal, Pressable, ScrollView, Share, Text, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { Switch } from "@/components/switch";
 import { buildAutomaticRoutine } from "@fitty/core/domain/calculations/automatic-routine";
 import {
@@ -18,20 +18,28 @@ import {
   canAddRoutine,
   routineLimitMessage,
 } from "@fitty/core/domain/routine-limits";
+import {
+  removeRoutineExercise,
+  replaceRoutineExercise,
+} from "@fitty/core/domain/routine-day";
 import { findExercise, type CatalogExercise } from "@fitty/core/domain/workouts";
 import { translate } from "@fitty/core/data/translations";
 import { Chip, ChipGroup } from "@/components/chip";
 import { Dropdown } from "@/components/dropdown";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { ReorderList } from "@/components/reorder-list";
+import { RoutineExerciseMenu } from "@/components/routine-exercise-menu";
 import { Notice } from "@/components/notice";
 import { goals } from "@/components/onboarding";
 import { TextPrompt } from "@/components/prompt";
+import { ShareRoutine } from "@/components/share-routine";
 import { Button, Card, DialogScroll, Field, Label, Screen, Title } from "@/components/ui";
 import { env } from "@/lib/env";
 import { makeId } from "@/lib/id";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
+
+type ExerciseSpot = { rid: string; did: string; index: number };
 
 type Prompt =
   | { type: "rename"; rid: string; name: string }
@@ -44,6 +52,7 @@ const symbols: Record<string, SymbolViewProps["name"]> = {
   "✎": { ios: "pencil", android: "edit" },
   "✕": { ios: "trash.fill", android: "delete" },
   share: { ios: "square.and.arrow.up", android: "share" },
+  "⋮": { ios: "ellipsis", android: "more_horiz" },
 };
 
 function IconButton({
@@ -101,10 +110,14 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
   const [groups, setGroups] = useState<MuscleGroup[]>([]);
   const [days, setDays] = useState(3);
   const [prompt, setPrompt] = useState<Prompt | null>(null);
+  const [shareLink, setShareLink] = useState<string | null>(null);
   const [superset, setSuperset] = useState<{ rid: string; did: string } | null>(
     null,
   );
   const [members, setMembers] = useState<string[]>([]);
+  // The routine exercise whose menu is open, and the one being changed.
+  const [options, setOptions] = useState<ExerciseSpot | null>(null);
+  const [replacing, setReplacing] = useState<ExerciseSpot | null>(null);
   const [picker, setPicker] = useState<{ rid: string; did: string } | null>(
     null,
   );
@@ -178,6 +191,17 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
         .find((item) => item.id === superset.rid)
         ?.days.find((item) => item.id === superset.did)
     : undefined;
+  const optionsDay = options
+    ? snapshot.routines
+        .find((item) => item.id === options.rid)
+        ?.days.find((item) => item.id === options.did)
+    : undefined;
+  const optionsId = options ? optionsDay?.items[options.index] : undefined;
+  const optionsExercise =
+    optionsId === undefined ? undefined : findExercise(snapshot, optionsId);
+  const optionsName = optionsExercise
+    ? exerciseName(language, optionsExercise.name)
+    : (optionsId ?? "");
   return (
     <>
       <Modal
@@ -446,9 +470,9 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                     symbol="share"
                     onPress={() => {
                       try {
-                        void Share.share({
-                          message: `${env.apiUrl}/#routine=${encodeRoutine(snapshot, routine)}`,
-                        });
+                        setShareLink(
+                          `${env.apiUrl}/#routine=${encodeRoutine(snapshot, routine)}`,
+                        );
                       } catch (error) {
                         notify(
                           error instanceof Error
@@ -657,29 +681,14 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                                       </Text>
                                     </Pressable>
                                     <IconButton
-                                      label={t(
-                                        "Quitar ejercicio",
-                                        "Remove exercise",
-                                      )}
-                                      symbol="✕"
-                                      danger
+                                      label={t("Más opciones", "More options")}
+                                      symbol="⋮"
                                       onPress={() =>
-                                        editDay(
-                                          routine.id,
-                                          day.id,
-                                          (target) => {
-                                            target.items.splice(index, 1);
-                                            target.supersets = target.supersets
-                                              ?.map((group) =>
-                                                group.filter((item) =>
-                                                  target.items.includes(item),
-                                                ),
-                                              )
-                                              .filter(
-                                                (group) => group.length > 1,
-                                              );
-                                          },
-                                        )
+                                        setOptions({
+                                          rid: routine.id,
+                                          did: day.id,
+                                          index,
+                                        })
                                       }
                                     />
                                   </View>
@@ -776,6 +785,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
             setPrompt(null);
         }}
       />
+      <ShareRoutine link={shareLink} onClose={() => setShareLink(null)} />
       <Modal
         visible={removingDay !== null}
         transparent
@@ -1005,6 +1015,41 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
           </View>
         </View>
       </Modal>
+      <RoutineExerciseMenu
+        visible={options !== null}
+        name={optionsName}
+        canSuperset={new Set(optionsDay?.items).size > 1}
+        onClose={() => setOptions(null)}
+        onReplace={() => setReplacing(options)}
+        onSuperset={() => {
+          if (!options || optionsId === undefined) return;
+          // Its superset to edit it, or the exercise already marked.
+          setMembers(
+            optionsDay?.supersets?.find((group) =>
+              group.includes(optionsId),
+            ) ?? [optionsId],
+          );
+          setSuperset({ rid: options.rid, did: options.did });
+        }}
+        onRemove={() =>
+          options &&
+          editDay(options.rid, options.did, (day) =>
+            removeRoutineExercise(day, options.index),
+          )
+        }
+      />
+      <ExercisePicker
+        single
+        visible={replacing !== null}
+        onClose={() => setReplacing(null)}
+        onPick={([id]) =>
+          replacing &&
+          id &&
+          editDay(replacing.rid, replacing.did, (day) =>
+            replaceRoutineExercise(day, replacing.index, id),
+          )
+        }
+      />
       <ExercisePicker
         visible={picker !== null}
         onClose={() => setPicker(null)}

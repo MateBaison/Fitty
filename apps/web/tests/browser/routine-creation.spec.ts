@@ -111,6 +111,21 @@ test("custom goals, automatic routines, editable days and independent sharing co
   const link = await page
     .getByLabel("Enlace de rutina", { exact: true })
     .inputValue();
+  // "Copiar enlace" puts the link in the clipboard, also in a browser that
+  // refuses the Clipboard API.
+  await page
+    .context()
+    .grantPermissions(["clipboard-read", "clipboard-write"]);
+  const clipboard = () => page.evaluate(() => navigator.clipboard.readText());
+  const copy = page.getByRole("button", { name: "Copiar enlace", exact: true });
+  await copy.click();
+  await expect.poll(clipboard).toBe(link);
+  await page.evaluate(async () => {
+    await navigator.clipboard.writeText("");
+    navigator.clipboard.writeText = () => Promise.reject(new Error("blocked"));
+  });
+  await copy.click();
+  await expect.poll(clipboard).toBe(link);
   await page.keyboard.press("Escape");
   await page.goto(link);
   await expect(page.getByRole("dialog")).toBeVisible();

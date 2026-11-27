@@ -834,10 +834,8 @@ label input[type="checkbox"] {
   accent-color: var(--primary);
   flex-shrink: 0;
 }
-/* The same red bin as the phone app. */
-.exercise-remove[data-slot="button"] {
-  --destructive-solid: #dc2626;
-  --destructive-solid-hover: #b91c1c;
+/* Three dots at the end of a routine exercise, as in the phone app. */
+.exercise-more[data-slot="button"] {
   flex-shrink: 0;
   width: 44px;
   min-width: 44px;
@@ -846,7 +844,7 @@ label input[type="checkbox"] {
   padding: 0;
   border-radius: 12px;
 }
-.exercise-remove[data-slot="button"] svg {
+.exercise-more[data-slot="button"] svg {
   width: 20px;
   height: 20px;
 }

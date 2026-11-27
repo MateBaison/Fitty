@@ -1,5 +1,10 @@
 {
   "fr": {
+    "Más opciones": "Plus d’options",
+    "Cambiar ejercicio": "Changer d’exercice",
+    "Agregar a superserie": "Ajouter à une supersérie",
+    "Eliminar ejercicio": "Supprimer l’exercice",
+    "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.": "Seule une copie modifiable est partagée, sans votre profil, votre historique, vos poids ni vos notes privées.",
     "Activar rutina": "Activer la routine",
     "Desactivar rutina": "Désactiver la routine",
     "Agregar a rutina": "Ajouter à la routine",
@@ -1170,6 +1175,11 @@
     "Foto de": "Photo de"
   },
   "zh": {
+    "Más opciones": "更多选项",
+    "Cambiar ejercicio": "更换练习",
+    "Agregar a superserie": "加入超级组",
+    "Eliminar ejercicio": "删除练习",
+    "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.": "分享的是可编辑的副本，不包含你的个人资料、历史记录、重量或私人备注。",
     "Activar rutina": "启用计划",
     "Desactivar rutina": "停用计划",
     "Agregar a rutina": "添加到计划",
@@ -2340,6 +2350,11 @@
     "Foto de": "照片："
   },
   "hi": {
+    "Más opciones": "और विकल्प",
+    "Cambiar ejercicio": "व्यायाम बदलें",
+    "Agregar a superserie": "सुपरसेट में जोड़ें",
+    "Eliminar ejercicio": "व्यायाम हटाएँ",
+    "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.": "केवल संपादन योग्य कॉपी साझा की जाती है; आपकी प्रोफ़ाइल, इतिहास, वज़न या निजी नोट्स नहीं।",
     "Activar rutina": "दिनचर्या सक्रिय करें",
     "Desactivar rutina": "दिनचर्या निष्क्रिय करें",
     "Agregar a rutina": "दिनचर्या में जोड़ें",
@@ -3510,6 +3525,11 @@
     "Foto de": "फ़ोटो:"
   },
   "ar": {
+    "Más opciones": "خيارات أخرى",
+    "Cambiar ejercicio": "تغيير التمرين",
+    "Agregar a superserie": "إضافة إلى مجموعة متتالية",
+    "Eliminar ejercicio": "حذف التمرين",
+    "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.": "تتم مشاركة نسخة قابلة للتعديل، دون ملفك الشخصي أو سجلك أو أوزانك أو ملاحظاتك الخاصة.",
     "Activar rutina": "تفعيل الروتين",
     "Desactivar rutina": "إيقاف الروتين",
     "Agregar a rutina": "إضافة إلى الروتين",
@@ -4680,6 +4700,11 @@
     "Foto de": "صورة"
   },
   "de": {
+    "Más opciones": "Weitere Optionen",
+    "Cambiar ejercicio": "Übung wechseln",
+    "Agregar a superserie": "Zum Supersatz hinzufügen",
+    "Eliminar ejercicio": "Übung löschen",
+    "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.": "Geteilt wird eine bearbeitbare Kopie, ohne dein Profil, deinen Verlauf, deine Gewichte oder private Notizen.",
     "Activar rutina": "Trainingsplan aktivieren",
     "Desactivar rutina": "Trainingsplan deaktivieren",
     "Agregar a rutina": "Zum Trainingsplan hinzufügen",
@@ -5848,6 +5873,11 @@
     "Foto de": "Foto von"
   },
   "it": {
+    "Más opciones": "Altre opzioni",
+    "Cambiar ejercicio": "Cambia esercizio",
+    "Agregar a superserie": "Aggiungi a una superserie",
+    "Eliminar ejercicio": "Elimina esercizio",
+    "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.": "Viene condivisa una copia modificabile, senza il tuo profilo, la cronologia, i pesi o le note private.",
     "Activar rutina": "Attiva routine",
     "Desactivar rutina": "Disattiva routine",
     "Agregar a rutina": "Aggiungi alla routine",
@@ -7016,6 +7046,11 @@
     "Foto de": "Foto di"
   },
   "pt": {
+    "Más opciones": "Mais opções",
+    "Cambiar ejercicio": "Trocar exercício",
+    "Agregar a superserie": "Adicionar à supersérie",
+    "Eliminar ejercicio": "Excluir exercício",
+    "Se comparte una copia editable; no tu perfil, historial, pesos ni notas privadas.": "É compartilhada uma cópia editável, sem seu perfil, histórico, cargas ou notas privadas.",
     "Activar rutina": "Ativar rotina",
     "Desactivar rutina": "Desativar rotina",
     "Agregar a rutina": "Adicionar à rotina",
@@ -8184,6 +8219,10 @@
     "Foto de": "Foto de"
   },
   "en": {
+    "Más opciones": "More options",
+    "Cambiar ejercicio": "Change exercise",
+    "Agregar a superserie": "Add to superset",
+    "Eliminar ejercicio": "Delete exercise",
     "Sexo": "Sex",
     "Masculino": "Male",
     "Femenino": "Female",

@@ -127,3 +127,76 @@ test("days reorder without a grip, rename persists and deletion has a cancellabl
     ),
   ).toBe(true);
 });
+
+test("the three dots of a routine exercise change, group and delete it", async ({
+  page,
+}, info) => {
+  await page.request.get("http://127.0.0.1:54329/__reset");
+  await page.route("**/*", (route) =>
+    new URL(route.request().url()).hostname === "127.0.0.1"
+      ? route.continue()
+      : route.abort(),
+  );
+  await login(page);
+  await expect(page.getByTestId("launch-splash")).toHaveCount(0);
+  const day = page
+    .locator(".routine-card")
+    .first()
+    .locator("[data-routine-day]")
+    .first();
+  await day.locator("summary").first().click();
+  const rows = day.locator("[data-routine-exercise]");
+  const ids = () =>
+    rows.evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute("data-routine-exercise")),
+    );
+  const before = await ids();
+  expect(before.length).toBeGreaterThan(1);
+  const menu = page.getByRole("dialog", { name: "Más opciones", exact: true });
+  const openMenu = () =>
+    rows
+      .first()
+      .getByRole("button", { name: /^Más opciones/ })
+      .click();
+
+  // Change: another exercise takes the same position.
+  await openMenu();
+  await expect(menu.locator(".exercise-menu-item")).toHaveText([
+    "Cambiar ejercicio",
+    "Agregar a superserie",
+    "Eliminar ejercicio",
+  ]);
+  await page.screenshot({
+    path: `artifacts/routine-exercise-menu-${info.project.name}.png`,
+    animations: "disabled",
+  });
+  await menu.getByRole("button", { name: "Cambiar ejercicio" }).click();
+  await page.getByRole("button", { name: "Gemelos", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^Elegir / })
+    .first()
+    .click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  const changed = await ids();
+  expect(changed[0]).not.toBe(before[0]);
+  expect(changed.slice(1)).toEqual(before.slice(1));
+
+  // Superset: the window opens with this exercise already marked.
+  await openMenu();
+  await menu.getByRole("button", { name: "Agregar a superserie" }).click();
+  const choices = page.getByRole("dialog").getByRole("checkbox");
+  await expect(choices.first()).toBeChecked();
+  // The box itself is hidden: the whole row is the control.
+  await page.getByRole("dialog").locator(".superset-row").nth(1).click();
+  await expect(choices.nth(1)).toBeChecked();
+  await page
+    .getByRole("button", { name: "Guardar superserie (2)", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+
+  // Delete: the exercise leaves the day.
+  await openMenu();
+  await menu.getByRole("button", { name: "Eliminar ejercicio" }).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect.poll(ids).toEqual(before.slice(1));
+});
