@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { exerciseSource } from "@/lib/exercise-image";
 import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
 import {
@@ -12,7 +13,6 @@ import {
 } from "react-native";
 import {
   equipmentFilters,
-  exerciseImage,
   fullBodyImage,
   matchesEquipment,
   muscleImages,
@@ -310,7 +310,7 @@ export function ExerciseBrowser({
             }}
           >
             <Image
-              source={`${env.apiUrl}${exerciseImage(item, snapshot.profile.gender)}`}
+              source={exerciseSource(item, snapshot.profile.gender)}
               style={{
                 width: "100%",
                 aspectRatio: 3 / 2,

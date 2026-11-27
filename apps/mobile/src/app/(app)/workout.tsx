@@ -1,4 +1,6 @@
 import * as Haptics from "expo-haptics";
+import { ExerciseGallery } from "@/components/exercise-gallery";
+import { exerciseSource } from "@/lib/exercise-image";
 import { exerciseName } from "@/lib/exercise-name";
 import { Image } from "expo-image";
 import { SymbolView } from "expo-symbols";
@@ -14,7 +16,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { exerciseImage } from "@fitty/core/data/exercises";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { translate } from "@fitty/core/data/translations";
 import { replaceWorkoutExercise } from "@fitty/core/domain/exercise-replacement";
@@ -48,7 +49,6 @@ import { NumberInput } from "@/components/number-input";
 import { SessionExtras } from "@/components/session-extras";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Field, Label, Screen, Title, DialogScroll } from "@/components/ui";
-import { env } from "@/lib/env";
 import { makeId } from "@/lib/id";
 import { playRestDone } from "@/lib/sound";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -356,7 +356,7 @@ export default function Workout() {
                   onPress={() => setImageFor(exercise)}
                 >
                   <Image
-                    source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                    source={exerciseSource(exercise, snapshot.profile.gender)}
                     style={{
                       width: 64,
                       height: 64,
@@ -866,16 +866,13 @@ export default function Workout() {
             <Card style={{ padding: 0, overflow: "hidden" }}>
               <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
                 {imageFor ? (
-                  <Image
-                    source={`${env.apiUrl}${exerciseImage(imageFor, snapshot.profile.gender)}`}
+                  <ExerciseGallery
+                    exercise={imageFor}
                     style={{
                       width: "100%",
                       aspectRatio: 3 / 2,
                       backgroundColor: "#0d1016",
                     }}
-                    contentFit="contain"
-                    cachePolicy="disk"
-                    accessibilityIgnoresInvertColors
                   />
                 ) : null}
                 <View style={{ padding: space(4), gap: space(3) }}>

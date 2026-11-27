@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Keyboard,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { Card, Label, styles } from "@/components/ui";
 import { colors, space } from "@/theme";
 
@@ -33,7 +40,10 @@ export function Dropdown<T extends string | number>({
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
-        onPress={() => setOpen(true)}
+        onPress={() => {
+          Keyboard.dismiss();
+          setOpen(true);
+        }}
         style={[
           styles.input,
           {

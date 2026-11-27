@@ -246,6 +246,11 @@ export const routineEditSchema = routineSchema.superRefine(
 );
 
 // New external inputs are stricter than the historical reader.
+export const MAX_EXERCISE_PHOTOS = 3;
+export const exercisePhotoSchema = z
+  .string()
+  .max(600_000)
+  .regex(/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/);
 export const customExerciseFormSchema = z.strictObject({
   id: z.string().regex(/^custom-[a-zA-Z0-9-]{4,100}$/),
   name: z.string().trim().min(1).max(100),
@@ -260,6 +265,7 @@ export const customExerciseFormSchema = z.strictObject({
   ]),
   tracking: trackingSchema,
   steps: z.array(z.string().max(1000)).max(10),
+  photos: z.array(exercisePhotoSchema).max(MAX_EXERCISE_PHOTOS).optional(),
 });
 export const setInputSchema = z.discriminatedUnion("metric", [
   z.strictObject({

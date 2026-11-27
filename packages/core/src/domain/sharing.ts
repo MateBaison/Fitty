@@ -7,7 +7,8 @@ import {
   type Snapshot,
   type Routine,
 } from "./schemas/snapshot";
-const sharedCustom = customExerciseFormSchema.extend({
+// Shared routines never carry the author's photos.
+const sharedCustom = customExerciseFormSchema.omit({ photos: true }).extend({
   custom: z.boolean().optional(),
   pattern: z.string().optional(),
   level: z.string().optional(),

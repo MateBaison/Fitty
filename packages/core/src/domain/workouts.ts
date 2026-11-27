@@ -1,12 +1,17 @@
 import { z } from "zod";
 import { availableExercises, exercises, muscleImages } from "../data/exercises";
+import { savedExercisePhotos } from "./exercise-photos";
 import { muscleGroupSchema, type Exercise } from "./schemas/exercise";
 import {
   customExerciseFormSchema,
   type SavedSet,
   type Snapshot,
 } from "./schemas/snapshot";
-export type CatalogExercise = Exercise & { custom?: boolean };
+export type CatalogExercise = Exercise & {
+  custom?: boolean;
+  /** The user's own reference photos of a custom exercise (data URLs). */
+  photos?: string[];
+};
 export type Session = Snapshot["sessions"][number];
 export type Entry = NonNullable<Snapshot["workout"]>["entries"][number];
 export function catalogFor(
@@ -25,9 +30,11 @@ export function catalogFor(
         steps: item.steps ?? [],
       });
       if (!parsed.success) return [];
+      const photos = savedExercisePhotos(item.photos);
       return [
         {
           ...parsed.data,
+          ...(photos.length ? { photos } : {}),
           custom: true,
           pattern: "move",
           level: "Personalizado",

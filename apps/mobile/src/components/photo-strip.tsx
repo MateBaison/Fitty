@@ -10,15 +10,26 @@ export function PhotoStrip({
   photos,
   onChange,
   max = 3,
+  pick = pickPhoto,
 }: {
   photos: string[];
   onChange: (photos: string[]) => void;
   max?: number;
+  /** Replaces the default library picker; resolves null when nothing was added. */
+  pick?: () => Promise<string | null>;
 }) {
   const { notify, t } = useAccount();
   return (
     <View style={{ gap: space(2) }}>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(2) }}>
+      {/* An empty row would only add a gap above the button. */}
+      <View
+        style={{
+          display: photos.length ? "flex" : "none",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: space(2),
+        }}
+      >
         {photos.map((photo, index) => (
           <View key={index}>
             <Image
@@ -55,7 +66,7 @@ export function PhotoStrip({
           variant="secondary"
           onPress={async () => {
             try {
-              const photo = await pickPhoto();
+              const photo = await pick();
               if (photo) onChange([...photos, photo]);
             } catch (error) {
               notify(error instanceof Error ? error.message : String(error));

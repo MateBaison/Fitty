@@ -243,6 +243,10 @@ export function Field({
             styles.input,
             icon ? { paddingRight: space(11) } : null,
             center ? { textAlign: "center" } : null,
+            // A multiline input starts at the top: pad it so one line sits centered.
+            props.multiline
+              ? { paddingTop: 13, paddingBottom: 13, textAlignVertical: "center" }
+              : null,
             locked
               ? {
                   backgroundColor: "#12151c",

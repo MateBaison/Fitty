@@ -1,4 +1,6 @@
 import { Image } from "expo-image";
+import { ExerciseGallery } from "@/components/exercise-gallery";
+import { exerciseSource } from "@/lib/exercise-image";
 import { SymbolView } from "expo-symbols";
 import { useState } from "react";
 import { exerciseName } from "@/lib/exercise-name";
@@ -10,8 +12,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { exerciseImage } from "@fitty/core/data/exercises";
+import { initialWindowMetrics } from "react-native-safe-area-context";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { translate } from "@fitty/core/data/translations";
 import {
@@ -41,7 +42,6 @@ import {
   Label,
   styles,
 } from "@/components/ui";
-import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -300,9 +300,16 @@ export function ManualSession({
         </DialogScroll>
       </>,
     );
+  // The app layout zeroes the top inset for its header; a modal needs the real one.
+  const insets = initialWindowMetrics?.insets ?? { top: 54, bottom: 0 };
   return (
     <Modal visible animationType="slide" onRequestClose={back}>
-      <SafeAreaView style={styles.screen}>
+      <View
+        style={[
+          styles.screen,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.content}
@@ -413,7 +420,7 @@ export function ManualSession({
                       onPress={() => setImageFor(exercise)}
                     >
                       <Image
-                        source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                        source={exerciseSource(exercise, snapshot.profile.gender)}
                         style={{
                           width: 64,
                           height: 64,
@@ -744,7 +751,7 @@ export function ManualSession({
             {t("Guardar entrenamiento", "Save workout")}
           </Button>
         </ScrollView>
-      </SafeAreaView>
+      </View>
       <Modal
         visible={finishing}
         transparent
@@ -852,16 +859,13 @@ export function ManualSession({
             <Card style={{ padding: 0, overflow: "hidden" }}>
               <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
                 {imageFor ? (
-                  <Image
-                    source={`${env.apiUrl}${exerciseImage(imageFor, snapshot.profile.gender)}`}
+                  <ExerciseGallery
+                    exercise={imageFor}
                     style={{
                       width: "100%",
                       aspectRatio: 3 / 2,
                       backgroundColor: "#0d1016",
                     }}
-                    contentFit="contain"
-                    cachePolicy="disk"
-                    accessibilityIgnoresInvertColors
                   />
                 ) : null}
                 <View style={{ padding: space(4), gap: space(3) }}>

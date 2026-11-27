@@ -2,14 +2,23 @@ import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 
 /**
- * Picks a photo and returns a compressed JPEG data URL (longest side ≤ size),
- * matching the web app's stored photo format. Returns null when cancelled.
+ * Picks or takes a photo and returns a compressed JPEG data URL (longest side
+ * ≤ size), matching the web app's stored photo format. Returns null when
+ * cancelled.
  */
-export async function pickPhoto(size = 1200): Promise<string | null> {
-  const result = await ImagePicker.launchImageLibraryAsync({
+export async function pickPhoto(
+  size = 1200,
+  { camera = false, quality = 0.8 } = {},
+): Promise<string | null> {
+  if (camera && !(await ImagePicker.requestCameraPermissionsAsync()).granted)
+    throw new Error("camera-denied");
+  const options: ImagePicker.ImagePickerOptions = {
     mediaTypes: ["images"],
     quality: 1,
-  });
+  };
+  const result = camera
+    ? await ImagePicker.launchCameraAsync(options)
+    : await ImagePicker.launchImageLibraryAsync(options);
   const asset = result.canceled ? null : result.assets[0];
   if (!asset) return null;
   const ratio = Math.min(1, size / Math.max(asset.width, asset.height));
@@ -22,7 +31,7 @@ export async function pickPhoto(size = 1200): Promise<string | null> {
   const image = await context.renderAsync();
   const saved = await image.saveAsync({
     format: SaveFormat.JPEG,
-    compress: 0.8,
+    compress: quality,
     base64: true,
   });
   if (!saved.base64) throw new Error("No se pudo preparar la imagen.");

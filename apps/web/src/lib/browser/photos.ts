@@ -1,6 +1,7 @@
 export async function compressedPhoto(
   file: File,
   size = 1200,
+  quality = 0.8,
 ): Promise<string> {
   if (!file.type.startsWith("image/") || file.size > 8 * 1024 * 1024)
     throw new Error("Elegí una imagen menor a 8 MB.");
@@ -16,7 +17,7 @@ export async function compressedPhoto(
     const context = canvas.getContext("2d");
     if (!context) throw new Error("No se pudo preparar la imagen.");
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/jpeg", 0.8);
+    return canvas.toDataURL("image/jpeg", quality);
   } finally {
     URL.revokeObjectURL(url);
   }

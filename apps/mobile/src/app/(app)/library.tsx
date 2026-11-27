@@ -1,9 +1,8 @@
-import { Image } from "expo-image";
+import { ExerciseGallery } from "@/components/exercise-gallery";
 import { exerciseName } from "@/lib/exercise-name";
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
 import { type CatalogExercise } from "@fitty/core/domain/workouts";
 import { useRouter } from "expo-router";
@@ -12,7 +11,6 @@ import { CustomExerciseForm } from "@/components/custom-exercise-form";
 import { ExerciseBrowser } from "@/components/exercise-browser";
 import { Notice } from "@/components/notice";
 import { Button, Card, Glow, Label, styles, DialogScroll } from "@/components/ui";
-import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -71,18 +69,15 @@ export default function Library() {
             <Card style={{ padding: 0, overflow: "hidden" }}>
               <DialogScroll flush contentContainerStyle={{ gap: space(3) }}>
                 {selected ? (
-                  <View>
-                    <Image
-                      source={`${env.apiUrl}${exerciseImage(selected, snapshot.profile.gender)}`}
-                      style={{
-                        width: "100%",
-                        aspectRatio: 3 / 2,
-                        backgroundColor: "#0d1016",
-                      }}
-                      contentFit="cover"
-                      cachePolicy="disk"
-                      accessibilityIgnoresInvertColors
-                    />
+                  <ExerciseGallery
+                    exercise={selected}
+                    style={{
+                      width: "100%",
+                      aspectRatio: 3 / 2,
+                      backgroundColor: "#0d1016",
+                    }}
+                    contentFit="cover"
+                  >
                     <Pressable
                       accessibilityRole="button"
                       accessibilityLabel={t("Ejercicio anterior", "Previous exercise")}
@@ -119,7 +114,7 @@ export default function Library() {
                     >
                       <Text style={{ color: "#fffc", fontSize: 40, fontWeight: "300", textShadowColor: "#000a", textShadowRadius: 6 }}>›</Text>
                     </Pressable>
-                  </View>
+                  </ExerciseGallery>
                 ) : null}
                 <View style={{ padding: space(4), gap: space(3) }}>
                   <View

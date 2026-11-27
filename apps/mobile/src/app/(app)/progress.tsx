@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { exerciseSource } from "@/lib/exercise-image";
 import { useRouter } from "expo-router";
 import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
@@ -22,10 +23,8 @@ import {
   shiftProgressDate,
   type ProgressPeriod,
 } from "@fitty/core/domain/progress-period";
-import { exerciseImage } from "@fitty/core/data/exercises";
 import { catalogFor, localDateKey } from "@fitty/core/domain/workouts";
 import { Dropdown } from "@/components/dropdown";
-import { env } from "@/lib/env";
 import { BodyPanel } from "@/app/(app)/body";
 import { ProgressChart, type ChartPoint } from "@/components/progress-chart";
 import { BackButton } from "@/components/back-button";
@@ -762,7 +761,7 @@ export default function Progress() {
           >
             {selectedExercise ? (
               <Image
-                source={`${env.apiUrl}${exerciseImage(selectedExercise, snapshot.profile.gender)}`}
+                source={exerciseSource(selectedExercise, snapshot.profile.gender)}
                 style={{
                   width: 36,
                   height: 36,
@@ -993,7 +992,7 @@ export default function Progress() {
                     }}
                   >
                     <Image
-                      source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                      source={exerciseSource(exercise, snapshot.profile.gender)}
                       style={{
                         width: 56,
                         height: 56,

@@ -1,4 +1,6 @@
 import { useRouter } from "expo-router";
+import { ExerciseGallery } from "@/components/exercise-gallery";
+import { exerciseSource } from "@/lib/exercise-image";
 import { exerciseName } from "@/lib/exercise-name";
 import { useEffect, useState } from "react";
 import { Image } from "expo-image";
@@ -15,7 +17,6 @@ import {
   routineLimitMessage,
 } from "@fitty/core/domain/routine-limits";
 import { findExercise, type CatalogExercise } from "@fitty/core/domain/workouts";
-import { exerciseImage } from "@fitty/core/data/exercises";
 import { translate } from "@fitty/core/data/translations";
 import { Chip, ChipGroup } from "@/components/chip";
 import { Dropdown } from "@/components/dropdown";
@@ -191,12 +192,9 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
           />
           {viewing ? (
             <Card>
-              <Image
-                source={`${env.apiUrl}${exerciseImage(viewing, snapshot.profile.gender)}`}
+              <ExerciseGallery
+                exercise={viewing}
                 style={{ width: "100%", aspectRatio: 3 / 2, borderRadius: 14, backgroundColor: "#0d1016" }}
-                contentFit="contain"
-                cachePolicy="disk"
-                accessibilityIgnoresInvertColors
               />
               <Text style={{ color: colors.foreground, fontSize: 18, fontWeight: "800", textAlign: "center" }}>
                 {exerciseName(language, viewing.name)}
@@ -629,7 +627,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                                           onPress={() => setViewing(exercise)}
                                         >
                                           <Image
-                                            source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                                            source={exerciseSource(exercise, snapshot.profile.gender)}
                                             style={{
                                               width: 56,
                                               height: 56,
@@ -904,7 +902,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                     >
                       {exercise ? (
                         <Image
-                          source={`${env.apiUrl}${exerciseImage(exercise, snapshot.profile.gender)}`}
+                          source={exerciseSource(exercise, snapshot.profile.gender)}
                           style={{
                             width: 52,
                             height: 52,

@@ -833,6 +833,50 @@ label input[type="checkbox"] {
   color: #facc15;
   fill: #facc15;
 }
+/* One line sits centered; the box grows with each new instruction. */
+.exercise-steps {
+  display: block;
+  padding-block: 12px;
+  line-height: 22px;
+  resize: none;
+}
+.exercise-photo-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.exercise-photo-item {
+  position: relative;
+}
+.exercise-photo-item img,
+.exercise-photo-thumb img {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.exercise-photo-item button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--background);
+}
+.exercise-photo-item button svg {
+  width: 16px;
+  height: 16px;
+}
+.exercise-photo-thumb {
+  border: 2px solid transparent;
+  border-radius: 14px;
+}
+.exercise-photo-thumb[aria-pressed="true"] {
+  border-color: var(--primary);
+}
 .custom-visual {
   min-height: 100px;
   display: grid;
