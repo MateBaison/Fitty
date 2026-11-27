@@ -63,7 +63,7 @@ export function ExercisePicker({
       onClose={onClose}
       title={
         single
-          ? t("Cambiar ejercicio", "Change exercise")
+          ? t("Reemplazar ejercicio", "Replace exercise")
           : t("Agregar ejercicios", "Add exercises")
       }
       description={

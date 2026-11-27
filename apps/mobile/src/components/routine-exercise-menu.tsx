@@ -79,7 +79,7 @@ export function RoutineExerciseMenu({
               </View>
             </View>
             <Button variant="secondary" onPress={run(onReplace)}>
-              {t("Cambiar ejercicio", "Change exercise")}
+              {t("Reemplazar ejercicio", "Replace exercise")}
             </Button>
             <Button
               variant="secondary"

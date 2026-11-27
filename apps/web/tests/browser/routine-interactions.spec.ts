@@ -162,7 +162,7 @@ test("the three dots of a routine exercise change, group and delete it", async (
   // Change: another exercise takes the same position.
   await openMenu();
   await expect(menu.locator(".exercise-menu-item")).toHaveText([
-    "Cambiar ejercicio",
+    "Reemplazar ejercicio",
     "Agregar a superserie",
     "Eliminar ejercicio",
   ]);
@@ -170,7 +170,7 @@ test("the three dots of a routine exercise change, group and delete it", async (
     path: `artifacts/routine-exercise-menu-${info.project.name}.png`,
     animations: "disabled",
   });
-  await menu.getByRole("button", { name: "Cambiar ejercicio" }).click();
+  await menu.getByRole("button", { name: "Reemplazar ejercicio" }).click();
   await page.getByRole("button", { name: "Gemelos", exact: true }).click();
   await page
     .getByRole("button", { name: /^Elegir / })

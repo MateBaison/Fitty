@@ -53,7 +53,7 @@ export function ExerciseOptions({
             onClick={run(onReplace)}
           >
             <Repeat aria-hidden="true" />
-            {t("Cambiar ejercicio", "Change exercise")}
+            {t("Reemplazar ejercicio", "Replace exercise")}
           </button>
           <button
             type="button"
