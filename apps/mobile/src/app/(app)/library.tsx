@@ -1,4 +1,5 @@
 import { ExerciseGallery } from "@/components/exercise-gallery";
+import { Chevron } from "@/lib/direction";
 import { exerciseName } from "@/lib/exercise-name";
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
@@ -87,14 +88,14 @@ export default function Library() {
                         position: "absolute",
                         top: 0,
                         bottom: 0,
-                        left: 0,
+                        start: 0,
                         width: "50%",
                         justifyContent: "center",
                         alignItems: "flex-start",
                         paddingHorizontal: space(2),
                       }}
                     >
-                      <Text style={{ color: "#fffc", fontSize: 40, fontWeight: "300", textShadowColor: "#000a", textShadowRadius: 6 }}>‹</Text>
+                      <Chevron to="back" style={{ color: "#fffc", fontSize: 40, fontWeight: "300", textShadowColor: "#000a", textShadowRadius: 6 }} />
                     </Pressable>
                     <Pressable
                       accessibilityRole="button"
@@ -105,14 +106,14 @@ export default function Library() {
                         position: "absolute",
                         top: 0,
                         bottom: 0,
-                        right: 0,
+                        end: 0,
                         width: "50%",
                         justifyContent: "center",
                         alignItems: "flex-end",
                         paddingHorizontal: space(2),
                       }}
                     >
-                      <Text style={{ color: "#fffc", fontSize: 40, fontWeight: "300", textShadowColor: "#000a", textShadowRadius: 6 }}>›</Text>
+                      <Chevron to="forward" style={{ color: "#fffc", fontSize: 40, fontWeight: "300", textShadowColor: "#000a", textShadowRadius: 6 }} />
                     </Pressable>
                   </ExerciseGallery>
                 ) : null}

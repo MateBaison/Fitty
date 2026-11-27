@@ -26,6 +26,16 @@ Supabase falls back to the Site URL when a redirect is not allowlisted, which wo
 
 Before App Store submission, consider native Sign in with Apple (`expo-apple-authentication` + `signInWithIdToken`), which additionally needs the "Sign in with Apple" capability for `uy.fitty.app` in Apple Developer and `uy.fitty.app` added to the Apple provider's client IDs in Supabase.
 
+## Right-to-left (Arabic)
+
+The account language sets the direction (`textDirection` from `@fitty/core`), never the phone's: `Direction` in `src/lib/direction.tsx` wraps the app and sign-in, and switching language mirrors the screens at once, without a restart. When adding UI:
+
+- Position with `start`/`end` (`marginStart`, `borderStartWidth`), not left/right.
+- Use `Chevron` for back/forward arrows, `Switch` from `components/switch.tsx`, and `useInputAlign()` on text fields that are not centered.
+- Wrap measurements such as "90 kg × 8" in `leftToRight()`, and mirror drag gestures with `useRTL()`.
+
+The progress chart and the shareable workout poster are not mirrored.
+
 ## Limits
 
 - Account snapshots travel through a Vercel Function, which rejects request bodies above 4.5 MB; very photo-heavy accounts get a clear "too large" error on mobile until photos move to storage.

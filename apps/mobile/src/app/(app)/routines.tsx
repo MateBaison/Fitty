@@ -1,11 +1,13 @@
 import { useRouter } from "expo-router";
 import { ExerciseGallery } from "@/components/exercise-gallery";
+import { useRTL } from "@/lib/direction";
 import { exerciseSource } from "@/lib/exercise-image";
 import { exerciseName } from "@/lib/exercise-name";
 import { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
-import { Alert, Modal, Pressable, ScrollView, Share, Switch, Text, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, Share, Text, View } from "react-native";
+import { Switch } from "@/components/switch";
 import { buildAutomaticRoutine } from "@fitty/core/domain/calculations/automatic-routine";
 import {
   muscleGroups,
@@ -90,6 +92,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
   const snapshot = useSnapshot();
   const { change, notify, t } = useAccount();
   const language = snapshot.settings.language ?? "es";
+  const rtl = useRTL();
   const [creating, setCreating] = useState(false);
   const [viewing, setViewing] = useState<CatalogExercise | null>(null);
   const [mode, setMode] = useState<"custom" | "auto">("custom");
@@ -545,7 +548,7 @@ export function RoutinesSection({ embedded = false }: { embedded?: boolean } = {
                           }}
                         >
                           <Text style={{ color: colors.muted, fontSize: 11 }}>
-                            {dayOpen ? "▼" : "▶"}
+                            {dayOpen ? "▼" : rtl ? "◀" : "▶"}
                           </Text>
                           <Text
                             style={{

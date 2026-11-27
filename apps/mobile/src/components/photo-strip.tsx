@@ -50,7 +50,7 @@ export function PhotoStrip({
               style={{
                 position: "absolute",
                 top: 4,
-                right: 4,
+                end: 4,
                 backgroundColor: colors.background,
                 borderRadius: 12,
                 width: 24,

@@ -39,7 +39,7 @@ export function LanguageMenu({
         style={{
           position: "absolute",
           top,
-          right: space(4),
+          end: space(4),
           width: 40,
           height: 40,
           borderRadius: 20,
@@ -66,7 +66,7 @@ export function LanguageMenu({
             style={{
               position: "absolute",
               top: top + 46,
-              right: space(4),
+              end: space(4),
               backgroundColor: colors.card,
               borderRadius: radius,
               borderWidth: 1,

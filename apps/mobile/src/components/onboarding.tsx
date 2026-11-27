@@ -4,10 +4,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  Switch,
   Text,
   View,
 } from "react-native";
+import { Switch } from "@/components/switch";
 import { colors, space } from "@/theme";
 import { languages } from "@fitty/core/data/translations";
 import {
@@ -325,7 +325,7 @@ export function Onboarding() {
     >
       <Screen>
         <View style={{ justifyContent: "center" }}>
-          <View style={{ position: "absolute", left: 0, zIndex: 1 }}>
+          <View style={{ position: "absolute", start: 0, zIndex: 1 }}>
             <BackButton onPress={cancel} />
           </View>
           <Title center>

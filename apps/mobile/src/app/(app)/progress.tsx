@@ -1,9 +1,11 @@
 import { Image } from "expo-image";
+import { Chevron, leftToRight, useRTL } from "@/lib/direction";
 import { exerciseSource } from "@/lib/exercise-image";
 import { useRouter } from "expo-router";
 import { exerciseName } from "@/lib/exercise-name";
 import { useMemo, useState } from "react";
-import { Modal, Pressable, ScrollView, Switch, Text, View } from "react-native";
+import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Switch } from "@/components/switch";
 import { translate } from "@fitty/core/data/translations";
 import { recordPanel } from "@fitty/core/domain/personal-records";
 import {
@@ -243,6 +245,7 @@ export default function Progress() {
   const locale = snapshot.settings.language ?? "es";
   const unit = snapshot.settings.weight ?? "kg";
   const factor = unit === "lb" ? 2.20462 : 1;
+  const rtl = useRTL();
   const [tab, setTab] = useState<"summary" | "exercises" | "body">("summary");
   const [period, setPeriod] = useState<ProgressPeriod>("week");
   const [anchor, setAnchor] = useState(() => new Date());
@@ -296,8 +299,12 @@ export default function Progress() {
     Math.floor(minutes / 60) > 0
       ? `${Math.floor(minutes / 60)} h\n${Math.round(minutes % 60)} min`
       : `${Math.round(minutes)} min`;
-  const formatSet = (weight: number, quantity: number, kind: string) =>
-    `${(weight * factor).toLocaleString(locale, { maximumFractionDigits: 1 })} ${unit} × ${quantity} ${kind === "seconds" ? "s" : t("Rep", "Reps")}`;
+  const formatSet = (weight: number, quantity: number, kind: string) => {
+    const load = `${(weight * factor).toLocaleString(locale, { maximumFractionDigits: 1 })} ${unit} × ${quantity}`;
+    return kind === "seconds"
+      ? leftToRight(`${load} s`)
+      : `${leftToRight(load)} ${t("Rep", "Reps")}`;
+  };
   const points: ChartPoint[] = history.flatMap((record) => {
     const sets = record.sets.filter((set) =>
       metric === "seconds"
@@ -405,16 +412,15 @@ export default function Progress() {
               opacity: period === "all" ? 0.35 : 1,
             }}
           >
-            <Text
+            <Chevron
+              to="back"
               style={{
                 color: colors.accent,
                 fontSize: 24,
                 fontWeight: "800",
                 marginTop: -2,
               }}
-            >
-              ‹
-            </Text>
+            />
           </Pressable>
           <Text
             numberOfLines={1}
@@ -449,16 +455,15 @@ export default function Progress() {
               opacity: period === "all" ? 0.35 : 1,
             }}
           >
-            <Text
+            <Chevron
+              to="forward"
               style={{
                 color: colors.accent,
                 fontSize: 24,
                 fontWeight: "800",
                 marginTop: -2,
               }}
-            >
-              ›
-            </Text>
+            />
           </Pressable>
         </View>
       </View>
@@ -576,13 +581,20 @@ export default function Progress() {
                       item.id,
                   )}
                 </Text>
-                <Text style={{ color: colors.primary, fontWeight: "800" }}>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontWeight: "800",
+                    // Keeps "before, arrow, after" in reading order whatever the units.
+                    writingDirection: rtl ? "rtl" : "ltr",
+                  }}
+                >
                   {formatSet(
                     item.result.before.kg,
                     item.result.before.value,
                     item.result.before.metric,
                   )}
-                  {" → "}
+                  {rtl ? " ← " : " → "}
                   {formatSet(
                     item.result.after.kg,
                     item.result.after.value,
@@ -766,7 +778,7 @@ export default function Progress() {
                   width: 36,
                   height: 36,
                   borderRadius: 8,
-                  marginRight: space(3),
+                  marginEnd: space(3),
                   backgroundColor: "#0d1016",
                 }}
                 contentFit="cover"

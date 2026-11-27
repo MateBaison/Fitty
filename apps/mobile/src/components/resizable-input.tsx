@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { PanResponder, Text, TextInput, View } from "react-native";
 import { Label, styles } from "@/components/ui";
+import { useInputAlign, useRTL } from "@/lib/direction";
 import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
-/** Multi-line box that can be made taller or shorter by dragging its bottom-right corner. */
+/** Multi-line box that can be made taller or shorter by dragging its bottom corner. */
 export function ResizableInput({
   label,
   value,
@@ -19,6 +20,8 @@ export function ResizableInput({
   initialHeight?: number;
 }) {
   const { t } = useAccount();
+  const rtl = useRTL();
+  const inputAlign = useInputAlign();
   const [height, setHeight] = useState(initialHeight);
   const start = useRef(initialHeight);
   const latest = useRef(onResizing);
@@ -54,7 +57,7 @@ export function ResizableInput({
           accessibilityLabel={label}
           placeholderTextColor={colors.muted}
           textAlignVertical="top"
-          style={[styles.input, { height, paddingTop: space(3) }]}
+          style={[styles.input, inputAlign, { height, paddingTop: space(3) }]}
         />
         <View
           {...pan.panHandlers}
@@ -62,7 +65,7 @@ export function ResizableInput({
           accessibilityLabel={t("Redimensionar", "Resize")}
           style={{
             position: "absolute",
-            right: 2,
+            end: 2,
             bottom: 2,
             width: 36,
             height: 36,
@@ -71,7 +74,9 @@ export function ResizableInput({
             padding: 6,
           }}
         >
-          <Text style={{ color: colors.muted, fontSize: 18, lineHeight: 18 }}>◢</Text>
+          <Text style={{ color: colors.muted, fontSize: 18, lineHeight: 18 }}>
+            {rtl ? "◣" : "◢"}
+          </Text>
         </View>
       </View>
     </View>

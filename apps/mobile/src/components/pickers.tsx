@@ -14,6 +14,7 @@ import countryNames from "@fitty/core/data/country-names.json";
 import { localeFor } from "@fitty/core/data/translations";
 import { Button, Card, Label, styles } from "@/components/ui";
 import { Slider } from "@/components/slider";
+import { Chevron, useInputAlign, useRTL } from "@/lib/direction";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -155,7 +156,7 @@ export function DateField({
       <Sheet visible={open} onClose={() => setOpen(false)}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
           <Pressable accessibilityRole="button" accessibilityLabel={t("Mes anterior", "Previous month")} onPress={() => shift(-1)} style={navStyle}>
-            <Text style={navText}>‹</Text>
+            <Chevron to="back" style={navText} />
           </Pressable>
           <Pressable
             accessibilityRole="button"
@@ -167,7 +168,7 @@ export function DateField({
             </Text>
           </Pressable>
           <Pressable accessibilityRole="button" accessibilityLabel={t("Mes siguiente", "Next month")} onPress={() => shift(1)} style={navStyle}>
-            <Text style={navText}>›</Text>
+            <Chevron to="forward" style={navText} />
           </Pressable>
         </View>
         {choosingYear ? (
@@ -339,13 +340,13 @@ export function RangeField({
         </Label>
         <View style={{ flexDirection: "row", alignItems: "center", gap: space(2) }}>
           <Pressable accessibilityRole="button" accessibilityLabel={t("Mes anterior", "Previous month")} onPress={() => shift(-1)} style={navStyle}>
-            <Text style={navText}>‹</Text>
+            <Chevron to="back" style={navText} />
           </Pressable>
           <Text style={{ flex: 1, textAlign: "center", color: colors.foreground, fontSize: 18, fontWeight: "800", textTransform: "capitalize" }}>
             {new Date(year, month, 1).toLocaleDateString(locale, { month: "long" })} {year}
           </Text>
           <Pressable accessibilityRole="button" accessibilityLabel={t("Mes siguiente", "Next month")} onPress={() => shift(1)} style={navStyle}>
-            <Text style={navText}>›</Text>
+            <Chevron to="forward" style={navText} />
           </Pressable>
         </View>
         <View style={{ flexDirection: "row" }}>
@@ -485,6 +486,7 @@ export function CountryField({
   invalid?: boolean;
 }) {
   const { t } = useAccount();
+  const inputAlign = useInputAlign();
   const language = useSnapshot().settings.language ?? "es";
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -535,7 +537,7 @@ export function CountryField({
           onChangeText={setQuery}
           placeholder={t("Buscar país", "Search country")}
           placeholderTextColor={colors.muted}
-          style={styles.input}
+          style={[styles.input, inputAlign]}
         />
         <FlatList
  showsVerticalScrollIndicator={false}
@@ -608,8 +610,9 @@ function Ruler({
 }) {
   const gap = 10;
   // Dragging the tape moves the marks with the finger, like a real tape measure.
-  const latest = useRef({ value, min, max, step, tick, vertical, onChange });
-  latest.current = { value, min, max, step, tick, vertical, onChange };
+  const rtl = useRTL();
+  const latest = useRef({ value, min, max, step, tick, vertical, onChange, rtl });
+  latest.current = { value, min, max, step, tick, vertical, onChange, rtl };
   const origin = useRef(value);
   const pan = useRef(
     PanResponder.create({
@@ -621,7 +624,7 @@ function Ruler({
       },
       onPanResponderMove: (_, gesture) => {
         const c = latest.current;
-        const moved = c.vertical ? gesture.dy : -gesture.dx;
+        const moved = c.vertical ? gesture.dy : c.rtl ? gesture.dx : -gesture.dx;
         const raw = origin.current + (moved / gap) * c.tick;
         const snapped = Math.round(raw / c.step) * c.step;
         c.onChange(
@@ -650,12 +653,12 @@ function Ruler({
         const position = (vertical ? length / 2 - offset : length / 2 + offset) - 1;
         const label = Math.round(mark * tick * 100) / 100;
         return vertical ? (
-          <View key={mark} pointerEvents="none" style={{ position: "absolute", top: position - 8, left: 0, flexDirection: "row", alignItems: "center", gap: 4, height: 16 }}>
+          <View key={mark} pointerEvents="none" style={{ position: "absolute", top: position - 8, start: 0, flexDirection: "row", alignItems: "center", gap: 4, height: 16 }}>
             <View style={{ width: major ? 22 : 12, height: 2, backgroundColor: major ? colors.foreground : colors.muted }} />
             {major ? <Text style={{ color: colors.muted, fontSize: 11 }}>{label}</Text> : null}
           </View>
         ) : (
-          <View key={mark} pointerEvents="none" style={{ position: "absolute", left: position - 12, top: 0, width: 24, alignItems: "center" }}>
+          <View key={mark} pointerEvents="none" style={{ position: "absolute", start: position - 12, top: 0, width: 24, alignItems: "center" }}>
             <View style={{ width: 2, height: major ? 22 : 12, backgroundColor: major ? colors.foreground : colors.muted }} />
             {major ? <Text style={{ color: colors.muted, fontSize: 11 }}>{label}</Text> : null}
           </View>
@@ -665,8 +668,8 @@ function Ruler({
         pointerEvents="none"
         style={
           vertical
-            ? { position: "absolute", top: length / 2 - 1, left: 0, width: 34, height: 3, backgroundColor: colors.primary }
-            : { position: "absolute", left: length / 2 - 1, top: 0, height: 34, width: 3, backgroundColor: colors.primary }
+            ? { position: "absolute", top: length / 2 - 1, start: 0, width: 34, height: 3, backgroundColor: colors.primary }
+            : { position: "absolute", start: length / 2 - 1, top: 0, height: 34, width: 3, backgroundColor: colors.primary }
         }
       />
     </View>

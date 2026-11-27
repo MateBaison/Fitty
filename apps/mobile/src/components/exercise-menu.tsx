@@ -1,4 +1,5 @@
-import { Modal, Pressable, ScrollView, Switch, Text, View } from "react-native";
+import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Switch } from "@/components/switch";
 import { BackButton } from "@/components/back-button";
 import { Button, Card, Label } from "@/components/ui";
 import { useAccount } from "@/state/account";
@@ -69,7 +70,7 @@ export function ExerciseMenu({
                 style={{ flexDirection: "row", alignItems: "center", gap: space(3) }}
               >
                 <BackButton onPress={onClose} />
-                <View style={{ flex: 1, alignItems: "center", paddingRight: 56 }}>
+                <View style={{ flex: 1, alignItems: "center", paddingEnd: 56 }}>
                   <Text
                     accessibilityRole="header"
                     style={{

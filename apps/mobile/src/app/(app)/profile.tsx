@@ -8,10 +8,10 @@ import {
   Pressable,
   ScrollView,
   Share,
-  Switch,
   Text,
   View,
 } from "react-native";
+import { Switch } from "@/components/switch";
 import { changeWeightUnit } from "@fitty/core/domain/workout-entry-actions";
 import { restartAccount } from "@fitty/core/domain/account-reset";
 import { readSnapshotJson } from "@fitty/core/domain/legacy/read-snapshot";
@@ -722,7 +722,7 @@ export default function Profile() {
                 ) : (
                   <>
                     <View style={{ justifyContent: "center" }}>
-                      <View style={{ position: "absolute", left: 0, zIndex: 1 }}>
+                      <View style={{ position: "absolute", start: 0, zIndex: 1 }}>
                         <BackButton onPress={() => setSettingsOpen(false)} />
                       </View>
                       <Text style={{ ...sectionTitle, textAlign: "center" }}>

@@ -26,6 +26,7 @@ import {
 } from "@fitty/core/domain/schemas/exercise";
 import { catalogFor, type CatalogExercise } from "@fitty/core/domain/workouts";
 import { Card, Label, styles, DialogScroll } from "@/components/ui";
+import { useInputAlign } from "@/lib/direction";
 import { env } from "@/lib/env";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -85,6 +86,7 @@ export function ExerciseBrowser({
 }) {
   const snapshot = useSnapshot();
   const { t } = useAccount();
+  const inputAlign = useInputAlign();
   const language = snapshot.settings.language ?? "es";
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<Group>("Todos");
@@ -135,7 +137,7 @@ export function ExerciseBrowser({
               placeholder={t("Buscar ejercicio", "Search exercise")}
               placeholderTextColor={colors.muted}
               accessibilityLabel={t("Buscar ejercicios", "Search exercises")}
-              style={[styles.input, { flex: 1, minHeight: 44, paddingVertical: space(2) }]}
+              style={[styles.input, inputAlign, { flex: 1, minHeight: 44, paddingVertical: space(2) }]}
             />
             </View>
             <View
@@ -325,7 +327,7 @@ export function ExerciseBrowser({
                 style={{
                   position: "absolute",
                   top: 8,
-                  right: 8,
+                  end: 8,
                   width: 30,
                   height: 30,
                   borderRadius: 15,

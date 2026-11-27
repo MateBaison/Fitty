@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { localDateKey } from "@fitty/core/domain/workouts";
+import { Chevron } from "@/lib/direction";
 import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -56,7 +57,7 @@ export function MenstrualDays({
           accessibilityLabel={t("Mes anterior", "Previous month")}
           onPress={() => shift(-1)}
         >
-          <Text style={navStyle}>‹</Text>
+          <Chevron to="back" style={navStyle} />
         </Pressable>
         <Text style={{ color: colors.foreground, fontWeight: "800" }}>
           {month.toLocaleDateString(locale, { month: "long", year: "numeric" })}
@@ -66,7 +67,7 @@ export function MenstrualDays({
           accessibilityLabel={t("Mes siguiente", "Next month")}
           onPress={() => shift(1)}
         >
-          <Text style={navStyle}>›</Text>
+          <Chevron to="forward" style={navStyle} />
         </Pressable>
       </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>

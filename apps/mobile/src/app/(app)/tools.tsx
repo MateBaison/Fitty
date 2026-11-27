@@ -14,6 +14,7 @@ import { CombatPanel } from "@/app/(app)/combat";
 import { Button, Card, Field, Label, Screen } from "@/components/ui";
 import { OptionField } from "@/components/pickers";
 import { ClockControls } from "@/components/clock-controls";
+import { useRTL } from "@/lib/direction";
 import { playRestDone } from "@/lib/sound";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
@@ -205,6 +206,8 @@ function EdgeFade({ side }: { side: "left" | "right" }) {
         top: 0,
         bottom: 0,
         [side]: 0,
+        // `side` is a physical edge of the scroller, so this box is not mirrored.
+        direction: "ltr",
         width: steps * 4,
         flexDirection: side === "left" ? "row" : "row-reverse",
       }}
@@ -232,7 +235,9 @@ function Timer() {
   const [editing, setEditing] = useState(false);
   const [minutes, setMinutes] = useState("1");
   const [extra, setExtra] = useState("0");
-  const [edges, setEdges] = useState({ left: false, right: true });
+  const rtl = useRTL();
+  // A row starts at the right in right-to-left layouts, so more waits at the left.
+  const [edges, setEdges] = useState({ left: rtl, right: !rtl });
   const scroller = useRef<React.ComponentRef<typeof ScrollView>>(null);
   const [box, setBox] = useState(0);
   const [slot, setSlot] = useState<{ x: number; width: number } | null>(null);
@@ -271,6 +276,7 @@ function Timer() {
         <View style={{ gap: space(2) }}>
           <View
             style={{
+              direction: "ltr",
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",

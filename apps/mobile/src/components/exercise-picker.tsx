@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Modal, Pressable, Text, View } from "react-native";
+import { Modal, Pressable, View } from "react-native";
 import { initialWindowMetrics } from "react-native-safe-area-context";
 import { ExerciseBrowser } from "@/components/exercise-browser";
 import { Button, Glow, styles } from "@/components/ui";
+import { Chevron } from "@/lib/direction";
 import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -59,9 +60,7 @@ export function ExercisePicker({
                 borderWidth: 1,
               }}
             >
-              <Text style={{ color: colors.accent, fontSize: 22, fontWeight: "700" }}>
-                ‹
-              </Text>
+              <Chevron to="back" style={{ color: colors.accent, fontSize: 22, fontWeight: "700" }} />
             </Pressable>
           }
           selectedIds={selected}

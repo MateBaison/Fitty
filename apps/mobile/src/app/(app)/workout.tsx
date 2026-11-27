@@ -12,10 +12,10 @@ import {
   Modal,
   Pressable,
   ScrollView,
-  Switch,
   Text,
   View,
 } from "react-native";
+import { Switch } from "@/components/switch";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { translate } from "@fitty/core/data/translations";
 import { replaceWorkoutExercise } from "@fitty/core/domain/exercise-replacement";
@@ -215,7 +215,7 @@ export default function Workout() {
           justifyContent: "center",
         }}
       >
-        <View style={{ position: "absolute", top: space(3), left: space(3) }}>
+        <View style={{ position: "absolute", top: space(3), start: space(3) }}>
           <BackButton onPress={() => router.back()} />
         </View>
         <Pressable
@@ -226,7 +226,7 @@ export default function Workout() {
           style={{
             position: "absolute",
             top: space(3),
-            right: space(3),
+            end: space(3),
             width: 44,
             height: 44,
             borderRadius: 12,

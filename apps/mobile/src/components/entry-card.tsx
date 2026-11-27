@@ -1,7 +1,8 @@
 import { Image } from "expo-image";
 import { exerciseName } from "@/lib/exercise-name";
 import { SymbolView } from "expo-symbols";
-import { Pressable, Switch, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { Switch } from "@/components/switch";
 import { exerciseImage } from "@fitty/core/data/exercises";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { translate } from "@fitty/core/data/translations";
@@ -110,7 +111,8 @@ export function EntryCard({
             <Text style={{ color: colors.muted, fontSize: 13 }}>{t("Temp", "Time")}</Text>
           </View>
           <View style={{ flexDirection: "row", gap: space(2) }}>
-            <Label muted style={{ width: 44, textAlign: "center" }}>
+            {/* Wider than its column (centered on it) so the Arabic word fits on one line. */}
+            <Label muted numberOfLines={1} style={{ width: 60, marginHorizontal: -8, textAlign: "center" }}>
               {t("Serie", "Set")}
             </Label>
             <Label muted style={{ flex: 1, textAlign: "center" }}>

@@ -328,7 +328,7 @@ export function ManualSession({
               justifyContent: "center",
             }}
           >
-            <View style={{ position: "absolute", top: space(3), left: space(3) }}>
+            <View style={{ position: "absolute", top: space(3), start: space(3) }}>
               <BackButton onPress={back} />
             </View>
             <Pressable
@@ -339,7 +339,7 @@ export function ManualSession({
               style={{
                 position: "absolute",
                 top: space(3),
-                right: space(3),
+                end: space(3),
                 width: 44,
                 height: 44,
                 borderRadius: 12,

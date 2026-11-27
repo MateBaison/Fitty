@@ -31,6 +31,7 @@ import {
   type Session,
 } from "@fitty/core/domain/workouts";
 import { personalRecords } from "@fitty/core/domain/personal-records";
+import { Chevron, isolate, leftToRight, useRTL } from "@/lib/direction";
 import { shareToInstagramStory } from "@/lib/instagram";
 import { ManualSession } from "@/components/manual-session";
 import { SessionEditor } from "@/components/session-editor";
@@ -181,6 +182,7 @@ export function DaySheet({
   const locale = language;
   const unit = snapshot.settings.weight ?? "kg";
   const factor = unit === "lb" ? 2.20462 : 1;
+  const rtl = useRTL();
   const [detailId, setDetailId] = useState<string | null>(null);
   const [logging, setLogging] = useState(false);
   const [poster, setPoster] = useState<Session | null>(null);
@@ -284,8 +286,8 @@ export function DaySheet({
                   borderRadius: 14,
                   borderColor: colors.border,
                   borderWidth: 1,
-                  borderLeftWidth: 4,
-                  borderLeftColor: session.color ? nearestTrainingColor(session.color) : colors.primary,
+                  borderStartWidth: 4,
+                  borderStartColor: session.color ? nearestTrainingColor(session.color) : colors.primary,
                   backgroundColor: colors.secondary,
                   padding: space(3),
                   gap: 2,
@@ -351,7 +353,7 @@ export function DaySheet({
                   borderWidth: 1,
                 }}
               >
-                <Text style={{ color: colors.accent, fontSize: 24, fontWeight: "700" }}>‹</Text>
+                <Chevron to="back" style={{ color: colors.accent, fontSize: 24, fontWeight: "700" }} />
               </Pressable>
               <View style={{ flex: 1 }} />
               <IconButton
@@ -405,8 +407,9 @@ export function DaySheet({
               <Text style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}>
                 {detail.day}
               </Text>
-              <Label muted>
-                {detail.routine} · {new Date(detail.date).toLocaleDateString(locale)}
+              {/* A routine named in Latin letters would otherwise scramble an Arabic date. */}
+              <Label muted style={rtl ? { writingDirection: "rtl" } : undefined}>
+                {detail.routine} · {isolate(new Date(detail.date).toLocaleDateString(locale))}
               </Label>
               <Label muted>
                 {t("Tiempo", "Time")}: {time(detail)} · {t("Volumen", "Volume")}: {volume(detail)}
@@ -446,9 +449,10 @@ export function DaySheet({
                             <Text style={{ color: typeColor[set.type ?? "normal"], fontWeight: "800" }}>
                               {type?.letter ?? "N"}
                             </Text>{" "}
-                            {t("Serie", "Set")} {setNumber(exercise.performedSets ?? [], number)}: {set.kg ?? 0}{" "}
-                            {detail.weightUnit ?? "kg"} ×{" "}
-                            {set.seconds != null ? `${set.seconds} s` : `${set.reps ?? 0} reps`}
+                            {t("Serie", "Set")} {setNumber(exercise.performedSets ?? [], number)}:{" "}
+                            {leftToRight(
+                              `${set.kg ?? 0} ${detail.weightUnit ?? "kg"} × ${set.seconds != null ? `${set.seconds} s` : `${set.reps ?? 0} reps`}`,
+                            )}
                           </Text>
                           {record ? (
                             <SymbolView
@@ -502,7 +506,11 @@ export function DaySheet({
             >
               <SquareButton label={t("Volver", "Back")} onPress={() => setPoster(null)}>
                 <SymbolView
-                  name={{ ios: "chevron.left", android: "arrow_back" }}
+                  name={
+                    rtl
+                      ? { ios: "chevron.right", android: "arrow_forward" }
+                      : { ios: "chevron.left", android: "arrow_back" }
+                  }
                   tintColor={colors.foreground}
                   size={24}
                 />

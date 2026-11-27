@@ -1,8 +1,9 @@
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
+import { Chevron } from "@/lib/direction";
 import { useAccount } from "@/state/account";
 import { colors } from "@/theme";
 
-/** Square "‹" button shared by screens that sit left of a search field. */
+/** Square back button shared by screens that sit left of a search field. */
 export function BackButton({ onPress }: { onPress: () => void }) {
   const { t } = useAccount();
   return (
@@ -21,9 +22,7 @@ export function BackButton({ onPress }: { onPress: () => void }) {
         borderWidth: 1,
       }}
     >
-      <Text style={{ color: colors.accent, fontSize: 22, fontWeight: "700" }}>
-        ‹
-      </Text>
+      <Chevron to="back" style={{ color: colors.accent, fontSize: 22, fontWeight: "700" }} />
     </Pressable>
   );
 }

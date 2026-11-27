@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
 import { Button, Card, DialogScroll, Label } from "@/components/ui";
+import { Chevron } from "@/lib/direction";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -89,7 +90,7 @@ export function SetTypeDialog({
                 onPress={onClose}
                 style={{ ...circle, backgroundColor: colors.secondary }}
               >
-                <Text style={{ color: colors.accent, fontSize: 22, fontWeight: "800", lineHeight: 26 }}>‹</Text>
+                <Chevron to="back" style={{ color: colors.accent, fontSize: 22, fontWeight: "800", lineHeight: 26 }} />
               </Pressable>
               <Text
                 accessibilityRole="header"

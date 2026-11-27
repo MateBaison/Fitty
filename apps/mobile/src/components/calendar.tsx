@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { PanResponder, Pressable, Text, View } from "react-native";
 import { menstrualCalendarEnabled } from "@fitty/core/domain/menstrual-calendar";
 import { color, localDateKey } from "@fitty/core/domain/workouts";
+import { Chevron, useRTL } from "@/lib/direction";
 import { useAccount, useSnapshot } from "@/state/account";
 import { nearestTrainingColor } from "@/lib/training-colors";
 import { colors, space } from "@/theme";
@@ -55,9 +56,10 @@ export function Calendar({
   ];
   const shift = (delta: number) =>
     setMonth(new Date(month.getFullYear(), month.getMonth() + delta, 1));
-  // Swipe sideways over the calendar to change month (left = next).
+  // Swipe sideways over the calendar to change month (towards the start = next).
+  const rtl = useRTL();
   const shiftRef = useRef(shift);
-  shiftRef.current = shift;
+  shiftRef.current = (delta) => shift(rtl ? -delta : delta);
   const swipe = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, gesture) =>
@@ -84,7 +86,7 @@ export function Calendar({
           onPress={() => shift(-1)}
           hitSlop={12}
         >
-          <Text style={navStyle}>‹</Text>
+          <Chevron to="back" style={navStyle} />
         </Pressable>
         <Text
           style={{
@@ -104,7 +106,7 @@ export function Calendar({
           onPress={() => shift(1)}
           hitSlop={12}
         >
-          <Text style={navStyle}>›</Text>
+          <Chevron to="forward" style={navStyle} />
         </Pressable>
       </View>
       <View style={{ flexDirection: "row" }}>

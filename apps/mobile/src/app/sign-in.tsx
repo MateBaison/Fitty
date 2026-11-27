@@ -6,12 +6,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   Text,
-  View,
 } from "react-native";
 import { privacyNotice, translate } from "@fitty/core/data/translations";
 import { z } from "zod";
 import { LanguageMenu } from "@/components/language-menu";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
+import { Direction } from "@/lib/direction";
 import { storedLanguage, storeLanguage } from "@/lib/language";
 import { signInWithApple, signInWithProvider } from "@/lib/oauth";
 import { supabase } from "@/lib/supabase";
@@ -79,7 +79,7 @@ export default function SignIn() {
     (sentTo ? verify.error : send.error)
   )?.message;
   return (
-    <View style={{ flex: 1 }}>
+    <Direction language={language}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -208,6 +208,6 @@ export default function SignIn() {
           storeLanguage(code);
         }}
       />
-    </View>
+    </Direction>
   );
 }

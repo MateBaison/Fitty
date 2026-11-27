@@ -19,6 +19,7 @@ import {
   type SyncView,
 } from "@fitty/core/sync/sync-controller";
 import { api } from "@/lib/api";
+import { Direction } from "@/lib/direction";
 import { queryStateRepository } from "@/lib/state-repository";
 
 type Account = {
@@ -136,7 +137,7 @@ export function AccountProvider({
         notify: setNotice,
       }}
     >
-      {children}
+      <Direction language={language}>{children}</Direction>
     </AccountContext>
   );
 }

@@ -15,6 +15,7 @@ import {
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Defs, RadialGradient, Rect, Stop } from "react-native-svg";
+import { useInputAlign } from "@/lib/direction";
 import { colors, radius, space } from "@/theme";
 
 /** Blue light fading from the top-right corner, like the web body background. */
@@ -223,13 +224,14 @@ export function Field({
   ...props
 }: TextInputProps & {
   label: string;
-  /** Symbol shown at the right edge of the input. */
+  /** Symbol shown at the trailing edge of the input. */
   icon?: SymbolViewProps["name"];
   /** Read-only look: dimmer box and text. */
   locked?: boolean;
   /** Centers the label and the typed text, as in the sign-in form. */
   center?: boolean;
 }) {
+  const inputAlign = useInputAlign();
   return (
     <View style={{ gap: space(1.5) }}>
       <Label muted style={center ? { textAlign: "center" } : undefined}>
@@ -241,7 +243,8 @@ export function Field({
           accessibilityLabel={label}
           style={[
             styles.input,
-            icon ? { paddingRight: space(11) } : null,
+            inputAlign,
+            icon ? { paddingEnd: space(11) } : null,
             center ? { textAlign: "center" } : null,
             // A multiline input starts at the top: pad it so one line sits centered.
             props.multiline
@@ -262,7 +265,7 @@ export function Field({
             pointerEvents="none"
             style={{
               position: "absolute",
-              right: space(3.5),
+              end: space(3.5),
               top: 0,
               bottom: 0,
               justifyContent: "center",

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Switch, View } from "react-native";
+import { View } from "react-native";
+import { Switch } from "@/components/switch";
 import { accountCacheKey } from "@fitty/core/storage/account-cache";
 import {
   deleteConfirmationLabel,

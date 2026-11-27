@@ -1,5 +1,6 @@
 import { useRef, useState, type ComponentRef } from "react";
 import { PanResponder, View } from "react-native";
+import { useRTL } from "@/lib/direction";
 import { colors } from "@/theme";
 
 /** Draggable slider, horizontal or vertical (top is the maximum), with no native module. */
@@ -22,12 +23,17 @@ export function Slider({
 }) {
   const box = useRef<ComponentRef<typeof View>>(null);
   const origin = useRef(0);
-  const latest = useRef({ min, max, step, onChange, vertical, length });
-  latest.current = { min, max, step, onChange, vertical, length };
+  // A horizontal slider starts where the text does; a vertical one never mirrors.
+  const mirrored = useRTL() && !vertical;
+  const latest = useRef({ min, max, step, onChange, vertical, length, mirrored });
+  latest.current = { min, max, step, onChange, vertical, length, mirrored };
   const [, force] = useState(0);
   const apply = (page: number) => {
     const c = latest.current;
-    const along = Math.min(Math.max(page - origin.current, 0), c.length);
+    const fromLeft = page - origin.current;
+    // The box is the track plus 14 points of padding on each side.
+    const fromStart = c.mirrored ? c.length + 28 - fromLeft : fromLeft;
+    const along = Math.min(Math.max(fromStart, 0), c.length);
     const fraction = c.vertical ? 1 - along / c.length : along / c.length;
     const raw = c.min + fraction * (c.max - c.min);
     const snapped = Math.round(raw / c.step) * c.step;
@@ -85,7 +91,7 @@ export function Slider({
           style={
             vertical
               ? { position: "absolute", bottom: 0, width: thickness, height: length - position, borderRadius: 4, backgroundColor: colors.primary }
-              : { position: "absolute", left: 0, height: thickness, width: position, borderRadius: 4, backgroundColor: colors.primary }
+              : { position: "absolute", start: 0, height: thickness, width: position, borderRadius: 4, backgroundColor: colors.primary }
           }
         />
         <View
@@ -98,8 +104,8 @@ export function Slider({
             borderColor: colors.primary,
             borderWidth: 3,
             ...(vertical
-              ? { top: position - 14, left: thickness / 2 - 14 }
-              : { left: position - 14, top: thickness / 2 - 14 }),
+              ? { top: position - 14, start: thickness / 2 - 14 }
+              : { start: position - 14, top: thickness / 2 - 14 }),
           }}
         />
       </View>
