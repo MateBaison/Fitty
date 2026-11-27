@@ -806,6 +806,34 @@ label input[type="checkbox"] {
   accent-color: var(--primary);
   flex-shrink: 0;
 }
+/* The same red bin as the phone app. */
+.exercise-remove[data-slot="button"] {
+  --destructive-solid: #dc2626;
+  --destructive-solid-hover: #b91c1c;
+  flex-shrink: 0;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 12px;
+}
+.exercise-remove[data-slot="button"] svg {
+  width: 20px;
+  height: 20px;
+}
+/* One button fills the row; two share it, wrapping long translations. */
+.exercise-picker-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.exercise-picker-actions [data-slot="button"] {
+  height: auto;
+  padding: 8px 10px;
+  white-space: normal;
+}
 .exercise-picker-confirm {
   position: sticky;
   bottom: -1px;
@@ -986,6 +1014,25 @@ label input[type="checkbox"] {
 }
 .routine-day[open] {
   padding-bottom: 10px;
+}
+/* The rename pencil sits beside the name of an open day, as in the phone app. */
+.routine-day-action {
+  display: none;
+  flex-shrink: 0;
+  margin-inline-start: 6px;
+}
+.routine-day[open] > summary > .routine-day-action {
+  display: inline-flex;
+}
+.routine-day-rename[data-slot="button"] {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: #8ed2f5;
 }
 .drag-handle {
   touch-action: none;

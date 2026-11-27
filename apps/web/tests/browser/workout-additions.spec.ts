@@ -18,6 +18,13 @@ test("add an extra exercise to an active routine workout and retain it after rel
     .getByRole("button", { name: "Agregar ejercicios", exact: true })
     .click();
   await page.getByRole("button", { name: "Abdominales", exact: true }).click();
+  // Going back and creating share one row.
+  const box = async (name: RegExp) =>
+    (await page.getByRole("button", { name }).boundingBox())!;
+  const back = await box(/Zonas musculares/);
+  const create = await box(/Crear ejercicio/);
+  expect(create.y).toBe(back.y);
+  expect(create.x).toBeGreaterThan(back.x + back.width);
   await page.getByLabel("Seleccionar Plancha", { exact: true }).check();
   await page.getByRole("button", { name: /Agregar seleccionados/ }).click();
   await expect(page.locator("[data-workout-entry]")).toHaveCount(before + 1);

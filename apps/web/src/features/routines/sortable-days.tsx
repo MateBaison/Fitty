@@ -62,13 +62,18 @@ export function SortableDays({
 export function SortableDay({
   id,
   title,
+  action,
   children,
 }: {
   id: string;
   title: ReactNode;
+  /** Control shown beside the title while the day is open. */
+  action?: ReactNode;
   children: ReactNode;
 }) {
   const sort = useSortable({ id });
+  // A button role would hide the controls inside the summary from screen readers.
+  const { role: _role, ...attributes } = sort.attributes;
   return (
     <details
       ref={sort.setNodeRef}
@@ -85,10 +90,21 @@ export function SortableDay({
       <summary
         ref={sort.setActivatorNodeRef}
         className="font-bold sortable-day-title"
-        {...sort.attributes}
+        {...attributes}
         {...sort.listeners}
       >
         {title}
+        {action && (
+          // Pressing the control must not start dragging the day.
+          <span
+            className="routine-day-action"
+            onMouseDown={(event) => event.stopPropagation()}
+            onTouchStart={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+          >
+            {action}
+          </span>
+        )}
       </summary>
       {children}
     </details>

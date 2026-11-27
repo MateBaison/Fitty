@@ -64,9 +64,22 @@ export function ExercisePicker({
         "Choose one or more exercises and review their images before adding them.",
       )}
     >
-      <Button variant="secondary" onClick={() => setCreating(true)}>
-        ＋ {t("Crear ejercicio", "Create exercise")}
-      </Button>
+      <div className="exercise-picker-actions">
+        {group && (
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setGroup(null);
+              setQuery("");
+            }}
+          >
+            ← {t("Zonas musculares", "Muscle groups")}
+          </Button>
+        )}
+        <Button variant="secondary" onClick={() => setCreating(true)}>
+          ＋ {t("Crear ejercicio", "Create exercise")}
+        </Button>
+      </div>
       {!group ? (
         <div className="exercise-grid">
           {(["Favoritos", ...muscleGroups] as const).map((muscle) => (
@@ -92,15 +105,6 @@ export function ExercisePicker({
         </div>
       ) : (
         <>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setGroup(null);
-              setQuery("");
-            }}
-          >
-            ← {t("Zonas musculares", "Muscle groups")}
-          </Button>
           <Input
             aria-label={t("Buscar ejercicio", "Search exercise")}
             value={query}

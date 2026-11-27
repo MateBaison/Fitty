@@ -20,7 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
-import { GripVertical } from "lucide-react";
+import { GripVertical, Trash2 } from "lucide-react";
 import { useApp } from "@/state/app-provider";
 import { findExercise } from "@fitty/core/domain/workouts";
 import { ExerciseDetails } from "@/features/exercises/exercise-details";
@@ -73,11 +73,12 @@ function SortableItem({
       )}
       <span className="min-w-0 flex-1">{short(exercise?.name ?? exerciseId)}</span>
       <Button
-        variant="ghost"
+        variant="destructive-solid"
+        className="exercise-remove"
         aria-label={`Quitar ${exercise?.name ?? exerciseId}`}
         onClick={remove}
       >
-        −
+        <Trash2 aria-hidden="true" />
       </Button>
       <ExerciseDetails
         exercise={enlarged ? (exercise ?? null) : null}

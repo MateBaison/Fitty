@@ -396,23 +396,28 @@ export function RoutinesHome() {
                     {day.name} <small>({day.items.length})</small>
                   </>
                 }
-              >
-                <SortableExercises rid={routine.id} did={day.id} />
-                <div className="my-3 flex flex-wrap justify-center gap-2">
+                action={
                   <Button
+                    type="button"
                     variant="secondary"
-                    onClick={() =>
+                    size="icon-xl"
+                    className="routine-day-rename"
+                    aria-label={`${t("Renombrar", "Rename")} ${day.name}`}
+                    title={t("Cambiar nombre", "Rename")}
+                    onClick={(event) => {
+                      event.preventDefault();
                       openEditor(
                         { type: "rename-day", rid: routine.id, did: day.id },
                         day.name,
-                      )
-                    }
-                    aria-label={`${t("Renombrar", "Rename")} ${day.name}`}
+                      );
+                    }}
                   >
-                    <Pencil data-icon="inline-start" />
-                    {t("Renombrar", "Rename")}
+                    <Pencil aria-hidden="true" />
                   </Button>
-
+                }
+              >
+                <SortableExercises rid={routine.id} did={day.id} />
+                <div className="my-3 flex flex-wrap justify-center gap-2">
                   <Button
                     variant="secondary"
                     onClick={() => setPicker({ rid: routine.id, did: day.id })}
@@ -702,7 +707,7 @@ export function RoutinesHome() {
                 </label>
               </>
             ) : (
-              <label className="block">
+              <label className="grid gap-1.5">
                 {t("Nombre", "Name")}
                 <Input
                   required
