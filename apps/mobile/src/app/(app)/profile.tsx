@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import { openWebPage } from "@/lib/open-link";
-import { useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import {
   Alert,
   Modal,
@@ -31,6 +32,7 @@ import {
   ProfileFields,
   profileDraft,
   profileValues,
+  type ProfileDraft,
 } from "@/components/profile-fields";
 import { DeleteAccount } from "@/components/delete-account";
 import { LinkedApps } from "@/components/linked-apps";
@@ -274,7 +276,11 @@ export default function Profile() {
   const snapshot = useSnapshot();
   const { change, notify, retry, view, t } = useAccount();
   const { session } = useSession();
-  const [draft, setDraft] = useState(() => profileDraft(snapshot.profile));
+  // Only unsaved edits are kept here; without them the saved profile is shown.
+  const [edits, setEdits] = useState<ProfileDraft | null>(null);
+  const draft = edits ?? profileDraft(snapshot.profile);
+  // Tab screens stay mounted, so leaving the tab has to drop unsaved edits.
+  useFocusEffect(useCallback(() => () => setEdits(null), []));
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [linkedOpen, setLinkedOpen] = useState(false);
   const [choosingLanguage, setChoosingLanguage] = useState(false);
@@ -394,6 +400,12 @@ export default function Profile() {
         Object.assign(draft.settings, { weight, height, distance, language });
       })
     ) {
+      // Unsaved measures were typed in the previous units.
+      if (
+        weight !== (settings.weight ?? "kg") ||
+        height !== (settings.height ?? "cm")
+      )
+        setEdits(null);
       setSettingsOpen(false);
       notify(t("Configuración guardada", "Settings saved"));
     }
@@ -488,7 +500,7 @@ export default function Profile() {
         </View>
         <ProfileFields
           value={draft}
-          onChange={setDraft}
+          onChange={setEdits}
           email={session?.user.email ?? undefined}
         />
         {menstrualAllowed ? (
@@ -550,8 +562,10 @@ export default function Profile() {
                   if (draft[key] !== original[key])
                     Object.assign(next.profile, { [key]: values[key] });
               })
-            )
+            ) {
+              setEdits(null);
               notify(t("Perfil guardado", "Profile saved"));
+            }
           }}
         >
           {t("Guardar cambios", "Save changes")}
