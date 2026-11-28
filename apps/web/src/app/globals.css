@@ -1627,7 +1627,7 @@ strong {
 .workout-fold {
   scroll-margin-top: 90px;
 }
-/* Holding an exercise opens the reorder window instead of selecting text. */
+/* Holding an exercise picks it up instead of selecting text. */
 .workout-fold > summary {
   user-select: none;
   -webkit-user-select: none;
@@ -1649,50 +1649,117 @@ strong {
   width: 20px;
   height: 20px;
 }
-.reorder-list {
-  display: grid;
-  gap: 8px;
-}
-.reorder-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 54px;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--secondary);
-  text-align: start;
-  cursor: grab;
-  touch-action: manipulation;
+/* Compact list shown in place while an exercise is held and dragged. */
+.workout-reorder {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 25;
+  overflow: hidden;
+  cursor: grabbing;
+  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
-.reorder-row[data-highlighted] {
-  border-color: var(--primary);
+.workout-reorder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--background);
+  opacity: 0;
+  transition: opacity 110ms ease;
 }
-.reorder-row[data-dragging] {
+.workout-reorder[data-open]::before {
+  opacity: 1;
+}
+.workout-reorder[data-dropped] {
+  pointer-events: none;
+}
+.workout-reorder-slot {
+  position: absolute;
+  transition:
+    transform 220ms ease,
+    opacity 110ms ease;
+}
+.workout-reorder:not([data-open]) .workout-reorder-slot {
+  opacity: 0;
+}
+/* Closing: the rows travel to their cards and fade only at the end. */
+.workout-reorder[data-dropped]:not([data-open]) .workout-reorder-slot {
+  transition-delay: 0ms, 110ms;
+}
+.workout-reorder[data-dropped]:not([data-open])::before {
+  transition-delay: 110ms;
+}
+.workout-reorder-slot[data-held] {
   z-index: 1;
-  cursor: grabbing;
-  box-shadow: 0 10px 24px #000a;
 }
-.reorder-row svg {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
+.workout-reorder-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-inline: 8px;
+  border-radius: 14px;
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease;
+}
+.workout-reorder-slot[data-held] .workout-reorder-row {
+  background: var(--background);
+}
+.workout-reorder-row[data-follow] {
+  transition: opacity 150ms ease;
+}
+.workout-reorder-row[data-dimmed] {
+  opacity: 0.5;
+}
+.workout-reorder-row > small {
+  height: 20px;
   color: var(--muted-foreground);
 }
-.reorder-row span {
-  display: grid;
-  gap: 2px;
+.workout-reorder-member {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--reorder-row);
+}
+.workout-reorder-member strong {
+  display: -webkit-box;
   min-width: 0;
+  overflow: hidden;
   overflow-wrap: anywhere;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
-.reorder-row small {
-  color: var(--muted-foreground);
+.workout-reorder-thumb {
+  flex: none;
+  width: calc(var(--reorder-row) - 14px);
+  height: calc(var(--reorder-row) - 14px);
+  overflow: hidden;
+  border-radius: 50%;
+  background: #0d1016;
+}
+.workout-reorder-thumb .exercise-image,
+.workout-reorder-thumb .custom-visual {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  object-fit: cover;
+  font-size: 1.25rem;
+}
+.workout-reorder-thumb .custom-visual small {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .workout-reorder *,
+  .workout-reorder::before {
+    transition: none !important;
+  }
 }
 
 .training-colors {

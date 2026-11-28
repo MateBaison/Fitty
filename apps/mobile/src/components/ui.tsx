@@ -45,12 +45,15 @@ export function Screen({
   scroll = true,
   glow = true,
   pinned,
+  locked: held = false,
 }: {
   children: ReactNode;
   scroll?: boolean;
   glow?: boolean;
   /** Floats at the top of the screen; the rest scrolls underneath. */
   pinned?: ReactNode;
+  /** Stops scrolling while the screen handles a gesture of its own. */
+  locked?: boolean;
 }) {
   // Read from the context so screens under the app header (which owns the top inset) get no extra gap.
   const insets = useSafeAreaInsets();
@@ -81,7 +84,7 @@ export function Screen({
           style={glow ? { backgroundColor: "transparent" } : undefined}
           contentContainerStyle={content}
           keyboardShouldPersistTaps="handled"
-          scrollEnabled={!locked}
+          scrollEnabled={!locked && !held}
         >
           <ScrollLockContext.Provider value={setLocked}>
             {children}

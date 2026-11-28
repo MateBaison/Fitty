@@ -47,9 +47,8 @@ import {
   exerciseNote,
   setExerciseNote,
 } from "@fitty/core/domain/exercise-notes";
-import * as Haptics from "expo-haptics";
 import { ExerciseNoteDialog } from "@/components/exercise-note-dialog";
-import { ReorderExercisesDialog } from "@/components/reorder-exercises-dialog";
+import { useWorkoutReorder } from "@/components/workout-reorder";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { BackButton } from "@/components/back-button";
 import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
@@ -89,8 +88,9 @@ export default function Workout() {
   const [menuFor, setMenuFor] = useState<number | null>(null);
   // Exercise ID whose standing note is open.
   const [noteFor, setNoteFor] = useState<string | null>(null);
-  // Key of the exercise that was long-pressed to reorder the workout.
-  const [reordering, setReordering] = useState<string | null>(null);
+  const reorder = useWorkoutReorder((from, to) =>
+    change((draft) => moveWorkoutBlock(draft, from, to)),
+  );
   const [adding, setAdding] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [resizingComment, setResizingComment] = useState(false);
@@ -165,17 +165,35 @@ export default function Workout() {
   const restEnabled = settings.restEnabled === true;
   const keys = workoutEntryKeys(workout.entries);
   const blocks = workoutBlocks(workout.entries);
-  const nameOf = (id: string) => {
-    const exercise = findExercise(snapshot, id);
-    return exercise ? exerciseName(language, exercise.name) : id;
-  };
-  const startReorder = (index: number) => {
-    if (blocks.length < 2) return;
-    void Haptics.selectionAsync();
-    setReordering(keys[index]!);
+  const startReorder = (index: number, pageY: number) =>
+    void reorder.start(
+      blocks.map((block) => ({
+        key: keys[block[0]!]!,
+        superset: Boolean(workout.entries[block[0]!]!.superset),
+        members: block.map((number) => {
+          const id = workout.entries[number]!.id;
+          const exercise = findExercise(snapshot, id);
+          return {
+            name: exercise ? exerciseName(language, exercise.name) : id,
+            image: exercise
+              ? exerciseSource(exercise, snapshot.profile.gender)
+              : undefined,
+          };
+        }),
+      })),
+      blocks.findIndex((block) => block.includes(index)),
+      pageY,
+    );
+  // The same move for screen readers, one place at a time.
+  const stepExercise = (index: number, direction: -1 | 1) => {
+    const from = blocks.findIndex((block) => block.includes(index));
+    const to = from + direction;
+    if (to >= 0 && to < blocks.length)
+      change((draft) => moveWorkoutBlock(draft, from, to));
   };
   return (
-    <Screen>
+    <View style={{ flex: 1 }} {...reorder.areaProps}>
+    <Screen locked={reorder.active}>
       <View
         style={{
           borderRadius: 24,
@@ -302,7 +320,8 @@ export default function Workout() {
         const entryKey = keys[index]!;
         const note = exerciseNote(snapshot, entry.id);
         return (
-          <Card key={entryKey}>
+          <View key={entryKey} ref={reorder.cardRef(entryKey)} collapsable={false}>
+          <Card>
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ expanded }}
@@ -314,8 +333,21 @@ export default function Workout() {
                     )
                   : undefined
               }
+              accessibilityActions={
+                blocks.length > 1
+                  ? [
+                      { name: "up", label: t("Subir", "Move up") },
+                      { name: "down", label: t("Bajar", "Move down") },
+                    ]
+                  : undefined
+              }
+              onAccessibilityAction={({ nativeEvent }) =>
+                stepExercise(index, nativeEvent.actionName === "up" ? -1 : 1)
+              }
               delayLongPress={350}
-              onLongPress={() => startReorder(index)}
+              onLongPress={(event) =>
+                startReorder(index, event.nativeEvent.pageY)
+              }
               onPress={() =>
                 change((draft) => {
                   const current = draft.workout;
@@ -337,6 +369,10 @@ export default function Workout() {
                   accessibilityRole="button"
                   accessibilityLabel={`${t("Ampliar", "Enlarge")} ${exercise.name}`}
                   onPress={() => setImageFor(exercise)}
+                  delayLongPress={350}
+                  onLongPress={(event) =>
+                    startReorder(index, event.nativeEvent.pageY)
+                  }
                 >
                   <Image
                     source={exerciseSource(exercise, snapshot.profile.gender)}
@@ -689,6 +725,7 @@ export default function Workout() {
               </>
             ) : null}
           </Card>
+          </View>
         );
       })}
       <Button variant="secondary" onPress={() => setAdding(true)}>
@@ -998,20 +1035,6 @@ export default function Workout() {
           onClose={() => setNoteFor(null)}
         />
       ) : null}
-      {reordering !== null ? (
-        <ReorderExercisesDialog
-          rows={blocks.map((block) => ({
-            key: keys[block[0]!]!,
-            names: block.map((index) => nameOf(workout.entries[index]!.id)),
-            superset: Boolean(workout.entries[block[0]!]!.superset),
-            highlighted: block.some((index) => keys[index] === reordering),
-          }))}
-          onMove={(from, to) =>
-            change((draft) => moveWorkoutBlock(draft, from, to))
-          }
-          onClose={() => setReordering(null)}
-        />
-      ) : null}
       <ExercisePicker
         visible={adding}
         onClose={() => setAdding(false)}
@@ -1028,5 +1051,7 @@ export default function Workout() {
         }}
       />
     </Screen>
+    {reorder.overlay}
+    </View>
   );
 }

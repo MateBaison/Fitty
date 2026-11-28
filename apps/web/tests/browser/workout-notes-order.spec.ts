@@ -6,30 +6,68 @@ const names = (page: Page) =>
 const summary = (page: Page, index: number) =>
   page.locator(`[data-workout-entry="${index}"] > summary`);
 
-/** Presses and holds the name of an exercise, like a finger would. */
+const overlay = (page: Page) => page.locator(".workout-reorder");
+const rows = (page: Page) => overlay(page).locator(".workout-reorder-slot");
+
+/**
+ * Holds the name of an exercise with a finger or the mouse and returns the
+ * ways to keep moving that same pointer and to let go.
+ */
 async function hold(page: Page, index: number, touch: boolean) {
   const target = summary(page, index).locator("strong");
-  await target.scrollIntoViewIfNeeded();
+  // Centered, so the sticky header cannot cover it.
+  await target.evaluate((element) =>
+    element.scrollIntoView({ block: "center", behavior: "instant" }),
+  );
   const box = (await target.boundingBox())!;
   const point = { x: box.x + 10, y: box.y + box.height / 2 };
-  if (touch) {
-    const session = await page.context().newCDPSession(page);
+  const session = touch ? await page.context().newCDPSession(page) : null;
+  if (session)
     await session.send("Input.dispatchTouchEvent", {
       type: "touchStart",
       touchPoints: [point],
     });
-    await page.waitForTimeout(700);
-    await session.send("Input.dispatchTouchEvent", {
-      type: "touchEnd",
-      touchPoints: [],
-    });
-    await session.detach();
-  } else {
+  else {
     await page.mouse.move(point.x, point.y);
     await page.mouse.down();
-    await page.waitForTimeout(700);
-    await page.mouse.up();
   }
+  await expect(overlay(page)).toHaveAttribute("data-open", "true");
+  // The rows finish folding.
+  await page.waitForTimeout(350);
+  let y = point.y;
+  return {
+    async drag(distance: number) {
+      const from = y;
+      for (let step = 1; step <= 12; step += 1) {
+        y = from + (distance * step) / 12;
+        if (session)
+          await session.send("Input.dispatchTouchEvent", {
+            type: "touchMove",
+            touchPoints: [{ x: point.x, y }],
+          });
+        else await page.mouse.move(point.x, y);
+        await page.waitForTimeout(20);
+      }
+      await page.waitForTimeout(250);
+    },
+    async release() {
+      if (session) {
+        await session.send("Input.dispatchTouchEvent", {
+          type: "touchEnd",
+          touchPoints: [],
+        });
+        await session.detach();
+      } else await page.mouse.up();
+      await expect(overlay(page)).toHaveCount(0);
+    },
+  };
+}
+
+/** Distance between the same point of two compact rows. */
+async function between(page: Page, from: number, to: number) {
+  const a = (await rows(page).nth(from).boundingBox())!,
+    b = (await rows(page).nth(to).boundingBox())!;
+  return b.y - a.y;
 }
 
 test("exercise notes stay with the exercise and holding it reorders the workout", async ({
@@ -89,37 +127,68 @@ test("exercise notes stay with the exercise and holding it reorders the workout"
   await page.keyboard.press("Escape");
   await expect(noteDialog).toHaveCount(0);
 
-  // Holding an exercise opens the reorder window, which stays after letting go.
+  // Holding an exercise folds them all into rows, in place and with no window.
   const before = await names(page);
-  await hold(page, 1, touch);
-  const dialog = page.getByRole("dialog", { name: "Ordenar ejercicios" });
-  await expect(dialog).toBeVisible();
-  await page.waitForTimeout(400);
-  await expect(dialog).toBeVisible();
-  const rows = dialog.locator(".reorder-row");
-  await expect(rows).toHaveCount(before.length);
-  await expect(rows.nth(1)).toHaveAttribute("data-highlighted", "true");
+  const still = await hold(page, 1, touch);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(rows(page)).toHaveCount(before.length);
+  await expect(rows(page).locator("strong")).toHaveText(before);
+  await expect(
+    rows(page).nth(1).locator(".workout-reorder-row"),
+  ).toHaveAttribute("data-dimmed", "true");
   await page.screenshot({
-    path: `artifacts/workout-reorder-${info.project.name}.png`,
+    path: `artifacts/workout-reorder-held-${info.project.name}.png`,
   });
-  const from = (await rows.nth(1).boundingBox())!,
-    to = (await rows.nth(0).boundingBox())!;
-  await page.mouse.move(from.x + 40, from.y + from.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(to.x + 40, to.y + 4, { steps: 12 });
-  await page.waitForTimeout(250);
-  await page.mouse.up();
+  // Letting go without moving changes nothing and does not fold the card.
+  const openBefore = await page
+    .locator("[data-workout-entry]")
+    .evaluateAll((list) =>
+      list.map((element) => (element as HTMLDetailsElement).open),
+    );
+  await still.release();
+  expect(await names(page)).toEqual(before);
+  expect(
+    await page
+      .locator("[data-workout-entry]")
+      .evaluateAll((list) =>
+        list.map((element) => (element as HTMLDetailsElement).open),
+      ),
+  ).toEqual(openBefore);
+
+  // The same pointer drags it up, and releasing applies the new order.
+  const held = await hold(page, 1, touch);
+  const scroll = await page.evaluate(() => window.scrollY);
+  await held.drag(await between(page, 1, 0));
+  await expect(
+    rows(page).nth(1).locator(".workout-reorder-row"),
+  ).not.toHaveAttribute("data-dimmed", "true");
+  const moved = (await rows(page).nth(1).boundingBox())!,
+    other = (await rows(page).nth(0).locator("strong").boundingBox())!;
+  expect(other.y).toBeGreaterThan(moved.y);
+  await page.screenshot({
+    path: `artifacts/workout-reorder-drag-${info.project.name}.png`,
+  });
+  // Dragging never scrolls the page underneath.
+  expect(await page.evaluate(() => window.scrollY)).toBe(scroll);
+  await held.release();
   const swapped = [before[1]!, before[0]!, ...before.slice(2)];
   await expect.poll(() => names(page)).toEqual(swapped);
-  // The arrow keys move rows too, keeping the focus on the moved one.
-  await rows.nth(0).focus();
-  await page.keyboard.press("ArrowDown");
+
+  // Alt + arrows move it too, keeping the focus on the moved exercise.
+  await summary(page, 0).focus();
+  await page.keyboard.press("Alt+ArrowDown");
   await expect.poll(() => names(page)).toEqual(before);
-  await expect(rows.nth(1)).toBeFocused();
-  await page.keyboard.press("ArrowUp");
+  await expect(summary(page, 1)).toBeFocused();
+  await page.keyboard.press("Alt+ArrowUp");
   await expect.poll(() => names(page)).toEqual(swapped);
-  await dialog.getByRole("button", { name: "Listo", exact: true }).click();
-  await expect(dialog).toHaveCount(0);
+
+  // Escape lets go without moving.
+  const cancelled = await hold(page, 0, touch);
+  await cancelled.drag(await between(page, 0, 1));
+  await page.keyboard.press("Escape");
+  await expect(overlay(page)).toHaveCount(0);
+  await cancelled.release();
+  expect(await names(page)).toEqual(swapped);
 
   // The note followed its exercise, and the order survives a reload.
   await expect(
@@ -140,12 +209,7 @@ test("exercise notes stay with the exercise and holding it reorders the workout"
   await expect
     .poll(() => entry.evaluate((element: HTMLDetailsElement) => element.open))
     .toBe(!wasOpen);
-  await expect(dialog).toHaveCount(0);
-  // Right click does the same as holding.
-  await summary(page, 0).locator("strong").click({ button: "right" });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: "Listo", exact: true }).click();
-  await expect(dialog).toHaveCount(0);
+  await expect(overlay(page)).toHaveCount(0);
 
   // The bin at the top right deletes the note after asking.
   const second = page.locator('[data-workout-entry="1"]');

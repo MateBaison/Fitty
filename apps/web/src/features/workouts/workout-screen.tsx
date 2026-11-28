@@ -28,8 +28,8 @@ import { ExercisePicker } from "@/features/exercises/exercise-picker";
 import { ReplacementDialog } from "./replacement-dialog";
 import { ExerciseMenu } from "./exercise-menu";
 import { ExerciseNoteDialog } from "./exercise-note-dialog";
-import { ReorderExercisesDialog } from "./reorder-exercises-dialog";
-import { useLongPress } from "./use-long-press";
+import { WorkoutReorder, type ReorderStart } from "./workout-reorder";
+import { useLongPress, type HeldPointer } from "./use-long-press";
 import {
   exerciseNote,
   setExerciseNote,
@@ -50,8 +50,8 @@ export function WorkoutScreen() {
   const longPress = useLongPress();
   // Exercise ID whose standing note is open.
   const [noteFor, setNoteFor] = useState<string | null>(null);
-  // Key of the exercise that was long-pressed to reorder the workout.
-  const [reordering, setReordering] = useState<string | null>(null);
+  // Set while an exercise is held to move it within the workout.
+  const [reordering, setReordering] = useState<ReorderStart | null>(null);
   const { snapshot, change, notify, t } = useApp(),
     router = useRouter(),
     workout = snapshot.workout;
@@ -152,8 +152,37 @@ export function WorkoutScreen() {
   };
   const keys = workoutEntryKeys(workout.entries),
     blocks = workoutBlocks(workout.entries),
-    nameOf = (id: string) =>
-      short(findExercise(snapshot, id)?.name ?? id);
+    blockOf = (index: number) =>
+      blocks.findIndex((block) => block.includes(index));
+  const holdExercise = (index: number, pointer: HeldPointer) =>
+    setReordering({
+      ...pointer,
+      from: blockOf(index),
+      blocks: blocks.map((block) => ({
+        key: keys[block[0]!]!,
+        superset: Boolean(workout.entries[block[0]!]!.superset),
+        members: block.map((number) => {
+          const id = workout.entries[number]!.id,
+            exercise = findExercise(snapshot, id);
+          return { name: short(exercise?.name ?? id), exercise };
+        }),
+      })),
+    });
+  // The keyboard moves the same blocks one place at a time.
+  const stepExercise = (index: number, direction: -1 | 1) => {
+    const from = blockOf(index),
+      to = from + direction;
+    if (to < 0 || to >= blocks.length) return;
+    change((draft) => moveWorkoutBlock(draft, from, to));
+    const key = keys[index]!;
+    requestAnimationFrame(() =>
+      document
+        .querySelector<HTMLElement>(
+          `[data-entry-key="${CSS.escape(key)}"] > summary`,
+        )
+        ?.focus(),
+    );
+  };
   const renderEntry = (entry: Entry, index: number) => {
     const exercise = findExercise(snapshot, entry.id),
       opened = workout.openExercises?.includes(index) ?? index === 0,
@@ -202,6 +231,7 @@ export function WorkoutScreen() {
         key={entryKey}
         className={`panel workout-fold ${entry.superset ? "superset-fold" : ""}`}
         data-workout-entry={index}
+        data-entry-key={entryKey}
         open={opened}
         onToggle={(event) => {
           const open = event.currentTarget.open;
@@ -220,7 +250,13 @@ export function WorkoutScreen() {
         <summary
           className="picker-row"
           {...(blocks.length > 1
-            ? longPress(() => setReordering(entryKey))
+            ? {
+                "aria-keyshortcuts": "Alt+ArrowUp Alt+ArrowDown",
+                ...longPress(
+                  (pointer) => holdExercise(index, pointer),
+                  (direction) => stepExercise(index, direction),
+                ),
+              }
             : {})}
         >
           <button
@@ -449,14 +485,9 @@ export function WorkoutScreen() {
           onClose={() => setNoteFor(null)}
         />
       )}
-      {reordering !== null && (
-        <ReorderExercisesDialog
-          rows={blocks.map((block) => ({
-            key: keys[block[0]!]!,
-            names: block.map((number) => nameOf(workout.entries[number]!.id)),
-            superset: Boolean(workout.entries[block[0]!]!.superset),
-            highlighted: block.some((number) => keys[number] === reordering),
-          }))}
+      {reordering && (
+        <WorkoutReorder
+          start={reordering}
           onMove={(from, to) =>
             change((draft) => moveWorkoutBlock(draft, from, to))
           }

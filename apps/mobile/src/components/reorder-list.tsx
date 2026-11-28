@@ -1,6 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { useContext, useRef, useState, type ReactNode } from "react";
 import { PanResponder, View } from "react-native";
+import { dropTarget } from "@fitty/core/domain/drag-reorder";
 import { ScrollLockContext } from "@/components/ui";
 
 /**
@@ -31,21 +32,11 @@ export function ReorderList<T>({
 
   const targetFor = (from: number, dy: number) => {
     const { count, gap: space } = latest.current;
-    let target = from;
-    let remaining = dy;
-    while (remaining > 0 && target < count - 1) {
-      const step = (heights.current[target + 1] ?? 0) + space;
-      if (remaining < step / 2) break;
-      remaining -= step;
-      target += 1;
-    }
-    while (remaining < 0 && target > 0) {
-      const step = (heights.current[target - 1] ?? 0) + space;
-      if (-remaining < step / 2) break;
-      remaining += step;
-      target -= 1;
-    }
-    return target;
+    const sizes = Array.from(
+      { length: count },
+      (_, index) => heights.current[index] ?? 0,
+    );
+    return dropTarget(sizes, space, from, dy);
   };
   const finish = (dy: number) => {
     const from = dragging.current;
