@@ -26,12 +26,15 @@ export function PickerButton({
   onPress,
   invalid,
   icon,
+  compact,
 }: {
   label: string;
   value: string;
   placeholder?: string;
   onPress: () => void;
   invalid?: boolean;
+  /** For half a row: a long value takes two smaller lines. */
+  compact?: boolean;
   /** Symbol at the right edge hinting what tapping opens. */
   icon?: SymbolViewProps["name"];
 }) {
@@ -50,13 +53,15 @@ export function PickerButton({
             gap: space(2),
             borderColor: invalid ? colors.destructive : colors.border,
           },
+          compact ? { paddingHorizontal: space(3), paddingVertical: space(1) } : null,
         ]}
       >
         <Text
+          numberOfLines={compact ? 2 : undefined}
           style={{
             flex: 1,
             color: value ? colors.foreground : colors.muted,
-            fontSize: 16,
+            fontSize: compact ? 15 : 16,
           }}
         >
           {value || placeholder || ""}
@@ -404,11 +409,13 @@ export function OptionField({
   options,
   value,
   onChange,
+  compact,
 }: {
   label: string;
   options: readonly (readonly [string, string])[];
   value: string;
   onChange: (value: string) => void;
+  compact?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const shown = options.find(([key]) => key === value)?.[1] ?? "";
@@ -417,6 +424,7 @@ export function OptionField({
       <PickerButton
         label={label}
         value={shown}
+        compact={compact}
         icon={{ ios: "chevron.down", android: "keyboard_arrow_down" }}
         onPress={() => setOpen(true)}
       />

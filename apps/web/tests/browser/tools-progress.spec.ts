@@ -79,6 +79,20 @@ test("four calculators expose colored results and a weight-goal range", async ({
     await expect(page.getByLabel("Objetivo diario (kcal)")).toHaveValue(amount);
   }
   await page.getByRole("button", { name: "Macros", exact: true }).click();
+  await expect(page.locator("details.extras")).toHaveCount(0);
+  // Two rows of two: calories and distribution, then weight and meals.
+  const boxes = await Promise.all(
+    [
+      page.getByLabel("Objetivo diario (kcal)"),
+      page.getByRole("button", { name: /^Distribución:/ }),
+      page.getByLabel("Peso (kg)", { exact: true }),
+      page.getByLabel("Comidas por día"),
+    ].map(async (field) => (await field.boundingBox())!),
+  );
+  expect(boxes[1]!.y).toBeCloseTo(boxes[0]!.y, 0);
+  expect(boxes[3]!.y).toBeCloseTo(boxes[2]!.y, 0);
+  expect(boxes[2]!.y).toBeGreaterThan(boxes[0]!.y);
+  expect(boxes[1]!.x).toBeGreaterThan(boxes[0]!.x);
   await page
     .getByRole("button", { name: "Calcular macros", exact: true })
     .click();
@@ -103,7 +117,15 @@ test("four calculators expose colored results and a weight-goal range", async ({
   const protein = page.locator(".result-protein").first();
   await expect(protein).toContainText("135 g");
   await expect(protein).toContainText("18 %");
-  await page.getByLabel("Distribución").selectOption("protein");
+  await expect(page.locator("details.extras")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Distribución: Equilibrada" })
+    .click();
+  await page
+    .getByRole("button", { name: "Alta en proteína", exact: true })
+    .click();
+  // The extras only follow a calculation.
+  await expect(page.locator("details.extras")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Calcular macros", exact: true })
     .click();

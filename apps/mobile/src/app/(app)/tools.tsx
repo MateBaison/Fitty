@@ -581,7 +581,23 @@ function Calculators() {
         ) : null}
         {section === "macros" ? (
           <>
-            <Field label={t("Objetivo diario (kcal)", "Daily target (kcal)")} value={calories} onChangeText={setCalories} keyboardType="number-pad" />
+            <View style={{ flexDirection: "row", alignItems: "flex-end", gap: space(3) }}>
+              <View style={{ flex: 1 }}>
+                <Field label={t("Objetivo diario (kcal)", "Daily target (kcal)")} value={calories} onChangeText={setCalories} keyboardType="number-pad" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <OptionField
+                  compact
+                  label={t("Distribución", "Distribution")}
+                  options={splits.map(([value, es, en]) => [value, t(es, en)] as const)}
+                  value={split}
+                  onChange={(value) => {
+                    setSplit(value as typeof split);
+                    setMacros(null);
+                  }}
+                />
+              </View>
+            </View>
             <View style={{ flexDirection: "row", alignItems: "flex-end", gap: space(3) }}>
               <View style={{ flex: 1 }}>
                 <Field
@@ -598,15 +614,6 @@ function Calculators() {
                 <Field label={t("Comidas por día", "Meals per day")} value={meals} onChangeText={setMeals} keyboardType="number-pad" />
               </View>
             </View>
-            <OptionField
-              label={t("Distribución", "Distribution")}
-              options={splits.map(([value, es, en]) => [value, t(es, en)] as const)}
-              value={split}
-              onChange={(value) => {
-                setSplit(value as typeof split);
-                setMacros(null);
-              }}
-            />
           </>
         ) : null}
         {section === "maximum" ? (
@@ -674,8 +681,8 @@ function Calculators() {
             </View>
           </View>
         ) : null}
-        {section === "macros" ? (
-          <NutritionExtras calories={macros?.calories ?? (num(calories) || 0)} />
+        {section === "macros" && macros ? (
+          <NutritionExtras calories={macros.calories} />
         ) : null}
         {section === "maximum" && maximum !== null ? (
           <Result

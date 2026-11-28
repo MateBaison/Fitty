@@ -1012,6 +1012,39 @@ main > h1 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
+/* Two columns on every width; a label that wraps keeps the fields level. */
+.form-grid.macro-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+}
+.choice-field > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+  min-height: 50px;
+  margin-top: 4px;
+  padding: 4px 8px;
+  background: var(--secondary);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  /* Small enough on narrow phones not to split a long word. */
+  font-size: clamp(0.75rem, 3.7vw, 0.95rem);
+  line-height: 1.2;
+  text-align: start;
+  cursor: pointer;
+}
+.choice-field > button > span {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.choice-field > button > svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
 select,
 textarea {
   width: 100%;

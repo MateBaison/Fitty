@@ -6,6 +6,7 @@ import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
 import { NumericInput } from "@/components/ui/numeric-input";
 import { NutritionExtras } from "./nutrition-extras";
+import { ChoiceField } from "./choice-field";
 import {
   calorieMetrics,
   calorieTargets,
@@ -142,7 +143,11 @@ export function CalculatorsScreen() {
                 ? t("Una repetición máxima", "One-rep max")
                 : t("Estimación de objetivo de peso", "Weight goal estimate")}
         </h2>
-        <div className="form-grid">
+        <div
+          className={
+            section === "macros" ? "form-grid macro-fields" : "form-grid"
+          }
+        >
           {(section === "calories" || section === "goal") && (
             <>
               <label>
@@ -232,6 +237,26 @@ export function CalculatorsScreen() {
                   onChange={(event) => setCalories(Number(event.target.value))}
                 />
               </label>
+              <ChoiceField
+                label={t("Distribución", "Distribution")}
+                value={split}
+                options={[
+                  { value: "balanced", label: t("Equilibrada", "Balanced") },
+                  {
+                    value: "protein",
+                    label: t("Alta en proteína", "High protein"),
+                  },
+                  {
+                    value: "lowerCarb",
+                    label: t("Menos carbohidratos", "Lower carbohydrate"),
+                  },
+                  { value: "keto", label: t("Cetogénica", "Ketogenic") },
+                ]}
+                onChange={(value) => {
+                  setSplit(value);
+                  setMacros(null);
+                }}
+              />
               <label>
                 {t("Peso (", "Weight (")}
                 {units.weight ?? "kg"})
@@ -252,27 +277,6 @@ export function CalculatorsScreen() {
                   value={meals}
                   onChange={(event) => setMeals(Number(event.target.value))}
                 />
-              </label>
-              <label>
-                {t("Distribución", "Distribution")}
-                <select
-                  value={split}
-                  onChange={(event) => {
-                    setSplit(event.target.value as typeof split);
-                    setMacros(null);
-                  }}
-                >
-                  <option value="balanced">
-                    {t("Equilibrada", "Balanced")}
-                  </option>
-                  <option value="protein">
-                    {t("Alta en proteína", "High protein")}
-                  </option>
-                  <option value="lowerCarb">
-                    {t("Menos carbohidratos", "Lower carbohydrate")}
-                  </option>
-                  <option value="keto">{t("Cetogénica", "Ketogenic")}</option>
-                </select>
               </label>
             </>
           )}
@@ -424,8 +428,8 @@ export function CalculatorsScreen() {
             </section>
           </>
         )}
-        {section === "macros" && (
-          <NutritionExtras calories={macros?.calories ?? calories} />
+        {section === "macros" && macros && (
+          <NutritionExtras calories={macros.calories} />
         )}
         {section === "maximum" && maximum !== null && (
           <Result
