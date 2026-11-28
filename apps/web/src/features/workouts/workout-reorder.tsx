@@ -8,6 +8,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import {
+  dragDistance,
   dropTarget,
   edgeScroll,
   placeList,
@@ -49,9 +50,24 @@ type Layout = {
   start: number;
   max: number;
   startScroll: number;
+  /** How far the pointer can still travel each way. */
+  room: { up: number; down: number };
   /** Distance from each row to the card it comes from or returns to. */
   origins: number[];
 };
+
+/** How far the held row is from its slot for the pointer's position. */
+function travelled(
+  layout: Layout,
+  start: ReorderStart,
+  pointer: { y: number; scroll: number },
+) {
+  const moved = pointer.y - start.y + pointer.scroll - layout.startScroll;
+  // A list that scrolls is already placed under the pointer.
+  return layout.max
+    ? moved
+    : dragDistance(layout.heights, GAP, start.from, moved, layout.room);
+}
 
 const card = (key: string) =>
   document.querySelector(`[data-entry-key="${CSS.escape(key)}"]`);
@@ -121,6 +137,7 @@ export function WorkoutReorder({
       start: placed.start,
       max: placed.max,
       startScroll: placed.scroll,
+      room: { up: start.y - areaTop - 24, down: height - start.y - 24 },
       origins: rects.map((rect, index) => {
         if (!rect) return 0;
         const slot = areaTop + placed.start + tops[index]! - placed.scroll;
@@ -150,7 +167,7 @@ export function WorkoutReorder({
             layout.heights,
             GAP,
             from,
-            pointer.y - start.y + pointer.scroll - layout.startScroll,
+            travelled(layout, start, pointer),
           )
         : from;
       setDropped(to);
@@ -245,7 +262,7 @@ export function WorkoutReorder({
   }, [scrolls]);
 
   if (!layout) return null;
-  const dy = pointer.y - start.y + pointer.scroll - layout.startScroll;
+  const dy = travelled(layout, start, pointer);
   const to = dropped ?? dropTarget(layout.heights, GAP, from, dy);
   const { tops } = stackRows(layout.heights, GAP);
   return createPortal(

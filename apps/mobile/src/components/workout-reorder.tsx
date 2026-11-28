@@ -3,6 +3,7 @@ import { Image, type ImageProps } from "expo-image";
 import { use, useEffect, useRef, useState, type ComponentRef } from "react";
 import { Animated, PanResponder, StyleSheet, Text, View } from "react-native";
 import {
+  dragDistance,
   dropTarget,
   edgeScroll,
   placeList,
@@ -39,6 +40,8 @@ type Session = {
   maxScroll: number;
   startY: number;
   startScroll: number;
+  /** How far the finger can still travel each way. */
+  room: { up: number; down: number };
   /** Distance from each row to the card it comes from or returns to. */
   origins: number[];
   /** Slot chosen on release, while the cards open again. */
@@ -46,6 +49,14 @@ type Session = {
 };
 
 type Native = ComponentRef<typeof View>;
+
+/** How far the held row is from its slot for the finger's position. */
+function travelled(session: Session, pointer: { y: number; scroll: number }) {
+  const { heights, from, startY, startScroll, maxScroll, room } = session;
+  const moved = pointer.y - startY + pointer.scroll - startScroll;
+  // A list that scrolls is already placed under the finger.
+  return maxScroll ? moved : dragDistance(heights, GAP, from, moved, room);
+}
 
 const measure = (view: Native) =>
   new Promise<{ y: number; height: number }>((resolve) =>
@@ -136,6 +147,10 @@ export function useWorkoutReorder(onMove: (from: number, to: number) => void) {
       maxScroll: placed.max,
       startY: pageY,
       startScroll: placed.scroll,
+      room: {
+        up: pageY - box.y - space(6),
+        down: box.y + box.height - pageY - space(6),
+      },
       origins,
       dropped: null,
     });
@@ -151,13 +166,13 @@ export function useWorkoutReorder(onMove: (from: number, to: number) => void) {
     finger.current = null;
     const current = session.current;
     if (!current) return setActive(false);
-    const { from, heights, startY, startScroll } = current;
-    const { y, scroll } = position.current;
+    const { from, heights } = current;
+    const { scroll } = position.current;
     const to = dropTarget(
       heights,
       GAP,
       from,
-      y - startY + scroll - startScroll,
+      travelled(current, position.current),
     );
     show({ ...current, dropped: to });
     if (to !== from) latest.current(from, to);
@@ -261,7 +276,7 @@ function Overlay({
   progress: Animated.Value;
 }) {
   const { from, heights, dropped } = session;
-  const dy = pointer.y - session.startY + pointer.scroll - session.startScroll;
+  const dy = travelled(session, pointer);
   const to = dropped ?? dropTarget(heights, GAP, from, dy);
   const { tops } = stackRows(heights, GAP);
   return (

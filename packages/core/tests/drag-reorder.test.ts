@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  dragDistance,
   dropTarget,
   edgeScroll,
   placeList,
@@ -37,15 +38,32 @@ describe("drag reorder geometry", () => {
     expect(shifts(1, 1)).toEqual([0, 0, 0, 0]);
   });
 
-  it("keeps the held row under the pointer while the list fits", () => {
-    // Row 2 spans 170 to 220, so its middle sits 195 below the start.
-    expect(placeList(heights, 10, 2, 400, 20, 700)).toEqual({
-      start: 205,
-      scroll: 0,
-      max: 0,
-    });
-    expect(placeList(heights, 10, 2, 40, 20, 700).start).toBe(20);
-    expect(placeList(heights, 10, 2, 690, 20, 700).start).toBe(420);
+  it("gathers a list that fits at the top, wherever it is held", () => {
+    for (const pointer of [40, 400, 690])
+      expect(placeList(heights, 10, 2, pointer, 20, 700)).toEqual({
+        start: 20,
+        scroll: 0,
+        max: 0,
+      });
+  });
+
+  it("follows the pointer while there is room to reach the end", () => {
+    const room = { up: 300, down: 400 };
+    expect(dragDistance(heights, 10, 0, 100, room)).toBe(100);
+    expect(dragDistance(heights, 10, 3, -100, room)).toBe(-100);
+    expect(dragDistance(heights, 10, 0, 0, room)).toBe(0);
+  });
+
+  it("speeds up toward an edge that is too close", () => {
+    // The last slot is 230 away and the pointer only has 115 below it.
+    const room = { up: 500, down: 115 };
+    expect(dragDistance(heights, 10, 0, 50, room)).toBe(100);
+    expect(
+      dropTarget(heights, 10, 0, dragDistance(heights, 10, 0, 115, room)),
+    ).toBe(3);
+    // The row never strays far past the end.
+    expect(dragDistance(heights, 10, 0, 900, room)).toBe(270);
+    expect(dragDistance(heights, 10, 0, -900, room)).toBe(-40);
   });
 
   it("scrolls a list taller than the room", () => {

@@ -62,8 +62,8 @@ export function slotShift(
 }
 
 /**
- * Places a list between `top` and `bottom` with the held row as close to the
- * pointer as it fits. A list taller than that room starts at `top` and scrolls.
+ * Places a list against `top`. One taller than the room down to `bottom` also
+ * scrolls, starting with the held row as close to the pointer as possible.
  */
 export function placeList(
   heights: readonly number[],
@@ -75,10 +75,32 @@ export function placeList(
 ) {
   const { tops, height } = stackRows(heights, gap);
   const wanted = pointer - (tops[held] ?? 0) - (heights[held] ?? 0) / 2;
-  if (height <= bottom - top)
-    return { start: clamp(wanted, top, bottom - height), scroll: 0, max: 0 };
+  if (height <= bottom - top) return { start: top, scroll: 0, max: 0 };
   const max = height - (bottom - top);
   return { start: top, scroll: clamp(top - wanted, 0, max), max };
+}
+
+/**
+ * How far the held row travels when the pointer moved `moved`. Rows gather at
+ * the top, so a pointer held near an edge may have little room on that side:
+ * the row then moves faster, keeping both ends of the list within reach.
+ */
+export function dragDistance(
+  heights: readonly number[],
+  gap: number,
+  from: number,
+  moved: number,
+  room: { up: number; down: number },
+  slack = 40,
+) {
+  const end = moved < 0 ? 0 : heights.length - 1;
+  const needed = Math.abs(slotShift(heights, gap, from, end, from));
+  const space = Math.max(48, moved < 0 ? room.up : room.down);
+  const distance = Math.min(
+    needed + slack,
+    Math.abs(moved) * Math.max(1, needed / space),
+  );
+  return moved < 0 ? -distance : distance;
 }
 
 /** Pixels per frame to scroll while the pointer rests near an edge. */

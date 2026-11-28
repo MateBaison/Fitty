@@ -136,6 +136,10 @@ test("exercise notes stay with the exercise and holding it reorders the workout"
   await expect(
     rows(page).nth(1).locator(".workout-reorder-row"),
   ).toHaveAttribute("data-dimmed", "true");
+  // The rows gather at the top, wherever the exercise was held.
+  const header = (await page.locator(".app-header").boundingBox())!,
+    first = (await rows(page).nth(0).boundingBox())!;
+  expect(first.y - (header.y + header.height)).toBeCloseTo(16, 0);
   await page.screenshot({
     path: `artifacts/workout-reorder-held-${info.project.name}.png`,
   });
