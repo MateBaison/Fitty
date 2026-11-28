@@ -60,7 +60,7 @@ export function WorkoutScreen() {
     [extras, setExtras] = useState(emptyExtras),
     [supersetOpen, setSupersetOpen] = useState(false),
     [members, setMembers] = useState<number[]>([]);
-  const { rest, now, setRest } = useRuntime(),
+  const { rest, now, finished, setRest } = useRuntime(),
     restEnd = rest.end;
   const setRestEnd = (end: number, source?: string) =>
     setRest({
@@ -181,6 +181,11 @@ export function WorkoutScreen() {
                   set: Number(rest.source.slice(restSource.length)),
                   progress: 1 - (restEnd - now) / (rest.duration * 1000),
                 }
+              : undefined
+          }
+          rested={
+            finished?.startsWith(restSource)
+              ? Number(finished.slice(restSource.length))
               : undefined
           }
           onNote={
@@ -437,7 +442,6 @@ export function WorkoutScreen() {
       {confirmDialog}
       {noteFor !== null && (
         <ExerciseNoteDialog
-          name={nameOf(noteFor)}
           initial={exerciseNote(snapshot, noteFor)}
           onSave={(note) =>
             change((draft) => setExerciseNote(draft, noteFor, note))

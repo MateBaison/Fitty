@@ -283,6 +283,20 @@ test("the workout in progress can be continued or cancelled from home", async ({
   await drawer
     .getByRole("button", { name: "Omitir descanso", exact: true })
     .click();
+  // A skipped rest does not glow; one that runs out does, for a moment.
+  const rested = page.locator(".set-grid-row[data-rest-done]");
+  await expect(rested).toHaveCount(0);
+  await page.getByLabel("Segundos", { exact: true }).fill("5");
+  await setClock.click();
+  await expect(rested).toHaveCount(1, { timeout: 8000 });
+  await expect(rested.locator(".set-rest")).toHaveAccessibleName(
+    "Iniciar descanso 1 serie 1",
+  );
+  await page.waitForTimeout(500);
+  await page.screenshot({
+    path: `artifacts/rest-done-glow-${info.project.name}.png`,
+  });
+  await expect(rested).toHaveCount(0, { timeout: 4000 });
   await expect(drawer).toBeHidden();
   await expect(setClock).not.toHaveAttribute("style", /conic-gradient/);
   await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();

@@ -60,6 +60,7 @@ export function SetGrid({
   toolbar,
   onRest,
   resting,
+  rested,
   onNote,
   externalMetric = false,
 }: {
@@ -68,6 +69,8 @@ export function SetGrid({
   onRest?: (set: number) => void;
   /** The set whose rest is running, and how much of it has gone by (0 to 1). */
   resting?: { set: number; progress: number };
+  /** The set whose rest has just run out: its row glows for a moment. */
+  rested?: number;
   /** Opens the standing note of the exercise; absent when it has none. */
   onNote?: () => void;
   entry: Entry;
@@ -224,6 +227,7 @@ export function SetGrid({
           <div
             className={`set-grid-row${records[number]?.length ? " personal-record-row" : ""}`}
             data-rest-enabled={!!onRest}
+            data-rest-done={rested === number || undefined}
             key={number}
             data-set-row={number}
           >

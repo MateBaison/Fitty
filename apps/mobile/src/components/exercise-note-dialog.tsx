@@ -1,5 +1,7 @@
+import { SymbolView } from "expo-symbols";
 import { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -15,18 +17,28 @@ import { colors, space } from "@/theme";
 
 /** Floating window to read or edit the standing note of an exercise. */
 export function ExerciseNoteDialog({
-  name,
   initial,
   onSave,
   onClose,
 }: {
-  name: string;
   initial: string;
   onSave: (note: string) => void;
   onClose: () => void;
 }) {
   const { t } = useAccount();
   const [note, setNote] = useState(initial);
+  const remove = () =>
+    Alert.alert(t("¿Eliminar la nota?", "Delete the note?"), undefined, [
+      { text: t("Cancelar", "Cancel"), style: "cancel" },
+      {
+        text: t("Eliminar", "Delete"),
+        style: "destructive",
+        onPress: () => {
+          onSave("");
+          onClose();
+        },
+      },
+    ]);
   return (
     <Modal transparent visible animationType="fade" onRequestClose={onClose}>
       <KeyboardAvoidingView
@@ -63,7 +75,7 @@ export function ExerciseNoteDialog({
                 }}
               >
                 <BackButton onPress={onClose} />
-                <View style={{ flex: 1, alignItems: "center", paddingEnd: 56 }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                   <Text
                     accessibilityRole="header"
                     style={{
@@ -76,10 +88,32 @@ export function ExerciseNoteDialog({
                     {t("Notas de ejercicio", "Exercise notes")}
                   </Text>
                 </View>
+                {initial ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t("Eliminar nota", "Delete note")}
+                    onPress={remove}
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 12,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: colors.secondary,
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                    }}
+                  >
+                    <SymbolView
+                      name={{ ios: "trash", android: "delete" }}
+                      tintColor={colors.destructive}
+                      size={20}
+                    />
+                  </Pressable>
+                ) : (
+                  <View style={{ width: 44 }} />
+                )}
               </View>
-              <Label style={{ textAlign: "center", fontWeight: "800" }}>
-                {name}
-              </Label>
               <Field
                 label={t(
                   "Instrucciones o comentarios sobre este ejercicio",

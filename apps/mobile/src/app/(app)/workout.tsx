@@ -56,6 +56,7 @@ import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
 import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
 import { RestFill } from "@/components/rest-fill";
+import { RestGlow } from "@/components/rest-glow";
 import { SessionExtras } from "@/components/session-extras";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Field, Label, Screen, Title, DialogScroll } from "@/components/ui";
@@ -80,7 +81,7 @@ export default function Workout() {
   const { change, t, notify } = useAccount();
   const router = useRouter();
   const [extras, setExtras] = useState<Extras>(emptyExtras);
-  const { rest, start: startRest, stop: stopRest } = useRest();
+  const { rest, finished, start: startRest, stop: stopRest } = useRest();
   const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(
     null,
   );
@@ -616,6 +617,9 @@ export default function Workout() {
                           {type?.letter ?? "N"}
                         </Text>
                       </Pressable>
+                      {finished === `${entryKey}|${number}` ? (
+                        <RestGlow />
+                      ) : null}
                     </View>
                   );
                 })}
@@ -987,7 +991,6 @@ export default function Workout() {
       ) : null}
       {noteFor !== null ? (
         <ExerciseNoteDialog
-          name={nameOf(noteFor)}
           initial={exerciseNote(snapshot, noteFor)}
           onSave={(note) =>
             change((draft) => setExerciseNote(draft, noteFor, note))

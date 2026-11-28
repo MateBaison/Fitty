@@ -4,9 +4,13 @@ import type { Session } from "@fitty/core/domain/workouts";
 import { CombatAudio } from "@/lib/browser/combat-audio";
 /** `source` names the set whose clock started the rest. */
 type Rest = { end: number; duration: number; source?: string };
+/** How long the set that just finished resting stays highlighted. */
+export const REST_GLOW_MS = 1800;
 const Context = createContext<{
   now: number;
   rest: Rest;
+  /** The `source` of a rest that has just run out (never of a skipped one). */
+  finished: string | undefined;
   setRest: (value: Rest) => void;
   clipboard: Session[];
   setClipboard: (value: Session[]) => void;
@@ -22,8 +26,16 @@ export function RuntimeProvider({
   const [now, setNow] = useState(Date.now()),
     [rest, updateRest] = useState<Rest>({ end: 0, duration: 0 }),
     announced = useRef(0),
-    callback = useRef(onRestComplete);
+    callback = useRef(onRestComplete),
+    source = useRef(rest.source);
   callback.current = onRestComplete;
+  source.current = rest.source;
+  const [finished, setFinished] = useState<string>();
+  useEffect(() => {
+    if (!finished) return;
+    const timer = setTimeout(() => setFinished(undefined), REST_GLOW_MS);
+    return () => clearTimeout(timer);
+  }, [finished]);
   const audio = useRef(new CombatAudio());
   useEffect(() => () => audio.current.close(), []);
   useEffect(() => {
@@ -36,6 +48,7 @@ export function RuntimeProvider({
         navigator.vibrate?.([120, 70, 120]);
         void audio.current.play("timer").catch(() => {});
         callback.current();
+        setFinished(source.current);
       }
     };
     update();
@@ -51,6 +64,7 @@ export function RuntimeProvider({
       value={{
         now,
         rest,
+        finished,
         clipboard,
         setClipboard,
         setRest: (value) => {
@@ -61,6 +75,7 @@ export function RuntimeProvider({
               .catch(() => {});
           }
           setNow(Date.now());
+          setFinished(undefined);
           updateRest(value);
         },
       }}

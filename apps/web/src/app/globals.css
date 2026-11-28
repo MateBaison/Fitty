@@ -1297,7 +1297,8 @@ label input[type="checkbox"] {
   width: 20px;
   height: 20px;
 }
-.dialog-back-button {
+.dialog-back-button,
+.dialog-delete-button {
   position: absolute;
   top: 12px;
   left: 12px;
@@ -1313,6 +1314,16 @@ label input[type="checkbox"] {
 .dialog-back-button svg {
   width: 22px;
   height: 22px;
+}
+/* Mirrors the back button, at the other corner of the dialog. */
+.dialog-delete-button {
+  right: 12px;
+  left: auto;
+  color: var(--destructive, #ef4444);
+}
+.dialog-delete-button svg {
+  width: 20px;
+  height: 20px;
 }
 .exercise-menu-body {
   display: grid;
@@ -2325,6 +2336,25 @@ input[type="range"] {
 }
 .set-rest[data-resting] {
   color: #fff;
+}
+/* A soft green light on the row of a set whose rest has just run out. */
+.set-grid-row[data-rest-done] {
+  border-radius: 10px;
+  animation: set-rest-done 1.8s ease-out;
+}
+@keyframes set-rest-done {
+  0%,
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 transparent;
+  }
+  20%,
+  40% {
+    background-color: #4ade8033;
+    box-shadow:
+      0 0 0 2px #4ade80,
+      0 0 18px 4px #4ade8080;
+  }
 }
 .drop-segment-controls {
   display: flex;

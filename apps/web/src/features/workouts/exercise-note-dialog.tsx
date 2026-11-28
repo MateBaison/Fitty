@@ -1,24 +1,36 @@
 "use client";
 import { useState } from "react";
+import { Trash2 } from "lucide-react";
 import { EXERCISE_NOTE_MAX } from "@fitty/core/domain/exercise-notes";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useApp } from "@/state/app-provider";
 
 /** Floating window to read or edit the standing note of an exercise. */
 export function ExerciseNoteDialog({
-  name,
   initial,
   onSave,
   onClose,
 }: {
-  name: string;
   initial: string;
   onSave: (note: string) => void;
   onClose: () => void;
 }) {
   const { t } = useApp(),
-    [note, setNote] = useState(initial);
+    [note, setNote] = useState(initial),
+    [ask, confirmDialog] = useConfirm();
+  const remove = async () => {
+    if (
+      await ask(t("¿Eliminar la nota?", "Delete the note?"), {
+        confirmLabel: t("Eliminar", "Delete"),
+        destructive: true,
+      })
+    ) {
+      onSave("");
+      onClose();
+    }
+  };
   return (
     <AppDialog
       open
@@ -28,7 +40,17 @@ export function ExerciseNoteDialog({
       backLabel={t("Volver", "Back")}
     >
       <div className="exercise-menu-body">
-        <strong className="text-center">{name}</strong>
+        {initial && (
+          <button
+            type="button"
+            className="dialog-delete-button"
+            aria-label={t("Eliminar nota", "Delete note")}
+            title={t("Eliminar nota", "Delete note")}
+            onClick={remove}
+          >
+            <Trash2 aria-hidden="true" />
+          </button>
+        )}
         <label className="block">
           {t(
             "Instrucciones o comentarios sobre este ejercicio",
@@ -56,6 +78,7 @@ export function ExerciseNoteDialog({
         >
           {t("Guardar", "Save")}
         </Button>
+        {confirmDialog}
       </div>
     </AppDialog>
   );

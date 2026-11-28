@@ -1182,7 +1182,9 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Maintenez appuyé puis faites glisser pour changer l’ordre. Seule cette séance est modifiée.",
     "Mover ejercicio": "Déplacer l’exercice",
     "Subir": "Monter",
-    "Bajar": "Descendre"
+    "Bajar": "Descendre",
+    "Eliminar nota": "Supprimer la note",
+    "¿Eliminar la nota?": "Supprimer la note ?"
   },
   "zh": {
     "Tiempo transcurrido": "已用时间",
@@ -2367,7 +2369,9 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "长按并拖动即可调整顺序。仅更改本次训练。",
     "Mover ejercicio": "移动动作",
     "Subir": "上移",
-    "Bajar": "下移"
+    "Bajar": "下移",
+    "Eliminar nota": "删除笔记",
+    "¿Eliminar la nota?": "要删除这条笔记吗？"
   },
   "hi": {
     "Tiempo transcurrido": "बीता हुआ समय",
@@ -3552,7 +3556,9 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "क्रम बदलने के लिए दबाकर रखें और खींचें। केवल यही वर्कआउट बदलेगा।",
     "Mover ejercicio": "व्यायाम खिसकाएँ",
     "Subir": "ऊपर ले जाएँ",
-    "Bajar": "नीचे ले जाएँ"
+    "Bajar": "नीचे ले जाएँ",
+    "Eliminar nota": "नोट हटाएँ",
+    "¿Eliminar la nota?": "नोट हटाएँ?"
   },
   "ar": {
     "Tiempo transcurrido": "الوقت المنقضي",
@@ -4737,7 +4743,9 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "اضغط مطولاً ثم اسحب لتغيير الترتيب. يتغير هذا التمرين فقط.",
     "Mover ejercicio": "نقل التمرين",
     "Subir": "نقل لأعلى",
-    "Bajar": "نقل لأسفل"
+    "Bajar": "نقل لأسفل",
+    "Eliminar nota": "حذف الملاحظة",
+    "¿Eliminar la nota?": "هل تريد حذف الملاحظة؟"
   },
   "de": {
     "Tiempo transcurrido": "Verstrichene Zeit",
@@ -5920,7 +5928,9 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Gedrückt halten und ziehen, um die Reihenfolge zu ändern. Nur dieses Training ändert sich.",
     "Mover ejercicio": "Übung verschieben",
     "Subir": "Nach oben",
-    "Bajar": "Nach unten"
+    "Bajar": "Nach unten",
+    "Eliminar nota": "Notiz löschen",
+    "¿Eliminar la nota?": "Notiz löschen?"
   },
   "it": {
     "Tiempo transcurrido": "Tempo trascorso",
@@ -7103,7 +7113,9 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Tieni premuto e trascina per cambiare l’ordine. Cambia solo questo allenamento.",
     "Mover ejercicio": "Sposta esercizio",
     "Subir": "Sposta su",
-    "Bajar": "Sposta giù"
+    "Bajar": "Sposta giù",
+    "Eliminar nota": "Elimina nota",
+    "¿Eliminar la nota?": "Eliminare la nota?"
   },
   "pt": {
     "Tiempo transcurrido": "Tempo decorrido",
@@ -8286,7 +8298,9 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Mantenha pressionado e arraste para mudar a ordem. Só este treino muda.",
     "Mover ejercicio": "Mover exercício",
     "Subir": "Mover para cima",
-    "Bajar": "Mover para baixo"
+    "Bajar": "Mover para baixo",
+    "Eliminar nota": "Excluir nota",
+    "¿Eliminar la nota?": "Excluir a nota?"
   },
   "en": {
     "Tiempo transcurrido": "Elapsed time",
@@ -8942,6 +8956,8 @@
     "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Press and hold, then drag to change the order. Only this workout changes.",
     "Mover ejercicio": "Move exercise",
     "Subir": "Move up",
-    "Bajar": "Move down"
+    "Bajar": "Move down",
+    "Eliminar nota": "Delete note",
+    "¿Eliminar la nota?": "Delete the note?"
   }
 }

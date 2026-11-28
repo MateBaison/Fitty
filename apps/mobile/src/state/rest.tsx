@@ -18,8 +18,13 @@ export type Rest = {
   source?: string;
 };
 
+/** How long the set that just finished resting stays highlighted. */
+export const REST_GLOW_MS = 1800;
+
 const Context = createContext<{
   rest: Rest | null;
+  /** The `source` of a rest that has just run out (never of a skipped one). */
+  finished: string | null;
   start: (seconds: number, source?: string) => void;
   stop: () => void;
 } | null>(null);
@@ -28,11 +33,11 @@ const Context = createContext<{
 export function RestProvider({ children }: { children: ReactNode }) {
   const working = Boolean(useSnapshot().workout);
   const [rest, setRest] = useState<Rest | null>(null);
-  const start = useCallback(
-    (seconds: number, source?: string) =>
-      setRest({ end: Date.now() + seconds * 1000, seconds, source }),
-    [],
-  );
+  const [finished, setFinished] = useState<string | null>(null);
+  const start = useCallback((seconds: number, source?: string) => {
+    setFinished(null);
+    setRest({ end: Date.now() + seconds * 1000, seconds, source });
+  }, []);
   const stop = useCallback(() => setRest(null), []);
   useEffect(() => {
     if (!rest) return;
@@ -42,19 +47,30 @@ export function RestProvider({ children }: { children: ReactNode }) {
           Haptics.NotificationFeedbackType.Success,
         );
         playRestDone();
+        setFinished(rest.source ?? null);
         setRest(null);
       },
       Math.max(0, rest.end - Date.now()),
     );
     return () => clearTimeout(timer);
   }, [rest]);
+  useEffect(() => {
+    if (!finished) return;
+    const timer = setTimeout(() => setFinished(null), REST_GLOW_MS);
+    return () => clearTimeout(timer);
+  }, [finished]);
   // A rest ends with its workout, so it never announces itself later.
   useEffect(() => {
     if (!working) setRest(null);
   }, [working]);
   const value = useMemo(
-    () => ({ rest: working ? rest : null, start, stop }),
-    [working, rest, start, stop],
+    () => ({
+      rest: working ? rest : null,
+      finished: working ? finished : null,
+      start,
+      stop,
+    }),
+    [working, rest, finished, start, stop],
   );
   return <Context value={value}>{children}</Context>;
 }

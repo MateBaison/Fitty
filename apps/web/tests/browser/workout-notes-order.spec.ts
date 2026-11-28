@@ -62,6 +62,14 @@ test("exercise notes stay with the exercise and holding it reorders the workout"
     .getByRole("button", { name: "Notas de ejercicio", exact: true })
     .click();
   const noteDialog = page.getByRole("dialog", { name: "Notas de ejercicio" });
+  const trash = noteDialog.getByRole("button", {
+    name: "Eliminar nota",
+    exact: true,
+  });
+  // Nothing to delete yet, and the exercise name is not repeated.
+  await expect(noteDialog.getByRole("textbox")).toBeVisible();
+  await expect(trash).toHaveCount(0);
+  await expect(noteDialog).not.toContainText("Press banca");
   await noteDialog.getByRole("textbox").fill("Banco en la posición 4");
   await noteDialog
     .getByRole("button", { name: "Guardar", exact: true })
@@ -136,4 +144,31 @@ test("exercise notes stay with the exercise and holding it reorders the workout"
   // Right click does the same as holding.
   await summary(page, 0).locator("strong").click({ button: "right" });
   await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "Listo", exact: true }).click();
+  await expect(dialog).toHaveCount(0);
+
+  // The bin at the top right deletes the note after asking.
+  const second = page.locator('[data-workout-entry="1"]');
+  if (!(await second.evaluate((element: HTMLDetailsElement) => element.open)))
+    await summary(page, 1).locator("strong").click();
+  await noteButton.click();
+  const back = (await noteDialog
+      .getByRole("button", { name: "Volver", exact: true })
+      .boundingBox())!,
+    bin = (await trash.boundingBox())!;
+  expect(bin.y).toBe(back.y);
+  expect(bin.x).toBeGreaterThan(back.x + 100);
+  await page.screenshot({
+    path: `artifacts/workout-note-dialog-${info.project.name}.png`,
+  });
+  await trash.click();
+  const confirm = page.getByRole("dialog", { name: "¿Eliminar la nota?" });
+  await confirm.getByRole("button", { name: "Volver", exact: true }).click();
+  await expect(noteDialog.getByRole("textbox")).toHaveValue(
+    "Banco en la posición 4",
+  );
+  await trash.click();
+  await confirm.getByRole("button", { name: "Eliminar", exact: true }).click();
+  await expect(noteDialog).toHaveCount(0);
+  await expect(noteButton).toHaveCount(0);
 });
