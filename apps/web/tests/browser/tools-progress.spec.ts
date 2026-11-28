@@ -94,6 +94,36 @@ test("four calculators expose colored results and a weight-goal range", async ({
     path: `artifacts/macros-${info.project.name}.png`,
     fullPage: true,
   });
+  // Protein follows the weight; the extras open below the results.
+  await page.getByLabel("Objetivo diario (kcal)").fill("3000");
+  await page.getByLabel("Peso (kg)", { exact: true }).fill("75");
+  await page
+    .getByRole("button", { name: "Calcular macros", exact: true })
+    .click();
+  const protein = page.locator(".result-protein").first();
+  await expect(protein).toContainText("135 g");
+  await expect(protein).toContainText("18 %");
+  await page.getByLabel("Distribución").selectOption("protein");
+  await page
+    .getByRole("button", { name: "Calcular macros", exact: true })
+    .click();
+  await expect(protein).toContainText("165 g");
+  await expect(page.getByText("2,2 g por kg")).toBeVisible();
+  const extras = page.locator("details.extras");
+  await expect(extras.getByText("Para todos los días")).toBeHidden();
+  await extras.getByText("Extras", { exact: true }).click();
+  await expect(extras.getByText("Menos de 75 g por día")).toBeVisible();
+  await extras.getByText("Fibra", { exact: true }).click();
+  await expect(extras.getByText(/da saciedad/)).toBeVisible();
+  await page.screenshot({
+    path: `artifacts/macros-extras-${info.project.name}.png`,
+    fullPage: true,
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
   await page
     .getByRole("button", { name: "Una repetición máxima", exact: true })
     .click();

@@ -1,9 +1,11 @@
 "use client";
 import { useSwipeNavigation } from "@/lib/browser/use-swipe-navigation";
 import { useState } from "react";
+import { localeFor } from "@fitty/core/data/translations";
 import { useApp } from "@/state/app-provider";
 import { Button } from "@/components/ui/button";
 import { NumericInput } from "@/components/ui/numeric-input";
+import { NutritionExtras } from "./nutrition-extras";
 import {
   calorieMetrics,
   calorieTargets,
@@ -49,9 +51,9 @@ export function CalculatorsScreen() {
   const [targets, setTargets] = useState<ReturnType<
       typeof calorieTargets
     > | null>(null),
-    [macros, setMacros] = useState<ReturnType<typeof macroMetrics> | null>(
-      null,
-    ),
+    [macros, setMacros] = useState<
+      (ReturnType<typeof macroMetrics> & { calories: number }) | null
+    >(null),
     [maximum, setMaximum] = useState<number | null>(null),
     [goal, setGoal] = useState<WeightGoalResult | null>(null);
   const useCaloriesForMacros = (value: number) => {
@@ -75,7 +77,15 @@ export function CalculatorsScreen() {
         setTargets(result);
         setCalories(result.maintenance);
       } else if (section === "macros")
-        setMacros(macroMetrics({ calories, meals, split }));
+        setMacros({
+          ...macroMetrics({
+            calories,
+            meals,
+            split,
+            weightKg: weight / (units.weight === "lb" ? 2.20462 : 1),
+          }),
+          calories,
+        });
       else if (section === "maximum")
         setMaximum(oneRepMax({ weight: load, reps }));
       else
@@ -223,6 +233,19 @@ export function CalculatorsScreen() {
                 />
               </label>
               <label>
+                {t("Peso (", "Weight (")}
+                {units.weight ?? "kg"})
+                <NumericInput
+                  type="number"
+                  step="0.1"
+                  value={weight}
+                  onChange={(event) => {
+                    setWeight(Number(event.target.value));
+                    setMacros(null);
+                  }}
+                />
+              </label>
+              <label>
                 {t("Comidas por día", "Meals per day")}
                 <NumericInput
                   type="number"
@@ -234,9 +257,10 @@ export function CalculatorsScreen() {
                 {t("Distribución", "Distribution")}
                 <select
                   value={split}
-                  onChange={(event) =>
-                    setSplit(event.target.value as typeof split)
-                  }
+                  onChange={(event) => {
+                    setSplit(event.target.value as typeof split);
+                    setMacros(null);
+                  }}
                 >
                   <option value="balanced">
                     {t("Equilibrada", "Balanced")}
@@ -277,10 +301,10 @@ export function CalculatorsScreen() {
         </div>
         <Button className="mt-5" onClick={calculate}>
           {section === "calories"
-            ? "Calcular calorías"
+            ? t("Calcular calorías", "Calculate calories")
             : section === "macros"
-              ? "Calcular macros"
-              : "Calcular"}
+              ? t("Calcular macros", "Calculate macros")
+              : t("Calcular", "Calculate")}
         </Button>
         {error && (
           <p role="alert" className="mt-4">
@@ -299,21 +323,21 @@ export function CalculatorsScreen() {
               }
               value={
                 targets.loss < 1200
-                  ? "Consultar con un profesional"
-                  : `${targets.loss} kcal/día`
+                  ? t("Consultar con un profesional", "Consult a professional")
+                  : `${targets.loss} ${t("kcal/día", "kcal/day")}`
               }
             />
             <Result
               color="maintain"
               label={t("Mantenerse", "Maintain weight")}
               onSelect={() => useCaloriesForMacros(targets.maintenance)}
-              value={`${targets.maintenance} kcal/día`}
+              value={`${targets.maintenance} ${t("kcal/día", "kcal/day")}`}
             />
             <Result
               color="gain"
               label={t("Subir de peso", "Gain weight")}
               onSelect={() => useCaloriesForMacros(targets.gain)}
-              value={`${targets.gain} kcal/día`}
+              value={`${targets.gain} ${t("kcal/día", "kcal/day")}`}
             />
           </div>
         )}
@@ -322,25 +346,42 @@ export function CalculatorsScreen() {
             <Result
               color="daily"
               label={t("Objetivo diario", "Daily target")}
-              value={`${calories} kcal`}
+              value={`${macros.calories} kcal`}
             />
             <div className="result-grid">
               <Result
                 color="carbs"
                 label={t("Carbohidratos", "Carbohydrates")}
                 value={`${macros.daily.carbs} g`}
+                detail={`${macros.percentages.carbsPct} %`}
               />
               <Result
                 color="protein"
                 label={t("Proteínas", "Protein")}
                 value={`${macros.daily.protein} g`}
+                detail={`${macros.percentages.proteinPct} %`}
               />
               <Result
                 color="fat"
                 label={t("Grasas", "Fat")}
                 value={`${macros.daily.fat} g`}
+                detail={`${macros.percentages.fatPct} %`}
               />
             </div>
+            <p className="mt-3 text-sm text-muted-foreground" role="status">
+              {macros.proteinLimited
+                ? t(
+                    "La proteína se limitó al 40 % de las calorías para dejar lugar a grasas y carbohidratos.",
+                    "Protein was capped at 40% of calories to leave room for fat and carbohydrates.",
+                  )
+                : t(
+                    "Proteína calculada con tu peso: {n} g por kg.",
+                    "Protein based on your weight: {n} g per kg.",
+                  ).replace(
+                    "{n}",
+                    macros.proteinPerKg.toLocaleString(localeFor(units.language)),
+                  )}
+            </p>
             <section
               className="macro-meal-results"
               aria-labelledby="macro-meal-title"
@@ -383,6 +424,9 @@ export function CalculatorsScreen() {
             </section>
           </>
         )}
+        {section === "macros" && (
+          <NutritionExtras calories={macros?.calories ?? calories} />
+        )}
         {section === "maximum" && maximum !== null && (
           <Result
             color="gain"
@@ -395,8 +439,14 @@ export function CalculatorsScreen() {
           (goal.kind === "message" ? (
             <p className="mt-5" role="status">
               {goal.reason === "already-at-target"
-                ? "Ya estás en el peso elegido."
-                : "Esta estimación no es adecuada para esos datos. Consultá con un profesional antes de reducir la ingesta."}
+                ? t(
+                    "Ya estás en el peso elegido.",
+                    "You are already at the chosen weight.",
+                  )
+                : t(
+                    "Esta estimación no es adecuada para esos datos. Consultá con un profesional antes de reducir la ingesta.",
+                    "This estimate is not suitable for those values. Consult a professional before reducing intake.",
+                  )}
             </p>
           ) : (
             <>
@@ -406,7 +456,7 @@ export function CalculatorsScreen() {
                   "Rango orientativo, no una fecha garantizada",
                   "Estimated range, not a guaranteed date",
                 )}
-                value={`${goal.fastWeeks}–${goal.slowWeeks} semanas`}
+                value={`${goal.fastWeeks}–${goal.slowWeeks} ${t("semanas", "weeks")}`}
               />
               <div className="table-scroll">
                 <table>
@@ -433,8 +483,8 @@ export function CalculatorsScreen() {
                         </td>
                         <td>
                           {milestone.calories < 1200
-                            ? "Consultar"
-                            : `${milestone.calories} kcal/día`}
+                            ? t("Consultar", "Consult")
+                            : `${milestone.calories} ${t("kcal/día", "kcal/day")}`}
                         </td>
                       </tr>
                     ))}
@@ -463,11 +513,13 @@ function Result({
   color,
   label,
   value,
+  detail,
   onSelect,
 }: {
   color: string;
   label: string;
   value: string;
+  detail?: string;
   onSelect?: () => void;
 }) {
   const { t } = useApp();
@@ -491,6 +543,7 @@ function Result({
     <div className={`result-card result-${color}`}>
       <h3>{translatedLabel}</h3>
       <strong>{value}</strong>
+      {detail && <small className="result-detail">{detail}</small>}
     </div>
   );
 }

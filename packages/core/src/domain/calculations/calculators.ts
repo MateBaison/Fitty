@@ -31,28 +31,46 @@ export function calorieTargets(maintenance: number) {
     gain: Math.round(maintenance + 300),
   };
 }
-export const macroSplits = {
-  balanced: [40, 30, 30],
-  protein: [30, 40, 30],
-  lowerCarb: [20, 40, 40],
-  keto: [5, 25, 70],
+/**
+ * Protein follows body weight. Fat is a share of the calories and carbohydrates
+ * take the rest; the ketogenic split fixes carbohydrates and fat takes the rest.
+ */
+export const macroPlans = {
+  balanced: { proteinPerKg: 1.8, fatPct: 30 },
+  protein: { proteinPerKg: 2.2, fatPct: 30 },
+  lowerCarb: { proteinPerKg: 1.8, fatPct: 40 },
+  keto: { proteinPerKg: 1.8, carbsPct: 5 },
 } as const;
+/** Heavy bodies on few calories would otherwise leave nothing for the rest. */
+export const maxProteinPct = 40;
 const macroInputSchema = z.strictObject({
   calories: z.number().min(1000).max(6000),
+  weightKg: z.number().min(25).max(400),
   meals: z.number().int().min(1).max(8),
   split: z.enum(["balanced", "protein", "lowerCarb", "keto"]),
 });
 export function macroMetrics(raw: unknown) {
   const m = macroInputSchema.parse(raw);
-  const [carbsPct, proteinPct, fatPct] = macroSplits[m.split];
-  const daily = {
-    carbs: Math.round((m.calories * carbsPct) / 100 / 4),
-    protein: Math.round((m.calories * proteinPct) / 100 / 4),
-    fat: Math.round((m.calories * fatPct) / 100 / 9),
-  };
+  const plan = macroPlans[m.split];
+  const wanted = m.weightKg * plan.proteinPerKg;
+  const limit = (m.calories * maxProteinPct) / 100 / 4;
+  const protein = Math.round(Math.min(wanted, limit));
+  let carbs: number, fat: number;
+  if ("carbsPct" in plan) {
+    carbs = Math.round((m.calories * plan.carbsPct) / 100 / 4);
+    fat = Math.round((m.calories - (protein + carbs) * 4) / 9);
+  } else {
+    fat = Math.round((m.calories * plan.fatPct) / 100 / 9);
+    carbs = Math.round((m.calories - protein * 4 - fat * 9) / 4);
+  }
+  const daily = { carbs, protein, fat };
+  const proteinPct = Math.round((protein * 400) / m.calories);
+  const fatPct = Math.round((fat * 900) / m.calories);
   return {
     daily,
-    percentages: { carbsPct, proteinPct, fatPct },
+    percentages: { carbsPct: 100 - proteinPct - fatPct, proteinPct, fatPct },
+    proteinPerKg: plan.proteinPerKg,
+    proteinLimited: wanted > limit,
     perMeal: {
       calories: Math.round(m.calories / m.meals),
       carbs: Math.round(daily.carbs / m.meals),

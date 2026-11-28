@@ -6,6 +6,10 @@ import {
   oneRepMax,
   weightGoal,
 } from "../src/domain/calculations/calculators";
+import {
+  extraAmount,
+  nutritionExtraGroups,
+} from "../src/domain/calculations/nutrition-extras";
 import { buildAutomaticRoutine } from "../src/domain/calculations/automatic-routine";
 import { exercises } from "../src/data/exercises";
 import { muscleGroups } from "../src/domain/schemas/exercise";
@@ -32,19 +36,44 @@ describe("Phase 2 domain parity", () => {
     });
     expect(() => calorieMetrics({ ...inputs, age: 15 })).toThrow();
   });
-  test("macros retain daily/per-meal rounding; 1RM retains Epley and one-rep exception", () => {
-    const macros = macroMetrics({
-      calories: 2100,
-      meals: 3,
-      split: "balanced",
+  test("macros set protein by body weight; 1RM retains Epley and one-rep exception", () => {
+    const at = (split: string, calories = 3000, weightKg = 75) =>
+      macroMetrics({ calories, weightKg, meals: 3, split });
+    expect(at("balanced").daily).toEqual({
+      carbs: 390,
+      protein: 135,
+      fat: 100,
     });
-    expect(macros.daily).toEqual({ carbs: 210, protein: 158, fat: 70 });
-    expect(macros.perMeal).toEqual({
-      calories: 700,
-      carbs: 70,
-      protein: 53,
-      fat: 23,
+    expect(at("balanced").percentages).toEqual({
+      carbsPct: 52,
+      proteinPct: 18,
+      fatPct: 30,
     });
+    expect(at("balanced").perMeal).toEqual({
+      calories: 1000,
+      carbs: 130,
+      protein: 45,
+      fat: 33,
+    });
+    expect(at("protein").daily).toEqual({ carbs: 360, protein: 165, fat: 100 });
+    expect(at("lowerCarb").daily).toEqual({
+      carbs: 316,
+      protein: 135,
+      fat: 133,
+    });
+    expect(at("keto").daily).toEqual({ carbs: 38, protein: 135, fat: 256 });
+    expect(at("balanced").proteinLimited).toBe(false);
+    // 2.2 g/kg of 120 kg would be 1056 kcal of 1500: capped at 40 %.
+    const capped = at("protein", 1500, 120);
+    expect(capped.proteinLimited).toBe(true);
+    expect(capped.daily).toEqual({ carbs: 113, protein: 150, fat: 50 });
+    // Even the most extreme accepted inputs leave nothing negative.
+    for (const split of ["balanced", "protein", "lowerCarb", "keto"])
+      for (const value of Object.values(at(split, 1000, 400).daily))
+        expect(value).toBeGreaterThan(0);
+    expect(() =>
+      macroMetrics({ calories: 3000, meals: 3, split: "keto" }),
+    ).toThrow();
     expect(oneRepMax({ weight: 100, reps: 5 })).toBeCloseTo(116.6666667);
     expect(oneRepMax({ weight: 100, reps: 1 })).toBe(100);
     expect(() => oneRepMax({ weight: 100, reps: 11 })).toThrow();
@@ -127,5 +156,38 @@ describe("Phase 2 domain parity", () => {
     );
     expect(textDirection("ar")).toBe("rtl");
     expect(textDirection("pt")).toBe("ltr");
+  });
+});
+describe("nutrition extras", () => {
+  test("limits follow the calories and every text has all languages", () => {
+    const items = nutritionExtraGroups.flatMap((group) => group.items);
+    const amount = (id: string, calories: number) =>
+      extraAmount(
+        items.find((item) => item.id === id)!,
+        calories,
+        (es) => es,
+      );
+    expect(amount("sugar", 3000)).toBe("Menos de 75 g por día");
+    expect(amount("saturatedFat", 2000)).toBe("Menos de 22 g por día");
+    expect(amount("transFat", 2000)).toBe("Menos de 2 g por día");
+    expect(amount("calcium", 2000)).toBeNull();
+    expect(amount("sugar", 0)).toBeNull();
+    expect(amount("fiber", 0)).toBe("Al menos 25 g por día");
+    const texts = nutritionExtraGroups.flatMap((group) => [
+      group.title,
+      ...group.items.flatMap((item) => [
+        item.name,
+        item.benefit,
+        item.foods,
+        ...(item.amount ? [item.amount] : []),
+      ]),
+    ]);
+    for (const language of ["fr", "zh", "hi", "ar", "de", "it", "pt"])
+      for (const [es] of texts)
+        // The English fallback only shows up when a translation is missing.
+        expect(
+          translate(language, es, "missing"),
+          `${language}: ${es}`,
+        ).not.toBe("missing");
   });
 });

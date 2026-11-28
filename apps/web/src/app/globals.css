@@ -101,6 +101,86 @@
 .result-daily strong {
   color: #cfb6ff;
 }
+.result-detail {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted-foreground);
+}
+.extras {
+  margin-top: 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--secondary);
+}
+.extras summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+.extras summary::-webkit-details-marker {
+  display: none;
+}
+.extras summary:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+  border-radius: 12px;
+}
+.extras summary strong,
+.extras summary small {
+  display: block;
+}
+.extras > summary strong {
+  font-size: 1.15rem;
+}
+.extras summary small {
+  color: var(--muted-foreground);
+}
+.extras summary svg {
+  flex: none;
+  transition: transform 0.2s;
+}
+.extras[open] > summary > svg,
+.extras-item[open] > summary > svg {
+  transform: rotate(180deg);
+}
+.extras h3 {
+  margin: 16px 16px 8px;
+  font-size: 1rem;
+  font-weight: 750;
+}
+.extras-item {
+  margin: 0 8px 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+.extras-item p {
+  padding: 0 16px 12px;
+}
+.extras-item p b {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+}
+.extras-note {
+  margin: 16px 16px 0;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+.extras-sources {
+  padding: 0 16px 12px;
+  font-size: 0.875rem;
+}
+.extras-sources a {
+  display: inline-block;
+  padding: 6px 0;
+  text-decoration: underline;
+}
 .macro-meal-results {
   margin-top: 24px;
   padding-top: 20px;

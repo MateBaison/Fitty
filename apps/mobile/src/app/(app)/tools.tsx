@@ -10,10 +10,12 @@ import {
   weightGoal,
   type WeightGoalResult,
 } from "@fitty/core/domain/calculations/calculators";
+import { localeFor } from "@fitty/core/data/translations";
 import { CombatPanel } from "@/app/(app)/combat";
 import { Button, Card, Field, Label, Screen } from "@/components/ui";
 import { OptionField } from "@/components/pickers";
 import { ClockControls } from "@/components/clock-controls";
+import { NutritionExtras } from "@/components/nutrition-extras";
 import { useRTL } from "@/lib/direction";
 import { playRestDone } from "@/lib/sound";
 import { useAccount, useSnapshot } from "@/state/account";
@@ -455,7 +457,9 @@ function Calculators() {
   const [error, setError] = useState("");
   const [targets, setTargets] = useState<ReturnType<typeof calorieTargets> | null>(null);
   const [basal, setBasal] = useState<number | null>(null);
-  const [macros, setMacros] = useState<ReturnType<typeof macroMetrics> | null>(null);
+  const [macros, setMacros] = useState<
+    (ReturnType<typeof macroMetrics> & { calories: number; meals: number }) | null
+  >(null);
   const [maximum, setMaximum] = useState<number | null>(null);
   const [goal, setGoal] = useState<WeightGoalResult | null>(null);
   const input = () => ({
@@ -475,9 +479,16 @@ function Calculators() {
         setTargets(result);
         setCalories(String(result.maintenance));
       } else if (section === "macros")
-        setMacros(
-          macroMetrics({ calories: num(calories), meals: num(meals), split }),
-        );
+        setMacros({
+          ...macroMetrics({
+            calories: num(calories),
+            meals: num(meals),
+            split,
+            weightKg: num(weight) / factor,
+          }),
+          calories: num(calories),
+          meals: num(meals),
+        });
       else if (section === "maximum")
         setMaximum(oneRepMax({ weight: num(load), reps: num(reps) }));
       else setGoal(weightGoal({ ...input(), targetKg: num(target) / factor }));
@@ -570,9 +581,18 @@ function Calculators() {
         ) : null}
         {section === "macros" ? (
           <>
-            <View style={{ flexDirection: "row", gap: space(3) }}>
+            <Field label={t("Objetivo diario (kcal)", "Daily target (kcal)")} value={calories} onChangeText={setCalories} keyboardType="number-pad" />
+            <View style={{ flexDirection: "row", alignItems: "flex-end", gap: space(3) }}>
               <View style={{ flex: 1 }}>
-                <Field label={t("Objetivo diario (kcal)", "Daily target (kcal)")} value={calories} onChangeText={setCalories} keyboardType="number-pad" />
+                <Field
+                  label={`${t("Peso", "Weight")} (${unit})`}
+                  value={weight}
+                  onChangeText={(value) => {
+                    setWeight(value);
+                    setMacros(null);
+                  }}
+                  keyboardType="decimal-pad"
+                />
               </View>
               <View style={{ flex: 1 }}>
                 <Field label={t("Comidas por día", "Meals per day")} value={meals} onChangeText={setMeals} keyboardType="number-pad" />
@@ -582,7 +602,10 @@ function Calculators() {
               label={t("Distribución", "Distribution")}
               options={splits.map(([value, es, en]) => [value, t(es, en)] as const)}
               value={split}
-              onChange={(value) => setSplit(value as typeof split)}
+              onChange={(value) => {
+                setSplit(value as typeof split);
+                setMacros(null);
+              }}
             />
           </>
         ) : null}
@@ -617,15 +640,29 @@ function Calculators() {
         {section === "macros" && macros ? (
           <View style={{ gap: space(2) }}>
             <View style={{ flexDirection: "row", gap: space(2) }}>
-              <Result compact tone="daily" label={t("Calorías", "Calories")} value={`${Math.round(Number(calories))} kcal`} />
-              <Result compact tone="carbs" label={t("Carbohidratos", "Carbohydrates")} value={`${macros.daily.carbs} g`} />
+              <Result compact tone="daily" label={t("Calorías", "Calories")} value={`${Math.round(macros.calories)} kcal`} />
+              <Result compact tone="carbs" label={t("Carbohidratos", "Carbohydrates")} value={`${macros.daily.carbs} g`} detail={`${macros.percentages.carbsPct} %`} />
             </View>
             <View style={{ flexDirection: "row", gap: space(2) }}>
-              <Result compact tone="protein" label={t("Proteínas", "Protein")} value={`${macros.daily.protein} g`} />
-              <Result compact tone="fat" label={t("Grasas", "Fat")} value={`${macros.daily.fat} g`} />
+              <Result compact tone="protein" label={t("Proteínas", "Protein")} value={`${macros.daily.protein} g`} detail={`${macros.percentages.proteinPct} %`} />
+              <Result compact tone="fat" label={t("Grasas", "Fat")} value={`${macros.daily.fat} g`} detail={`${macros.percentages.fatPct} %`} />
             </View>
             <Label muted>
-              {t("Por comida", "Per meal")} · {meals} {t("comidas", "meals")}
+              {macros.proteinLimited
+                ? t(
+                    "La proteína se limitó al 40 % de las calorías para dejar lugar a grasas y carbohidratos.",
+                    "Protein was capped at 40% of calories to leave room for fat and carbohydrates.",
+                  )
+                : t(
+                    "Proteína calculada con tu peso: {n} g por kg.",
+                    "Protein based on your weight: {n} g per kg.",
+                  ).replace(
+                    "{n}",
+                    macros.proteinPerKg.toLocaleString(localeFor(snapshot.settings.language)),
+                  )}
+            </Label>
+            <Label muted>
+              {t("Por comida", "Per meal")} · {macros.meals} {t("comidas", "meals")}
             </Label>
             <View style={{ flexDirection: "row", gap: space(2) }}>
               <Result compact tone="daily" label={t("Calorías por comida", "Calories per meal")} value={`${macros.perMeal.calories} kcal`} />
@@ -636,6 +673,9 @@ function Calculators() {
               <Result compact tone="fat" label={t("Grasas por comida", "Fat per meal")} value={`${macros.perMeal.fat} g`} />
             </View>
           </View>
+        ) : null}
+        {section === "macros" ? (
+          <NutritionExtras calories={macros?.calories ?? (num(calories) || 0)} />
         ) : null}
         {section === "maximum" && maximum !== null ? (
           <Result
@@ -716,9 +756,11 @@ function Result({
   onUse,
   tone,
   compact,
+  detail,
 }: {
   label: string;
   value: string;
+  detail?: string;
   onUse?: () => void;
   tone?: keyof typeof resultTones;
   /** Fills half a row (used in two-column grids). */
@@ -753,6 +795,11 @@ function Result({
       >
         {value}
       </Text>
+      {detail ? (
+        <Text style={{ color: colors.muted, fontSize: 12, textAlign: compact ? "center" : "left" }}>
+          {detail}
+        </Text>
+      ) : null}
       {onUse ? (
         <Text style={{ color: colors.accent, fontSize: 13, fontWeight: "700" }}>
           {t("Usar en macros →", "Use for macros →")}
