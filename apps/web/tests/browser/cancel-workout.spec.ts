@@ -17,9 +17,11 @@ test("cancel workout asks in an in-app dialog even when the browser blocks confi
     .getByRole("button", { name: /Pecho y tríceps/ })
     .click();
   await expect(page).toHaveURL(/\/workout$/);
-  await page
-    .getByRole("button", { name: "Cancelar entrenamiento", exact: true })
-    .click();
+  // The workout page's own button; the home panel may still be sliding away.
+  const cancel = page
+    .getByRole("main")
+    .getByRole("button", { name: "Cancelar entrenamiento", exact: true });
+  await cancel.click();
   const dialog = page.getByRole("dialog", {
     name: "¿Cancelar este entrenamiento?",
   });
@@ -27,9 +29,7 @@ test("cancel workout asks in an in-app dialog even when the browser blocks confi
   await dialog.getByRole("button", { name: "Volver", exact: true }).click();
   await expect(dialog).toHaveCount(0);
   await expect(page).toHaveURL(/\/workout$/);
-  await page
-    .getByRole("button", { name: "Cancelar entrenamiento", exact: true })
-    .click();
+  await cancel.click();
   await dialog
     .getByRole("button", { name: "Cancelar entrenamiento", exact: true })
     .click();

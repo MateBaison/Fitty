@@ -438,12 +438,16 @@ main > h1 {
   box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
   backdrop-filter: blur(20px);
 }
-/* The rest countdown slides up from behind the bottom bar: this box ends at
-   the middle of the bar, which covers the lower part of the panel. */
-.rest-drawer {
+/* Panels (rest countdown, workout in progress) slide up from behind the bottom
+   bar: each box ends at the middle of the bar, which covers the lower part of
+   the panel. */
+.bar-drawer {
+  --drawer-bottom: calc(
+    max(12px, calc(env(safe-area-inset-bottom) - 10px)) + 36px
+  );
   position: fixed;
   z-index: 29;
-  bottom: calc(max(12px, calc(env(safe-area-inset-bottom) - 10px)) + 36px);
+  bottom: var(--drawer-bottom);
   left: 50%;
   transform: translateX(-50%);
   width: min(448px, calc(100% - 104px));
@@ -451,13 +455,19 @@ main > h1 {
   overflow: hidden;
   pointer-events: none;
   visibility: hidden;
-  transition: visibility 0s 360ms;
+  transition:
+    visibility 0s 360ms,
+    bottom 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.rest-drawer[data-open="true"] {
+.bar-drawer[data-open="true"] {
   visibility: visible;
-  transition: none;
+  transition: bottom 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.rest-drawer-panel {
+/* Resting on the home page: the countdown sits on top of the workout. */
+.rest-drawer:has(~ .workout-drawer[data-open="true"]) {
+  bottom: calc(var(--drawer-bottom) + 58px);
+}
+.bar-drawer-panel {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -472,30 +482,17 @@ main > h1 {
   transform: translateY(58px);
   transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.rest-drawer[data-open="true"] .rest-drawer-panel {
+.bar-drawer[data-open="true"] .bar-drawer-panel {
   pointer-events: auto;
   transform: none;
 }
-.rest-drawer-panel > svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  color: var(--primary);
-}
-.rest-drawer-panel span {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.rest-drawer-panel strong {
-  font-size: 1.35rem;
+.bar-drawer-panel strong {
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   direction: ltr;
 }
-.rest-drawer-panel button {
+.bar-drawer-panel button,
+.workout-drawer-continue {
   display: grid;
   place-items: center;
   width: 44px;
@@ -505,31 +502,121 @@ main > h1 {
   background: var(--primary);
   color: var(--primary-foreground);
 }
-.rest-drawer-panel button svg {
+.bar-drawer-panel button svg,
+.workout-drawer-continue svg {
   width: 20px;
   height: 20px;
 }
-/* Room for the countdown, so it covers neither the page's end nor a message. */
-.app-shell:has(.rest-drawer[data-open="true"]) {
+.bar-drawer-panel .workout-drawer-cancel {
+  background: #dc2626;
+  color: #fff;
+}
+.workout-drawer .bar-drawer-panel {
+  gap: 6px;
+  padding-inline-start: 14px;
+}
+.bar-drawer-panel .workout-drawer-cancel,
+.workout-drawer-continue {
+  width: 40px;
+  height: 40px;
+}
+.rest-drawer .bar-drawer-panel > svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--primary);
+}
+.rest-drawer .bar-drawer-panel > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rest-drawer .bar-drawer-panel > strong {
+  font-size: 1.35rem;
+}
+.workout-drawer-details {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.2;
+}
+.workout-drawer-details p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  /* Shrinks with the phone so the whole phrase fits beside the buttons. */
+  font-size: clamp(0.6rem, 2.9vw, 0.8rem);
+}
+.workout-drawer-details p span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.workout-drawer-details strong {
+  /* In line with the text beside the dot. */
+  margin-inline-start: 17px;
+  justify-self: start;
+  font-size: 1.25rem;
+}
+/* A soft halo of the same blue. */
+.workout-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow:
+    0 0 8px 3px color-mix(in srgb, var(--primary) 70%, transparent),
+    0 0 16px 6px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+/* Room for the panels, so they cover neither the page's end nor a message. */
+.app-shell:has(.bar-drawer[data-open="true"]) {
   padding-bottom: calc(165px + env(safe-area-inset-bottom));
 }
-.app-shell:has(.rest-drawer[data-open="true"]) .save-toast {
+.app-shell:has(.bar-drawer[data-open="true"]) .save-toast {
   bottom: calc(155px + env(safe-area-inset-bottom));
 }
-/* Narrow phones: the word matters more than the icon. */
+.app-shell:has(.rest-drawer[data-open="true"]):has(
+    .workout-drawer[data-open="true"]
+  ) {
+  padding-bottom: calc(223px + env(safe-area-inset-bottom));
+}
+.app-shell:has(.rest-drawer[data-open="true"]):has(
+    .workout-drawer[data-open="true"]
+  )
+  .save-toast {
+  bottom: calc(213px + env(safe-area-inset-bottom));
+}
+/* Narrow phones: wider panels, and in the countdown the word matters more than
+   the icon. */
 @media (max-width: 360px) {
-  .rest-drawer-panel {
+  .bar-drawer {
+    width: calc(100% - 64px);
+  }
+  .bar-drawer-panel {
     gap: 6px;
     padding-inline: 12px 6px;
+  }
+  .rest-drawer .bar-drawer-panel {
     font-size: 0.85rem;
   }
-  .rest-drawer-panel > svg {
+  .rest-drawer .bar-drawer-panel > svg {
     display: none;
+  }
+  .workout-drawer-details p {
+    gap: 6px;
+  }
+  .workout-drawer-details strong {
+    margin-inline-start: 15px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rest-drawer,
-  .rest-drawer-panel {
+  .bar-drawer,
+  .bar-drawer[data-open="true"],
+  .bar-drawer-panel {
     transition: none;
   }
 }
@@ -1164,75 +1251,6 @@ label input[type="checkbox"] {
   -webkit-touch-callout: none;
   color: var(--muted-foreground);
   cursor: grab;
-}
-/* Stays under the header (its height is set as `top`) while the page scrolls. */
-.active-workout-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 15;
-  margin: -8px 0 12px;
-  padding: 8px 0;
-}
-.active-workout-actions {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-}
-.active-workout-buttons {
-  display: flex;
-  gap: 8px;
-}
-.active-workout .active-workout-button {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  min-height: 48px;
-  padding: 0;
-  border: 0;
-  border-radius: 15px;
-}
-.active-workout .active-workout-button svg {
-  width: 22px;
-  height: 22px;
-}
-.active-workout-time {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 1.25rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  direction: ltr;
-}
-.active-workout-time svg {
-  width: 20px;
-  height: 20px;
-  color: var(--primary);
-}
-.active-workout {
-  --destructive-solid: #dc2626;
-  --destructive-solid-hover: #b91c1c;
-  border-left: 4px solid var(--primary);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-}
-.active-workout-details {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-.active-workout-details p {
-  margin-bottom: 0;
-}
-@media (max-width: 360px) {
-  .active-workout {
-    gap: 8px;
-    padding: 12px;
-  }
 }
 .primary-link {
   display: inline-flex;
@@ -4539,26 +4557,6 @@ input[type="range"] {
 }
 .combat-frame {
   padding-top: 36px;
-}
-.active-workout-details {
-  min-width: 0;
-}
-.active-workout-details .eyebrow {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: clamp(0.58rem, 2.9vw, 0.75rem);
-}
-.active-workout-details .eyebrow {
-  font-size: clamp(0.52rem, 2.5vw, 0.7rem);
-  letter-spacing: 0.06em;
-}
-/* Beside the buttons, narrow phones need two lines instead of a cut title. */
-@media (max-width: 360px) {
-  .active-workout-details .eyebrow {
-    white-space: normal;
-  }
 }
 .filter-list {
   display: grid;

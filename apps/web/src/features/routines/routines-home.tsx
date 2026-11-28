@@ -37,7 +37,6 @@ import { copyField } from "@/lib/browser/clipboard";
 import { replaceRoutineExercise } from "@fitty/core/domain/routine-day";
 import { CalendarPanel } from "@/features/calendar/calendar-panel";
 import { ReadinessDialog } from "@/features/workouts/readiness-dialog";
-import { ActiveWorkoutBanner } from "@/features/workouts/active-workout-banner";
 
 type Editor = {
   type: "new" | "rename" | "day" | "rename-day";
@@ -114,10 +113,6 @@ export function RoutinesHome() {
     setMode("choose");
     setGroups([]);
   };
-  const activeRoutine = snapshot.routines.find(
-      (routine) => routine.id === workout?.rid,
-    ),
-    activeDay = activeRoutine?.days.find((day) => day.id === workout?.did);
   return (
     <>
       <AppDialog
@@ -266,13 +261,7 @@ export function RoutinesHome() {
           }}
         />
       )}
-      {workout ? (
-        <ActiveWorkoutBanner
-          day={activeDay?.name ?? "Entrenamiento"}
-          routine={activeRoutine?.name}
-          started={workout.started}
-        />
-      ) : (
+      {!workout && (
         <Button className="mb-5 w-full" onClick={() => setQuick(true)}>
           {t("Iniciar entrenamiento", "Start workout")}
         </Button>

@@ -44,27 +44,21 @@ export function Screen({
   children,
   scroll = true,
   glow = true,
-  pinned,
   locked: held = false,
 }: {
   children: ReactNode;
   scroll?: boolean;
   glow?: boolean;
-  /** Floats at the top of the screen; the rest scrolls underneath. */
-  pinned?: ReactNode;
   /** Stops scrolling while the screen handles a gesture of its own. */
   locked?: boolean;
 }) {
   // Read from the context so screens under the app header (which owns the top inset) get no extra gap.
   const insets = useSafeAreaInsets();
   const [locked, setLocked] = useState(false);
-  const [pinnedHeight, setPinnedHeight] = useState(0);
   const barSpace = use(BottomSpace);
   const content = [
     styles.content,
     barSpace ? { paddingBottom: barSpace + space(4) } : null,
-    // Room for the floating block, measured with the gap around it.
-    pinned ? { paddingTop: pinnedHeight } : null,
   ];
   return (
     <View
@@ -93,23 +87,6 @@ export function Screen({
       ) : (
         <View style={[content, { flex: 1 }]}>{children}</View>
       )}
-      {pinned ? (
-        <View
-          pointerEvents="box-none"
-          onLayout={(event) =>
-            setPinnedHeight(event.nativeEvent.layout.height)
-          }
-          style={{
-            position: "absolute",
-            top: insets.top,
-            left: insets.left,
-            right: insets.right,
-            padding: space(4),
-          }}
-        >
-          {pinned}
-        </View>
-      ) : null}
     </View>
   );
 }

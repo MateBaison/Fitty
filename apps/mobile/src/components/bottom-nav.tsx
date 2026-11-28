@@ -12,6 +12,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BAR_HEIGHT, barOffset } from "@/components/bottom-space";
 import { RestDrawer } from "@/components/rest-drawer";
+import { WorkoutDrawer } from "@/components/workout-drawer";
 import { useRTL } from "@/lib/direction";
 import { useAccount } from "@/state/account";
 import { colors } from "@/theme";
@@ -112,8 +113,9 @@ export function BottomNav() {
         alignItems: "center",
       }}
     >
-      {/* Drawn before the bar so that it comes out from behind it. */}
+      {/* Drawn before the bar so that they come out from behind it. */}
       <RestDrawer />
+      <WorkoutDrawer />
       <View
         accessibilityRole="tablist"
         onLayout={(event) => setWidth(event.nativeEvent.layout.width)}

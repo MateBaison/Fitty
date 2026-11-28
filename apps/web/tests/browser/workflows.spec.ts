@@ -1,6 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { chooseZone } from "./zones";
-import { login, openExerciseMenu, openHomeSection, trackBy } from "./login-helper";
+import {
+  login,
+  openExerciseMenu,
+  openHomeSection,
+  trackBy,
+} from "./login-helper";
 import { readFile } from "node:fs/promises";
 test.beforeEach(async ({ page }) => {
   await page.request.get("http://127.0.0.1:54329/__reset");
@@ -19,9 +24,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
   await page
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: /Pecho y tríceps/ })
-    .click();
+  await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
   await expect(page).toHaveURL(/\/workout$/);
   await page
     .getByRole("button", { name: "Tipo de serie 1 serie 1", exact: true })
@@ -79,20 +82,23 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
     .getByRole("button", { name: "Iniciar descanso", exact: true })
     .click();
   await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();
-  await expect(page.locator(".active-workout")).toHaveCount(1);
-  await expect(page.locator(".active-workout").getByRole("timer")).toHaveText(
-    /^\d{2}:\d{2}$/,
-  );
-  // Scrolled to the bottom, the workout in progress stays under the header.
+  const running = page.locator(".workout-drawer");
+  await expect(running).toBeVisible();
+  await expect(running.getByRole("timer")).toHaveText(/^\d{2}:\d{2}$/);
+  // It rises from behind the bar, and a running rest sits on top of it.
+  const above = async (selector: string) => {
+    const panel = await page
+      .locator(`${selector} .bar-drawer-panel`)
+      .boundingBox();
+    const bar = await page.locator(".bottom-nav").boundingBox();
+    return Math.round(bar!.y - panel!.y);
+  };
+  await expect.poll(() => above(".workout-drawer")).toBe(59);
+  await expect.poll(() => above(".rest-drawer")).toBe(117);
+  // Scrolled to the bottom, the panel stays put and covers nothing at the end.
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
-  await expect
-    .poll(async () => {
-      const header = await page.locator(".app-header").boundingBox();
-      const banner = await page.locator(".active-workout").boundingBox();
-      return Math.round(banner!.y - header!.y - header!.height);
-    })
-    .toBe(8);
+  await expect.poll(() => above(".workout-drawer")).toBe(59);
   await page.screenshot({
     path: `artifacts/active-workout-${info.project.name}.png`,
   });
@@ -272,7 +278,7 @@ test("the workout in progress can be continued or cancelled from home", async ({
   await expect(drawer.getByRole("timer")).toHaveText(/^(01:00|00:5\d)$/);
   await expect
     .poll(async () => {
-      const panel = await drawer.locator(".rest-drawer-panel").boundingBox();
+      const panel = await drawer.locator(".bar-drawer-panel").boundingBox();
       const bar = await page.locator(".bottom-nav").boundingBox();
       return Math.round(bar!.y - panel!.y);
     })
@@ -299,12 +305,30 @@ test("the workout in progress can be continued or cancelled from home", async ({
   await expect(rested).toHaveCount(0, { timeout: 4000 });
   await expect(drawer).toBeHidden();
   await expect(setClock).not.toHaveAttribute("style", /conic-gradient/);
+  const running = page.locator(".workout-drawer");
+  // The panel belongs to the home page only.
+  await expect(running).toBeHidden();
   await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();
   await expect(clock).toHaveCount(0);
-  const banner = page.locator(".active-workout");
   await expect(
-    banner.getByRole("link", { name: "Continuar", exact: true }),
+    running.getByRole("link", { name: "Continuar", exact: true }),
   ).toBeVisible();
+  await expect(running).toContainText("Entrenamiento en curso");
+  await expect
+    .poll(async () => {
+      const panel = await running.locator(".bar-drawer-panel").boundingBox();
+      const bar = await page.locator(".bottom-nav").boundingBox();
+      return Math.round(bar!.y - panel!.y);
+    })
+    .toBe(59);
+  // Nothing in it is cut off, even on the narrowest phone.
+  expect(
+    await running
+      .locator(".bar-drawer-panel, .workout-drawer-details span")
+      .evaluateAll((list) =>
+        list.every((element) => element.scrollWidth <= element.clientWidth),
+      ),
+  ).toBe(true);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -313,19 +337,19 @@ test("the workout in progress can be continued or cancelled from home", async ({
   await page.screenshot({
     path: `artifacts/active-workout-buttons-${info.project.name}.png`,
   });
-  const cancel = banner.getByRole("button", {
+  const cancel = running.getByRole("button", {
     name: "Cancelar entrenamiento",
     exact: true,
   });
   await cancel.click();
   const dialog = page.getByRole("dialog");
   await dialog.getByRole("button", { name: "Volver", exact: true }).click();
-  await expect(banner).toHaveCount(1);
+  await expect(running).toBeVisible();
   await cancel.click();
   await dialog
     .getByRole("button", { name: "Cancelar entrenamiento", exact: true })
     .click();
-  await expect(banner).toHaveCount(0);
+  await expect(running).toBeHidden();
   await expect(
     page.getByRole("button", { name: "Iniciar entrenamiento", exact: true }),
   ).toBeVisible();
@@ -359,9 +383,7 @@ test("personal record highlights appear while logging and remain in the calendar
   await page
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: /Pecho y tríceps/ })
-    .click();
+  await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("20");
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("10");
   await expect(page.locator(".personal-record-row")).toHaveCount(0);
@@ -802,9 +824,7 @@ test("optional menstrual readiness check offers advice before starting", async (
   await page
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: /Pecho y tríceps/ })
-    .click();
+  await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
   const dialog = page.getByRole("dialog", { name: "¿Cómo te sentís hoy?" });
   await dialog
     .getByRole("combobox", { name: "Dolor o molestias", exact: true })
@@ -842,9 +862,7 @@ test("exercise replacement preserves logged sets and filters same-zone equipment
   await page
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: /Pecho y tríceps/ })
-    .click();
+  await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("20");
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("12");
   await openExerciseMenu(page);
@@ -1192,9 +1210,7 @@ test("masculine profiles hide menstrual calendar borders and legend with saved d
   await page
     .getByRole("button", { name: "Iniciar entrenamiento", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: /Pecho y tríceps/ })
-    .click();
+  await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
   await expect(page).toHaveURL(/\/workout$/);
   await expect(
     page.getByRole("dialog", { name: "¿Cómo te sentís hoy?" }),

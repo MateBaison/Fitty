@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/state/app-provider";
 import { RestDrawer } from "@/features/workouts/rest-drawer";
+import { WorkoutDrawer } from "@/features/workouts/workout-drawer";
 import { House, Timer, UserRound, UsersRound } from "lucide-react";
 const destinations = [
   { href: "/professionals", label: "Profesionales", icon: UsersRound },
@@ -22,6 +23,7 @@ export function BottomNav() {
   return (
     <>
       <RestDrawer />
+      <WorkoutDrawer />
       <nav
         className="bottom-nav"
         aria-label={t("Navegación principal", "Main navigation")}

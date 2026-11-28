@@ -19,8 +19,8 @@ export function RestDrawer() {
     if (!working && rest.end) setRest({ end: 0, duration: 0 });
   }, [working, rest.end, setRest]);
   return (
-    <div className="rest-drawer" data-open={open} inert={!open}>
-      <div className="rest-drawer-panel">
+    <div className="bar-drawer rest-drawer" data-open={open} inert={!open}>
+      <div className="bar-drawer-panel">
         <Timer aria-hidden="true" />
         <span>{t("Descanso", "Rest")}</span>
         <strong role="timer">

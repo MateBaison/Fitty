@@ -8,7 +8,6 @@ import {
   startWorkout,
   type Session,
 } from "@fitty/core/domain/workouts";
-import { ActiveWorkoutBanner } from "@/components/active-workout-banner";
 import { Calendar } from "@/components/calendar";
 import { DaySheet } from "@/components/day-sheet";
 import { Notice } from "@/components/notice";
@@ -71,25 +70,8 @@ export default function Home() {
   const routine = snapshot.routines.find(
     (item) => item.id === snapshot.selected,
   );
-  const activeRoutine = snapshot.routines.find(
-    (item) => item.id === snapshot.workout?.rid,
-  );
-  const activeDay = activeRoutine?.days.find(
-    (item) => item.id === snapshot.workout?.did,
-  );
   return (
-    <Screen
-      pinned={
-        snapshot.workout ? (
-          <ActiveWorkoutBanner
-            day={activeDay?.name ?? t("Entrenamiento", "Workout")}
-            routine={activeRoutine?.name}
-            started={snapshot.workout.started}
-            onContinue={() => router.navigate("/workout")}
-          />
-        ) : null
-      }
-    >
+    <Screen>
       <Notice />
       {snapshot.workout ? null : (
         <Button onPress={() => setPicking(true)}>

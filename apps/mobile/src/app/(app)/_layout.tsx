@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import type { ReactNode } from "react";
 import { View } from "react-native";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -8,25 +8,26 @@ import {
   BAR_HEIGHT,
   barOffset,
   BottomSpace,
-  REST_HEIGHT,
+  DRAWER_HEIGHT,
 } from "@/components/bottom-space";
 import { Onboarding } from "@/components/onboarding";
 import { Button, Card, Label, Loading, Screen, Title } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
-import { AccountProvider, useAccount } from "@/state/account";
+import { AccountProvider, useAccount, useSnapshot } from "@/state/account";
 import { RestProvider, useRest } from "@/state/rest";
 import { useSession } from "@/state/session";
 import { colors } from "@/theme";
 
-/** Room below the screens for the bar and, while resting, the countdown. */
+/** Room below the screens for the bar and the panels that come out above it. */
 function BarSpace({ children }: { children: ReactNode }) {
   const insets = useSafeAreaInsets();
   const { rest } = useRest();
+  const workout = useSnapshot().workout;
+  const home = usePathname() === "/";
+  const panels = (rest ? 1 : 0) + (home && workout ? 1 : 0);
   return (
     <BottomSpace
-      value={
-        BAR_HEIGHT + barOffset(insets.bottom) + (rest ? REST_HEIGHT : 0)
-      }
+      value={BAR_HEIGHT + barOffset(insets.bottom) + panels * DRAWER_HEIGHT}
     >
       {children}
     </BottomSpace>
