@@ -1,8 +1,7 @@
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
-import { useEffect, useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
-import { timeFormat } from "@fitty/core/domain/combat";
 import { Label } from "@/components/ui";
+import { useElapsedTime } from "@/lib/use-elapsed-time";
 import { useAccount } from "@/state/account";
 import { colors, space } from "@/theme";
 
@@ -55,14 +54,7 @@ export function ActiveWorkoutBanner({
   onContinue: () => void;
 }) {
   const { change, t } = useAccount();
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-  const elapsed = Number.isFinite(started)
-    ? timeFormat((now - started) / 1000)
-    : "--:--";
+  const elapsed = useElapsedTime(started);
   const cancel = () =>
     Alert.alert(
       t("Cancelar entrenamiento", "Cancel workout"),

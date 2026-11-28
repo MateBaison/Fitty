@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Play, Timer, X } from "lucide-react";
-import { timeFormat } from "@fitty/core/domain/combat";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";
+import { useElapsedTime } from "@/lib/browser/use-elapsed-time";
 import { useApp } from "@/state/app-provider";
 
 /**
@@ -23,13 +23,7 @@ export function ActiveWorkoutBanner({
   const { change, t } = useApp();
   const [ask, confirmDialog] = useConfirm();
   const banner = useRef<HTMLDivElement>(null);
-  const [now, setNow] = useState<number | null>(null);
-  useEffect(() => {
-    const update = () => setNow(Date.now());
-    update();
-    const timer = setInterval(update, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const elapsed = useElapsedTime(started);
   // The header is sticky too and its height depends on the screen width.
   useEffect(() => {
     const header = document.querySelector<HTMLElement>(".app-header");
@@ -68,9 +62,7 @@ export function ActiveWorkoutBanner({
             aria-label={t("Tiempo transcurrido", "Elapsed time")}
           >
             <Timer aria-hidden="true" />
-            {now !== null && Number.isFinite(started)
-              ? timeFormat((now - started) / 1000)
-              : "--:--"}
+            {elapsed}
           </span>
           <div className="active-workout-buttons">
             <Button

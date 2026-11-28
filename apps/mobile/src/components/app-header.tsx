@@ -4,8 +4,45 @@ import { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SupportForm } from "@/components/support-form";
+import { useElapsedTime } from "@/lib/use-elapsed-time";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, space } from "@/theme";
+
+/** Takes the place of the section title while a workout is being recorded. */
+function WorkoutTime({ started }: { started: number }) {
+  const { t } = useAccount();
+  const elapsed = useElapsedTime(started);
+  return (
+    <View
+      accessible
+      accessibilityRole="timer"
+      accessibilityLabel={`${t("Tiempo transcurrido", "Elapsed time")}: ${elapsed}`}
+      style={{ alignItems: "center" }}
+    >
+      <Text
+        style={{
+          color: colors.muted,
+          fontSize: 11,
+          fontWeight: "700",
+          letterSpacing: 1,
+          textTransform: "uppercase",
+        }}
+      >
+        {t("Tiempo", "Time")}
+      </Text>
+      <Text
+        style={{
+          color: colors.foreground,
+          fontSize: 22,
+          fontWeight: "800",
+          fontVariant: ["tabular-nums"],
+        }}
+      >
+        {elapsed}
+      </Text>
+    </View>
+  );
+}
 
 /** Same header as the web: logo, date and time, support and sign out, with the section title underneath. */
 export function AppHeader() {
@@ -73,18 +110,22 @@ export function AppHeader() {
           </Text>
         </Pressable>
       </View>
-      <Text
-        accessibilityRole="header"
-        numberOfLines={1}
-        style={{
-          color: colors.foreground,
-          fontSize: 16,
-          fontWeight: "800",
-          textAlign: "center",
-        }}
-      >
-        {title}
-      </Text>
+      {pathname.startsWith("/workout") && snapshot.workout ? (
+        <WorkoutTime started={snapshot.workout.started} />
+      ) : (
+        <Text
+          accessibilityRole="header"
+          numberOfLines={1}
+          style={{
+            color: colors.foreground,
+            fontSize: 16,
+            fontWeight: "800",
+            textAlign: "center",
+          }}
+        >
+          {title}
+        </Text>
+      )}
       <View
         style={{
           flex: 1,

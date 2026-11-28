@@ -1,4 +1,3 @@
-import * as Haptics from "expo-haptics";
 import { ExerciseGallery } from "@/components/exercise-gallery";
 import { exerciseSource } from "@/lib/exercise-image";
 import { exerciseName } from "@/lib/exercise-name";
@@ -46,67 +45,16 @@ import { BackButton } from "@/components/back-button";
 import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
 import { Notice } from "@/components/notice";
 import { NumberInput } from "@/components/number-input";
+import { RestFill } from "@/components/rest-fill";
 import { SessionExtras } from "@/components/session-extras";
 import { SyncStatus } from "@/components/sync-status";
 import { Button, Card, Field, Label, Screen, Title, DialogScroll } from "@/components/ui";
 import { makeId } from "@/lib/id";
-import { playRestDone } from "@/lib/sound";
+import { useRest } from "@/state/rest";
 import { useAccount, useSnapshot } from "@/state/account";
 import { colors, radius, space } from "@/theme";
 
 const pad = (value: number) => String(value).padStart(2, "0");
-/** Rest countdown shared by every exercise in the workout. */
-function RestBanner({ end, onStop }: { end: number; onStop: () => void }) {
-  const { t } = useAccount();
-  const [now, setNow] = useState(Date.now());
-  const done = useRef(false);
-  useEffect(() => {
-    done.current = false;
-    const timer = setInterval(() => setNow(Date.now()), 250);
-    return () => clearInterval(timer);
-  }, [end]);
-  const left = Math.max(0, Math.ceil((end - now) / 1000));
-  useEffect(() => {
-    if (left === 0 && !done.current) {
-      done.current = true;
-      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      playRestDone();
-      onStop();
-    }
-  }, [left, onStop]);
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={t("Detener descanso", "Stop rest")}
-      onPress={onStop}
-      style={{
-        backgroundColor: colors.primary,
-        borderRadius: radius,
-        padding: space(3),
-        flexDirection: "row",
-        alignItems: "center",
-      }}
-    >
-      <Text
-        style={{ color: colors.primaryForeground, fontWeight: "700", flex: 1 }}
-      >
-        {t("Descanso", "Rest")}
-      </Text>
-      <Text
-        accessibilityRole="timer"
-        style={{
-          color: colors.primaryForeground,
-          fontSize: 22,
-          fontWeight: "800",
-          fontVariant: ["tabular-nums"],
-        }}
-      >
-        {pad(Math.floor(left / 60))}:{pad(left % 60)}
-      </Text>
-    </Pressable>
-  );
-}
-
 /** Shared column sizes so every header sits exactly over its data. */
 const columns = {
   set: { width: 72 },
@@ -122,7 +70,7 @@ export default function Workout() {
   const { change, t, notify } = useAccount();
   const router = useRouter();
   const [extras, setExtras] = useState<Extras>(emptyExtras);
-  const [restEnd, setRestEnd] = useState(0);
+  const { rest, start: startRest, stop: stopRest } = useRest();
   const [typeFor, setTypeFor] = useState<{ entry: number; set: number } | null>(
     null,
   );
@@ -284,7 +232,7 @@ export default function Workout() {
               trackColor={{ true: "#22c55e", false: colors.border }}
               onValueChange={(checked) => {
                 change((draft) => void (draft.settings.restEnabled = checked));
-                if (!checked) setRestEnd(0);
+                if (!checked) stopRest();
               }}
             />
           </View>
@@ -305,9 +253,6 @@ export default function Workout() {
           </View>
           <Label>{t("segundos", "seconds")}</Label>
         </View>
-        {restEnd > Date.now() ? (
-          <RestBanner end={restEnd} onStop={() => setRestEnd(0)} />
-        ) : null}
       </Card>
       {workout.entries.map((entry, index) => {
         const exercise = findExercise(snapshot, entry.id);
@@ -490,13 +435,14 @@ export default function Workout() {
                                 const current = draft.sets[number];
                                 if (current) current.restUsed = true;
                               });
-                              setRestEnd(Date.now() + restSeconds * 1000);
+                              startRest(restSeconds, `${index}:${number}`);
                             }}
                             hitSlop={6}
                             style={{
                               width: 30,
                               height: 26,
                               borderRadius: 8,
+                              overflow: "hidden",
                               alignItems: "center",
                               justifyContent: "center",
                               backgroundColor:
@@ -505,12 +451,17 @@ export default function Workout() {
                                   : colors.secondary,
                             }}
                           >
+                            {rest?.source === `${index}:${number}` ? (
+                              <RestFill rest={rest} width={30} height={26} />
+                            ) : null}
                             <SymbolView
                               name={{ ios: "timer", android: "timer" }}
                               tintColor={
-                                set.restUsed === true
-                                  ? colors.success
-                                  : colors.muted
+                                rest?.source === `${index}:${number}`
+                                  ? "#ffffff"
+                                  : set.restUsed === true
+                                    ? colors.success
+                                    : colors.muted
                               }
                               size={15}
                             />

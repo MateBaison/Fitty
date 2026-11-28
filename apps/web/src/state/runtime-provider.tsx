@@ -2,7 +2,8 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Session } from "@fitty/core/domain/workouts";
 import { CombatAudio } from "@/lib/browser/combat-audio";
-type Rest = { end: number; duration: number };
+/** `source` names the set whose clock started the rest. */
+type Rest = { end: number; duration: number; source?: string };
 const Context = createContext<{
   now: number;
   rest: Rest;

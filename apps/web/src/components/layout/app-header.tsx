@@ -3,14 +3,39 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { localeFor, translate } from "@fitty/core/data/translations";
 import { cn } from "@/lib/utils";
+import { useElapsedTime } from "@/lib/browser/use-elapsed-time";
 import { useEffect, useState } from "react";
+
+/** Takes the place of the section title while a workout is being recorded. */
+function WorkoutTime({
+  started,
+  language,
+}: {
+  started: number;
+  language: string;
+}) {
+  const elapsed = useElapsedTime(started);
+  return (
+    <div
+      className="header-section-title header-workout-time"
+      role="timer"
+      aria-label={translate(language, "Tiempo transcurrido", "Elapsed time")}
+    >
+      <span>{translate(language, "Tiempo", "Time")}</span>
+      <strong>{elapsed}</strong>
+    </div>
+  );
+}
 
 export function AppHeader({
   accountAction,
   language = "es",
+  workoutStarted,
 }: {
   accountAction?: React.ReactNode;
   language?: string;
+  /** Start of the workout in progress, if there is one. */
+  workoutStarted?: number;
 }) {
   const pathname = usePathname();
   const welcome = ["/", "/login", "/onboarding"].includes(pathname);
@@ -23,6 +48,7 @@ export function AppHeader({
     { path: "/progress", es: "Progreso", en: "Progress" },
     { path: "/profile", es: "Perfil", en: "Profile" },
   ].find((item) => item.path === pathname);
+  const timing = pathname === "/workout" && workoutStarted !== undefined;
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
     if (!showDate) return;
@@ -35,7 +61,7 @@ export function AppHeader({
     <header
       className={cn(
         "app-header",
-        section && "app-header-section",
+        (section || timing) && "app-header-section",
         welcome && "app-header-welcome",
       )}
     >
@@ -87,6 +113,7 @@ export function AppHeader({
           {translate(language, section.es, section.en)}
         </h1>
       )}
+      {timing && <WorkoutTime started={workoutStarted} language={language} />}
     </header>
   );
 }

@@ -438,6 +438,101 @@ main > h1 {
   box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
   backdrop-filter: blur(20px);
 }
+/* The rest countdown slides up from behind the bottom bar: this box ends at
+   the middle of the bar, which covers the lower part of the panel. */
+.rest-drawer {
+  position: fixed;
+  z-index: 29;
+  bottom: calc(max(12px, calc(env(safe-area-inset-bottom) - 10px)) + 36px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(448px, calc(100% - 104px));
+  height: 94px;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s 360ms;
+}
+.rest-drawer[data-open="true"] {
+  visibility: visible;
+  transition: none;
+}
+.rest-drawer-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 8px 36px 16px;
+  border: 1px solid #2b6a8f;
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  background: #173a52;
+  color: #f5f7fb;
+  font-weight: 700;
+  transform: translateY(58px);
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rest-drawer[data-open="true"] .rest-drawer-panel {
+  pointer-events: auto;
+  transform: none;
+}
+.rest-drawer-panel > svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--primary);
+}
+.rest-drawer-panel span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rest-drawer-panel strong {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+.rest-drawer-panel button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.rest-drawer-panel button svg {
+  width: 20px;
+  height: 20px;
+}
+/* Room for the countdown, so it covers neither the page's end nor a message. */
+.app-shell:has(.rest-drawer[data-open="true"]) {
+  padding-bottom: calc(165px + env(safe-area-inset-bottom));
+}
+.app-shell:has(.rest-drawer[data-open="true"]) .save-toast {
+  bottom: calc(155px + env(safe-area-inset-bottom));
+}
+/* Narrow phones: the word matters more than the icon. */
+@media (max-width: 360px) {
+  .rest-drawer-panel {
+    gap: 6px;
+    padding-inline: 12px 6px;
+    font-size: 0.85rem;
+  }
+  .rest-drawer-panel > svg {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rest-drawer,
+  .rest-drawer-panel {
+    transition: none;
+  }
+}
 .bottom-nav a {
   min-height: 57px;
   display: flex;
@@ -2161,6 +2256,9 @@ input[type="range"] {
   color: #4ade80;
   background: #4ade801c;
 }
+.set-rest[data-resting] {
+  color: #fff;
+}
 .drop-segment-controls {
   display: flex;
   flex-wrap: wrap;
@@ -3858,6 +3956,37 @@ input[type="range"] {
     grid-column: 1 / -1;
     grid-row: 2;
     padding-bottom: 6px;
+  }
+}
+
+.header-workout-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.header-workout-time span {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.header-workout-time strong {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+/* On phones the title has its own row: one line keeps the header short. */
+@media (max-width: 480px) {
+  .header-workout-time {
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .header-workout-time strong {
+    font-size: 1.15rem;
   }
 }
 

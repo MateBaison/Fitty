@@ -80,7 +80,9 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
     .click();
   await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();
   await expect(page.locator(".active-workout")).toHaveCount(1);
-  await expect(page.getByRole("timer")).toHaveText(/^\d{2}:\d{2}$/);
+  await expect(page.locator(".active-workout").getByRole("timer")).toHaveText(
+    /^\d{2}:\d{2}$/,
+  );
   // Scrolled to the bottom, the workout in progress stays under the header.
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
@@ -250,7 +252,41 @@ test("the workout in progress can be continued or cancelled from home", async ({
     .click();
   await page.getByRole("button", { name: /Pecho y tríceps/ }).click();
   await expect(page).toHaveURL(/\/workout$/);
+  // The header counts the workout where the section title usually goes.
+  const clock = page.locator(".app-header").getByRole("timer");
+  await expect(clock).toContainText(/Tiempo\s*00:0[1-9]/);
+  await page.screenshot({
+    path: `artifacts/workout-header-time-${info.project.name}.png`,
+  });
+  // A set's clock fills up while its rest counts down behind the bottom bar.
+  await page
+    .getByRole("switch", { name: "Descanso entre series", exact: true })
+    .check();
+  const setClock = page.getByRole("button", {
+    name: "Iniciar descanso 1 serie 1",
+    exact: true,
+  });
+  await setClock.click();
+  await expect(setClock).toHaveAttribute("style", /conic-gradient/);
+  const drawer = page.locator(".rest-drawer");
+  await expect(drawer.getByRole("timer")).toHaveText(/^(01:00|00:5\d)$/);
+  await expect
+    .poll(async () => {
+      const panel = await drawer.locator(".rest-drawer-panel").boundingBox();
+      const bar = await page.locator(".bottom-nav").boundingBox();
+      return Math.round(bar!.y - panel!.y);
+    })
+    .toBe(59);
+  await page.screenshot({
+    path: `artifacts/rest-drawer-${info.project.name}.png`,
+  });
+  await drawer
+    .getByRole("button", { name: "Omitir descanso", exact: true })
+    .click();
+  await expect(drawer).toBeHidden();
+  await expect(setClock).not.toHaveAttribute("style", /conic-gradient/);
   await page.getByRole("link", { name: "FITTY — volver al inicio" }).click();
+  await expect(clock).toHaveCount(0);
   const banner = page.locator(".active-workout");
   await expect(
     banner.getByRole("link", { name: "Continuar", exact: true }),

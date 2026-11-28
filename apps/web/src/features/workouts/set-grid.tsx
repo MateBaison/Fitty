@@ -59,11 +59,14 @@ export function SetGrid({
   onChange,
   toolbar,
   onRest,
+  resting,
   externalMetric = false,
 }: {
   externalMetric?: boolean;
   toolbar?: React.ReactNode;
-  onRest?: () => void;
+  onRest?: (set: number) => void;
+  /** The set whose rest is running, and how much of it has gone by (0 to 1). */
+  resting?: { set: number; progress: number };
   entry: Entry;
   index: number;
   started: number;
@@ -229,6 +232,14 @@ export function SetGrid({
                   <button
                     type="button"
                     className="set-rest"
+                    data-resting={resting?.set === number || undefined}
+                    style={
+                      resting?.set === number
+                        ? {
+                            background: `conic-gradient(#ff8a4c ${resting.progress * 360}deg, var(--secondary) 0)`,
+                          }
+                        : undefined
+                    }
                     aria-pressed={set.restUsed === true}
                     aria-label={`${t("Iniciar descanso", "Start rest")} ${index + 1} ${t("serie", "set")} ${number + 1}`}
                     onClick={() => {
@@ -236,7 +247,7 @@ export function SetGrid({
                         const current = draft.sets[number];
                         if (current) current.restUsed = true;
                       });
-                      onRest();
+                      onRest(number);
                     }}
                   >
                     <Timer aria-hidden="true" />

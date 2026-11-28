@@ -188,6 +188,7 @@ export function AppProvider({
     );
   const header = (
     <AppHeader
+      workoutStarted={view.snapshot?.workout?.started}
       language={
         view.snapshot?.settings.language ?? controller.current?.language
       }

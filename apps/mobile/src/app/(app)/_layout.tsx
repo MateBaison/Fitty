@@ -1,15 +1,37 @@
 import { Tabs } from "expo-router";
+import type { ReactNode } from "react";
 import { View } from "react-native";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppHeader } from "@/components/app-header";
 import { BottomNav } from "@/components/bottom-nav";
-import { BAR_HEIGHT, barOffset, BottomSpace } from "@/components/bottom-space";
+import {
+  BAR_HEIGHT,
+  barOffset,
+  BottomSpace,
+  REST_HEIGHT,
+} from "@/components/bottom-space";
 import { Onboarding } from "@/components/onboarding";
 import { Button, Card, Label, Loading, Screen, Title } from "@/components/ui";
 import { supabase } from "@/lib/supabase";
 import { AccountProvider, useAccount } from "@/state/account";
+import { RestProvider, useRest } from "@/state/rest";
 import { useSession } from "@/state/session";
 import { colors } from "@/theme";
+
+/** Room below the screens for the bar and, while resting, the countdown. */
+function BarSpace({ children }: { children: ReactNode }) {
+  const insets = useSafeAreaInsets();
+  const { rest } = useRest();
+  return (
+    <BottomSpace
+      value={
+        BAR_HEIGHT + barOffset(insets.bottom) + (rest ? REST_HEIGHT : 0)
+      }
+    >
+      {children}
+    </BottomSpace>
+  );
+}
 
 function AccountGate() {
   const { view, resolve, retry, t } = useAccount();
@@ -60,10 +82,11 @@ function AccountGate() {
   )
     return <Onboarding />;
   return (
+    <RestProvider>
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <AppHeader />
       <SafeAreaInsetsContext.Provider value={{ ...insets, top: 0 }}>
-        <BottomSpace value={BAR_HEIGHT + barOffset(insets.bottom)}>
+        <BarSpace>
           <Tabs
             tabBar={() => <BottomNav />}
             screenOptions={{
@@ -82,9 +105,10 @@ function AccountGate() {
             <Tabs.Screen name="body" />
             <Tabs.Screen name="combat" />
           </Tabs>
-        </BottomSpace>
+        </BarSpace>
       </SafeAreaInsetsContext.Provider>
     </View>
+    </RestProvider>
   );
 }
 

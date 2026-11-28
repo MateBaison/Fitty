@@ -47,9 +47,10 @@ export function WorkoutScreen() {
     [members, setMembers] = useState<number[]>([]);
   const { rest, now, setRest } = useRuntime(),
     restEnd = rest.end;
-  const setRestEnd = (end: number) =>
+  const setRestEnd = (end: number, source?: string) =>
     setRest({
       end,
+      source,
       duration: Math.max(5, Number(snapshot.settings.restSeconds) || 60),
     });
   const restSeconds = Math.max(
@@ -146,7 +147,19 @@ export function WorkoutScreen() {
           externalMetric
           onRest={
             enabled
-              ? () => setRestEnd(Date.now() + restSeconds * 1000)
+              ? (set) =>
+                  setRestEnd(
+                    Date.now() + restSeconds * 1000,
+                    `${index}:${set}`,
+                  )
+              : undefined
+          }
+          resting={
+            restEnd > now && rest.source?.startsWith(`${index}:`)
+              ? {
+                  set: Number(rest.source.split(":")[1]),
+                  progress: 1 - (restEnd - now) / (rest.duration * 1000),
+                }
               : undefined
           }
           onChange={(edit) => editEntry(index, edit)}
@@ -325,16 +338,6 @@ export function WorkoutScreen() {
             </button>
           )}
         </div>
-        {restEnd > 0 && (
-          <div className="mt-3 flex items-center justify-between">
-            <strong>
-              {t("Descanso", "Rest")}: {remaining} s
-            </strong>
-            <Button variant="ghost" onClick={() => setRestEnd(0)}>
-              {t("Omitir descanso", "Skip rest")}
-            </Button>
-          </div>
-        )}
       </section>
       {workout.entries.flatMap((entry, index) => {
         if (!entry.superset) return [renderEntry(entry, index)];
