@@ -714,7 +714,7 @@ export function ManualSession({
                   </View>
                 </View>
                 <Field
-                  label={t("Nota de este ejercicio", "Note for this exercise")}
+                  label={t("Comentarios", "Comments")}
                   defaultValue={entry.note ?? ""}
                   maxLength={500}
                   multiline

@@ -1616,6 +1616,73 @@ strong {
 .workout-fold {
   scroll-margin-top: 90px;
 }
+/* Holding an exercise opens the reorder window instead of selecting text. */
+.workout-fold > summary {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.workout-fold > summary img {
+  -webkit-user-drag: none;
+}
+.set-tools .set-note-button {
+  flex: 0 0 44px;
+  align-self: stretch;
+  height: auto;
+  padding: 0;
+  border-color: #2b6a8f;
+  background: #10283a;
+  color: var(--primary);
+}
+.set-tools .set-note-button svg {
+  width: 20px;
+  height: 20px;
+}
+.reorder-list {
+  display: grid;
+  gap: 8px;
+}
+.reorder-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--secondary);
+  text-align: start;
+  cursor: grab;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.reorder-row[data-highlighted] {
+  border-color: var(--primary);
+}
+.reorder-row[data-dragging] {
+  z-index: 1;
+  cursor: grabbing;
+  box-shadow: 0 10px 24px #000a;
+}
+.reorder-row svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: var(--muted-foreground);
+}
+.reorder-row span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.reorder-row small {
+  color: var(--muted-foreground);
+}
 
 .training-colors {
   display: flex;

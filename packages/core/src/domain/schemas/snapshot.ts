@@ -122,6 +122,7 @@ export const settingsSchema = z.looseObject({
   theme: z.string().optional(),
   combatClock: z.unknown().optional(),
   exerciseMetrics: z.record(z.string(), z.string()).optional(),
+  exerciseNotes: z.record(z.string(), z.string()).optional(),
   routineDaySetPlans: z
     .record(
       z.string(),

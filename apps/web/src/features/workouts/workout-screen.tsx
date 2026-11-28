@@ -27,9 +27,19 @@ import { useRuntime } from "@/state/runtime-provider";
 import { ExercisePicker } from "@/features/exercises/exercise-picker";
 import { ReplacementDialog } from "./replacement-dialog";
 import { ExerciseMenu } from "./exercise-menu";
+import { ExerciseNoteDialog } from "./exercise-note-dialog";
+import { ReorderExercisesDialog } from "./reorder-exercises-dialog";
+import { useLongPress } from "./use-long-press";
+import {
+  exerciseNote,
+  setExerciseNote,
+} from "@fitty/core/domain/exercise-notes";
 import {
   leaveSuperset,
   removeWorkoutEntry,
+  moveWorkoutBlock,
+  workoutBlocks,
+  workoutEntryKeys,
 } from "@fitty/core/domain/workout-entry-actions";
 import { replaceWorkoutExercise } from "@fitty/core/domain/exercise-replacement";
 export function WorkoutScreen() {
@@ -37,6 +47,11 @@ export function WorkoutScreen() {
   const [replacement, setReplacement] = useState<number | null>(null);
   const [ask, confirmDialog] = useConfirm();
   const short = useExerciseName();
+  const longPress = useLongPress();
+  // Exercise ID whose standing note is open.
+  const [noteFor, setNoteFor] = useState<string | null>(null);
+  // Key of the exercise that was long-pressed to reorder the workout.
+  const [reordering, setReordering] = useState<string | null>(null);
   const { snapshot, change, notify, t } = useApp(),
     router = useRouter(),
     workout = snapshot.workout;
@@ -135,9 +150,15 @@ export function WorkoutScreen() {
     )
       router.push("/home");
   };
+  const keys = workoutEntryKeys(workout.entries),
+    blocks = workoutBlocks(workout.entries),
+    nameOf = (id: string) =>
+      short(findExercise(snapshot, id)?.name ?? id);
   const renderEntry = (entry: Entry, index: number) => {
     const exercise = findExercise(snapshot, entry.id),
-      opened = workout.openExercises?.includes(index) ?? index === 0;
+      opened = workout.openExercises?.includes(index) ?? index === 0,
+      entryKey = keys[index]!,
+      restSource = `${entryKey}|`;
     const content = (
       <>
         <SetGrid
@@ -150,16 +171,21 @@ export function WorkoutScreen() {
               ? (set) =>
                   setRestEnd(
                     Date.now() + restSeconds * 1000,
-                    `${index}:${set}`,
+                    `${restSource}${set}`,
                   )
               : undefined
           }
           resting={
-            restEnd > now && rest.source?.startsWith(`${index}:`)
+            restEnd > now && rest.source?.startsWith(restSource)
               ? {
-                  set: Number(rest.source.split(":")[1]),
+                  set: Number(rest.source.slice(restSource.length)),
                   progress: 1 - (restEnd - now) / (rest.duration * 1000),
                 }
+              : undefined
+          }
+          onNote={
+            exerciseNote(snapshot, entry.id)
+              ? () => setNoteFor(entry.id)
               : undefined
           }
           onChange={(edit) => editEntry(index, edit)}
@@ -168,7 +194,7 @@ export function WorkoutScreen() {
     );
     return (
       <details
-        key={index}
+        key={entryKey}
         className={`panel workout-fold ${entry.superset ? "superset-fold" : ""}`}
         data-workout-entry={index}
         open={opened}
@@ -186,7 +212,12 @@ export function WorkoutScreen() {
           });
         }}
       >
-        <summary className="picker-row">
+        <summary
+          className="picker-row"
+          {...(blocks.length > 1
+            ? longPress(() => setReordering(entryKey))
+            : {})}
+        >
           <button
             type="button"
             className="picker-thumb"
@@ -217,6 +248,7 @@ export function WorkoutScreen() {
               change((draft) => leaveSuperset(draft, index))
             }
             onDetails={() => exercise && setImage(exercise)}
+            onNote={() => setNoteFor(entry.id)}
             onRemove={async () => {
               if (
                 await ask(
@@ -403,6 +435,30 @@ export function WorkoutScreen() {
         {t("Finalizar entrenamiento", "Finish workout")}
       </Button>
       {confirmDialog}
+      {noteFor !== null && (
+        <ExerciseNoteDialog
+          name={nameOf(noteFor)}
+          initial={exerciseNote(snapshot, noteFor)}
+          onSave={(note) =>
+            change((draft) => setExerciseNote(draft, noteFor, note))
+          }
+          onClose={() => setNoteFor(null)}
+        />
+      )}
+      {reordering !== null && (
+        <ReorderExercisesDialog
+          rows={blocks.map((block) => ({
+            key: keys[block[0]!]!,
+            names: block.map((number) => nameOf(workout.entries[number]!.id)),
+            superset: Boolean(workout.entries[block[0]!]!.superset),
+            highlighted: block.some((number) => keys[number] === reordering),
+          }))}
+          onMove={(from, to) =>
+            change((draft) => moveWorkoutBlock(draft, from, to))
+          }
+          onClose={() => setReordering(null)}
+        />
+      )}
       <ExerciseDetails exercise={image} onClose={() => setImage(null)} />
       <AppDialog
         open={finish}

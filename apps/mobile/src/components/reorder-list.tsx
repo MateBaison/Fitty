@@ -23,6 +23,8 @@ export function ReorderList<T>({
   const setScrollLocked = useContext(ScrollLockContext);
   const heights = useRef<number[]>([]);
   const dragging = useRef<number | null>(null);
+  // True once the finger moved and the list took over the gesture.
+  const panning = useRef(false);
   const latest = useRef({ count: items.length, onMove, gap });
   latest.current = { count: items.length, onMove, gap };
   const [drag, setDrag] = useState<{ index: number; dy: number } | null>(null);
@@ -48,6 +50,7 @@ export function ReorderList<T>({
   const finish = (dy: number) => {
     const from = dragging.current;
     dragging.current = null;
+    panning.current = false;
     setScrollLocked(false);
     setDrag(null);
     if (from === null) return;
@@ -60,6 +63,7 @@ export function ReorderList<T>({
       onMoveShouldSetPanResponder: () => dragging.current !== null,
       onMoveShouldSetPanResponderCapture: () => dragging.current !== null,
       onPanResponderTerminationRequest: () => false,
+      onPanResponderGrant: () => void (panning.current = true),
       onPanResponderMove: (_, gesture) =>
         setDrag((current) => current && { ...current, dy: gesture.dy }),
       onPanResponderRelease: (_, gesture) => finish(gesture.dy),
@@ -70,7 +74,14 @@ export function ReorderList<T>({
   const target = drag ? targetFor(drag.index, drag.dy) : null;
   const dragHeight = drag ? (heights.current[drag.index] ?? 0) + gap : 0;
   return (
-    <View style={{ gap }} {...pan.panHandlers}>
+    <View
+      style={{ gap }}
+      {...pan.panHandlers}
+      // Lifting the finger without moving drops the item where it was.
+      onTouchEnd={() => {
+        if (dragging.current !== null && !panning.current) finish(0);
+      }}
+    >
       {items.map((item, index) => {
         let shift = 0;
         if (drag && target !== null && index !== drag.index) {

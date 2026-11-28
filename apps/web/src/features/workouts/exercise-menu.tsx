@@ -1,7 +1,15 @@
 "use client";
 import { useState } from "react";
 import { Switch } from "@base-ui/react/switch";
-import { Info, Layers, Repeat, Settings, Trash2, Unlink } from "lucide-react";
+import {
+  Info,
+  Layers,
+  NotebookText,
+  Repeat,
+  Settings,
+  Trash2,
+  Unlink,
+} from "lucide-react";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { useApp } from "@/state/app-provider";
 import {
@@ -49,6 +57,7 @@ export function ExerciseMenu({
   onSuperset,
   onLeaveSuperset,
   onDetails,
+  onNote,
   onRemove,
 }: {
   entry: Entry;
@@ -57,6 +66,7 @@ export function ExerciseMenu({
   onSuperset: () => void;
   onLeaveSuperset: () => void;
   onDetails: () => void;
+  onNote: () => void;
   onRemove: () => void;
 }) {
   const { snapshot, change, t } = useApp(),
@@ -90,6 +100,14 @@ export function ExerciseMenu({
         backLabel={t("Volver", "Back")}
       >
         <div className="exercise-menu-body">
+          <button
+            type="button"
+            className="exercise-menu-item"
+            onClick={run(onNote)}
+          >
+            <NotebookText aria-hidden="true" />
+            {t("Notas de ejercicio", "Exercise notes")}
+          </button>
           <button
             type="button"
             className="exercise-menu-item"

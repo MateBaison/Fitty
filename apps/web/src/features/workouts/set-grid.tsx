@@ -2,7 +2,7 @@
 import { Switch } from "@base-ui/react/switch";
 import { useState } from "react";
 import { localizedSetTypes } from "@fitty/core/data/set-types";
-import { CircleHelp, Trophy, Timer } from "lucide-react";
+import { CircleHelp, NotebookText, Trophy, Timer } from "lucide-react";
 import { personalRecords } from "@fitty/core/domain/personal-records";
 import { AppDialog } from "@/components/ui/app-dialog";
 import { useApp } from "@/state/app-provider";
@@ -60,6 +60,7 @@ export function SetGrid({
   toolbar,
   onRest,
   resting,
+  onNote,
   externalMetric = false,
 }: {
   externalMetric?: boolean;
@@ -67,6 +68,8 @@ export function SetGrid({
   onRest?: (set: number) => void;
   /** The set whose rest is running, and how much of it has gone by (0 to 1). */
   resting?: { set: number; progress: number };
+  /** Opens the standing note of the exercise; absent when it has none. */
+  onNote?: () => void;
   entry: Entry;
   index: number;
   started: number;
@@ -426,6 +429,16 @@ export function SetGrid({
         >
           − {t("Eliminar última serie", "Remove last set")}
         </Button>
+        {onNote && (
+          <Button
+            variant="secondary"
+            className="set-note-button"
+            aria-label={t("Ver nota del ejercicio", "View exercise note")}
+            onClick={onNote}
+          >
+            <NotebookText aria-hidden="true" />
+          </Button>
+        )}
         <Button
           variant="secondary"
           onClick={() =>
@@ -438,9 +451,9 @@ export function SetGrid({
         </Button>
       </div>
       <label className="block">
-        {t("Nota de este ejercicio", "Note for this exercise")}
+        {t("Comentarios", "Comments")}
         <textarea
-          aria-label={`Nota ejercicio ${index + 1}`}
+          aria-label={`${t("Comentarios", "Comments")} ${index + 1}`}
           maxLength={1000}
           value={entry.note ?? ""}
           onChange={(event) =>

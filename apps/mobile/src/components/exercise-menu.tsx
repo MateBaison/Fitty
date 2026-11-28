@@ -9,7 +9,6 @@ import { colors, space } from "@/theme";
 export function ExerciseMenu({
   visible,
   onClose,
-  name,
   metric,
   unit,
   inSuperset,
@@ -17,13 +16,13 @@ export function ExerciseMenu({
   onUnit,
   onReplace,
   onDetails,
+  onNote,
   onSuperset,
   onLeaveSuperset,
   onRemove,
 }: {
   visible: boolean;
   onClose: () => void;
-  name: string;
   metric: "reps" | "seconds";
   unit: "kg" | "lb";
   inSuperset: boolean;
@@ -31,6 +30,7 @@ export function ExerciseMenu({
   onUnit: (unit: "kg" | "lb") => void;
   onReplace: () => void;
   onDetails: () => void;
+  onNote: () => void;
   onSuperset: () => void;
   onLeaveSuperset: () => void;
   onRemove: () => void;
@@ -82,9 +82,11 @@ export function ExerciseMenu({
                   >
                     {t("Ajustes del ejercicio", "Exercise settings")}
                   </Text>
-                  <Label muted style={{ textAlign: "center" }}>{name}</Label>
                 </View>
               </View>
+              <Button variant="secondary" onPress={run(onNote)}>
+                {t("Notas de ejercicio", "Exercise notes")}
+              </Button>
               <Button variant="secondary" onPress={run(onSuperset)}>
                 {t("Crear superserie", "Create superset")}
               </Button>

@@ -52,3 +52,52 @@ export function removeWorkoutEntry(draft: Snapshot, index: number) {
     Math.min(workout.index > index ? workout.index - 1 : workout.index, workout.entries.length - 1),
   );
 }
+
+type OrderedEntry = { id: string; superset?: string };
+
+/**
+ * A key for each exercise of a workout that survives reordering, so screens and
+ * the rest timer keep following the same exercise after it moves.
+ */
+export function workoutEntryKeys(entries: readonly OrderedEntry[]): string[] {
+  const seen = new Map<string, number>();
+  return entries.map((entry) => {
+    const occurrence = seen.get(entry.id) ?? 0;
+    seen.set(entry.id, occurrence + 1);
+    return `${entry.id}#${occurrence}`;
+  });
+}
+
+/**
+ * The movable pieces of a workout, as entry indexes in display order: one
+ * exercise, or all the members of a superset together.
+ */
+export function workoutBlocks(entries: readonly OrderedEntry[]): number[][] {
+  const blocks: number[][] = [];
+  const supersets = new Map<string, number[]>();
+  entries.forEach((entry, index) => {
+    const existing = entry.superset ? supersets.get(entry.superset) : undefined;
+    if (existing) return void existing.push(index);
+    const block = [index];
+    blocks.push(block);
+    if (entry.superset) supersets.set(entry.superset, block);
+  });
+  return blocks;
+}
+
+/** Moves one block of the workout in progress; the saved routine is not touched. */
+export function moveWorkoutBlock(draft: Snapshot, from: number, to: number) {
+  const workout = draft.workout;
+  if (!workout || from === to) return;
+  const blocks = workoutBlocks(workout.entries);
+  if (!blocks[from] || !blocks[to]) return;
+  // Exercises opened by default (none recorded yet) keep that state when moving.
+  const open = workout.openExercises ?? [0];
+  const [moved] = blocks.splice(from, 1);
+  blocks.splice(to, 0, moved!);
+  const order = blocks.flat();
+  const position = (index: number) => order.indexOf(index);
+  workout.entries = order.map((index) => workout.entries[index]!);
+  workout.openExercises = open.map(position).filter((index) => index >= 0);
+  workout.index = Math.max(0, position(workout.index));
+}

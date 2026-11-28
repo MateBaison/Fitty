@@ -1172,7 +1172,17 @@
     "No queda espacio para más fotos. Quitá alguna foto guardada para poder agregar otra.": "Plus de place pour d’autres photos. Supprimez une photo enregistrée pour en ajouter une autre.",
     "Fotos del ejercicio": "Photos de l’exercice",
     "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.": "Impossible de charger la photo. Choisissez une image de moins de 8 Mo.",
-    "Foto de": "Photo de"
+    "Foto de": "Photo de",
+    "Comentarios": "Commentaires",
+    "Notas de ejercicio": "Notes d’exercice",
+    "Instrucciones o comentarios sobre este ejercicio": "Instructions ou commentaires sur cet exercice",
+    "Aparece cada vez que hacés este ejercicio.": "Elle apparaît à chaque fois que vous faites cet exercice.",
+    "Ver nota del ejercicio": "Voir la note de l’exercice",
+    "Ordenar ejercicios": "Réorganiser les exercices",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Maintenez appuyé puis faites glisser pour changer l’ordre. Seule cette séance est modifiée.",
+    "Mover ejercicio": "Déplacer l’exercice",
+    "Subir": "Monter",
+    "Bajar": "Descendre"
   },
   "zh": {
     "Tiempo transcurrido": "已用时间",
@@ -2347,7 +2357,17 @@
     "No queda espacio para más fotos. Quitá alguna foto guardada para poder agregar otra.": "没有空间存放更多照片。删除一张已保存的照片后才能添加新照片。",
     "Fotos del ejercicio": "练习照片",
     "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.": "无法加载照片。请选择小于 8 MB 的图片。",
-    "Foto de": "照片："
+    "Foto de": "照片：",
+    "Comentarios": "备注",
+    "Notas de ejercicio": "动作笔记",
+    "Instrucciones o comentarios sobre este ejercicio": "关于此动作的说明或备注",
+    "Aparece cada vez que hacés este ejercicio.": "每次做这个动作时都会显示。",
+    "Ver nota del ejercicio": "查看动作笔记",
+    "Ordenar ejercicios": "调整动作顺序",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "长按并拖动即可调整顺序。仅更改本次训练。",
+    "Mover ejercicio": "移动动作",
+    "Subir": "上移",
+    "Bajar": "下移"
   },
   "hi": {
     "Tiempo transcurrido": "बीता हुआ समय",
@@ -3522,7 +3542,17 @@
     "No queda espacio para más fotos. Quitá alguna foto guardada para poder agregar otra.": "और फ़ोटो के लिए जगह नहीं है। नई फ़ोटो जोड़ने के लिए कोई सहेजी हुई फ़ोटो हटाएँ।",
     "Fotos del ejercicio": "व्यायाम की फ़ोटो",
     "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.": "फ़ोटो लोड नहीं हो सकी। 8 MB से छोटी इमेज चुनें।",
-    "Foto de": "फ़ोटो:"
+    "Foto de": "फ़ोटो:",
+    "Comentarios": "टिप्पणियाँ",
+    "Notas de ejercicio": "व्यायाम नोट्स",
+    "Instrucciones o comentarios sobre este ejercicio": "इस व्यायाम के बारे में निर्देश या टिप्पणियाँ",
+    "Aparece cada vez que hacés este ejercicio.": "जब भी आप यह व्यायाम करेंगे, यह दिखाई देगा।",
+    "Ver nota del ejercicio": "व्यायाम नोट देखें",
+    "Ordenar ejercicios": "व्यायामों का क्रम बदलें",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "क्रम बदलने के लिए दबाकर रखें और खींचें। केवल यही वर्कआउट बदलेगा।",
+    "Mover ejercicio": "व्यायाम खिसकाएँ",
+    "Subir": "ऊपर ले जाएँ",
+    "Bajar": "नीचे ले जाएँ"
   },
   "ar": {
     "Tiempo transcurrido": "الوقت المنقضي",
@@ -4697,7 +4727,17 @@
     "No queda espacio para más fotos. Quitá alguna foto guardada para poder agregar otra.": "لا توجد مساحة لمزيد من الصور. احذف صورة محفوظة لإضافة صورة أخرى.",
     "Fotos del ejercicio": "صور التمرين",
     "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.": "تعذّر تحميل الصورة. اختر صورة أصغر من 8 ميغابايت.",
-    "Foto de": "صورة"
+    "Foto de": "صورة",
+    "Comentarios": "ملاحظات",
+    "Notas de ejercicio": "ملاحظات التمرين",
+    "Instrucciones o comentarios sobre este ejercicio": "تعليمات أو ملاحظات حول هذا التمرين",
+    "Aparece cada vez que hacés este ejercicio.": "تظهر في كل مرة تؤدي فيها هذا التمرين.",
+    "Ver nota del ejercicio": "عرض ملاحظة التمرين",
+    "Ordenar ejercicios": "إعادة ترتيب التمارين",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "اضغط مطولاً ثم اسحب لتغيير الترتيب. يتغير هذا التمرين فقط.",
+    "Mover ejercicio": "نقل التمرين",
+    "Subir": "نقل لأعلى",
+    "Bajar": "نقل لأسفل"
   },
   "de": {
     "Tiempo transcurrido": "Verstrichene Zeit",
@@ -5870,7 +5910,17 @@
     "No queda espacio para más fotos. Quitá alguna foto guardada para poder agregar otra.": "Kein Platz für weitere Fotos. Entferne ein gespeichertes Foto, um ein neues hinzuzufügen.",
     "Fotos del ejercicio": "Fotos der Übung",
     "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.": "Das Foto konnte nicht geladen werden. Wähle ein Bild unter 8 MB.",
-    "Foto de": "Foto von"
+    "Foto de": "Foto von",
+    "Comentarios": "Kommentare",
+    "Notas de ejercicio": "Übungsnotizen",
+    "Instrucciones o comentarios sobre este ejercicio": "Anleitungen oder Kommentare zu dieser Übung",
+    "Aparece cada vez que hacés este ejercicio.": "Wird jedes Mal angezeigt, wenn du diese Übung machst.",
+    "Ver nota del ejercicio": "Übungsnotiz ansehen",
+    "Ordenar ejercicios": "Übungen neu anordnen",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Gedrückt halten und ziehen, um die Reihenfolge zu ändern. Nur dieses Training ändert sich.",
+    "Mover ejercicio": "Übung verschieben",
+    "Subir": "Nach oben",
+    "Bajar": "Nach unten"
   },
   "it": {
     "Tiempo transcurrido": "Tempo trascorso",
@@ -7043,7 +7093,17 @@
     "No queda espacio para más fotos. Quitá alguna foto guardada para poder agregar otra.": "Non c’è spazio per altre foto. Rimuovi una foto salvata per aggiungerne un’altra.",
     "Fotos del ejercicio": "Foto dell’esercizio",
     "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.": "Impossibile caricare la foto. Scegli un’immagine inferiore a 8 MB.",
-    "Foto de": "Foto di"
+    "Foto de": "Foto di",
+    "Comentarios": "Commenti",
+    "Notas de ejercicio": "Note dell’esercizio",
+    "Instrucciones o comentarios sobre este ejercicio": "Istruzioni o commenti su questo esercizio",
+    "Aparece cada vez que hacés este ejercicio.": "Compare ogni volta che fai questo esercizio.",
+    "Ver nota del ejercicio": "Vedi la nota dell’esercizio",
+    "Ordenar ejercicios": "Riordina esercizi",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Tieni premuto e trascina per cambiare l’ordine. Cambia solo questo allenamento.",
+    "Mover ejercicio": "Sposta esercizio",
+    "Subir": "Sposta su",
+    "Bajar": "Sposta giù"
   },
   "pt": {
     "Tiempo transcurrido": "Tempo decorrido",
@@ -8216,7 +8276,17 @@
     "No queda espacio para más fotos. Quitá alguna foto guardada para poder agregar otra.": "Não há espaço para mais fotos. Remova uma foto salva para adicionar outra.",
     "Fotos del ejercicio": "Fotos do exercício",
     "No se pudo cargar la foto. Elegí una imagen menor a 8 MB.": "Não foi possível carregar a foto. Escolha uma imagem com menos de 8 MB.",
-    "Foto de": "Foto de"
+    "Foto de": "Foto de",
+    "Comentarios": "Comentários",
+    "Notas de ejercicio": "Notas do exercício",
+    "Instrucciones o comentarios sobre este ejercicio": "Instruções ou comentários sobre este exercício",
+    "Aparece cada vez que hacés este ejercicio.": "Aparece sempre que você fizer este exercício.",
+    "Ver nota del ejercicio": "Ver nota do exercício",
+    "Ordenar ejercicios": "Reordenar exercícios",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Mantenha pressionado e arraste para mudar a ordem. Só este treino muda.",
+    "Mover ejercicio": "Mover exercício",
+    "Subir": "Mover para cima",
+    "Bajar": "Mover para baixo"
   },
   "en": {
     "Tiempo transcurrido": "Elapsed time",
@@ -8862,6 +8932,16 @@
     "No pudimos completar el inicio de sesión.": "We couldn't complete the sign-in.",
     "Saltar al contenido": "Skip to content",
     "Cerrar": "Close",
-    "Redimensionar": "Resize"
+    "Redimensionar": "Resize",
+    "Comentarios": "Comments",
+    "Notas de ejercicio": "Exercise notes",
+    "Instrucciones o comentarios sobre este ejercicio": "Instructions or comments about this exercise",
+    "Aparece cada vez que hacés este ejercicio.": "It shows every time you do this exercise.",
+    "Ver nota del ejercicio": "View exercise note",
+    "Ordenar ejercicios": "Reorder exercises",
+    "Mantené apretado y arrastrá para cambiar el orden. Solo cambia este entrenamiento.": "Press and hold, then drag to change the order. Only this workout changes.",
+    "Mover ejercicio": "Move exercise",
+    "Subir": "Move up",
+    "Bajar": "Move down"
   }
 }

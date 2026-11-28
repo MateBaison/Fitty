@@ -110,3 +110,9 @@ Progress period comparisons are derived from two inclusive local date ranges; no
 ## Clock preferences
 
 Optional `settings.combatClock` retains the last valid rounds, work/rest/preparation seconds and compatible internal mode through the normal account change/cache/sync path. Preset buttons are no longer displayed. Older accounts use the existing default until edited; malformed or future configurations remain preserved in snapshots and fall back for display. Unknown preference metadata survives edits. Only configuration persists: running/paused sessions are transient and are not resumed after reload. Remote preference refreshes do not reset an active or paused clock.
+
+## Exercise notes and workout order — 2026-11-28
+
+Optional `settings.exerciseNotes` stores one standing note (up to 1,000 characters) per exercise ID through the normal account change/cache/sync path; clearing the text removes that key. It shows whenever the exercise is part of a workout, independently of the per-workout comment kept in the entry's `note` and copied into completed sessions. Existing accounts need no new field. Standing notes are private account data: included in full backups, never in routine shares or workout posters.
+
+Exercises of the workout in progress can be reordered. Superset members move together; open exercises and the current index follow their exercise. Only the active workout changes: saved routines and historical sessions are not rewritten.

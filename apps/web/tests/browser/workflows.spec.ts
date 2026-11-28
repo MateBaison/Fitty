@@ -37,7 +37,7 @@ test("workout autosave, image dialog, rest across navigation, finish and calenda
   await page.getByLabel("Peso 1 serie 1", { exact: true }).fill("20");
   await page.getByLabel("Repeticiones 1 serie 1", { exact: true }).fill("12");
   await page
-    .getByLabel("Nota ejercicio 1", { exact: true })
+    .getByLabel("Comentarios 1", { exact: true })
     .fill("Controlar la bajada");
   await page.screenshot({
     path: `artifacts/workout-${info.project.name}.png`,

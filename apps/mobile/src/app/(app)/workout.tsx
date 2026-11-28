@@ -38,8 +38,18 @@ import { ExerciseMenu } from "@/components/exercise-menu";
 import {
   changeWeightUnit,
   leaveSuperset,
+  moveWorkoutBlock,
   removeWorkoutEntry,
+  workoutBlocks,
+  workoutEntryKeys,
 } from "@fitty/core/domain/workout-entry-actions";
+import {
+  exerciseNote,
+  setExerciseNote,
+} from "@fitty/core/domain/exercise-notes";
+import * as Haptics from "expo-haptics";
+import { ExerciseNoteDialog } from "@/components/exercise-note-dialog";
+import { ReorderExercisesDialog } from "@/components/reorder-exercises-dialog";
 import { ExercisePicker } from "@/components/exercise-picker";
 import { BackButton } from "@/components/back-button";
 import { SetTypeDialog, typeColor } from "@/components/set-type-dialog";
@@ -76,6 +86,10 @@ export default function Workout() {
   );
   const [replacing, setReplacing] = useState<number | null>(null);
   const [menuFor, setMenuFor] = useState<number | null>(null);
+  // Exercise ID whose standing note is open.
+  const [noteFor, setNoteFor] = useState<string | null>(null);
+  // Key of the exercise that was long-pressed to reorder the workout.
+  const [reordering, setReordering] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [resizingComment, setResizingComment] = useState(false);
@@ -148,6 +162,17 @@ export default function Workout() {
   const open = (index: number) =>
     workout.openExercises?.includes(index) ?? index === 0;
   const restEnabled = settings.restEnabled === true;
+  const keys = workoutEntryKeys(workout.entries);
+  const blocks = workoutBlocks(workout.entries);
+  const nameOf = (id: string) => {
+    const exercise = findExercise(snapshot, id);
+    return exercise ? exerciseName(language, exercise.name) : id;
+  };
+  const startReorder = (index: number) => {
+    if (blocks.length < 2) return;
+    void Haptics.selectionAsync();
+    setReordering(keys[index]!);
+  };
   return (
     <Screen>
       <View
@@ -273,11 +298,23 @@ export default function Workout() {
           metric,
         );
         const expanded = open(index);
+        const entryKey = keys[index]!;
+        const note = exerciseNote(snapshot, entry.id);
         return (
-          <Card key={`${entry.id}-${index}`}>
+          <Card key={entryKey}>
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ expanded }}
+              accessibilityHint={
+                blocks.length > 1
+                  ? t(
+                      "Mantené apretado para mover el ejercicio",
+                      "Press and hold to move the exercise",
+                    )
+                  : undefined
+              }
+              delayLongPress={350}
+              onLongPress={() => startReorder(index)}
               onPress={() =>
                 change((draft) => {
                   const current = draft.workout;
@@ -435,7 +472,7 @@ export default function Workout() {
                                 const current = draft.sets[number];
                                 if (current) current.restUsed = true;
                               });
-                              startRest(restSeconds, `${index}:${number}`);
+                              startRest(restSeconds, `${entryKey}|${number}`);
                             }}
                             hitSlop={6}
                             style={{
@@ -451,13 +488,13 @@ export default function Workout() {
                                   : colors.secondary,
                             }}
                           >
-                            {rest?.source === `${index}:${number}` ? (
+                            {rest?.source === `${entryKey}|${number}` ? (
                               <RestFill rest={rest} width={30} height={26} />
                             ) : null}
                             <SymbolView
                               name={{ ios: "timer", android: "timer" }}
                               tintColor={
-                                rest?.source === `${index}:${number}`
+                                rest?.source === `${entryKey}|${number}`
                                   ? "#ffffff"
                                   : set.restUsed === true
                                     ? colors.success
@@ -594,6 +631,32 @@ export default function Workout() {
                       {t("− Serie", "− Set")}
                     </Button>
                   </View>
+                  {note ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={t(
+                        "Ver nota del ejercicio",
+                        "View exercise note",
+                      )}
+                      onPress={() => setNoteFor(entry.id)}
+                      style={{
+                        width: 52,
+                        height: 52,
+                        borderRadius: 16,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#10283a",
+                        borderColor: "#2b6a8f",
+                        borderWidth: 1,
+                      }}
+                    >
+                      <SymbolView
+                        name={{ ios: "note.text", android: "sticky_note_2" }}
+                        tintColor={colors.primary}
+                        size={22}
+                      />
+                    </Pressable>
+                  ) : null}
                   <View style={{ flex: 1 }}>
                     <Button
                       variant="secondary"
@@ -609,7 +672,7 @@ export default function Workout() {
                   </View>
                 </View>
                 <Field
-                  label={t("Nota de este ejercicio", "Note for this exercise")}
+                  label={t("Comentarios", "Comments")}
                   defaultValue={entry.note ?? ""}
                   maxLength={500}
                   multiline
@@ -877,7 +940,6 @@ export default function Workout() {
             <ExerciseMenu
               visible
               onClose={() => setMenuFor(null)}
-              name={exercise ? exerciseName(language, exercise.name) : entry.id}
               metric={metric}
               unit={unit}
               inSuperset={Boolean(entry.superset)}
@@ -895,6 +957,7 @@ export default function Workout() {
               onUnit={(next) => change((draft) => changeWeightUnit(draft, next))}
               onReplace={() => setReplacing(index)}
               onDetails={() => exercise && setImageFor(exercise)}
+              onNote={() => setNoteFor(entry.id)}
               onSuperset={() => {
                 setMembers([index]);
                 setSupersetOpen(true);
@@ -921,6 +984,30 @@ export default function Workout() {
             />
           );
         })()
+      ) : null}
+      {noteFor !== null ? (
+        <ExerciseNoteDialog
+          name={nameOf(noteFor)}
+          initial={exerciseNote(snapshot, noteFor)}
+          onSave={(note) =>
+            change((draft) => setExerciseNote(draft, noteFor, note))
+          }
+          onClose={() => setNoteFor(null)}
+        />
+      ) : null}
+      {reordering !== null ? (
+        <ReorderExercisesDialog
+          rows={blocks.map((block) => ({
+            key: keys[block[0]!]!,
+            names: block.map((index) => nameOf(workout.entries[index]!.id)),
+            superset: Boolean(workout.entries[block[0]!]!.superset),
+            highlighted: block.some((index) => keys[index] === reordering),
+          }))}
+          onMove={(from, to) =>
+            change((draft) => moveWorkoutBlock(draft, from, to))
+          }
+          onClose={() => setReordering(null)}
+        />
       ) : null}
       <ExercisePicker
         visible={adding}

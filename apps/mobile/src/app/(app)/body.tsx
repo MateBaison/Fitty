@@ -6,6 +6,7 @@ import { bodyMeasurementInputSchema } from "@fitty/core/domain/schemas/snapshot"
 import { localDateKey } from "@fitty/core/domain/workouts";
 import { Notice } from "@/components/notice";
 import { PhotoStrip } from "@/components/photo-strip";
+import { DateField } from "@/components/pickers";
 import { Button, Card, Field, Label, Screen, Title } from "@/components/ui";
 import { makeId } from "@/lib/id";
 import { safePhoto } from "@/lib/photos";
@@ -69,12 +70,11 @@ export function BodyPanel() {
       <Title>{t("Medidas corporales", "Body measurements")}</Title>
       <Notice />
       <Card>
-        <Field
-          label={t("Fecha (AAAA-MM-DD)", "Date (YYYY-MM-DD)")}
+        <DateField
+          label={t("Fecha", "Date")}
           value={date}
-          onChangeText={setDate}
-          keyboardType="numbers-and-punctuation"
-          maxLength={10}
+          onChange={setDate}
+          max={localDateKey(new Date())}
         />
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space(3) }}>
           {fields.map(([key, es, en]) => (

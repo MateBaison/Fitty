@@ -209,7 +209,7 @@ export function EntryCard({
             </View>
           </View>
           <Field
-            label={t("Nota de este ejercicio", "Note for this exercise")}
+            label={t("Comentarios", "Comments")}
             value={entry.note ?? ""}
             onChangeText={(note) => onChange((draft) => void (draft.note = note))}
             maxLength={500}
